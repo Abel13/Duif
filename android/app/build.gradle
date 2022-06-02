@@ -21,10 +21,7 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
-def flutterGoogleMapsKey = localProperties.getProperty('flutter.googleMapsKey')
-if (flutterGoogleMapsKey == null) {
-    flutterGoogleMapsKey = 'API_KEY'
-}
+def googleMapsKey = localProperties.getProperty('google.mapsKey')
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
@@ -32,6 +29,7 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
     compileSdkVersion flutter.compileSdkVersion
+    ndkVersion flutter.ndkVersion
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -48,12 +46,17 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.duif_app"
+        applicationId "com.example.duif"
+        // You can update the following values to match your application needs.
+        // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration.
         minSdkVersion 20
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-        googleMapsKey flutterGoogleMapsKey
+        manifestPlaceholders = [
+            mapKey: googleMapsKey,
+            applicationName: 'android.app.Application',
+        ]
     }
 
     buildTypes {

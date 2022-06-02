@@ -10,11 +10,6 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(BoxesController());
 
-    print("POS: " +
-        controller.latitude.value.toString() +
-        " " +
-        controller.longitude.value.toString());
-
     return Scaffold(
       drawer: Drawer(
         child: ListView(
@@ -73,6 +68,17 @@ class HomePage extends StatelessWidget {
             zoom: 13,
           ),
           onMapCreated: controller.onMapCreated,
+          markers: Set.from(controller.markers),
+          // polylines: Set<Polyline>.of([
+          //   Polyline(
+          //       polylineId: PolylineId("1"),
+          //       visible: true,
+          //       points: controller.markers
+          //           .map((marker) => marker.position)
+          //           .toList(),
+          //       color: Colors.red,
+          //       width: 5)
+          // ]),
           myLocationEnabled: true,
           myLocationButtonEnabled: false,
         ),
