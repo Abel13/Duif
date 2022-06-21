@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
-project(duif_app LANGUAGES CXX)
+project(game_template LANGUAGES CXX)
 
-set(BINARY_NAME "duif_app")
+set(BINARY_NAME "game_template")
 
 cmake_policy(SET CMP0063 NEW)
 

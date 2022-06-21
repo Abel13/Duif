@@ -1,6 +1,6 @@
 {
-    "name": "duif",
-    "short_name": "duif",
+    "name": "game_template",
+    "short_name": "game_template",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
