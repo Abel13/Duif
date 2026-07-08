@@ -1,0 +1,27 @@
+.details {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.details div {
+  padding-bottom: var(--space-2);
+  border-bottom: 1px dashed rgba(46, 42, 36, 0.28);
+}
+
+.details dt {
+  color: var(--color-ink-soft);
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.details dd {
+  margin: var(--space-1) 0 0;
+  color: var(--color-ink);
+  font-weight: 800;
+}
+
+.empty {
+  color: var(--color-ink-soft);
+}

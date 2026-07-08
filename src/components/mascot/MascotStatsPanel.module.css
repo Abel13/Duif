@@ -1,0 +1,74 @@
+.stats {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.level {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid rgba(46, 42, 36, 0.45);
+  background: rgba(255, 248, 232, 0.72);
+}
+
+.level span,
+.xpHeader,
+.attribute dt {
+  color: var(--color-ink-soft);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.level strong {
+  color: var(--color-postal-red);
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.xp {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.xpHeader {
+  display: flex;
+  justify-content: space-between;
+}
+
+.track {
+  height: 0.8rem;
+  overflow: hidden;
+  border: 1px solid rgba(46, 42, 36, 0.35);
+  border-radius: 999px;
+  background: var(--color-paper-dark);
+}
+
+.fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--color-muted-green);
+}
+
+.attributes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.attribute {
+  padding: var(--space-3);
+  border: 1px dashed rgba(46, 42, 36, 0.32);
+  background: rgba(255, 248, 232, 0.58);
+}
+
+.attribute dd {
+  margin: var(--space-1) 0 0;
+  color: var(--color-ink);
+  font-size: 1.35rem;
+  font-weight: 900;
+}

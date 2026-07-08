@@ -1,12 +1,13 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 
-import { HomePage } from "./HomePage";
+import { MascotDetailPage } from "../pages/MascotDetailPage/MascotDetailPage";
 
 export function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="/" element={<Navigate to="/mascots/mascot-nuvem" replace />} />
+      <Route path="/mascots/:mascotId" element={<MascotDetailPage />} />
+      <Route path="*" element={<Navigate to="/mascots/mascot-nuvem" replace />} />
     </Routes>
   );
 }

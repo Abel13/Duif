@@ -8,6 +8,9 @@ export type TranslationDictionary = {
     loading: string;
     unavailable: string;
   };
+  units: {
+    kilometers: string;
+  };
   home: {
     iconAlt: string;
     eyebrow: string;
@@ -42,6 +45,7 @@ export type TranslationDictionary = {
   mascot: {
     myMascots: string;
     level: string;
+    xp: string;
     attributes: string;
     speed: string;
     stamina: string;
@@ -49,10 +53,25 @@ export type TranslationDictionary = {
     luck: string;
     specialTrait: string;
     equipment: string;
+    equipped: string;
+    notEquipped: string;
     traveling: string;
     skills: string;
     train: string;
     viewTrip: string;
+    customization: string;
+    currentDelivery: string;
+    noDeliveryTitle: string;
+    noDeliveryDescription: string;
+    route: string;
+    origin: string;
+    destination: string;
+    distance: string;
+    status: string;
+    visualPreview: string;
+    selectedMascot: string;
+    chooseMascot: string;
+    bottomNav: string;
   };
   species: {
     carrierPigeon: string;
@@ -160,6 +179,7 @@ export type TranslationKey =
   | "app.title"
   | "common.loading"
   | "common.unavailable"
+  | "units.kilometers"
   | "home.eyebrow"
   | "home.iconAlt"
   | "home.title"
@@ -187,6 +207,7 @@ export type TranslationKey =
   | "navigation.shop"
   | "mascot.myMascots"
   | "mascot.level"
+  | "mascot.xp"
   | "mascot.attributes"
   | "mascot.speed"
   | "mascot.stamina"
@@ -194,10 +215,25 @@ export type TranslationKey =
   | "mascot.luck"
   | "mascot.specialTrait"
   | "mascot.equipment"
+  | "mascot.equipped"
+  | "mascot.notEquipped"
   | "mascot.traveling"
   | "mascot.skills"
   | "mascot.train"
   | "mascot.viewTrip"
+  | "mascot.customization"
+  | "mascot.currentDelivery"
+  | "mascot.noDeliveryTitle"
+  | "mascot.noDeliveryDescription"
+  | "mascot.route"
+  | "mascot.origin"
+  | "mascot.destination"
+  | "mascot.distance"
+  | "mascot.status"
+  | "mascot.visualPreview"
+  | "mascot.selectedMascot"
+  | "mascot.chooseMascot"
+  | "mascot.bottomNav"
   | "species.carrierPigeon"
   | "species.messengerFalcon"
   | "species.mailDuck"

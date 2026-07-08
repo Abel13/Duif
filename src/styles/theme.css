@@ -13,6 +13,9 @@
   --color-tape: #d8b980;
   --color-shadow: rgba(46, 42, 36, 0.22);
   --color-focus: #3f6f86;
+  --color-scrollbar-track: rgba(232, 221, 199, 0.78);
+  --color-scrollbar-thumb: #6f91a8;
+  --color-scrollbar-thumb-hover: #5d7e94;
 
   --space-1: 0.25rem;
   --space-2: 0.5rem;

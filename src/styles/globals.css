@@ -11,6 +11,66 @@ body {
     auto;
 }
 
+html {
+  scrollbar-color: var(--color-scrollbar-thumb) var(--color-scrollbar-track);
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+::-webkit-scrollbar-track {
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0,
+      transparent 0.2rem,
+      rgba(46, 42, 36, 0.08) 0.2rem,
+      rgba(46, 42, 36, 0.08) 0.26rem,
+      transparent 0.26rem
+    ),
+    var(--color-scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  min-height: 3rem;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 248, 232, 0.35) 0,
+      rgba(255, 248, 232, 0.35) 28%,
+      transparent 28%,
+      transparent 52%,
+      rgba(46, 42, 36, 0.12) 52%,
+      rgba(46, 42, 36, 0.12) 68%,
+      transparent 68%
+    ),
+    var(--color-scrollbar-thumb);
+  border: 2px solid var(--color-paper);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 248, 232, 0.42) 0,
+      rgba(255, 248, 232, 0.42) 28%,
+      transparent 28%,
+      transparent 52%,
+      rgba(46, 42, 36, 0.14) 52%,
+      rgba(46, 42, 36, 0.14) 68%,
+      transparent 68%
+    ),
+    var(--color-scrollbar-thumb-hover);
+}
+
+::-webkit-scrollbar-corner {
+  background: var(--color-paper);
+}
+
 ::selection {
   color: var(--color-paper-light);
   background: var(--color-postal-brown);

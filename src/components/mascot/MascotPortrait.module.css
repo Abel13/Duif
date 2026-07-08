@@ -1,0 +1,44 @@
+.portrait {
+  display: grid;
+  min-height: 18rem;
+  place-items: center;
+  padding: var(--space-5);
+  border: 1px dashed rgba(46, 42, 36, 0.35);
+  border-radius: var(--radius-paper);
+  background:
+    radial-gradient(circle at 50% 35%, color-mix(in srgb, var(--mascot-accent) 25%, transparent), transparent 32%),
+    linear-gradient(180deg, rgba(255, 248, 232, 0.65), rgba(232, 221, 199, 0.48));
+}
+
+.sheet {
+  display: grid;
+  gap: var(--space-4);
+  justify-items: center;
+}
+
+.figure {
+  display: grid;
+  width: min(58vw, 13rem);
+  aspect-ratio: 1;
+  place-items: center;
+  border: 3px solid var(--color-ink);
+  border-radius: 45% 55% 48% 52%;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--mascot-primary) 82%, white), var(--mascot-primary)),
+    var(--color-paper-light);
+  box-shadow: 0.4rem 0.55rem 0 rgba(46, 42, 36, 0.16);
+}
+
+.mark {
+  color: var(--mascot-accent);
+  font-size: clamp(4rem, 22vw, 7rem);
+  font-weight: 900;
+  line-height: 1;
+}
+
+.caption {
+  max-width: 20rem;
+  color: var(--color-ink-soft);
+  font-size: 0.92rem;
+  text-align: center;
+}
