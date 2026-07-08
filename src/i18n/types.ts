@@ -54,6 +54,106 @@ export type TranslationDictionary = {
     train: string;
     viewTrip: string;
   };
+  species: {
+    carrierPigeon: string;
+    messengerFalcon: string;
+    mailDuck: string;
+  };
+  traits: {
+    steadyRoute: {
+      name: string;
+      description: string;
+    };
+    directFlight: {
+      name: string;
+      description: string;
+    };
+    curiousFinder: {
+      name: string;
+      description: string;
+    };
+  };
+  equipment: {
+    rarity: {
+      common: string;
+      uncommon: string;
+      rare: string;
+    };
+    canvasPostalBag: {
+      name: string;
+      description: string;
+    };
+    blueRouteScarf: {
+      name: string;
+      description: string;
+    };
+    flightGoggles: {
+      name: string;
+      description: string;
+    };
+    urgentBadge: {
+      name: string;
+      description: string;
+    };
+    travelCap: {
+      name: string;
+      description: string;
+    };
+    featherCharm: {
+      name: string;
+      description: string;
+    };
+    smallSatchel: {
+      name: string;
+      description: string;
+    };
+  };
+  skills: {
+    longRoute: {
+      name: string;
+      description: string;
+    };
+    softLanding: {
+      name: string;
+      description: string;
+    };
+    quickDispatch: {
+      name: string;
+      description: string;
+    };
+    crosswindInstinct: {
+      name: string;
+      description: string;
+    };
+    shinyThing: {
+      name: string;
+      description: string;
+    };
+    happyDetour: {
+      name: string;
+      description: string;
+    };
+  };
+  delivery: {
+    status: {
+      available: string;
+      preparing: string;
+      outbound: string;
+      delivered: string;
+      returning: string;
+      returned: string;
+      completed: string;
+    };
+  };
+  locations: {
+    saoPaulo: string;
+    lisbon: string;
+  };
+  appearance: {
+    nuvemPortrait: string;
+    trovaoPortrait: string;
+    pipocaPortrait: string;
+  };
 };
 
 export type TranslationKey =
@@ -97,4 +197,54 @@ export type TranslationKey =
   | "mascot.traveling"
   | "mascot.skills"
   | "mascot.train"
-  | "mascot.viewTrip";
+  | "mascot.viewTrip"
+  | "species.carrierPigeon"
+  | "species.messengerFalcon"
+  | "species.mailDuck"
+  | "traits.steadyRoute.name"
+  | "traits.steadyRoute.description"
+  | "traits.directFlight.name"
+  | "traits.directFlight.description"
+  | "traits.curiousFinder.name"
+  | "traits.curiousFinder.description"
+  | "equipment.rarity.common"
+  | "equipment.rarity.uncommon"
+  | "equipment.rarity.rare"
+  | "equipment.canvasPostalBag.name"
+  | "equipment.canvasPostalBag.description"
+  | "equipment.blueRouteScarf.name"
+  | "equipment.blueRouteScarf.description"
+  | "equipment.flightGoggles.name"
+  | "equipment.flightGoggles.description"
+  | "equipment.urgentBadge.name"
+  | "equipment.urgentBadge.description"
+  | "equipment.travelCap.name"
+  | "equipment.travelCap.description"
+  | "equipment.featherCharm.name"
+  | "equipment.featherCharm.description"
+  | "equipment.smallSatchel.name"
+  | "equipment.smallSatchel.description"
+  | "skills.longRoute.name"
+  | "skills.longRoute.description"
+  | "skills.softLanding.name"
+  | "skills.softLanding.description"
+  | "skills.quickDispatch.name"
+  | "skills.quickDispatch.description"
+  | "skills.crosswindInstinct.name"
+  | "skills.crosswindInstinct.description"
+  | "skills.shinyThing.name"
+  | "skills.shinyThing.description"
+  | "skills.happyDetour.name"
+  | "skills.happyDetour.description"
+  | "delivery.status.available"
+  | "delivery.status.preparing"
+  | "delivery.status.outbound"
+  | "delivery.status.delivered"
+  | "delivery.status.returning"
+  | "delivery.status.returned"
+  | "delivery.status.completed"
+  | "locations.saoPaulo"
+  | "locations.lisbon"
+  | "appearance.nuvemPortrait"
+  | "appearance.trovaoPortrait"
+  | "appearance.pipocaPortrait";

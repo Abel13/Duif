@@ -58,4 +58,104 @@ export const ptBR = {
     train: "Treinar",
     viewTrip: "Ver Viagem",
   },
+  species: {
+    carrierPigeon: "Pombo-correio",
+    messengerFalcon: "Falcão-mensageiro",
+    mailDuck: "Pato-correio",
+  },
+  traits: {
+    steadyRoute: {
+      name: "Rota Segura",
+      description: "Mantém entregas estáveis e melhora recompensas em rotas longas.",
+    },
+    directFlight: {
+      name: "Voo Direto",
+      description: "Reduz desvios e favorece retornos rápidos depois da entrega.",
+    },
+    curiousFinder: {
+      name: "Achador Curioso",
+      description: "Aumenta a chance de encontrar lembranças e itens raros pelo caminho.",
+    },
+  },
+  equipment: {
+    rarity: {
+      common: "Comum",
+      uncommon: "Incomum",
+      rare: "Raro",
+    },
+    canvasPostalBag: {
+      name: "Bolsa Postal de Lona",
+      description: "Uma bolsa simples e confiável para cartas importantes.",
+    },
+    blueRouteScarf: {
+      name: "Cachecol de Rota Azul",
+      description: "Marca caminhos conhecidos com um toque de cor postal.",
+    },
+    flightGoggles: {
+      name: "Óculos de Voo",
+      description: "Ajuda a encarar vento forte sem perder a direção.",
+    },
+    urgentBadge: {
+      name: "Insígnia Urgente",
+      description: "Um selo vermelho para entregas que não podem esperar.",
+    },
+    travelCap: {
+      name: "Boné de Viagem",
+      description: "Protege em rotas curtas e deixa o visual mais preparado.",
+    },
+    featherCharm: {
+      name: "Amuleto de Pena",
+      description: "Um pequeno encanto para encontrar surpresas no caminho.",
+    },
+    smallSatchel: {
+      name: "Bornal Pequeno",
+      description: "Cabe o essencial para viagens curiosas e leves.",
+    },
+  },
+  skills: {
+    longRoute: {
+      name: "Rota Longa",
+      description: "Mantém boa orientação em distâncias maiores.",
+    },
+    softLanding: {
+      name: "Pouso Suave",
+      description: "Reduz desgaste ao terminar uma entrega.",
+    },
+    quickDispatch: {
+      name: "Partida Rápida",
+      description: "Sai do ninho com agilidade em entregas urgentes.",
+    },
+    crosswindInstinct: {
+      name: "Instinto de Vento Cruzado",
+      description: "Lida melhor com mudanças repentinas na rota.",
+    },
+    shinyThing: {
+      name: "Coisa Brilhante",
+      description: "Percebe pequenos objetos colecionáveis durante a viagem.",
+    },
+    happyDetour: {
+      name: "Desvio Alegre",
+      description: "Transforma pequenos atrasos em chance de descoberta.",
+    },
+  },
+  delivery: {
+    status: {
+      available: "Disponível",
+      preparing: "Preparando",
+      outbound: "Indo",
+      delivered: "Entregue",
+      returning: "Voltando",
+      returned: "Retornou",
+      completed: "Concluída",
+    },
+  },
+  locations: {
+    saoPaulo: "São Paulo",
+    lisbon: "Lisboa",
+  },
+  appearance: {
+    nuvemPortrait: "Retrato temporário de Nuvem",
+    trovaoPortrait: "Retrato temporário de Trovão",
+    pipocaPortrait: "Retrato temporário de Pipoca",
+  },
 } satisfies TranslationDictionary;
