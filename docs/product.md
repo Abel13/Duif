@@ -370,7 +370,11 @@ Travel logic should live outside UI components.
 
 Visible UI copy should come from translation files from the first implementation.
 
-The UI should be component-based, responsive, and lightweight.
+The UI should be component-based, mobile first, responsive, and lightweight.
+
+Mobile web is the primary product experience.
+
+Desktop should feel like an expanded version of the same notebook, not a separate dashboard-first product.
 
 ## Performance Direction
 

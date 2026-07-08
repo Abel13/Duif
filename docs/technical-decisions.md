@@ -655,13 +655,22 @@ Target:
 
 ## Browser Support
 
-Target modern mobile and desktop browsers.
+Target modern mobile and desktop browsers with a mobile-first implementation.
 
 Primary environment:
 
 - mobile web;
 - PWA-capable browsers;
 - desktop browser during development.
+
+Responsive rules:
+
+- build the base layout for narrow mobile viewports first;
+- use media queries to enhance tablet and desktop layouts;
+- avoid desktop-only interaction patterns;
+- keep primary actions reachable with one hand when practical;
+- prevent horizontal overflow;
+- validate important screens on mobile-sized and desktop-sized viewports before finishing.
 
 Do not optimize for legacy browsers in the first prototype.
 

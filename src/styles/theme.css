@@ -1,0 +1,39 @@
+:root {
+  --color-paper: #f7f1e3;
+  --color-paper-light: #fff8e8;
+  --color-paper-dark: #e8ddc7;
+  --color-paper-aged: #d6c6a8;
+  --color-ink: #2e2a24;
+  --color-ink-soft: #5a5046;
+  --color-postal-brown: #8b5e3c;
+  --color-postal-blue: #6f91a8;
+  --color-postal-red: #a44a3f;
+  --color-muted-green: #7a8f68;
+  --color-rare-gold: #c49a4a;
+  --color-tape: #d8b980;
+  --color-shadow: rgba(46, 42, 36, 0.22);
+  --color-focus: #3f6f86;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+
+  --radius-paper: 0.5rem;
+  --radius-small: 0.25rem;
+
+  --shadow-paper: 0 1rem 2.5rem var(--color-shadow);
+  --shadow-soft: 0 0.35rem 1rem rgba(46, 42, 36, 0.14);
+
+  --font-body: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+
+  color: var(--color-ink);
+  background: var(--color-paper);
+  font-family: var(--font-body);
+  line-height: 1.5;
+  font-weight: 400;
+}

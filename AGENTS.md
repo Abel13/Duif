@@ -188,6 +188,24 @@ Prefer:
 - Interactive targets should be comfortable on mobile.
 - Images should have useful alt text when meaningful.
 
+## Mobile-First Rules
+
+DUIF should be designed and implemented mobile first.
+
+Mobile web is the primary experience.
+
+Desktop should enhance the same experience with more space, not define the base layout.
+
+Rules:
+
+- Start layouts from the narrow mobile viewport.
+- Use responsive CSS to progressively adapt to tablet and desktop.
+- Keep primary actions reachable on mobile.
+- Keep tap targets comfortable.
+- Avoid horizontal scrolling.
+- Avoid dense dashboard layouts that only work on desktop.
+- Test important screens on mobile-sized and desktop-sized viewports before finishing.
+
 ## Language
 
 The app should start with internationalization support.

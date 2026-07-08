@@ -566,9 +566,13 @@ Sketch style should never make the UI harder to use.
 
 ## Responsive Direction
 
-The interface should work well on mobile first.
+The interface should be designed mobile first.
 
-Desktop may feel like an open notebook with side panels.
+Mobile web is the primary experience for DUIF.
+
+Start every screen from the narrow mobile layout, then enhance for tablet and desktop.
+
+Desktop may feel like an open notebook with side panels, but it should not drive the base design.
 
 Tablet may use a horizontal mascot selector.
 
@@ -577,6 +581,8 @@ Mobile should use a single-column layout.
 The mascot portrait should appear near the top on mobile.
 
 Navigation should remain reachable.
+
+Primary actions should remain easy to tap with one hand when practical.
 
 Avoid horizontal overflow.
 

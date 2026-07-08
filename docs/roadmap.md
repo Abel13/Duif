@@ -82,6 +82,7 @@ Includes:
 - ItemCard;
 - basic focus states;
 - responsive component behavior;
+- mobile-first component behavior;
 - component-level CSS Modules;
 - demo usage in the app shell.
 
@@ -99,6 +100,7 @@ Success criteria:
 - components use semantic HTML;
 - components are accessible by keyboard;
 - styling uses theme variables;
+- components are designed from mobile viewport constraints first;
 - components are reusable across future screens.
 
 Suggested Codex task:
@@ -165,7 +167,7 @@ Includes:
 - visual customization preview;
 - skills panel;
 - bottom navigation as paper tabs;
-- responsive layout.
+- mobile-first responsive layout.
 
 Does not include:
 
@@ -182,6 +184,7 @@ Success criteria:
 - mock mascot data is displayed clearly;
 - visible text comes from the i18n layer;
 - layout works on mobile and desktop;
+- mobile layout is the primary design baseline;
 - player can understand the mascot’s current state quickly;
 - components are split into maintainable pieces.
 
@@ -313,10 +316,11 @@ Do not use map tiles or a full map library yet. Use SVG/CSS to show a stylized d
 
 Goal:
 
-Make the mascot experience work well across mobile, tablet, and desktop.
+Refine the mascot experience across mobile, tablet, and desktop after the mobile-first baseline exists.
 
 Includes:
 
+- mobile-first layout review;
 - desktop notebook layout;
 - tablet horizontal mascot selector;
 - mobile single-column layout;
@@ -335,6 +339,7 @@ Does not include:
 Success criteria:
 
 - screen is usable on mobile;
+- mobile is treated as the primary experience;
 - important mascot information appears near the top;
 - touch targets are comfortable;
 - layout remains visually consistent;
@@ -343,7 +348,7 @@ Success criteria:
 Suggested Codex task:
 
 Make MascotDetailPage fully responsive.
-Desktop should feel like an open notebook. Tablet should use a horizontal mascot selector. Mobile should use a clean single-column layout with reachable navigation.
+Start from the mobile layout. Desktop should feel like an expanded open notebook. Tablet should use a horizontal mascot selector when it improves usability. Mobile should use a clean single-column layout with reachable navigation.
 
 ## Milestone 9: Send Flow Prototype
 
@@ -659,6 +664,7 @@ After the first mascot screen exists, review:
 - Is the status of the mascot clear?
 - Does the player know what to do next?
 - Does the screen work on mobile?
+- Does the mobile layout feel like the primary experience?
 - Is the implementation lightweight?
 - Can Codex safely continue from the structure?
 
