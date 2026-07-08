@@ -1,0 +1,446 @@
+# Product
+
+DUIF is a social idle game about messenger animals.
+
+Players own animals that carry letters, cards, stickers, and collectible objects across the world. The game combines mascot collection, asynchronous travel, social interaction, light progression, and cosmetic customization.
+
+The first version should focus on making the player care about their mascots and enjoy the act of sending something to another player.
+
+## Core Concept
+
+Each player starts with three messenger animals.
+
+Each animal has its own:
+
+- name;
+- species;
+- speed;
+- attributes;
+- level;
+- experience;
+- equipment;
+- visual customization;
+- current travel status.
+
+Players use these animals to send correspondence to friends. A correspondence can be a letter, card, sticker, collectible item, or event-specific object.
+
+When an animal is sent, it travels from the player’s origin to the destination, delivers the item, and then returns to its origin.
+
+The travel is asynchronous. The game should not simulate real-time movement on the server. Instead, travel progress is calculated from stored timestamps, coordinates, speed, and game multipliers.
+
+## Core Loop
+
+The main gameplay loop is:
+
+1. The player chooses a friend.
+2. The player chooses one of their messenger animals.
+3. The player chooses what to send.
+4. The animal starts traveling from origin to destination.
+5. The player checks the animal’s travel progress.
+6. The animal delivers the correspondence.
+7. The animal returns home.
+8. The player collects rewards, experience, and possible items found during the trip.
+9. The player upgrades or customizes the animal.
+10. The player sends another correspondence.
+
+The loop should feel simple, collectible, and social.
+
+## Player Fantasy
+
+The player should feel like they are managing a small team of charming postal companions.
+
+The mascots are not just units with stats. They should feel personal, expressive, and worth customizing.
+
+The game should evoke:
+
+- sending something thoughtful to a friend;
+- waiting for a companion to return;
+- collecting postal objects from around the world;
+- improving a favorite animal over time;
+- seeing friends’ mascots and profiles;
+- building small social rituals around sending and receiving.
+
+## Initial MVP Goal
+
+The MVP should validate the following question:
+
+Can players enjoy viewing, sending, waiting for, and customizing messenger animals?
+
+The MVP should not try to validate every future system at once.
+
+## MVP Scope
+
+The first playable MVP should include:
+
+- basic player profile;
+- three starter mascots;
+- mascot detail screen;
+- mock or simple friend system;
+- ability to send a correspondence to a friend;
+- calculated travel duration;
+- outbound and return states;
+- simple reward collection;
+- basic inventory;
+- lightweight visual customization;
+- simple notification or status indicator when an animal returns.
+
+## Out of Scope for the First MVP
+
+Do not include in the first MVP:
+
+- real-time multiplayer;
+- complex chat;
+- full social feed;
+- marketplace;
+- trading;
+- payments;
+- advanced shop;
+- complex economy;
+- full 3D globe;
+- real map tiles;
+- weather systems;
+- GPS-precise location;
+- route optimization;
+- moderation-heavy public posting features.
+
+These can be explored later if the core loop is validated.
+
+## Social Layer
+
+The game should eventually support a lightweight social network.
+
+Players should be able to:
+
+- add friends;
+- view friends’ profiles;
+- see friends’ mascots;
+- send correspondence to friends;
+- receive letters, cards, stickers, or collectibles;
+- build friendship progress through repeated exchanges;
+- display favorite received items;
+- visit a friend’s profile or postal page.
+
+The social layer should feel personal and low-pressure, not like a noisy public feed.
+
+## Correspondence Types
+
+Possible correspondence types:
+
+- letters;
+- cards;
+- postcards;
+- stickers;
+- stamps;
+- small gifts;
+- event tokens;
+- collectible souvenirs;
+- friendship notes.
+
+In the beginning, correspondence can be represented with simple mock objects.
+
+Later, each type may have cosmetic variants, rarity, event exclusivity, and collection value.
+
+## Mascots
+
+Mascots are the emotional center of the game.
+
+Initial mascots:
+
+- Nuvem;
+- Trovão;
+- Pipoca.
+
+A mascot should have:
+
+- id;
+- name;
+- species;
+- level;
+- experience;
+- attributes;
+- special trait;
+- equipment;
+- skills;
+- visual appearance;
+- current delivery status.
+
+Potential attributes:
+
+- speed;
+- stamina;
+- orientation;
+- luck.
+
+Potential traits:
+
+- better chance to find rare items;
+- faster return trips;
+- better delivery rewards;
+- improved event discovery;
+- stronger friendship bonus.
+
+## Travel System
+
+Travel should be calculated on demand.
+
+A delivery should store:
+
+- sender id;
+- receiver id;
+- animal id;
+- origin coordinates;
+- destination coordinates;
+- distance;
+- outbound start time;
+- outbound arrival time;
+- return start time;
+- return arrival time;
+- status;
+- reward seed.
+
+The UI can calculate the current status and progress using the current time.
+
+Possible statuses:
+
+- available;
+- preparing;
+- outbound;
+- delivered;
+- returning;
+- returned;
+- completed.
+
+The server should not need to update the animal’s position every second.
+
+## Location and Privacy
+
+The game should avoid using exact home locations.
+
+Preferred options:
+
+1. Let the player choose a city or region.
+2. Let the player choose a fictional postal base.
+3. Use approximate coordinates rather than exact GPS.
+4. Never expose precise location to other players.
+
+The product should feel global without creating privacy risk.
+
+## Rewards
+
+Rewards should make travel feel meaningful.
+
+Possible rewards:
+
+- experience;
+- soft currency;
+- stamps;
+- stickers;
+- equipment;
+- postcards;
+- feathers;
+- souvenirs;
+- event collectibles;
+- friendship points.
+
+Rewards can be generated from a deterministic seed based on the delivery, animal, and event context.
+
+The first version can use simple random rewards.
+
+## Inventory
+
+The inventory should feel like a collectible album.
+
+Potential categories:
+
+- stamps;
+- cards;
+- stickers;
+- envelopes;
+- equipment;
+- souvenirs;
+- feathers;
+- seasonal items.
+
+Inventory should support cosmetic expression and collection goals.
+
+## Customization
+
+Customization should focus on visible, charming changes to mascots.
+
+Examples:
+
+- hats;
+- bags;
+- scarves;
+- feathers;
+- badges;
+- delivery satchels;
+- color accents;
+- postcard frames;
+- profile decorations.
+
+Cosmetics should not be required for early gameplay, but they should give players a reason to return and personalize their mascots.
+
+## Economy
+
+The first prototype should not include a complex economy.
+
+A later version may include:
+
+- soft currency from deliveries;
+- cosmetic shop;
+- seasonal items;
+- limited-time collections;
+- non-pay-to-win progression boosts;
+- optional premium cosmetics.
+
+Gameplay power and paid cosmetics should be separated carefully.
+
+## Events
+
+Events can be added after the core loop works.
+
+Possible event types:
+
+- seasonal postal festivals;
+- rare route encounters;
+- limited-time stamps;
+- special delivery requests;
+- global collection challenges;
+- friendship exchange events.
+
+Events should add variety without making the base game overly complex.
+
+## Visual Identity
+
+The game should look like an illustrated postal notebook.
+
+The interface should feel like:
+
+- a sketchbook;
+- a postal album;
+- a travel diary;
+- a desk with papers, maps, stamps, and envelopes;
+- a collection of animal profile cards.
+
+The UI should avoid generic website patterns.
+
+Buttons and panels should look like objects from the game world, such as:
+
+- stamps;
+- paper tabs;
+- labels;
+- tags;
+- cards;
+- envelopes;
+- pinned notes.
+
+No emojis should be used in the UI.
+
+## Tone
+
+The product tone should be:
+
+- warm;
+- calm;
+- charming;
+- collectible;
+- lightly playful;
+- not overly childish;
+- not noisy;
+- not corporate.
+
+The game should feel welcoming without relying on excessive humor or exaggerated cuteness.
+
+## Technical Direction
+
+The first prototype should use:
+
+- React;
+- TypeScript;
+- Vite;
+- CSS Modules;
+- initial internationalization for `pt-BR` and `en-US`;
+- mock data;
+- no backend;
+- no authentication;
+- no real payment system.
+
+Travel logic should live outside UI components.
+
+Visible UI copy should come from translation files from the first implementation.
+
+The UI should be component-based, responsive, and lightweight.
+
+## Performance Direction
+
+The app should remain lightweight enough to work well as a PWA.
+
+Avoid:
+
+- full-screen image-based UI;
+- heavy 3D rendering;
+- complex map tiles in the first prototype;
+- excessive blur effects;
+- large unoptimized assets;
+- continuous background simulations.
+
+Prefer:
+
+- HTML and CSS for structure;
+- SVG for simple art and icons;
+- optimized WebP or AVIF for mascot illustrations;
+- small repeatable textures;
+- timestamp-based travel calculation;
+- transform and opacity for animations.
+
+## First Prototype Screen
+
+The first screen to build is the mascot detail screen.
+
+It should include:
+
+- mascot selector;
+- mascot name;
+- species;
+- large mascot portrait area;
+- level and experience;
+- attributes;
+- special trait;
+- equipment;
+- current travel status;
+- small route preview;
+- visual customization preview;
+- skills;
+- bottom navigation.
+
+The goal of this screen is to establish the visual style and make the mascot feel valuable.
+
+## Success Criteria for the First Prototype
+
+The first prototype is successful if:
+
+- the mascot screen feels visually distinct and not like a generic website;
+- the player can understand the mascot’s status quickly;
+- the UI feels lightweight and responsive;
+- the structure is ready for real game logic later;
+- the mock data is easy to replace with backend data later;
+- the mascot feels like something the player would want to customize and send on journeys.
+
+## Long-Term Product Direction
+
+If the core loop works, the product can expand toward:
+
+- send flow;
+- friend profiles;
+- received correspondence collection;
+- inventory album;
+- cosmetic shop;
+- events;
+- route discoveries;
+- richer mascot progression;
+- PWA installation;
+- push notifications;
+- eventual native app exploration.
+
+The product should grow from the emotional core: players caring about their messenger animals and enjoying social exchanges through them.
