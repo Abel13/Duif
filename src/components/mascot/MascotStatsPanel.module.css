@@ -4,13 +4,19 @@
 }
 
 .level {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
   padding: var(--space-3);
-  border: 1px solid rgba(46, 42, 36, 0.45);
-  background: rgba(255, 248, 232, 0.72);
+  border: 2px dashed rgba(164, 74, 63, 0.72);
+  border-radius: 0.25rem;
+  background:
+    radial-gradient(circle at 100% 0, rgba(164, 74, 63, 0.12), transparent 2.4rem),
+    var(--color-postal-label);
+  box-shadow: 0.16rem 0.16rem 0 rgba(46, 42, 36, 0.08);
+  transform: rotate(-1deg);
 }
 
 .level span,
@@ -44,7 +50,15 @@
   overflow: hidden;
   border: 1px solid rgba(46, 42, 36, 0.35);
   border-radius: 999px;
-  background: var(--color-paper-dark);
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent 0.9rem,
+      rgba(46, 42, 36, 0.08) 0.9rem,
+      rgba(46, 42, 36, 0.08) 0.96rem
+    ),
+    var(--color-paper-dark);
 }
 
 .fill {
@@ -62,8 +76,12 @@
 
 .attribute {
   padding: var(--space-3);
-  border: 1px dashed rgba(46, 42, 36, 0.32);
-  background: rgba(255, 248, 232, 0.58);
+  border: var(--border-dashed-ink);
+  border-radius: 0.35rem 0.15rem;
+  background:
+    linear-gradient(rgba(46, 42, 36, 0.035) 1px, transparent 1px),
+    rgba(255, 248, 232, 0.58);
+  background-size: 100% 1rem;
 }
 
 .attribute dd {

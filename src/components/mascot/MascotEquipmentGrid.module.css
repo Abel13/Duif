@@ -3,6 +3,14 @@
   gap: var(--space-3);
 }
 
+.grid > *:nth-child(even) {
+  transform: rotate(0.6deg);
+}
+
+.grid > *:nth-child(odd) {
+  transform: rotate(-0.4deg);
+}
+
 @media (min-width: 620px) {
   .grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));

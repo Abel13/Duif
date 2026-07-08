@@ -6,12 +6,29 @@
 }
 
 .skill {
+  position: relative;
   display: grid;
   gap: var(--space-2);
   padding: var(--space-3);
-  border: 1px solid rgba(46, 42, 36, 0.35);
-  border-radius: var(--radius-small);
-  background: rgba(255, 248, 232, 0.62);
+  border: var(--border-ink);
+  border-radius: 0.4rem 0.18rem;
+  background:
+    linear-gradient(rgba(46, 42, 36, 0.035) 1px, transparent 1px),
+    rgba(255, 248, 232, 0.62);
+  background-size: 100% 1.15rem;
+  box-shadow: 0.12rem 0.14rem 0 rgba(46, 42, 36, 0.07);
+}
+
+.skill::before {
+  content: "";
+  position: absolute;
+  top: -0.35rem;
+  left: 1rem;
+  width: 2.4rem;
+  height: 0.7rem;
+  border: 1px solid rgba(46, 42, 36, 0.14);
+  background: var(--color-tape-light);
+  transform: rotate(-2deg);
 }
 
 .name {
@@ -23,7 +40,9 @@
   width: fit-content;
   padding: 0.2rem 0.5rem;
   border: 1px dashed var(--color-postal-blue);
+  border-radius: 999px;
   color: var(--color-postal-blue);
+  background: rgba(111, 145, 168, 0.08);
   font-size: 0.76rem;
   font-weight: 900;
   text-transform: uppercase;

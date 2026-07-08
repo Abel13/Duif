@@ -1,15 +1,21 @@
 .panel {
   position: relative;
+  isolation: isolate;
   width: 100%;
   padding: clamp(1rem, 5vw, 1.75rem);
-  border: 2px solid rgba(46, 42, 36, 0.76);
-  border-radius: var(--radius-paper) var(--radius-small) var(--radius-paper)
-    calc(var(--radius-paper) + 0.25rem);
+  overflow: visible;
+  border: var(--border-ink-strong);
+  border-radius: 0.85rem 0.35rem 0.75rem 0.45rem;
   color: var(--color-ink);
   background:
+    linear-gradient(rgba(46, 42, 36, 0.045) 1px, transparent 1px),
     linear-gradient(135deg, rgba(255, 248, 232, 0.94), rgba(232, 221, 199, 0.88)),
     var(--color-paper-light);
-  box-shadow: var(--shadow-paper);
+  background-size:
+    100% 1.65rem,
+    auto,
+    auto;
+  box-shadow: var(--shadow-paper-lifted);
 }
 
 .panel::before {
@@ -19,15 +25,37 @@
   right: clamp(1rem, 8vw, 2rem);
   width: 4rem;
   height: 1.35rem;
-  border: 1px solid rgba(46, 42, 36, 0.2);
+  border: 1px solid rgba(46, 42, 36, 0.18);
   border-radius: 0.2rem;
-  background: rgba(216, 185, 128, 0.72);
+  background:
+    linear-gradient(90deg, transparent, rgba(255, 248, 232, 0.32), transparent),
+    var(--color-tape-light);
   transform: rotate(2deg);
+  box-shadow: 0 0.2rem 0.45rem rgba(46, 42, 36, 0.08);
+  z-index: 1;
+}
+
+.panel::after {
+  content: "";
+  position: absolute;
+  inset: 0.45rem;
+  border: 1px dashed rgba(46, 42, 36, 0.16);
+  border-radius: 0.55rem 0.25rem 0.5rem 0.35rem;
+  pointer-events: none;
+  z-index: -1;
 }
 
 .note {
-  border-left: 0.45rem solid var(--color-postal-blue);
+  border-left: 0.5rem solid var(--color-postal-blue);
+  border-radius: 0.35rem 0.85rem 0.45rem 0.75rem;
   background:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 1.55rem,
+      rgba(111, 145, 168, 0.16) 1.55rem,
+      rgba(111, 145, 168, 0.16) 1.62rem
+    ),
     linear-gradient(180deg, rgba(255, 248, 232, 0.96), rgba(247, 241, 227, 0.9)),
     var(--color-paper-light);
 }
@@ -35,9 +63,15 @@
 .map {
   border-style: dashed;
   background:
+    linear-gradient(45deg, transparent 48%, rgba(46, 42, 36, 0.07) 49%, transparent 51%),
     radial-gradient(circle at 20% 20%, rgba(191, 212, 218, 0.38), transparent 32%),
     radial-gradient(circle at 80% 70%, rgba(201, 214, 184, 0.38), transparent 30%),
     var(--color-paper);
+  background-size:
+    2.25rem 2.25rem,
+    auto,
+    auto,
+    auto;
 }
 
 .header {
@@ -48,13 +82,16 @@
 
 .eyebrow {
   width: fit-content;
-  padding: var(--space-2) var(--space-3);
+  padding: 0.4rem 0.7rem;
   border: 1px dashed currentColor;
+  border-radius: 0.15rem;
   color: var(--color-postal-red);
+  background: var(--color-postal-label);
   font-size: 0.75rem;
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  box-shadow: 0.12rem 0.12rem 0 rgba(46, 42, 36, 0.08);
 }
 
 .title {

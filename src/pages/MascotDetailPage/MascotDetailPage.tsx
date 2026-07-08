@@ -1,8 +1,6 @@
 import { Navigate, useParams } from "react-router-dom";
 
-import {
-  MascotBottomNav,
-} from "../../components/mascot/MascotBottomNav";
+import { MascotBottomNav } from "../../components/mascot/MascotBottomNav";
 import { MascotEquipmentGrid } from "../../components/mascot/MascotEquipmentGrid";
 import { MascotPortrait } from "../../components/mascot/MascotPortrait";
 import { MascotSelector } from "../../components/mascot/MascotSelector";
@@ -35,7 +33,15 @@ export function MascotDetailPage() {
 
         <section className={styles.content} aria-label={t("mascot.selectedMascot")}>
           <div className={styles.hero}>
-            <SketchPanel eyebrow={t(mascot.speciesKey)} title={mascot.name}>
+            <SketchPanel className={styles.heroPanel} eyebrow={t(mascot.speciesKey)} title={mascot.name}>
+              <div className={styles.heroLabels}>
+                <span>
+                  {t("mascot.level")} {mascot.level}
+                </span>
+                {mascot.currentDelivery && (
+                  <span>{t(`delivery.status.${mascot.currentDelivery.status}`)}</span>
+                )}
+              </div>
               <MascotPortrait mascot={mascot} />
               <div className={styles.heroActions}>
                 <StampButton>{t("mascot.train")}</StampButton>

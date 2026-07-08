@@ -2,9 +2,15 @@
   display: flex;
   gap: var(--space-2);
   overflow-x: auto;
-  padding-block: var(--space-2);
+  padding: var(--space-3) var(--space-2) var(--space-2);
+  border-top: 2px solid rgba(46, 42, 36, 0.22);
+  background:
+    linear-gradient(90deg, rgba(46, 42, 36, 0.08), transparent 1rem, transparent calc(100% - 1rem), rgba(46, 42, 36, 0.08)),
+    rgba(232, 221, 199, 0.35);
+  scroll-snap-type: x proximity;
 }
 
 .nav > * {
   flex: 0 0 auto;
+  scroll-snap-align: start;
 }

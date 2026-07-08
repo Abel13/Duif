@@ -1,6 +1,28 @@
 .details {
+  position: relative;
   display: grid;
   gap: var(--space-3);
+  padding: var(--space-3);
+  border: var(--border-dashed-ink);
+  border-radius: 0.5rem 0.2rem;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(111, 145, 168, 0.18), transparent 2.5rem),
+    linear-gradient(rgba(46, 42, 36, 0.035) 1px, transparent 1px),
+    rgba(255, 248, 232, 0.56);
+  background-size:
+    auto,
+    100% 1.35rem,
+    auto;
+}
+
+.details::after {
+  content: "";
+  position: absolute;
+  top: 1.35rem;
+  right: 1rem;
+  width: 4.5rem;
+  border-top: 2px dashed rgba(164, 74, 63, 0.28);
+  transform: rotate(-4deg);
 }
 
 .details div {
@@ -23,5 +45,9 @@
 }
 
 .empty {
+  padding: var(--space-3);
+  border: var(--border-dashed-ink);
+  border-radius: 0.4rem;
   color: var(--color-ink-soft);
+  background: rgba(255, 248, 232, 0.58);
 }

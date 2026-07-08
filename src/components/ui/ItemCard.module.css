@@ -1,27 +1,52 @@
 .card {
+  position: relative;
+  isolation: isolate;
   display: grid;
   gap: var(--space-3);
   min-width: 0;
   padding: var(--space-4);
-  border: 1px solid rgba(46, 42, 36, 0.42);
-  border-radius: var(--radius-paper) var(--radius-small) var(--radius-paper)
-    var(--radius-small);
-  background: rgba(255, 248, 232, 0.76);
-  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+  border: var(--border-ink);
+  border-radius: 0.65rem 0.25rem 0.55rem 0.3rem;
+  background:
+    linear-gradient(rgba(46, 42, 36, 0.035) 1px, transparent 1px),
+    linear-gradient(145deg, rgba(255, 248, 232, 0.92), rgba(232, 221, 199, 0.68));
+  background-size:
+    100% 1.25rem,
+    auto;
+  box-shadow:
+    0.22rem 0.28rem 0 rgba(46, 42, 36, 0.08),
+    var(--shadow-soft);
+}
+
+.card::after {
+  content: "";
+  position: absolute;
+  right: -1.35rem;
+  bottom: -1.35rem;
+  width: 3.25rem;
+  aspect-ratio: 1;
+  border: 1px dashed rgba(46, 42, 36, 0.22);
+  border-radius: 50%;
+  opacity: 0.7;
+  pointer-events: none;
 }
 
 .selected {
   border-color: var(--color-rare-gold);
   box-shadow:
-    0 0 0 2px rgba(196, 154, 74, 0.26),
+    inset 0 0 0 2px rgba(196, 154, 74, 0.18),
+    0.22rem 0.28rem 0 rgba(46, 42, 36, 0.08),
     var(--shadow-soft);
 }
 
 .label {
   width: fit-content;
   padding: 0.25rem 0.5rem;
-  border: 1px solid rgba(46, 42, 36, 0.38);
+  border: 1px dashed rgba(46, 42, 36, 0.48);
+  border-radius: 0.15rem;
   color: var(--color-postal-brown);
+  background: var(--color-postal-label);
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.06em;
@@ -30,9 +55,10 @@
 
 .visual {
   min-height: 4.5rem;
-  border: 1px dashed rgba(46, 42, 36, 0.34);
-  border-radius: var(--radius-small);
+  border: var(--border-dashed-ink);
+  border-radius: 0.35rem 0.18rem;
   background:
+    radial-gradient(circle at 72% 22%, rgba(164, 74, 63, 0.12), transparent 1.9rem),
     linear-gradient(135deg, rgba(111, 145, 168, 0.18), transparent 55%),
     var(--color-paper);
   display: grid;
@@ -59,4 +85,9 @@
 .meta {
   color: var(--color-muted-green);
   font-weight: 800;
+  width: fit-content;
+  padding: 0.15rem 0.45rem;
+  border: 1px solid rgba(122, 143, 104, 0.35);
+  border-radius: 999px;
+  background: rgba(122, 143, 104, 0.1);
 }

@@ -11,6 +11,10 @@
   --color-muted-green: #7a8f68;
   --color-rare-gold: #c49a4a;
   --color-tape: #d8b980;
+  --color-tape-light: rgba(229, 202, 150, 0.78);
+  --color-ink-line: rgba(46, 42, 36, 0.22);
+  --color-ink-strong-line: rgba(46, 42, 36, 0.72);
+  --color-postal-label: rgba(255, 248, 232, 0.82);
   --color-shadow: rgba(46, 42, 36, 0.22);
   --color-focus: #3f6f86;
   --color-scrollbar-track: rgba(232, 221, 199, 0.78);
@@ -30,6 +34,11 @@
 
   --shadow-paper: 0 1rem 2.5rem var(--color-shadow);
   --shadow-soft: 0 0.35rem 1rem rgba(46, 42, 36, 0.14);
+  --shadow-paper-lifted: 0 0.65rem 0 rgba(46, 42, 36, 0.06),
+    0 1.4rem 2.2rem rgba(46, 42, 36, 0.16);
+  --border-ink: 1px solid var(--color-ink-line);
+  --border-ink-strong: 2px solid var(--color-ink-strong-line);
+  --border-dashed-ink: 1px dashed rgba(46, 42, 36, 0.34);
 
   --font-body: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     sans-serif;

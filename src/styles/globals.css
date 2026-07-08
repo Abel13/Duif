@@ -2,10 +2,14 @@ body {
   min-width: 320px;
   color: var(--color-ink);
   background:
+    radial-gradient(circle at 12% 8%, rgba(164, 74, 63, 0.07), transparent 18rem),
+    radial-gradient(circle at 88% 18%, rgba(111, 145, 168, 0.08), transparent 16rem),
     linear-gradient(rgba(46, 42, 36, 0.035) 1px, transparent 1px),
     linear-gradient(90deg, rgba(46, 42, 36, 0.03) 1px, transparent 1px),
     var(--color-paper);
   background-size:
+    auto,
+    auto,
     28px 28px,
     28px 28px,
     auto;
