@@ -158,6 +158,9 @@ export const ptBR = {
     },
   },
   delivery: {
+    progress: "Progresso",
+    remainingTime: "Tempo restante",
+    routePreview: "Prévia da rota",
     status: {
       available: "Disponível",
       preparing: "Preparando",

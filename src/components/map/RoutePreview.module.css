@@ -1,0 +1,109 @@
+.preview {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+  padding: var(--space-3);
+  border: var(--border-dashed-ink);
+  border-radius: 0.65rem 0.2rem 0.55rem 0.3rem;
+  background:
+    radial-gradient(circle at 20% 28%, rgba(111, 145, 168, 0.18), transparent 3.5rem),
+    radial-gradient(circle at 82% 58%, rgba(122, 143, 104, 0.16), transparent 3.25rem),
+    linear-gradient(rgba(46, 42, 36, 0.035) 1px, transparent 1px),
+    rgba(255, 248, 232, 0.58);
+  background-size:
+    auto,
+    auto,
+    100% 1.25rem,
+    auto;
+}
+
+.map {
+  position: relative;
+  min-height: 8rem;
+  overflow: hidden;
+  border: 1px solid rgba(46, 42, 36, 0.22);
+  border-radius: 0.55rem 0.2rem;
+  background:
+    linear-gradient(120deg, rgba(111, 145, 168, 0.12), transparent 48%),
+    var(--color-paper);
+}
+
+.route {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.wash {
+  fill: none;
+  stroke: rgba(111, 145, 168, 0.16);
+  stroke-linecap: round;
+  stroke-width: 18;
+}
+
+.line {
+  fill: none;
+  stroke: rgba(46, 42, 36, 0.68);
+  stroke-dasharray: 9 9;
+  stroke-linecap: round;
+  stroke-width: 3;
+}
+
+.pin {
+  fill: var(--color-paper-light);
+  stroke: var(--color-postal-red);
+  stroke-width: 3;
+}
+
+.marker {
+  position: absolute;
+  top: 50%;
+  left: clamp(1.5rem, var(--route-progress), calc(100% - 1.5rem));
+  display: block;
+  width: 1.15rem;
+  aspect-ratio: 1;
+  border: 2px solid var(--color-ink);
+  border-radius: 50% 50% 50% 0;
+  background: var(--color-rare-gold);
+  box-shadow: 0.12rem 0.16rem 0 rgba(46, 42, 36, 0.16);
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.marker::after {
+  content: "";
+  position: absolute;
+  inset: 0.25rem;
+  border-radius: 50%;
+  background: var(--color-paper-light);
+}
+
+.points,
+.meta {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.points {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  color: var(--color-ink);
+  font-weight: 900;
+}
+
+.points span:last-child {
+  text-align: right;
+}
+
+.meta {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.meta span {
+  padding: var(--space-2);
+  border: 1px dashed rgba(46, 42, 36, 0.22);
+  border-radius: 0.3rem;
+  color: var(--color-ink);
+  background: rgba(255, 248, 232, 0.62);
+  font-weight: 900;
+  text-align: center;
+}

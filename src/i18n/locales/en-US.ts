@@ -158,6 +158,9 @@ export const enUS = {
     },
   },
   delivery: {
+    progress: "Progress",
+    remainingTime: "Remaining time",
+    routePreview: "Route preview",
     status: {
       available: "Available",
       preparing: "Preparing",

@@ -1,5 +1,11 @@
-import type { Delivery } from "../../game";
+import {
+  formatRemainingTime,
+  getDeliveryStatus,
+  getTravelProgress,
+  type Delivery,
+} from "../../game";
 import { useTranslation } from "../../i18n";
+import { RoutePreview } from "../map/RoutePreview";
 import { SketchPanel, StampButton } from "../ui";
 import styles from "./MascotTravelCard.module.css";
 
@@ -18,8 +24,26 @@ export function MascotTravelCard({ delivery }: MascotTravelCardProps) {
     );
   }
 
+  const progress = getTravelProgress(delivery);
+  const progressLabel = `${Math.round(progress * 100)}%`;
+  const calculatedStatus = getDeliveryStatus(delivery);
+  const statusLabel = t(`delivery.status.${calculatedStatus}`);
+  const remainingTime = formatRemainingTime(delivery);
+  const distanceLabel = `${delivery.distanceKm} ${t("units.kilometers")}`;
+
   return (
     <SketchPanel eyebrow={t("mascot.currentDelivery")} title={t("mascot.route")} variant="map">
+      <div className={styles.previewRegion} role="group" aria-label={t("delivery.routePreview")}>
+        <p className={styles.previewLabel}>{t("delivery.routePreview")}</p>
+        <RoutePreview
+          originLabel={t(delivery.origin.labelKey)}
+          destinationLabel={t(delivery.destination.labelKey)}
+          progress={progress}
+          statusLabel={statusLabel}
+          remainingTime={remainingTime}
+          distanceLabel={distanceLabel}
+        />
+      </div>
       <dl className={styles.details}>
         <div>
           <dt>{t("mascot.origin")}</dt>
@@ -31,13 +55,19 @@ export function MascotTravelCard({ delivery }: MascotTravelCardProps) {
         </div>
         <div>
           <dt>{t("mascot.distance")}</dt>
-          <dd>
-            {delivery.distanceKm} {t("units.kilometers")}
-          </dd>
+          <dd>{distanceLabel}</dd>
         </div>
         <div>
           <dt>{t("mascot.status")}</dt>
-          <dd>{t(`delivery.status.${delivery.status}`)}</dd>
+          <dd>{statusLabel}</dd>
+        </div>
+        <div>
+          <dt>{t("delivery.progress")}</dt>
+          <dd>{progressLabel}</dd>
+        </div>
+        <div>
+          <dt>{t("delivery.remainingTime")}</dt>
+          <dd>{remainingTime}</dd>
         </div>
       </dl>
       <StampButton>{t("mascot.viewTrip")}</StampButton>

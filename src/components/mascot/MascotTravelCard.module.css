@@ -1,3 +1,21 @@
+.previewRegion {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.previewLabel {
+  width: fit-content;
+  padding: 0.25rem 0.55rem;
+  border: 1px dashed rgba(46, 42, 36, 0.42);
+  border-radius: 0.15rem;
+  color: var(--color-postal-brown);
+  background: var(--color-postal-label);
+  font-size: 0.74rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
 .details {
   position: relative;
   display: grid;
@@ -50,4 +68,10 @@
   border-radius: 0.4rem;
   color: var(--color-ink-soft);
   background: rgba(255, 248, 232, 0.58);
+}
+
+@media (min-width: 620px) {
+  .details {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }

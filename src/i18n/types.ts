@@ -154,6 +154,9 @@ export type TranslationDictionary = {
     };
   };
   delivery: {
+    progress: string;
+    remainingTime: string;
+    routePreview: string;
     status: {
       available: string;
       preparing: string;
@@ -272,6 +275,9 @@ export type TranslationKey =
   | "skills.shinyThing.description"
   | "skills.happyDetour.name"
   | "skills.happyDetour.description"
+  | "delivery.progress"
+  | "delivery.remainingTime"
+  | "delivery.routePreview"
   | "delivery.status.available"
   | "delivery.status.preparing"
   | "delivery.status.outbound"
