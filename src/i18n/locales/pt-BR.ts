@@ -18,6 +18,23 @@ export const ptBR = {
     noteTitle: "Fundação pronta para começar",
     noteBody:
       "A primeira tela real será construída depois da base visual, dos componentes reutilizáveis e dos dados mockados.",
+    demo: {
+      actionsLabel: "Ações de demonstração",
+      primaryAction: "Preparar envio",
+      secondaryAction: "Ver caderno",
+      tabsLabel: "Navegação de demonstração",
+      cardsLabel: "Cartões colecionáveis de demonstração",
+      firstCardLabel: "Selo raro",
+      firstCardTitle: "Carta de boas-vindas",
+      firstCardDescription:
+        "Um cartão de papel para validar o estilo colecionável antes da tela do mascote.",
+      firstCardMeta: "Base visual",
+      secondCardLabel: "Item comum",
+      secondCardTitle: "Etiqueta de rota",
+      secondCardDescription:
+        "Um marcador postal simples para testar cards, estados e textos longos no mobile.",
+      secondCardMeta: "Mock inicial",
+    },
   },
   navigation: {
     nest: "Ninho",

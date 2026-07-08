@@ -1,0 +1,70 @@
+.panel {
+  position: relative;
+  width: 100%;
+  padding: clamp(1rem, 5vw, 1.75rem);
+  border: 2px solid rgba(46, 42, 36, 0.76);
+  border-radius: var(--radius-paper) var(--radius-small) var(--radius-paper)
+    calc(var(--radius-paper) + 0.25rem);
+  color: var(--color-ink);
+  background:
+    linear-gradient(135deg, rgba(255, 248, 232, 0.94), rgba(232, 221, 199, 0.88)),
+    var(--color-paper-light);
+  box-shadow: var(--shadow-paper);
+}
+
+.panel::before {
+  content: "";
+  position: absolute;
+  top: -0.75rem;
+  right: clamp(1rem, 8vw, 2rem);
+  width: 4rem;
+  height: 1.35rem;
+  border: 1px solid rgba(46, 42, 36, 0.2);
+  border-radius: 0.2rem;
+  background: rgba(216, 185, 128, 0.72);
+  transform: rotate(2deg);
+}
+
+.note {
+  border-left: 0.45rem solid var(--color-postal-blue);
+  background:
+    linear-gradient(180deg, rgba(255, 248, 232, 0.96), rgba(247, 241, 227, 0.9)),
+    var(--color-paper-light);
+}
+
+.map {
+  border-style: dashed;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(191, 212, 218, 0.38), transparent 32%),
+    radial-gradient(circle at 80% 70%, rgba(201, 214, 184, 0.38), transparent 30%),
+    var(--color-paper);
+}
+
+.header {
+  display: grid;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.eyebrow {
+  width: fit-content;
+  padding: var(--space-2) var(--space-3);
+  border: 1px dashed currentColor;
+  color: var(--color-postal-red);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.title {
+  color: var(--color-ink);
+  font-size: clamp(1.5rem, 8vw, 2.5rem);
+  line-height: 1.05;
+  letter-spacing: 0;
+}
+
+.body {
+  display: grid;
+  gap: var(--space-4);
+}

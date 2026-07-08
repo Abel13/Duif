@@ -16,6 +16,21 @@ export type TranslationDictionary = {
     noteLabel: string;
     noteTitle: string;
     noteBody: string;
+    demo: {
+      actionsLabel: string;
+      primaryAction: string;
+      secondaryAction: string;
+      tabsLabel: string;
+      cardsLabel: string;
+      firstCardLabel: string;
+      firstCardTitle: string;
+      firstCardDescription: string;
+      firstCardMeta: string;
+      secondCardLabel: string;
+      secondCardTitle: string;
+      secondCardDescription: string;
+      secondCardMeta: string;
+    };
   };
   navigation: {
     nest: string;
@@ -52,6 +67,19 @@ export type TranslationKey =
   | "home.noteLabel"
   | "home.noteTitle"
   | "home.noteBody"
+  | "home.demo.actionsLabel"
+  | "home.demo.primaryAction"
+  | "home.demo.secondaryAction"
+  | "home.demo.tabsLabel"
+  | "home.demo.cardsLabel"
+  | "home.demo.firstCardLabel"
+  | "home.demo.firstCardTitle"
+  | "home.demo.firstCardDescription"
+  | "home.demo.firstCardMeta"
+  | "home.demo.secondCardLabel"
+  | "home.demo.secondCardTitle"
+  | "home.demo.secondCardDescription"
+  | "home.demo.secondCardMeta"
   | "navigation.nest"
   | "navigation.letters"
   | "navigation.map"

@@ -18,6 +18,23 @@ export const enUS = {
     noteTitle: "Foundation ready to begin",
     noteBody:
       "The first real screen will be built after the visual base, reusable components, and mock data are in place.",
+    demo: {
+      actionsLabel: "Demo actions",
+      primaryAction: "Prepare delivery",
+      secondaryAction: "View notebook",
+      tabsLabel: "Demo navigation",
+      cardsLabel: "Demo collectible cards",
+      firstCardLabel: "Rare stamp",
+      firstCardTitle: "Welcome letter",
+      firstCardDescription:
+        "A paper card for validating the collectible style before the mascot screen.",
+      firstCardMeta: "Visual base",
+      secondCardLabel: "Common item",
+      secondCardTitle: "Route label",
+      secondCardDescription:
+        "A simple postal marker for testing cards, states, and longer mobile text.",
+      secondCardMeta: "Initial mock",
+    },
   },
   navigation: {
     nest: "Nest",
