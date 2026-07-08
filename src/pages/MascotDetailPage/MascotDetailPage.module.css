@@ -1,13 +1,15 @@
 .page {
   min-height: 100vh;
-  padding: clamp(0.9rem, 4vw, 3rem);
+  padding: clamp(0.75rem, 4vw, 3rem);
+  overflow-x: clip;
 }
 
 .shell {
   display: grid;
-  gap: var(--space-5);
+  gap: var(--space-4);
   width: min(100%, 1180px);
   margin-inline: auto;
+  min-width: 0;
 }
 
 .sidebar {
@@ -58,9 +60,14 @@
   border-top: var(--border-dashed-ink);
 }
 
+.heroActions > * {
+  flex: 1 1 9.5rem;
+}
+
 .mainGrid {
   display: grid;
   gap: var(--space-4);
+  min-width: 0;
 }
 
 .swatches {
@@ -85,6 +92,10 @@
 }
 
 @media (min-width: 760px) {
+  .shell {
+    gap: var(--space-5);
+  }
+
   .content,
   .mainGrid {
     gap: var(--space-5);
@@ -98,12 +109,18 @@
 
 @media (min-width: 960px) {
   .shell {
-    grid-template-columns: 16rem minmax(0, 1fr);
+    grid-template-columns: minmax(14rem, 16rem) minmax(0, 1fr);
     align-items: start;
   }
 
   .sidebar {
     position: sticky;
     top: var(--space-5);
+  }
+}
+
+@media (min-width: 1120px) {
+  .mainGrid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
 }

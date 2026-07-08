@@ -2,7 +2,8 @@
   position: relative;
   isolation: isolate;
   width: 100%;
-  padding: clamp(1rem, 5vw, 1.75rem);
+  min-width: 0;
+  padding: clamp(0.9rem, 5vw, 1.75rem);
   overflow: visible;
   border: var(--border-ink-strong);
   border-radius: 0.85rem 0.35rem 0.75rem 0.45rem;
@@ -99,9 +100,11 @@
   font-size: clamp(1.5rem, 8vw, 2.5rem);
   line-height: 1.05;
   letter-spacing: 0;
+  overflow-wrap: anywhere;
 }
 
 .body {
   display: grid;
   gap: var(--space-4);
+  min-width: 0;
 }

@@ -2,7 +2,7 @@
   display: grid;
   gap: var(--space-3);
   min-width: 0;
-  padding: var(--space-3);
+  padding: clamp(0.65rem, 3vw, var(--space-3));
   border: var(--border-dashed-ink);
   border-radius: 0.65rem 0.2rem 0.55rem 0.3rem;
   background:
@@ -19,7 +19,7 @@
 
 .map {
   position: relative;
-  min-height: 8rem;
+  min-height: clamp(6.75rem, 34vw, 8.5rem);
   overflow: hidden;
   border: 1px solid rgba(46, 42, 36, 0.22);
   border-radius: 0.55rem 0.2rem;
@@ -88,6 +88,14 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   color: var(--color-ink);
   font-weight: 900;
+  font-size: clamp(0.88rem, 3.8vw, 1rem);
+  line-height: 1.2;
+}
+
+.points span,
+.meta span {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .points span:last-child {
@@ -95,7 +103,7 @@
 }
 
 .meta {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(6.75rem, 1fr));
 }
 
 .meta span {
@@ -106,4 +114,11 @@
   background: rgba(255, 248, 232, 0.62);
   font-weight: 900;
   text-align: center;
+  line-height: 1.2;
+}
+
+@media (max-width: 360px) {
+  .meta {
+    grid-template-columns: 1fr;
+  }
 }
