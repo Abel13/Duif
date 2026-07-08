@@ -1,6 +1,7 @@
 export { currentPlayer, getMascotById, nuvemDelivery, starterMascots } from "./mockData";
 export {
   clampProgress,
+  DEFAULT_GAME_SPEED_MULTIPLIER,
   estimateTravelDurationHours,
   formatRemainingTime,
   getDeliveryStatus,
