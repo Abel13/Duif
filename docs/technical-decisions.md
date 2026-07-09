@@ -379,24 +379,29 @@ When real assets are added:
 
 ## PWA
 
-Do not add PWA setup immediately.
-
-Add PWA only after the first few screens are stable.
-
-Later use:
+Basic PWA setup is enabled with:
 
 vite-plugin-pwa
 
-PWA should eventually support:
+The current PWA setup supports:
 
 - manifest;
-- app icons;
+- placeholder app icons;
 - installability;
 - static asset caching;
-- offline shell;
-- possible push notifications later.
+- offline app shell.
+
+The current icon is a placeholder using:
+
+public/assets/icons/icon.png
+
+This placeholder icon is referenced by the manifest but is not precached in the app shell because it is larger than the default Workbox precache limit.
+
+Do not add large icon packs or generated image sets without a separate asset review.
 
 Do not implement push notifications in the first prototype.
+
+Do not implement background sync, backend API caching, or offline gameplay state yet.
 
 ## Notifications
 
