@@ -391,11 +391,17 @@ The current PWA setup supports:
 - static asset caching;
 - offline app shell.
 
-The current icon is a placeholder using:
+The current runtime icons are optimized placeholders generated from the source icon:
 
-public/assets/icons/icon.png
+- `public/assets/icons/icon-192.png`
+- `public/assets/icons/icon-512.png`
+- `public/assets/icons/apple-touch-icon.png`
 
-This placeholder icon is referenced by the manifest but is not precached in the app shell because it is larger than the default Workbox precache limit.
+The original source icon is kept outside `public/` at:
+
+assets-source/icons/icon.png
+
+This keeps the production build from shipping the multi-megabyte source file while preserving an editable source placeholder.
 
 Do not add large icon packs or generated image sets without a separate asset review.
 

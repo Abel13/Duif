@@ -15,6 +15,8 @@ Use stable public paths under `public/assets/`:
 
 Keep asset names lowercase and hyphenated, such as `nuvem.webp` or `worn-route-stamp.webp`.
 
+Keep large source files outside `public/` so they are not copied into the production build. Source-only app icons currently live under `assets-source/icons/`, while optimized runtime icons live under `public/assets/icons/`.
+
 ## Recommended Sizes
 
 - Mascot portraits: `640x640` or smaller.
@@ -22,12 +24,14 @@ Keep asset names lowercase and hyphenated, such as `nuvem.webp` or `worn-route-s
 - Item thumbnails: `256x256` or smaller.
 - Equipment icons: `192x192` or smaller.
 - Textures: tileable and as small as possible, usually `512x512` or smaller.
+- PWA icons: keep generated runtime icons at the exact manifest sizes, such as `192x192`, `512x512`, and `180x180` for Apple touch icons.
 
 ## Formats
 
 - Prefer `webp` for painted or textured art.
 - Use `png` only when transparency is important.
 - Avoid large source files in the app repository.
+- Never keep multi-megabyte source images in `public/`; Vite copies that folder directly into `dist`.
 - Do not add multi-megabyte asset packs without a separate review.
 
 ## Loading Rules
