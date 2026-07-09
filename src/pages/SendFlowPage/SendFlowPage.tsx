@@ -38,11 +38,15 @@ export function SendFlowPage() {
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const requestedMascotId = searchParams.get("mascotId");
+  const requestedFriendId = searchParams.get("friendId");
   const initialMascotId = starterMascots.some((mascot) => mascot.id === requestedMascotId)
     ? requestedMascotId ?? defaultMascotId
     : defaultMascotId;
+  const initialFriendId = mockFriends.some((friend) => friend.id === requestedFriendId)
+    ? requestedFriendId ?? mockFriends[0]?.id
+    : mockFriends[0]?.id;
   const [selection, setSelection] = useState<SendFlowSelection>({
-    friendId: mockFriends[0]?.id,
+    friendId: initialFriendId,
     mascotId: initialMascotId,
     correspondenceId: correspondenceOptions[0]?.id,
   });

@@ -226,6 +226,21 @@ export type TranslationDictionary = {
     toronto: string;
   };
   friends: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    profileTitle: string;
+    viewProfile: string;
+    sendToFriend: string;
+    quickSend: string;
+    friendshipLevel: string;
+    exchangeCount: string;
+    friendMascots: string;
+    receivedCorrespondence: string;
+    location: string;
+    backToFriends: string;
+    noCorrespondence: string;
+    mascotLabel: string;
     lia: {
       note: string;
     };
@@ -234,6 +249,24 @@ export type TranslationDictionary = {
     };
     mina: {
       note: string;
+    };
+    correspondence: {
+      liaPostcard: {
+        title: string;
+        description: string;
+      };
+      liaSticker: {
+        title: string;
+        description: string;
+      };
+      caioLetter: {
+        title: string;
+        description: string;
+      };
+      minaGift: {
+        title: string;
+        description: string;
+      };
     };
   };
   correspondence: {
@@ -258,6 +291,11 @@ export type TranslationDictionary = {
     nuvemPortrait: string;
     trovaoPortrait: string;
     pipocaPortrait: string;
+    friendAuroraPortrait: string;
+    friendBrisaPortrait: string;
+    friendTicoPortrait: string;
+    friendAtlasPortrait: string;
+    friendLumaPortrait: string;
   };
 };
 
@@ -412,9 +450,32 @@ export type TranslationKey =
   | "locations.lisbon"
   | "locations.curitiba"
   | "locations.toronto"
+  | "friends.eyebrow"
+  | "friends.title"
+  | "friends.subtitle"
+  | "friends.profileTitle"
+  | "friends.viewProfile"
+  | "friends.sendToFriend"
+  | "friends.quickSend"
+  | "friends.friendshipLevel"
+  | "friends.exchangeCount"
+  | "friends.friendMascots"
+  | "friends.receivedCorrespondence"
+  | "friends.location"
+  | "friends.backToFriends"
+  | "friends.noCorrespondence"
+  | "friends.mascotLabel"
   | "friends.lia.note"
   | "friends.caio.note"
   | "friends.mina.note"
+  | "friends.correspondence.liaPostcard.title"
+  | "friends.correspondence.liaPostcard.description"
+  | "friends.correspondence.liaSticker.title"
+  | "friends.correspondence.liaSticker.description"
+  | "friends.correspondence.caioLetter.title"
+  | "friends.correspondence.caioLetter.description"
+  | "friends.correspondence.minaGift.title"
+  | "friends.correspondence.minaGift.description"
   | "correspondence.letter.name"
   | "correspondence.letter.description"
   | "correspondence.postcard.name"
@@ -425,4 +486,9 @@ export type TranslationKey =
   | "correspondence.smallGift.description"
   | "appearance.nuvemPortrait"
   | "appearance.trovaoPortrait"
-  | "appearance.pipocaPortrait";
+  | "appearance.pipocaPortrait"
+  | "appearance.friendAuroraPortrait"
+  | "appearance.friendBrisaPortrait"
+  | "appearance.friendTicoPortrait"
+  | "appearance.friendAtlasPortrait"
+  | "appearance.friendLumaPortrait";

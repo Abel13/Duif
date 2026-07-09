@@ -230,6 +230,21 @@ export const ptBR = {
     toronto: "Toronto",
   },
   friends: {
+    eyebrow: "Caderno social",
+    title: "Amigos",
+    subtitle: "Veja companheiros de correspondência, mascotes visitantes e pequenos registros recebidos.",
+    profileTitle: "Perfil de amigo",
+    viewProfile: "Ver perfil",
+    sendToFriend: "Enviar para amigo",
+    quickSend: "Envio rápido",
+    friendshipLevel: "Nível de amizade",
+    exchangeCount: "Trocas",
+    friendMascots: "Mascotes do amigo",
+    receivedCorrespondence: "Correspondências recebidas",
+    location: "Localização",
+    backToFriends: "Voltar aos amigos",
+    noCorrespondence: "Ainda não há correspondências recebidas deste amigo.",
+    mascotLabel: "Mascote visitante",
     lia: {
       note: "Gosta de cartões com marcas de rota e selos antigos.",
     },
@@ -238,6 +253,24 @@ export const ptBR = {
     },
     mina: {
       note: "Coleciona lembranças de viagens longas.",
+    },
+    correspondence: {
+      liaPostcard: {
+        title: "Cartão das colinas de Lisboa",
+        description: "Um cartão-postal com riscos azuis, carimbos inclinados e cheiro de maresia.",
+      },
+      liaSticker: {
+        title: "Adesivo de bonde amarelo",
+        description: "Uma pequena lembrança para colar perto das rotas mais ensolaradas.",
+      },
+      caioLetter: {
+        title: "Bilhete dobrado do sul",
+        description: "Uma carta curta, dobrada com cuidado e marcada por chuva fina.",
+      },
+      minaGift: {
+        title: "Pacotinho de bordo",
+        description: "Um embrulho leve com uma etiqueta de viagem atravessando o oceano.",
+      },
     },
   },
   correspondence: {
@@ -262,5 +295,10 @@ export const ptBR = {
     nuvemPortrait: "Retrato temporário de Nuvem",
     trovaoPortrait: "Retrato temporário de Trovão",
     pipocaPortrait: "Retrato temporário de Pipoca",
+    friendAuroraPortrait: "Retrato temporário de Aurora",
+    friendBrisaPortrait: "Retrato temporário de Brisa",
+    friendTicoPortrait: "Retrato temporário de Tico",
+    friendAtlasPortrait: "Retrato temporário de Atlas",
+    friendLumaPortrait: "Retrato temporário de Luma",
   },
 } satisfies TranslationDictionary;

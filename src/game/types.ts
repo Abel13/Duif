@@ -91,6 +91,27 @@ export type FriendProfile = {
   name: string;
   location: Coordinates;
   favoriteNoteKey?: TranslationKey;
+  friendshipLevel: number;
+  exchangeCount: number;
+  mascotIds: string[];
+  receivedCorrespondence: ReceivedCorrespondencePreview[];
+};
+
+export type FriendMascotPreview = {
+  id: string;
+  name: string;
+  speciesKey: TranslationKey;
+  level: number;
+  appearance: MascotAppearance;
+};
+
+export type ReceivedCorrespondencePreview = {
+  id: string;
+  fromName: string;
+  type: CorrespondenceType;
+  titleKey: TranslationKey;
+  descriptionKey: TranslationKey;
+  receivedAt: string;
 };
 
 export type CorrespondenceType = "letter" | "postcard" | "sticker" | "smallGift";

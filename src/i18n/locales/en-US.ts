@@ -230,6 +230,21 @@ export const enUS = {
     toronto: "Toronto",
   },
   friends: {
+    eyebrow: "Social notebook",
+    title: "Friends",
+    subtitle: "See correspondence companions, visiting mascots, and small received notes.",
+    profileTitle: "Friend profile",
+    viewProfile: "View profile",
+    sendToFriend: "Send to friend",
+    quickSend: "Quick send",
+    friendshipLevel: "Friendship level",
+    exchangeCount: "Exchanges",
+    friendMascots: "Friend mascots",
+    receivedCorrespondence: "Received correspondence",
+    location: "Location",
+    backToFriends: "Back to friends",
+    noCorrespondence: "There is no received correspondence from this friend yet.",
+    mascotLabel: "Visiting mascot",
     lia: {
       note: "Likes cards with route marks and old stamps.",
     },
@@ -238,6 +253,24 @@ export const enUS = {
     },
     mina: {
       note: "Collects keepsakes from long journeys.",
+    },
+    correspondence: {
+      liaPostcard: {
+        title: "Card from Lisbon hills",
+        description: "A postcard with blue marks, tilted stamps, and a sea-breeze scent.",
+      },
+      liaSticker: {
+        title: "Yellow tram sticker",
+        description: "A small keepsake to place near the sunniest routes.",
+      },
+      caioLetter: {
+        title: "Folded note from the south",
+        description: "A short letter, carefully folded and marked by fine rain.",
+      },
+      minaGift: {
+        title: "Boarding parcel",
+        description: "A light parcel with a travel label crossing the ocean.",
+      },
     },
   },
   correspondence: {
@@ -262,5 +295,10 @@ export const enUS = {
     nuvemPortrait: "Temporary portrait of Nuvem",
     trovaoPortrait: "Temporary portrait of Trovão",
     pipocaPortrait: "Temporary portrait of Pipoca",
+    friendAuroraPortrait: "Temporary portrait of Aurora",
+    friendBrisaPortrait: "Temporary portrait of Brisa",
+    friendTicoPortrait: "Temporary portrait of Tico",
+    friendAtlasPortrait: "Temporary portrait of Atlas",
+    friendLumaPortrait: "Temporary portrait of Luma",
   },
 } satisfies TranslationDictionary;

@@ -1,0 +1,129 @@
+.page {
+  min-height: 100vh;
+  padding: clamp(0.75rem, 4vw, 3rem);
+  overflow-x: clip;
+}
+
+.shell {
+  display: grid;
+  gap: var(--space-4);
+  width: min(100%, 1120px);
+  min-width: 0;
+  margin-inline: auto;
+}
+
+.subtitle {
+  max-width: 48rem;
+  margin: 0;
+  color: var(--color-ink-soft);
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.grid {
+  display: grid;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.friendCard {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+  padding: var(--space-3);
+  border: var(--border-dashed-ink);
+  border-radius: 0.45rem 0.18rem;
+  background:
+    linear-gradient(135deg, rgba(164, 74, 63, 0.08), transparent 34%),
+    rgba(255, 248, 232, 0.68);
+  box-shadow: var(--shadow-paper);
+}
+
+.postmark {
+  display: grid;
+  width: 4.25rem;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 2px dashed rgba(46, 42, 36, 0.42);
+  border-radius: 999px;
+  color: var(--color-postal-red);
+  background: rgba(255, 248, 232, 0.72);
+  font-size: 1.55rem;
+  font-weight: 900;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2);
+  min-width: 0;
+  margin: 0;
+}
+
+.stats div {
+  min-width: 0;
+  padding: var(--space-2);
+  border: 1px dashed rgba(46, 42, 36, 0.24);
+  background: rgba(247, 241, 227, 0.62);
+}
+
+.stats dt {
+  color: var(--color-ink-soft);
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.stats dd {
+  margin: var(--space-1) 0 0;
+  color: var(--color-ink);
+  font-weight: 900;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.primaryLink,
+.secondaryLink {
+  display: inline-grid;
+  min-height: 2.75rem;
+  flex: 1 1 9rem;
+  place-items: center;
+  padding: 0.75rem 1rem;
+  border-radius: 0.22rem;
+  font-size: 0.82rem;
+  font-weight: 900;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.primaryLink {
+  border: 2px dashed rgba(164, 74, 63, 0.64);
+  color: var(--color-paper);
+  background: var(--color-postal-red);
+  box-shadow: 0 0.28rem 0 rgba(46, 42, 36, 0.14);
+}
+
+.secondaryLink {
+  border: 2px dashed var(--color-postal-brown);
+  color: var(--color-postal-brown);
+  background: var(--color-paper-light);
+}
+
+.primaryLink:focus-visible,
+.secondaryLink:focus-visible {
+  outline: 3px solid rgba(164, 74, 63, 0.52);
+  outline-offset: 3px;
+}
+
+@media (min-width: 720px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

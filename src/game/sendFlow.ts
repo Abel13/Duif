@@ -1,49 +1,16 @@
 import type {
   CorrespondenceOption,
   Delivery,
-  FriendProfile,
   Mascot,
   SendFlowSelection,
 } from "./types";
 import { currentPlayer, starterMascots } from "./mockData";
+import { getFriendById } from "./friends";
 import { estimateTravelDurationHours, haversineDistanceKm } from "./travel";
 
 const RETURN_PAUSE_MINUTES = 30;
 const HOUR_MS = 60 * 60 * 1000;
 const MINUTE_MS = 60 * 1000;
-
-export const mockFriends: FriendProfile[] = [
-  {
-    id: "friend-lisbon",
-    name: "Lia",
-    location: {
-      latitude: 38.7223,
-      longitude: -9.1393,
-      labelKey: "locations.lisbon",
-    },
-    favoriteNoteKey: "friends.lia.note",
-  },
-  {
-    id: "friend-curitiba",
-    name: "Caio",
-    location: {
-      latitude: -25.4284,
-      longitude: -49.2733,
-      labelKey: "locations.curitiba",
-    },
-    favoriteNoteKey: "friends.caio.note",
-  },
-  {
-    id: "friend-toronto",
-    name: "Mina",
-    location: {
-      latitude: 43.6532,
-      longitude: -79.3832,
-      labelKey: "locations.toronto",
-    },
-    favoriteNoteKey: "friends.mina.note",
-  },
-];
 
 export const correspondenceOptions: CorrespondenceOption[] = [
   {
@@ -71,10 +38,6 @@ export const correspondenceOptions: CorrespondenceOption[] = [
     descriptionKey: "correspondence.smallGift.description",
   },
 ];
-
-export function getFriendById(friendId: string) {
-  return mockFriends.find((friend) => friend.id === friendId);
-}
 
 export function getCorrespondenceById(correspondenceId: string) {
   return correspondenceOptions.find((option) => option.id === correspondenceId);

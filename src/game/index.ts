@@ -1,3 +1,10 @@
+export {
+  friendMascots,
+  getFriendById,
+  getFriendCorrespondence,
+  getFriendMascots,
+  mockFriends,
+} from "./friends";
 export { currentPlayer, getDeliveryById, getMascotById, nuvemDelivery, starterMascots } from "./mockData";
 export { createMockRewardFromDelivery, initialMockInventory } from "./rewards";
 export {
@@ -5,8 +12,6 @@ export {
   createMockDeliveryFromSelection,
   estimateMascotSpeedKmh,
   getCorrespondenceById,
-  getFriendById,
-  mockFriends,
 } from "./sendFlow";
 export {
   clampProgress,
@@ -26,6 +31,7 @@ export type {
   EquipmentItem,
   EquipmentRarity,
   EquipmentType,
+  FriendMascotPreview,
   FriendProfile,
   InventoryItem,
   Mascot,
@@ -36,6 +42,7 @@ export type {
   DeliveryReward,
   RewardItem,
   RewardRarity,
+  ReceivedCorrespondencePreview,
   SendFlowSelection,
   Skill,
 } from "./types";
