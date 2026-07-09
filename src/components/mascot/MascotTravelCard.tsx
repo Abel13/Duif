@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 import {
   formatRemainingTime,
   getDeliveryStatus,
@@ -70,7 +72,13 @@ export function MascotTravelCard({ delivery }: MascotTravelCardProps) {
           <dd>{remainingTime}</dd>
         </div>
       </dl>
-      <StampButton>{t("mascot.viewTrip")}</StampButton>
+      {calculatedStatus === "returned" ? (
+        <Link className={styles.rewardLink} to={`/rewards/${delivery.id}`}>
+          {t("rewards.collectButton")}
+        </Link>
+      ) : (
+        <StampButton>{t("mascot.viewTrip")}</StampButton>
+      )}
     </SketchPanel>
   );
 }

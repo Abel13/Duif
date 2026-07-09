@@ -24,6 +24,8 @@ export type EquipmentType = "bag" | "scarf" | "cap" | "badge" | "goggles" | "cha
 
 export type EquipmentRarity = "common" | "uncommon" | "rare";
 
+export type RewardRarity = "common" | "uncommon" | "rare";
+
 export type EquipmentItem = {
   id: string;
   nameKey: TranslationKey;
@@ -64,6 +66,24 @@ export type Delivery = {
   returnArrivalAt?: string;
   status: DeliveryStatus;
   rewardSeed: string;
+};
+
+export type RewardItem = {
+  id: string;
+  nameKey: TranslationKey;
+  descriptionKey: TranslationKey;
+  rarity: RewardRarity;
+};
+
+export type DeliveryReward = {
+  id: string;
+  deliveryId: string;
+  xpGained: number;
+  item: RewardItem;
+};
+
+export type InventoryItem = RewardItem & {
+  collectedAt: string;
 };
 
 export type FriendProfile = {

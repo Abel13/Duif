@@ -192,6 +192,37 @@ export const ptBR = {
       completed: "Concluída",
     },
   },
+  rewards: {
+    eyebrow: "Retorno postal",
+    title: "Coleta de recompensa",
+    readyTitle: "Envelope de retorno",
+    readyDescription: "O mascote voltou com marcas da rota e uma pequena descoberta.",
+    travelingTitle: "Ainda em viagem",
+    travelingDescription: "Esta entrega ainda não retornou ao ninho. A recompensa aparece quando o mascote voltar.",
+    completedTitle: "Recompensa coletada",
+    completedDescription: "O envelope foi arquivado no caderno e a descoberta entrou no inventário local.",
+    collectButton: "Coletar",
+    backToMascot: "Voltar ao mascote",
+    xpGained: "XP ganho",
+    itemFound: "Item encontrado",
+    inventory: "Inventário local",
+    collected: "Coletado",
+    rarity: "Raridade",
+    items: {
+      wornRouteStamp: {
+        name: "Selo de rota gasto",
+        description: "Um selo marcado pelo caminho, perfeito para páginas de viagem.",
+      },
+      blueAirmailLabel: {
+        name: "Etiqueta azul de correio aéreo",
+        description: "Uma etiqueta dobrada com tinta azul e cheiro de papel antigo.",
+      },
+      goldenCompassPin: {
+        name: "Broche de bússola dourada",
+        description: "Um achado raro que aponta para histórias ainda não contadas.",
+      },
+    },
+  },
   locations: {
     saoPaulo: "São Paulo",
     lisbon: "Lisboa",

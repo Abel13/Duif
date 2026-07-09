@@ -1,4 +1,5 @@
-export { currentPlayer, getMascotById, nuvemDelivery, starterMascots } from "./mockData";
+export { currentPlayer, getDeliveryById, getMascotById, nuvemDelivery, starterMascots } from "./mockData";
+export { createMockRewardFromDelivery, initialMockInventory } from "./rewards";
 export {
   correspondenceOptions,
   createMockDeliveryFromSelection,
@@ -26,11 +27,15 @@ export type {
   EquipmentRarity,
   EquipmentType,
   FriendProfile,
+  InventoryItem,
   Mascot,
   MascotAppearance,
   MascotAttributeSet,
   MascotTrait,
   Player,
+  DeliveryReward,
+  RewardItem,
+  RewardRarity,
   SendFlowSelection,
   Skill,
 } from "./types";

@@ -192,6 +192,37 @@ export const enUS = {
       completed: "Completed",
     },
   },
+  rewards: {
+    eyebrow: "Postal return",
+    title: "Reward collection",
+    readyTitle: "Return envelope",
+    readyDescription: "The mascot came back with route marks and a small discovery.",
+    travelingTitle: "Still traveling",
+    travelingDescription: "This delivery has not returned to the nest yet. The reward appears when the mascot comes back.",
+    completedTitle: "Reward collected",
+    completedDescription: "The envelope was archived in the notebook and the discovery entered the local inventory.",
+    collectButton: "Collect",
+    backToMascot: "Back to mascot",
+    xpGained: "XP gained",
+    itemFound: "Item found",
+    inventory: "Local inventory",
+    collected: "Collected",
+    rarity: "Rarity",
+    items: {
+      wornRouteStamp: {
+        name: "Worn route stamp",
+        description: "A stamp marked by the road, perfect for travel pages.",
+      },
+      blueAirmailLabel: {
+        name: "Blue airmail label",
+        description: "A folded label with blue ink and the scent of old paper.",
+      },
+      goldenCompassPin: {
+        name: "Golden compass pin",
+        description: "A rare find pointing toward stories not yet told.",
+      },
+    },
+  },
   locations: {
     saoPaulo: "São Paulo",
     lisbon: "Lisbon",

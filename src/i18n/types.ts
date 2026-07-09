@@ -188,6 +188,37 @@ export type TranslationDictionary = {
       completed: string;
     };
   };
+  rewards: {
+    eyebrow: string;
+    title: string;
+    readyTitle: string;
+    readyDescription: string;
+    travelingTitle: string;
+    travelingDescription: string;
+    completedTitle: string;
+    completedDescription: string;
+    collectButton: string;
+    backToMascot: string;
+    xpGained: string;
+    itemFound: string;
+    inventory: string;
+    collected: string;
+    rarity: string;
+    items: {
+      wornRouteStamp: {
+        name: string;
+        description: string;
+      };
+      blueAirmailLabel: {
+        name: string;
+        description: string;
+      };
+      goldenCompassPin: {
+        name: string;
+        description: string;
+      };
+    };
+  };
   locations: {
     saoPaulo: string;
     lisbon: string;
@@ -356,6 +387,27 @@ export type TranslationKey =
   | "delivery.status.returning"
   | "delivery.status.returned"
   | "delivery.status.completed"
+  | "rewards.eyebrow"
+  | "rewards.title"
+  | "rewards.readyTitle"
+  | "rewards.readyDescription"
+  | "rewards.travelingTitle"
+  | "rewards.travelingDescription"
+  | "rewards.completedTitle"
+  | "rewards.completedDescription"
+  | "rewards.collectButton"
+  | "rewards.backToMascot"
+  | "rewards.xpGained"
+  | "rewards.itemFound"
+  | "rewards.inventory"
+  | "rewards.collected"
+  | "rewards.rarity"
+  | "rewards.items.wornRouteStamp.name"
+  | "rewards.items.wornRouteStamp.description"
+  | "rewards.items.blueAirmailLabel.name"
+  | "rewards.items.blueAirmailLabel.description"
+  | "rewards.items.goldenCompassPin.name"
+  | "rewards.items.goldenCompassPin.description"
   | "locations.saoPaulo"
   | "locations.lisbon"
   | "locations.curitiba"

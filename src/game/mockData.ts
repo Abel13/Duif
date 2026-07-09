@@ -220,3 +220,9 @@ export const starterMascots: Mascot[] = [
 export function getMascotById(mascotId: string) {
   return starterMascots.find((mascot) => mascot.id === mascotId);
 }
+
+export function getDeliveryById(deliveryId: string) {
+  return starterMascots
+    .map((mascot) => mascot.currentDelivery)
+    .find((delivery) => delivery?.id === deliveryId);
+}

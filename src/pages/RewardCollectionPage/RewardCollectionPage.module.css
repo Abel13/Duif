@@ -1,0 +1,137 @@
+.page {
+  min-height: 100vh;
+  padding: var(--space-4) var(--space-3) var(--space-6);
+  background:
+    radial-gradient(circle at 20% 8%, rgba(196, 154, 74, 0.18), transparent 6rem),
+    linear-gradient(135deg, rgba(111, 145, 168, 0.12), transparent 36%),
+    var(--color-paper);
+}
+
+.shell {
+  display: grid;
+  gap: var(--space-4);
+  width: min(100%, 68rem);
+  margin: 0 auto;
+}
+
+.subtitle {
+  max-width: 48rem;
+  margin: 0;
+  color: var(--color-ink-soft);
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.grid {
+  display: grid;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.envelope {
+  position: relative;
+  display: grid;
+  gap: var(--space-4);
+  min-width: 0;
+  padding: var(--space-4);
+  overflow: hidden;
+  border: var(--border-ink);
+  border-radius: 0.35rem;
+  background:
+    linear-gradient(146deg, transparent 48%, rgba(139, 94, 60, 0.14) 49%, transparent 51%),
+    linear-gradient(214deg, transparent 48%, rgba(139, 94, 60, 0.12) 49%, transparent 51%),
+    rgba(255, 248, 232, 0.82);
+  box-shadow: var(--shadow-paper);
+}
+
+.envelopeFlap {
+  position: absolute;
+  top: -3.8rem;
+  left: 12%;
+  width: 76%;
+  height: 7rem;
+  border: 1px solid rgba(46, 42, 36, 0.22);
+  background: rgba(232, 221, 199, 0.78);
+  transform: rotate(45deg);
+}
+
+.summary,
+.rewardDetails {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+  margin: 0;
+}
+
+.summary div,
+.rewardDetails div {
+  min-width: 0;
+  padding-bottom: var(--space-2);
+  border-bottom: 1px dashed rgba(46, 42, 36, 0.28);
+}
+
+.summary dt,
+.rewardDetails dt {
+  color: var(--color-ink-soft);
+  font-size: 0.74rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.summary dd,
+.rewardDetails dd {
+  margin: var(--space-1) 0 0;
+  color: var(--color-ink);
+  font-weight: 900;
+  overflow-wrap: anywhere;
+}
+
+.rewardStack,
+.routeWrap {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.returnLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.9rem;
+  width: fit-content;
+  max-width: 100%;
+  padding: 0.65rem 1rem;
+  border: 2px dashed rgba(46, 42, 36, 0.55);
+  border-radius: 0.25rem;
+  color: var(--color-ink);
+  background: var(--color-postal-label);
+  font-size: 0.86rem;
+  font-weight: 900;
+  text-decoration: none;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.returnLink:focus-visible {
+  outline: 3px solid rgba(164, 74, 63, 0.52);
+  outline-offset: 3px;
+}
+
+@media (min-width: 760px) {
+  .page {
+    padding: var(--space-5);
+  }
+
+  .grid {
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.85fr);
+    align-items: start;
+  }
+
+  .summary,
+  .rewardDetails {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
