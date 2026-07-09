@@ -47,7 +47,10 @@ export function RewardCollectionPage() {
       ...currentInventory,
       {
         ...reward.item,
+        category: "keepsakes",
         collectedAt: new Date().toISOString(),
+        equipped: false,
+        sourceKey: "inventory.sources.routeReward",
       },
     ]);
   }

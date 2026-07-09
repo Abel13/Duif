@@ -9,11 +9,17 @@ export function MascotBottomNav() {
   const location = useLocation();
   const navigate = useNavigate();
   const isFriendsActive = location.pathname.startsWith("/friends");
+  const isInventoryActive = location.pathname.startsWith("/inventory");
+  const isNestActive = location.pathname.startsWith("/mascots");
 
   return (
     <nav className={styles.nav} aria-label={t("mascot.bottomNav")}>
-      <PaperTab active={!isFriendsActive}>{t("navigation.nest")}</PaperTab>
-      <PaperTab>{t("navigation.letters")}</PaperTab>
+      <PaperTab active={isNestActive} onClick={() => navigate("/mascots/mascot-nuvem")}>
+        {t("navigation.nest")}
+      </PaperTab>
+      <PaperTab active={isInventoryActive} onClick={() => navigate("/inventory")}>
+        {t("navigation.letters")}
+      </PaperTab>
       <PaperTab>{t("navigation.map")}</PaperTab>
       <PaperTab active={isFriendsActive} onClick={() => navigate("/friends")}>
         {t("navigation.friends")}

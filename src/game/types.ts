@@ -26,6 +26,8 @@ export type EquipmentRarity = "common" | "uncommon" | "rare";
 
 export type RewardRarity = "common" | "uncommon" | "rare";
 
+export type InventoryCategory = "all" | "equipment" | "stamps" | "keepsakes" | "routeMarks";
+
 export type EquipmentItem = {
   id: string;
   nameKey: TranslationKey;
@@ -83,7 +85,10 @@ export type DeliveryReward = {
 };
 
 export type InventoryItem = RewardItem & {
+  category: Exclude<InventoryCategory, "all">;
   collectedAt: string;
+  equipped: boolean;
+  sourceKey?: TranslationKey;
 };
 
 export type FriendProfile = {

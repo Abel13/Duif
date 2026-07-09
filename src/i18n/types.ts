@@ -219,6 +219,31 @@ export type TranslationDictionary = {
       };
     };
   };
+  inventory: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    categoriesLabel: string;
+    collectedTotal: string;
+    equippedTotal: string;
+    raritySummary: string;
+    emptySlotTitle: string;
+    emptySlotDescription: string;
+    source: string;
+    category: string;
+    categories: {
+      all: string;
+      equipment: string;
+      stamps: string;
+      keepsakes: string;
+      routeMarks: string;
+    };
+    sources: {
+      starterKit: string;
+      routeReward: string;
+      longRouteFind: string;
+    };
+  };
   locations: {
     saoPaulo: string;
     lisbon: string;
@@ -446,6 +471,25 @@ export type TranslationKey =
   | "rewards.items.blueAirmailLabel.description"
   | "rewards.items.goldenCompassPin.name"
   | "rewards.items.goldenCompassPin.description"
+  | "inventory.eyebrow"
+  | "inventory.title"
+  | "inventory.subtitle"
+  | "inventory.categoriesLabel"
+  | "inventory.collectedTotal"
+  | "inventory.equippedTotal"
+  | "inventory.raritySummary"
+  | "inventory.emptySlotTitle"
+  | "inventory.emptySlotDescription"
+  | "inventory.source"
+  | "inventory.category"
+  | "inventory.categories.all"
+  | "inventory.categories.equipment"
+  | "inventory.categories.stamps"
+  | "inventory.categories.keepsakes"
+  | "inventory.categories.routeMarks"
+  | "inventory.sources.starterKit"
+  | "inventory.sources.routeReward"
+  | "inventory.sources.longRouteFind"
   | "locations.saoPaulo"
   | "locations.lisbon"
   | "locations.curitiba"

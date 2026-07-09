@@ -5,6 +5,12 @@ export {
   getFriendMascots,
   mockFriends,
 } from "./friends";
+export {
+  getInventoryItemsByCategory,
+  getInventorySummary,
+  inventoryCategories,
+  mockInventoryItems,
+} from "./inventory";
 export { currentPlayer, getDeliveryById, getMascotById, nuvemDelivery, starterMascots } from "./mockData";
 export { createMockRewardFromDelivery, initialMockInventory } from "./rewards";
 export {
@@ -33,6 +39,7 @@ export type {
   EquipmentType,
   FriendMascotPreview,
   FriendProfile,
+  InventoryCategory,
   InventoryItem,
   Mascot,
   MascotAppearance,
