@@ -77,6 +77,27 @@ export const enUS = {
     chooseMascot: "Choose mascot",
     bottomNav: "Main navigation",
   },
+  send: {
+    startAction: "Send",
+    eyebrow: "Postal dispatch",
+    title: "Prepare delivery",
+    subtitle: "Choose a friend, a mascot, and a keepsake to start a new route.",
+    chooseFriend: "Choose a friend",
+    chooseMascot: "Choose a mascot",
+    chooseCorrespondence: "Choose correspondence",
+    summary: "Send summary",
+    confirmationTitle: "Delivery started",
+    confirmationDescription: "The mascot left the nest and is carrying your correspondence.",
+    sendButton: "Confirm send",
+    sendAnother: "Send another",
+    backToMascot: "View mascot",
+    estimatedDuration: "Estimated duration",
+    selectedFriend: "Selected friend",
+    selectedMascot: "Selected mascot",
+    selectedCorrespondence: "Selected correspondence",
+    readyHint: "Everything is ready to dispatch this delivery.",
+    incompleteHint: "Complete the three choices to confirm the send.",
+  },
   species: {
     carrierPigeon: "Carrier pigeon",
     messengerFalcon: "Messenger falcon",
@@ -174,6 +195,37 @@ export const enUS = {
   locations: {
     saoPaulo: "São Paulo",
     lisbon: "Lisbon",
+    curitiba: "Curitiba",
+    toronto: "Toronto",
+  },
+  friends: {
+    lia: {
+      note: "Likes cards with route marks and old stamps.",
+    },
+    caio: {
+      note: "Always replies with short, neatly folded notes.",
+    },
+    mina: {
+      note: "Collects keepsakes from long journeys.",
+    },
+  },
+  correspondence: {
+    letter: {
+      name: "Letter",
+      description: "A simple message, good for keeping friendship close.",
+    },
+    postcard: {
+      name: "Postcard",
+      description: "A small paper scene to mark the route.",
+    },
+    sticker: {
+      name: "Sticker",
+      description: "A light keepsake for decorating someone's notebook.",
+    },
+    smallGift: {
+      name: "Small gift",
+      description: "A delicate parcel for a more special delivery.",
+    },
   },
   appearance: {
     nuvemPortrait: "Temporary portrait of Nuvem",

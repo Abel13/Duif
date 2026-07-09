@@ -1,4 +1,4 @@
-import { Navigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 
 import { MascotBottomNav } from "../../components/mascot/MascotBottomNav";
 import { MascotEquipmentGrid } from "../../components/mascot/MascotEquipmentGrid";
@@ -17,6 +17,7 @@ const defaultMascotId = "mascot-nuvem";
 
 export function MascotDetailPage() {
   const { mascotId } = useParams();
+  const navigate = useNavigate();
   const mascot = getMascotById(mascotId ?? defaultMascotId);
   const { t } = useTranslation();
 
@@ -44,7 +45,9 @@ export function MascotDetailPage() {
               </div>
               <MascotPortrait mascot={mascot} />
               <div className={styles.heroActions}>
-                <StampButton>{t("mascot.train")}</StampButton>
+                <StampButton onClick={() => navigate(`/send?mascotId=${mascot.id}`)}>
+                  {t("send.startAction")}
+                </StampButton>
                 <StampButton variant="secondary">{t("mascot.viewTrip")}</StampButton>
               </div>
             </SketchPanel>

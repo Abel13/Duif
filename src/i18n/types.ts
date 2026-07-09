@@ -73,6 +73,27 @@ export type TranslationDictionary = {
     chooseMascot: string;
     bottomNav: string;
   };
+  send: {
+    startAction: string;
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    chooseFriend: string;
+    chooseMascot: string;
+    chooseCorrespondence: string;
+    summary: string;
+    confirmationTitle: string;
+    confirmationDescription: string;
+    sendButton: string;
+    sendAnother: string;
+    backToMascot: string;
+    estimatedDuration: string;
+    selectedFriend: string;
+    selectedMascot: string;
+    selectedCorrespondence: string;
+    readyHint: string;
+    incompleteHint: string;
+  };
   species: {
     carrierPigeon: string;
     messengerFalcon: string;
@@ -170,6 +191,37 @@ export type TranslationDictionary = {
   locations: {
     saoPaulo: string;
     lisbon: string;
+    curitiba: string;
+    toronto: string;
+  };
+  friends: {
+    lia: {
+      note: string;
+    };
+    caio: {
+      note: string;
+    };
+    mina: {
+      note: string;
+    };
+  };
+  correspondence: {
+    letter: {
+      name: string;
+      description: string;
+    };
+    postcard: {
+      name: string;
+      description: string;
+    };
+    sticker: {
+      name: string;
+      description: string;
+    };
+    smallGift: {
+      name: string;
+      description: string;
+    };
   };
   appearance: {
     nuvemPortrait: string;
@@ -237,6 +289,25 @@ export type TranslationKey =
   | "mascot.selectedMascot"
   | "mascot.chooseMascot"
   | "mascot.bottomNav"
+  | "send.startAction"
+  | "send.eyebrow"
+  | "send.title"
+  | "send.subtitle"
+  | "send.chooseFriend"
+  | "send.chooseMascot"
+  | "send.chooseCorrespondence"
+  | "send.summary"
+  | "send.confirmationTitle"
+  | "send.confirmationDescription"
+  | "send.sendButton"
+  | "send.sendAnother"
+  | "send.backToMascot"
+  | "send.estimatedDuration"
+  | "send.selectedFriend"
+  | "send.selectedMascot"
+  | "send.selectedCorrespondence"
+  | "send.readyHint"
+  | "send.incompleteHint"
   | "species.carrierPigeon"
   | "species.messengerFalcon"
   | "species.mailDuck"
@@ -287,6 +358,19 @@ export type TranslationKey =
   | "delivery.status.completed"
   | "locations.saoPaulo"
   | "locations.lisbon"
+  | "locations.curitiba"
+  | "locations.toronto"
+  | "friends.lia.note"
+  | "friends.caio.note"
+  | "friends.mina.note"
+  | "correspondence.letter.name"
+  | "correspondence.letter.description"
+  | "correspondence.postcard.name"
+  | "correspondence.postcard.description"
+  | "correspondence.sticker.name"
+  | "correspondence.sticker.description"
+  | "correspondence.smallGift.name"
+  | "correspondence.smallGift.description"
   | "appearance.nuvemPortrait"
   | "appearance.trovaoPortrait"
   | "appearance.pipocaPortrait";

@@ -77,6 +77,27 @@ export const ptBR = {
     chooseMascot: "Escolher mascote",
     bottomNav: "Navegação principal",
   },
+  send: {
+    startAction: "Enviar",
+    eyebrow: "Envio postal",
+    title: "Preparar entrega",
+    subtitle: "Escolha um amigo, um mascote e uma lembrança para iniciar uma nova rota.",
+    chooseFriend: "Escolha um amigo",
+    chooseMascot: "Escolha um mascote",
+    chooseCorrespondence: "Escolha o envio",
+    summary: "Resumo do envio",
+    confirmationTitle: "Entrega iniciada",
+    confirmationDescription: "O mascote saiu do ninho e já está levando seu envio.",
+    sendButton: "Confirmar envio",
+    sendAnother: "Enviar outro",
+    backToMascot: "Ver mascote",
+    estimatedDuration: "Duração estimada",
+    selectedFriend: "Amigo selecionado",
+    selectedMascot: "Mascote selecionado",
+    selectedCorrespondence: "Envio selecionado",
+    readyHint: "Tudo pronto para despachar esta entrega.",
+    incompleteHint: "Complete as três escolhas para confirmar o envio.",
+  },
   species: {
     carrierPigeon: "Pombo-correio",
     messengerFalcon: "Falcão-mensageiro",
@@ -174,6 +195,37 @@ export const ptBR = {
   locations: {
     saoPaulo: "São Paulo",
     lisbon: "Lisboa",
+    curitiba: "Curitiba",
+    toronto: "Toronto",
+  },
+  friends: {
+    lia: {
+      note: "Gosta de cartões com marcas de rota e selos antigos.",
+    },
+    caio: {
+      note: "Sempre responde com bilhetes curtos e bem dobrados.",
+    },
+    mina: {
+      note: "Coleciona lembranças de viagens longas.",
+    },
+  },
+  correspondence: {
+    letter: {
+      name: "Carta",
+      description: "Uma mensagem simples, boa para manter a amizade por perto.",
+    },
+    postcard: {
+      name: "Cartão-postal",
+      description: "Uma pequena cena de papel para marcar a rota.",
+    },
+    sticker: {
+      name: "Adesivo",
+      description: "Um mimo leve para decorar o caderno de alguém.",
+    },
+    smallGift: {
+      name: "Pequeno presente",
+      description: "Um embrulho delicado para uma entrega mais especial.",
+    },
   },
   appearance: {
     nuvemPortrait: "Retrato temporário de Nuvem",

@@ -66,6 +66,28 @@ export type Delivery = {
   rewardSeed: string;
 };
 
+export type FriendProfile = {
+  id: string;
+  name: string;
+  location: Coordinates;
+  favoriteNoteKey?: TranslationKey;
+};
+
+export type CorrespondenceType = "letter" | "postcard" | "sticker" | "smallGift";
+
+export type CorrespondenceOption = {
+  id: string;
+  type: CorrespondenceType;
+  nameKey: TranslationKey;
+  descriptionKey: TranslationKey;
+};
+
+export type SendFlowSelection = {
+  friendId?: string;
+  mascotId?: string;
+  correspondenceId?: string;
+};
+
 export type MascotAppearance = {
   primaryColor: string;
   accentColor: string;
