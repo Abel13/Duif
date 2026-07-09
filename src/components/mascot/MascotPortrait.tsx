@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 
 import type { Mascot } from "../../game";
 import { useTranslation } from "../../i18n";
+import { AssetImage } from "../ui";
 import styles from "./MascotPortrait.module.css";
 
 type MascotPortraitProps = {
@@ -19,11 +20,20 @@ export function MascotPortrait({ mascot }: MascotPortraitProps) {
     <section className={styles.portrait} style={portraitStyle} aria-label={t("mascot.visualPreview")}>
       <span className={styles.postmark} aria-hidden="true" />
       <div className={styles.sheet}>
-        <div className={styles.figure}>
-          <span className={styles.wing} aria-hidden="true" />
-          <span className={styles.mark}>{mascot.name.slice(0, 1)}</span>
-          <span className={styles.badge} aria-hidden="true" />
-        </div>
+        <AssetImage
+          alt={t(mascot.appearance.portraitPlaceholderKey)}
+          className={styles.assetFrame}
+          height={320}
+          loading="eager"
+          src={mascot.appearance.portraitAssetPath}
+          width={320}
+        >
+          <div className={styles.figure}>
+            <span className={styles.wing} aria-hidden="true" />
+            <span className={styles.mark}>{mascot.name.slice(0, 1)}</span>
+            <span className={styles.badge} aria-hidden="true" />
+          </div>
+        </AssetImage>
         <p className={styles.caption}>{t(mascot.appearance.portraitPlaceholderKey)}</p>
       </div>
     </section>

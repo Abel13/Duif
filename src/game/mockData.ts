@@ -1,3 +1,4 @@
+import { assetPaths } from "./assets";
 import type { Delivery, Mascot, Player } from "./types";
 
 const playerHomeBase = {
@@ -62,6 +63,7 @@ export const starterMascots: Mascot[] = [
         rarity: "common",
         equipped: true,
         descriptionKey: "equipment.canvasPostalBag.description",
+        iconAssetPath: assetPaths.equipment.icon("canvas-postal-bag.webp"),
       },
       {
         id: "equipment-nuvem-blue-scarf",
@@ -70,6 +72,7 @@ export const starterMascots: Mascot[] = [
         rarity: "uncommon",
         equipped: true,
         descriptionKey: "equipment.blueRouteScarf.description",
+        iconAssetPath: assetPaths.equipment.icon("blue-route-scarf.webp"),
       },
     ],
     skills: [
@@ -90,6 +93,7 @@ export const starterMascots: Mascot[] = [
       primaryColor: "#f7f1e3",
       accentColor: "#6f91a8",
       portraitPlaceholderKey: "appearance.nuvemPortrait",
+      portraitAssetPath: assetPaths.mascots.portrait("nuvem.webp"),
     },
     currentDelivery: nuvemDelivery,
   },
@@ -120,6 +124,7 @@ export const starterMascots: Mascot[] = [
         rarity: "rare",
         equipped: true,
         descriptionKey: "equipment.flightGoggles.description",
+        iconAssetPath: assetPaths.equipment.icon("flight-goggles.webp"),
       },
       {
         id: "equipment-trovao-red-badge",
@@ -128,6 +133,7 @@ export const starterMascots: Mascot[] = [
         rarity: "uncommon",
         equipped: true,
         descriptionKey: "equipment.urgentBadge.description",
+        iconAssetPath: assetPaths.equipment.icon("urgent-badge.webp"),
       },
       {
         id: "equipment-trovao-travel-cap",
@@ -136,6 +142,7 @@ export const starterMascots: Mascot[] = [
         rarity: "common",
         equipped: false,
         descriptionKey: "equipment.travelCap.description",
+        iconAssetPath: assetPaths.equipment.icon("travel-cap.webp"),
       },
     ],
     skills: [
@@ -156,6 +163,7 @@ export const starterMascots: Mascot[] = [
       primaryColor: "#8b5e3c",
       accentColor: "#a44a3f",
       portraitPlaceholderKey: "appearance.trovaoPortrait",
+      portraitAssetPath: assetPaths.mascots.portrait("trovao.webp"),
     },
   },
   {
@@ -185,6 +193,7 @@ export const starterMascots: Mascot[] = [
         rarity: "rare",
         equipped: true,
         descriptionKey: "equipment.featherCharm.description",
+        iconAssetPath: assetPaths.equipment.icon("feather-charm.webp"),
       },
       {
         id: "equipment-pipoca-small-satchel",
@@ -193,6 +202,7 @@ export const starterMascots: Mascot[] = [
         rarity: "common",
         equipped: true,
         descriptionKey: "equipment.smallSatchel.description",
+        iconAssetPath: assetPaths.equipment.icon("small-satchel.webp"),
       },
     ],
     skills: [
@@ -213,6 +223,7 @@ export const starterMascots: Mascot[] = [
       primaryColor: "#fff8e8",
       accentColor: "#c49a4a",
       portraitPlaceholderKey: "appearance.pipocaPortrait",
+      portraitAssetPath: assetPaths.mascots.portrait("pipoca.webp"),
     },
   },
 ];

@@ -1,6 +1,6 @@
 import type { EquipmentItem } from "../../game";
 import { useTranslation } from "../../i18n";
-import { ItemCard } from "../ui";
+import { AssetImage, ItemCard } from "../ui";
 import styles from "./MascotEquipmentGrid.module.css";
 
 type MascotEquipmentGridProps = {
@@ -20,7 +20,19 @@ export function MascotEquipmentGrid({ equipment }: MascotEquipmentGridProps) {
           meta={item.equipped ? t("mascot.equipped") : t("mascot.notEquipped")}
           selected={item.equipped}
           title={t(item.nameKey)}
-        />
+        >
+          <AssetImage
+            alt={t(item.nameKey)}
+            className={styles.assetFrame}
+            height={160}
+            src={item.iconAssetPath}
+            width={160}
+          >
+            <div className={styles.fallbackIcon} data-rarity={item.rarity}>
+              <span>{t(item.nameKey).slice(0, 1)}</span>
+            </div>
+          </AssetImage>
+        </ItemCard>
       ))}
     </div>
   );

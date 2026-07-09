@@ -1,3 +1,4 @@
+export { assetPaths, hasAssetPath } from "./assets";
 export {
   friendMascots,
   getFriendById,

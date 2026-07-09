@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 
 import { MascotBottomNav } from "../../components/mascot/MascotBottomNav";
-import { ItemCard, PaperTab, SketchPanel } from "../../components/ui";
+import { AssetImage, ItemCard, PaperTab, SketchPanel } from "../../components/ui";
 import {
   getInventoryItemsByCategory,
   getInventorySummary,
@@ -94,10 +94,18 @@ function InventoryCard({ item }: { item: InventoryItem }) {
       meta={metaParts.join(" / ")}
       selected={item.equipped}
     >
-      <div className={styles.itemStamp} data-rarity={item.rarity}>
-        <span>{t("inventory.source")}</span>
-        <strong>{item.sourceKey ? t(item.sourceKey) : t("common.unavailable")}</strong>
-      </div>
+      <AssetImage
+        alt={t(item.nameKey)}
+        className={styles.assetFrame}
+        height={192}
+        src={item.thumbnailAssetPath}
+        width={192}
+      >
+        <div className={styles.itemStamp} data-rarity={item.rarity}>
+          <span>{t("inventory.source")}</span>
+          <strong>{item.sourceKey ? t(item.sourceKey) : t("common.unavailable")}</strong>
+        </div>
+      </AssetImage>
     </ItemCard>
   );
 }

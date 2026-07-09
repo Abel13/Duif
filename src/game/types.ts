@@ -35,6 +35,7 @@ export type EquipmentItem = {
   rarity: EquipmentRarity;
   equipped: boolean;
   descriptionKey?: TranslationKey;
+  iconAssetPath?: string;
 };
 
 export type Skill = {
@@ -75,6 +76,7 @@ export type RewardItem = {
   nameKey: TranslationKey;
   descriptionKey: TranslationKey;
   rarity: RewardRarity;
+  thumbnailAssetPath?: string;
 };
 
 export type DeliveryReward = {
@@ -89,6 +91,7 @@ export type InventoryItem = RewardItem & {
   collectedAt: string;
   equipped: boolean;
   sourceKey?: TranslationKey;
+  thumbnailAssetPath?: string;
 };
 
 export type FriendProfile = {
@@ -138,6 +141,7 @@ export type MascotAppearance = {
   primaryColor: string;
   accentColor: string;
   portraitPlaceholderKey: TranslationKey;
+  portraitAssetPath?: string;
 };
 
 export type Mascot = {

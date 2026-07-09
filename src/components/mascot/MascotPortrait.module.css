@@ -74,10 +74,24 @@
   justify-items: center;
 }
 
+.assetFrame {
+  width: clamp(8.5rem, 46vw, 13rem);
+  aspect-ratio: 1;
+}
+
+.assetFrame[data-has-image="true"] {
+  border: 3px solid var(--color-ink);
+  border-radius: 44% 56% 48% 52% / 52% 42% 58% 48%;
+  background: rgba(255, 248, 232, 0.62);
+  box-shadow: 0.4rem 0.55rem 0 rgba(46, 42, 36, 0.16);
+  overflow: hidden;
+  transform: rotate(-2deg);
+}
+
 .figure {
   position: relative;
   display: grid;
-  width: clamp(8.5rem, 46vw, 13rem);
+  width: 100%;
   aspect-ratio: 1;
   place-items: center;
   border: 3px solid var(--color-ink);

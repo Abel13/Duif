@@ -1,4 +1,5 @@
 import type { InventoryCategory, InventoryItem, RewardRarity } from "./types";
+import { assetPaths } from "./assets";
 
 export const inventoryCategories: InventoryCategory[] = [
   "all",
@@ -18,6 +19,7 @@ export const mockInventoryItems: InventoryItem[] = [
     collectedAt: "2026-07-01T10:00:00.000Z",
     equipped: true,
     sourceKey: "inventory.sources.starterKit",
+    thumbnailAssetPath: assetPaths.equipment.icon("canvas-postal-bag.webp"),
   },
   {
     id: "inventory-blue-route-scarf",
@@ -28,6 +30,7 @@ export const mockInventoryItems: InventoryItem[] = [
     collectedAt: "2026-07-01T10:10:00.000Z",
     equipped: true,
     sourceKey: "inventory.sources.starterKit",
+    thumbnailAssetPath: assetPaths.equipment.icon("blue-route-scarf.webp"),
   },
   {
     id: "inventory-worn-route-stamp",
@@ -38,6 +41,7 @@ export const mockInventoryItems: InventoryItem[] = [
     collectedAt: "2026-07-03T12:00:00.000Z",
     equipped: false,
     sourceKey: "inventory.sources.routeReward",
+    thumbnailAssetPath: assetPaths.items.thumbnail("worn-route-stamp.webp"),
   },
   {
     id: "inventory-blue-airmail-label",
@@ -48,6 +52,7 @@ export const mockInventoryItems: InventoryItem[] = [
     collectedAt: "2026-07-04T12:00:00.000Z",
     equipped: false,
     sourceKey: "inventory.sources.routeReward",
+    thumbnailAssetPath: assetPaths.items.thumbnail("blue-airmail-label.webp"),
   },
   {
     id: "inventory-golden-compass-pin",
@@ -58,6 +63,7 @@ export const mockInventoryItems: InventoryItem[] = [
     collectedAt: "2026-07-05T12:00:00.000Z",
     equipped: false,
     sourceKey: "inventory.sources.longRouteFind",
+    thumbnailAssetPath: assetPaths.items.thumbnail("golden-compass-pin.webp"),
   },
 ];
 

@@ -96,11 +96,25 @@
     auto;
 }
 
+.assetFrame {
+  display: grid;
+  width: min(100%, 7.5rem);
+  aspect-ratio: 1;
+}
+
+.assetFrame[data-has-image="true"] {
+  border: 2px dashed rgba(46, 42, 36, 0.32);
+  border-radius: 0.42rem 0.18rem;
+  background: rgba(255, 248, 232, 0.74);
+  overflow: hidden;
+  transform: rotate(-2deg);
+}
+
 .itemStamp {
   display: grid;
   gap: var(--space-1);
-  width: min(100%, 7.5rem);
-  min-height: 4.75rem;
+  width: 100%;
+  height: 100%;
   place-items: center;
   padding: var(--space-2);
   border: 2px dashed rgba(46, 42, 36, 0.4);

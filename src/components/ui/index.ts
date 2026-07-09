@@ -1,3 +1,5 @@
+export { AssetImage } from "./AssetImage";
+export type { AssetImageProps } from "./AssetImage";
 export { ItemCard } from "./ItemCard";
 export type { ItemCardProps } from "./ItemCard";
 export { PaperTab } from "./PaperTab";

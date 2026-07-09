@@ -1,7 +1,7 @@
 import { Link, Navigate, useParams } from "react-router-dom";
 import type { CSSProperties } from "react";
 
-import { ItemCard, SketchPanel } from "../../components/ui";
+import { AssetImage, ItemCard, SketchPanel } from "../../components/ui";
 import {
   getFriendById,
   getFriendCorrespondence,
@@ -90,19 +90,27 @@ function FriendMascotCard({ mascot }: { mascot: FriendMascotPreview }) {
       description={t(mascot.speciesKey)}
       meta={`${t("mascot.level")} ${mascot.level}`}
     >
-      <div
-        className={styles.mascotBadge}
+      <AssetImage
+        alt={t(mascot.appearance.portraitPlaceholderKey)}
+        className={styles.assetFrame}
+        height={192}
+        src={mascot.appearance.portraitAssetPath}
         style={
           {
             "--friend-primary": mascot.appearance.primaryColor,
             "--friend-accent": mascot.appearance.accentColor,
-        } as CSSProperties
+          } as CSSProperties
         }
-        aria-label={t(mascot.appearance.portraitPlaceholderKey)}
-        role="img"
+        width={192}
       >
-        <span />
-      </div>
+        <div
+          aria-label={t(mascot.appearance.portraitPlaceholderKey)}
+          className={styles.mascotBadge}
+          role="img"
+        >
+          <span />
+        </div>
+      </AssetImage>
     </ItemCard>
   );
 }
