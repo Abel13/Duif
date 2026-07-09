@@ -197,6 +197,12 @@ Do not put core game calculations inside React components.
 
 Do not add a backend in the first visual prototype.
 
+Milestone 16 reviewed the playable prototype and concluded that DUIF is ready for a minimal backend foundation, but not a full backend product build.
+
+See:
+
+docs/backend-decision.md
+
 Later backend options:
 
 Supabase
@@ -213,6 +219,8 @@ Use Supabase first if the goal is to move quickly with:
 - storage;
 - simple serverless functions;
 - row-level security.
+
+The recommended next backend step is a local Supabase foundation with a minimal schema for profiles, mascots, friendships, deliveries, rewards, and inventory. Do not include shop, map providers, chat, trading, payments, or production auth polish in that first backend milestone.
 
 Use a custom Node backend later if the game needs:
 

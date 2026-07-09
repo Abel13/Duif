@@ -639,6 +639,47 @@ Success criteria:
 - data model is informed by the prototype;
 - no unnecessary server complexity is introduced.
 
+Decision outcome:
+
+The Milestone 16 decision is documented in `docs/backend-decision.md`.
+
+DUIF is ready for a minimal Supabase backend foundation, focused on the current core loop only. Mapa, Loja, trading, chat, payments, push notifications, and complex economy systems remain outside the first backend pass.
+
+## Milestone 17: Supabase Foundation And Data Model
+
+Goal:
+
+Add the local backend foundation for the validated core loop without wiring the full UI to production data yet.
+
+Includes:
+
+- local Supabase setup;
+- initial PostgreSQL migrations;
+- seed data based on the current prototype;
+- generated database TypeScript types;
+- documented RLS strategy;
+- schema coverage for profiles, mascots, friendships, deliveries, rewards, and inventory.
+
+Does not include:
+
+- production deployment;
+- production auth polish;
+- real map provider;
+- shop or payments;
+- trading;
+- chat;
+- push notifications;
+- full UI migration away from mocks.
+
+Success criteria:
+
+- local Supabase starts successfully;
+- migrations apply cleanly;
+- seed data represents the current prototype loop;
+- database types can be generated;
+- existing app tests and build still pass;
+- backend scope remains limited to persistence for the validated loop.
+
 ## Suggested First Execution Order
 
 Use this order for the first development pass:
