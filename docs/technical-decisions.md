@@ -368,6 +368,10 @@ This avoids adding a provider key before the product validates whether MapLibre 
 for DUIF. It is not a production tile/style decision. The first production map decision
 still needs a proper tile/style provider and usage review.
 
+The main `/map` screen uses one-finger pan on mobile because it is a full-screen primary
+gameplay surface. Cooperative two-finger gestures should only be reconsidered for embedded
+maps inside scroll-heavy pages. Smaller route previews remain static and non-interactive.
+
 Reasons:
 
 - open source;

@@ -893,6 +893,7 @@ Includes:
 - create a reusable map component under `src/components/map`;
 - render a real interactive MapLibre map;
 - make `/map` a full-screen map experience with postal cards overlaid on top;
+- allow one-finger mobile pan because the map is the primary interaction on this screen;
 - show a straight-line route using the current Nuvem delivery as the first case;
 - show origin, destination, and current pet position calculated from timestamps;
 - show route-relevant city/region labels through DUIF-owned layers;

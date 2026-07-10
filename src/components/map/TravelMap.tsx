@@ -94,7 +94,7 @@ export function TravelMap({
         attributionControl: false,
         center: toLngLat(petPosition),
         container: containerRef.current,
-        cooperativeGestures: true,
+        cooperativeGestures: false,
         pitchWithRotate: false,
         style: postalMapStyle,
         zoom: 2,
