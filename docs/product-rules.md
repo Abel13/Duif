@@ -1,0 +1,360 @@
+# Product Rules
+
+This document records product decisions for DUIF after the first playable backend loop.
+
+It should be treated as the source of truth for gameplay, privacy, social behavior, map
+mechanics, rewards, inventory, and monetization direction until a more formal game design
+document exists.
+
+## Product Pillar: Slow Social
+
+DUIF is a slow social game.
+
+Social interaction should happen through intentional asynchronous correspondence, not
+through real-time chat or a noisy public feed.
+
+Rules:
+
+- Players send letters, postcards, stickers, and gifts through their messenger pets.
+- The travel time is part of the social experience.
+- The recipient receives the correspondence when the pet reaches the destination.
+- The sender follows the trip and collects travel rewards when the pet returns.
+- Real-time chat is out of scope for v1.
+- The correspondence history replaces a continuous chat thread.
+- Notifications should feel postal and punctual, not like instant-message pressure.
+
+Design implication:
+
+> DUIF is a game of friendship by correspondence, meaningful waiting, and small surprises
+> found during the journey.
+
+## Travel Rules
+
+Travel uses real elapsed time.
+
+Rules:
+
+- Trips should last real hours or days.
+- There is no global accelerated game-speed multiplier as the default product rule.
+- Every delivery has a full cycle: outbound trip, delivery at destination, return trip.
+- A pet always returns to its origin after delivering.
+- Rewards are only finalized into the player's inventory after the pet returns and the
+  player collects them.
+- The frontend may animate progress in real time from timestamps, route, and speed.
+- The backend remains the authority for route, timestamps, effective speed, and granted
+  rewards.
+
+Equipment changes:
+
+- Pets can change equipment only when they are not in an active delivery.
+- Equipment is locked while a pet is preparing, outbound, delivered at destination,
+  returning, or waiting for uncollected reward.
+- A delivery stores a snapshot of the effective speed/rules calculated at send time.
+- Changing equipment later affects only future deliveries.
+
+Boosts:
+
+- Speed boosts should come from items or equipment, not a global time multiplier.
+- Example: a jet backpack with a limited autonomy in kilometers.
+- Boosts may require fuel or recharge.
+- Boosts and fuel need deeper balancing before implementation.
+
+## Real-Time Map Rules
+
+The map is a core mechanic, not just a route visualization.
+
+Rules:
+
+- The player should be able to follow a pet moving on the map in real time.
+- The pet position can be computed client-side from route, speed, timestamps, and current time.
+- Routes can be straight lines in v1.
+- The map should be interactive and visually customized for DUIF.
+- The map should show origin, destination, outbound/return direction, pet position, and
+  discovered route rewards.
+- The map should eventually show cities, states, countries, event areas, and route discovery
+  opportunities.
+
+Route rewards:
+
+- Rewards can be distributed by city, state, country, route segment, or event area.
+- If a pet crosses an eligible region, the delivery can collect badges, postcards, stamps,
+  souvenirs, materials, or seasonal items.
+- The player may see discoveries during the journey.
+- The final reward collection remains tied to the pet returning home.
+- The backend should be authoritative for which map rewards are granted.
+
+Technical direction:
+
+- Validate the real map stack early with MapLibre GL JS.
+- Use a real map spike before deeper inventory/shop implementation.
+- Production tile provider, custom tiles, and final map art direction are separate decisions.
+
+## Correspondence Rules
+
+Correspondence is the main social interaction.
+
+Letters:
+
+- Written by the player.
+- Have a character limit.
+- May contain emojis.
+- May include stickers purchased or earned in the shop.
+- Should feel personal and expressive.
+
+Postcards:
+
+- Can be app-sold cards based on cities, events, routes, or collections.
+- Can use user-uploaded photos.
+- May include a short written message on the back.
+- Need moderation/privacy decisions before user-uploaded images go live.
+
+Stickers:
+
+- Can be sold in the shop.
+- Can be sent as standalone correspondence.
+- Can be attached to letters/postcards if the later composition rules allow it.
+
+Gifts:
+
+- Not defined yet.
+- Candidate gift contents include inventory items, cosmetics, fuel, materials, equipment,
+  or surprise bundles.
+- Gift rules must be designed together with economy, abuse prevention, and shop policy.
+
+Reward impact:
+
+- Correspondence type may eventually affect rewards, but reward formulas are not final.
+- v1 should avoid locking a complex reward economy too early.
+
+## Social and Friends Rules
+
+Friends are real users connected by invite or code.
+
+Rules:
+
+- A player can invite another player by code or link.
+- The invite only allows a friendship request.
+- The invite does not reveal location details.
+- Sending correspondence requires an accepted friendship.
+- Users who are not accepted friends cannot send to each other.
+- The recipient sees visible received content based on what was sent: letter, postcard,
+  sticker, gift, or future correspondence type.
+
+Friend location visibility:
+
+- Accepted friends may see only city, state, and country.
+- Street and neighborhood are never shown to other players.
+- Non-friends should not see useful location data.
+- Sending uses sanitized postal-base data, not a real residential address.
+
+## Postal Base and Privacy Rules
+
+DUIF should use the term "postal base" instead of "home address" in product UI.
+
+Allowed postal-base fields:
+
+- street;
+- neighborhood;
+- city;
+- state;
+- country.
+
+Privacy rules:
+
+- Street and neighborhood are private reference data.
+- Friends see only city, state, and country.
+- Do not collect or display house number, complement, precise postal code, or exact
+  residential coordinates.
+- The game should never expose a user's real full address.
+- Route display should use sanitized labels such as "Sao Paulo, SP, Brazil".
+- Coordinates used for calculation should be approximate and derived from city/region/base,
+  not precise residence.
+
+Backend implications:
+
+- Direct social reads of profile location must be sanitized.
+- RLS or RPCs should allow:
+  - the current user to read their own full postal-base data;
+  - accepted friends to read only city/state/country;
+  - secure server-side functions to access private fields only for calculation.
+- UI should avoid rendering raw private location fields.
+
+## Mascot Progression Rules
+
+Mascots level up by completing deliveries.
+
+Rules:
+
+- Mascot XP comes primarily from kilometers traveled.
+- Because every delivery includes outbound and return, XP should consider total distance
+  traveled: `distanceKm * 2`.
+- Delivery type may later apply modifiers.
+- Player XP and mascot XP both exist, but their formulas can differ.
+- Mascot XP represents travel practice and route experience.
+- Player XP represents overall account progression.
+- There is no consumable stamina/energy system.
+
+Stamina:
+
+- Stamina is a passive attribute, not an energy meter.
+- It may help long routes, cargo penalties, return consistency, or boost efficiency.
+
+Possible level unlocks:
+
+- functional equipment slots;
+- cosmetic slots;
+- cargo capacity;
+- boost efficiency;
+- longer routes;
+- route discovery chance;
+- attribute increases;
+- visual titles or mascot appearance upgrades.
+
+Open balancing question:
+
+- Exact XP curve and per-level stat growth are not defined yet.
+
+## Equipment, Cosmetics, and Cargo Rules
+
+Equipment can be functional, cosmetic, or a functional item with cosmetic customization.
+
+Functional equipment:
+
+- Can affect attributes or travel rules.
+- Examples: jet backpack, cargo bag, compass, route goggles.
+- May affect speed, cargo capacity, route discovery, fuel usage, or reward odds.
+
+Cosmetics:
+
+- Change appearance only.
+- Can be applied to pets or equipment.
+- Should not affect gameplay stats.
+
+Cargo:
+
+- There is no hard general inventory limit in v1.
+- The important limit is pet cargo capacity during a delivery.
+- Cargo capacity depends on pet attributes, level, equipment, boosts, and item category.
+- Cosmetics do not consume cargo.
+- Materials and fuel may stack.
+- Items found during travel belong to delivery/cargo state until the pet returns and the
+  player collects them.
+
+Open balancing question:
+
+- Exact cargo units, item weights, and equipment slot counts are not defined yet.
+
+## Inventory and Album Rules
+
+Inventory and album are related but not identical.
+
+Definitions:
+
+- Inventory is the player's owned item storage.
+- Album is the collectible visual experience for viewing discovered items, rarity, empty
+  slots, and collection progress.
+- Cargo is the pet's delivery-specific carrying limit.
+
+Rules:
+
+- The album can remain the main UI metaphor for collection.
+- The album is not the entire inventory system.
+- Functional items, consumables, cosmetics, postcards, stickers, rewards, and materials may
+  all live in inventory.
+- The album should highlight collection progress and discoveries.
+
+Duplicate item policies:
+
+- Unique: one copy only.
+- Stackable: repeated items increase quantity.
+- Duplicate allowed: multiple copies can exist, possibly with different stats.
+- Convert on duplicate: repeat drops convert into fragments, soft currency, or upgrade
+  progress.
+
+Recommended defaults:
+
+- postcards, badges, and collection stamps: convert on duplicate or unique;
+- fuel and materials: stackable;
+- equipment with stats: duplicate allowed;
+- simple cosmetics: unique or convert on duplicate.
+
+Open design question:
+
+- Exact duplicate conversion outputs are not defined yet.
+
+## Reward Rules
+
+Rewards should motivate travel, collection, map exploration, and mascot progression.
+
+Confirmed factors:
+
+- distance;
+- rarity;
+- mascot attributes;
+- friend/social context;
+- luck;
+- route/city/state/country crossed;
+- future equipment and event modifiers.
+
+Possible reward types:
+
+- mascot XP;
+- player XP;
+- badges;
+- postcards;
+- stamps;
+- stickers;
+- souvenirs;
+- cosmetics;
+- equipment;
+- fuel;
+- materials;
+- soft currency;
+- route discoveries;
+- event collectibles.
+
+Open design question:
+
+- Exact reward formula and rarity tables are not defined yet.
+
+## Shop and Monetization Rules
+
+The shop can include cosmetics, useful items, social content, boosts, fuel, and premium currency.
+
+Potential categories:
+
+- cosmetic equipment;
+- equipment cosmetics;
+- stickers;
+- postcards;
+- city/event cards;
+- gifts;
+- boosts;
+- fuel;
+- materials;
+- premium currency.
+
+Guardrail:
+
+> Paid items can accelerate, customize, or expand expression, but the basic send-travel-return
+> loop should remain playable without purchases.
+
+Open design question:
+
+- Premium economy, pricing, purchase limits, and anti-pay-to-win boundaries are not defined yet.
+
+## Open Product Questions
+
+The following topics still need explicit product decisions before deep implementation:
+
+- exact mascot XP curve;
+- exact player XP formula;
+- level unlock cadence;
+- reward formulas and rarity tables;
+- gift contents and restrictions;
+- shop economy and premium currency rules;
+- fuel/recharge balancing;
+- cargo units and item weights;
+- duplicate conversion outputs;
+- moderation rules for user-written letters and user-uploaded postcard photos;
+- final map tile provider and map visual art direction.

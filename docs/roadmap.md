@@ -4,7 +4,9 @@ This roadmap defines the initial execution plan for DUIF.
 
 DUIF should be built in small, testable milestones. Each milestone should produce a working result that can be reviewed before moving to the next step.
 
-The goal is to avoid building the full game too early. Start with the emotional and visual core: the mascot detail experience.
+The goal is to avoid building the full game too early. Start with the emotional and visual
+core, validate the send-travel-return loop, then validate the real map because map travel is
+now a central mechanic.
 
 ## Roadmap Principles
 
@@ -15,10 +17,11 @@ Build in this order:
 3. Travel calculation.
 4. Sending flow.
 5. Social loop.
-6. Inventory and collection.
-7. PWA features.
-8. Backend and persistence.
-9. Economy and events.
+6. Backend and persistence for the core loop.
+7. Product rules and privacy.
+8. Real map validation.
+9. Inventory and collection.
+10. Economy and events.
 
 Each milestone should be small enough for Codex to implement in focused tasks.
 
@@ -842,6 +845,244 @@ Success criteria:
 - collection creates or reuses a delivery reward and writes an inventory item;
 - already collected rewards render as completed;
 - tests and build pass.
+
+## Milestone 23: Product Rules And Privacy Pass
+
+Goal:
+
+Consolidate the product decisions that shape the next backend and gameplay work before
+adding more systems.
+
+Includes:
+
+- slow social definition;
+- real-time travel/map product direction;
+- postal-base privacy rules;
+- social/friend visibility rules;
+- correspondence behavior;
+- mascot XP and progression direction;
+- equipment, cargo, inventory, and album definitions;
+- shop and monetization guardrails;
+- explicit open questions for balancing and economy.
+
+Does not include:
+
+- schema changes;
+- UI changes;
+- map implementation;
+- shop implementation;
+- reward economy implementation.
+
+Success criteria:
+
+- product rules are documented in `docs/product-rules.md`;
+- `docs/product.md` points to the rules document;
+- privacy and map technical decisions are reflected in `docs/technical-decisions.md`;
+- future roadmap milestones reference the new product direction.
+
+## Milestone 24: Real Map Validation
+
+Goal:
+
+Validate the real map technology DUIF will use for its central travel mechanic.
+
+Includes:
+
+- install `maplibre-gl`;
+- create a mobile-first `/map` route;
+- create a reusable map component under `src/components/map`;
+- render a real interactive MapLibre map;
+- show a straight-line route using the current Nuvem delivery as the first case;
+- show origin, destination, and current pet position calculated from timestamps;
+- add mocked city/state reward markers along or near the route;
+- show a small list/panel of route discoveries tied to the visible map markers;
+- link the `Mapa` bottom nav tab to `/map`;
+- document the MapLibre decision and known production tile/style open questions.
+
+Does not include:
+
+- custom tile hosting;
+- final illustrated map art;
+- real route geometry beyond straight lines;
+- backend reward-area tables;
+- live sockets;
+- inventory writes from route discoveries;
+- shop or economy logic.
+
+Success criteria:
+
+- `/map` renders without breaking mobile layout;
+- the map is interactive and not visually generic after initial styling;
+- the pet marker position changes based on delivery progress;
+- origin, destination, route line, and reward markers are visible;
+- `/mascots/mascot-nuvem`, `/send`, `/friends`, `/inventory`, and `/rewards` still work;
+- tests and build pass.
+
+## Milestone 25: Postal Base Privacy Model
+
+Goal:
+
+Make the data model and frontend language match the postal-base privacy rules before
+expanding social features.
+
+Includes:
+
+- add explicit postal-base fields for street, neighborhood, city, state, and country;
+- keep street and neighborhood private;
+- expose only city/state/country to accepted friends;
+- update social read helpers or add sanitized views/RPCs so friends do not receive private
+  location fields;
+- update send-flow destination labels to use sanitized city/state/country display;
+- update product copy from "address" to "postal base" where visible;
+- add database/RLS tests or unit tests for sanitized mapping where practical.
+
+Does not include:
+
+- real geocoding;
+- exact address collection;
+- public profile search;
+- production privacy settings UI;
+- moderation tooling.
+
+Success criteria:
+
+- accepted friends can send using sanitized location data;
+- street and neighborhood are not rendered in friend/profile/send UI;
+- non-friends cannot read useful location data;
+- current user can still manage/read their own full postal-base fields;
+- tests and build pass.
+
+## Milestone 26: Correspondence Content Prototype
+
+Goal:
+
+Turn correspondence from a type selector into the first real slow-social content prototype.
+
+Includes:
+
+- letter composer with character limit;
+- emoji support in letter text;
+- sticker attachment slots for letters;
+- postcard option with short back-of-card message;
+- placeholder model for app-sold city/event postcards;
+- placeholder model for user photo postcards without uploading real files yet;
+- received correspondence preview for the recipient side;
+- delivery status showing when content has arrived at the destination;
+- i18n copy for writing, previewing, and receiving correspondence.
+
+Does not include:
+
+- real image upload/storage;
+- moderation pipeline;
+- paid shop inventory;
+- real sticker purchases;
+- push notifications;
+- chat thread UI.
+
+Success criteria:
+
+- `/send` can collect simple letter/postcard content locally or in a safe persisted draft shape;
+- recipient-facing mock/profile UI can show received correspondence content;
+- character limits and empty-state validation are clear;
+- no real-time chat patterns are introduced;
+- tests and build pass.
+
+## Milestone 27: Route Rewards Design Prototype
+
+Goal:
+
+Prototype map-based rewards collected along a pet's route before finalizing inventory and
+reward economy.
+
+Includes:
+
+- define route reward types: badge, postcard, stamp, souvenir, material, event item;
+- define mock reward points or areas by city/state/country;
+- compute whether a straight-line route crosses or comes near eligible reward points;
+- show discovered route rewards during the active trip on `/map`;
+- distinguish "found during route" from "claimed into inventory after return";
+- keep backend authority as the future rule, but prototype the calculation in pure TypeScript;
+- add unit tests for route reward eligibility.
+
+Does not include:
+
+- final rarity tables;
+- anti-cheat implementation;
+- administrative boundary datasets;
+- real inventory writes for every route discovery;
+- economy balancing;
+- custom map tiles.
+
+Success criteria:
+
+- a Nuvem route can display mocked discoveries on the map;
+- discoveries are deterministic for a delivery seed/route;
+- collected-along-the-way items remain tied to delivery state until reward collection;
+- tests and build pass.
+
+## Milestone 28: Persisted Inventory Album
+
+Goal:
+
+Migrate the inventory album to read persisted inventory items while keeping the album as
+the collectible visual experience, not the full inventory/economy system.
+
+Includes:
+
+- authenticated read layer for `inventory_items`;
+- category filtering from persisted data;
+- album slots for collection progress;
+- duplicate policy display where available;
+- route rewards collected into inventory after return;
+- mock fallback without auth or Supabase config.
+
+Does not include:
+
+- equip/unequip writes;
+- shop purchases;
+- cargo capacity enforcement;
+- duplicate conversion economy;
+- premium currency.
+
+Success criteria:
+
+- `/inventory` uses persisted items when authenticated;
+- collected route rewards appear after reward collection;
+- album UI still works with mock fallback;
+- tests and build pass.
+
+## Milestone 29: Shop And Economy Design Pass
+
+Goal:
+
+Define the first safe economy rules before implementing a shop with cosmetics, useful
+items, boosts, fuel, stickers, postcards, gifts, and premium currency.
+
+Includes:
+
+- item categories for shop inventory;
+- free vs premium currency boundaries;
+- paid-item guardrails;
+- fuel/recharge direction;
+- gift contents and restrictions;
+- duplicate conversion decisions;
+- moderation implications for user-generated postcard content;
+- initial purchase/use flows at product-spec level.
+
+Does not include:
+
+- payments;
+- real store UI;
+- Stripe/App Store integration;
+- premium currency ledger;
+- backend purchase validation.
+
+Success criteria:
+
+- shop scope is explicit before implementation;
+- pay-to-win risks are documented;
+- gift and fuel open questions are resolved or intentionally deferred;
+- roadmap can safely schedule the first shop prototype.
 
 ## Suggested First Execution Order
 

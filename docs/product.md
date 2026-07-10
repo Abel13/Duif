@@ -1,10 +1,15 @@
 # Product
 
-DUIF is a social idle game about messenger animals.
+DUIF is a slow social game about messenger animals.
 
 Players own animals that carry letters, cards, stickers, and collectible objects across the world. The game combines mascot collection, asynchronous travel, social interaction, light progression, and cosmetic customization.
 
 The first version should focus on making the player care about their mascots and enjoy the act of sending something to another player.
+
+Detailed product rules for travel, slow social, privacy, map rewards, inventory, progression,
+and shop direction live in:
+
+`docs/product-rules.md`
 
 ## Core Concept
 
@@ -26,7 +31,9 @@ Players use these animals to send correspondence to friends. A correspondence ca
 
 When an animal is sent, it travels from the player’s origin to the destination, delivers the item, and then returns to its origin.
 
-The travel is asynchronous. The game should not simulate real-time movement on the server. Instead, travel progress is calculated from stored timestamps, coordinates, speed, and game multipliers.
+The travel is asynchronous and uses real elapsed time. The server does not need to update
+position every second. Instead, travel progress is calculated from stored timestamps,
+coordinates, route, and effective speed.
 
 ## Core Loop
 
@@ -88,7 +95,7 @@ The first playable MVP should include:
 
 Do not include in the first MVP:
 
-- real-time multiplayer;
+- real-time chat;
 - complex chat;
 - full social feed;
 - marketplace;
@@ -97,7 +104,6 @@ Do not include in the first MVP:
 - advanced shop;
 - complex economy;
 - full 3D globe;
-- real map tiles;
 - weather systems;
 - GPS-precise location;
 - route optimization;
@@ -122,6 +128,14 @@ Players should be able to:
 
 The social layer should feel personal and low-pressure, not like a noisy public feed.
 
+The core social model is slow social:
+
+- friendship by invite or code;
+- accepted friendship required for sending;
+- no real-time chat in v1;
+- correspondence is the social interaction;
+- the recipient receives the content when the pet reaches the destination.
+
 ## Correspondence Types
 
 Possible correspondence types:
@@ -139,6 +153,15 @@ Possible correspondence types:
 In the beginning, correspondence can be represented with simple mock objects.
 
 Later, each type may have cosmetic variants, rarity, event exclusivity, and collection value.
+
+Confirmed direction:
+
+- letters are written by the player, have a character limit, may contain emojis, and may
+  include stickers;
+- postcards can be app-sold city/event cards or user-uploaded photos with a short message
+  on the back;
+- stickers can be sent or attached to correspondence;
+- gifts are intentionally not defined yet and need a later economy/design pass.
 
 ## Mascots
 
@@ -181,7 +204,7 @@ Potential traits:
 
 ## Travel System
 
-Travel should be calculated on demand.
+Travel should be calculated on demand and shown live on the map.
 
 A delivery should store:
 
@@ -198,7 +221,7 @@ A delivery should store:
 - status;
 - reward seed.
 
-The UI can calculate the current status and progress using the current time.
+The UI can calculate the current status, progress, and pet position using the current time.
 
 Possible statuses:
 
@@ -212,16 +235,31 @@ Possible statuses:
 
 The server should not need to update the animal’s position every second.
 
+The map is a core mechanic. It should eventually show the pet moving, straight-line route,
+outbound/return state, cities or regions crossed, and rewards discovered along the path.
+
 ## Location and Privacy
 
 The game should avoid using exact home locations.
 
-Preferred options:
+Use the product term "postal base" instead of "home address".
 
-1. Let the player choose a city or region.
-2. Let the player choose a fictional postal base.
-3. Use approximate coordinates rather than exact GPS.
-4. Never expose precise location to other players.
+Allowed postal-base fields:
+
+- street;
+- neighborhood;
+- city;
+- state;
+- country.
+
+Visibility rules:
+
+- street and neighborhood are private reference data;
+- friends see only city, state, and country;
+- non-friends do not see useful location data;
+- do not collect or show house number, complement, exact postal code, or precise residential
+  coordinates;
+- route displays should use sanitized city/state/country labels.
 
 The product should feel global without creating privacy risk.
 
@@ -248,7 +286,8 @@ The first version can use simple random rewards.
 
 ## Inventory
 
-The inventory should feel like a collectible album.
+The inventory should support owned items. The album is the collectible visual experience
+for viewing discoveries, rarity, empty slots, and collection progress.
 
 Potential categories:
 
@@ -261,7 +300,8 @@ Potential categories:
 - feathers;
 - seasonal items.
 
-Inventory should support cosmetic expression and collection goals.
+Inventory should support functional items, cosmetic expression, social content, and
+collection goals. Pet cargo capacity is a separate delivery-specific limit.
 
 ## Customization
 

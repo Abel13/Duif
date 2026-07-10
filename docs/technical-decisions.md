@@ -336,46 +336,56 @@ Do not use precise player GPS in the first prototype.
 
 Preferred location model:
 
-- city-level coordinates;
-- region-level coordinates;
-- fictional postal bases;
-- manually selected map locations.
+- postal-base fields stored separately: street, neighborhood, city, state, country;
+- city/state/country as the only social display fields;
+- approximate coordinates for route calculation;
+- manually selected or geocoded approximate map locations.
 
 Do not expose exact location to other players.
+
+Street and neighborhood are private reference fields. Accepted friends should see only
+city, state, and country. Social reads should use sanitized profile data, not unrestricted
+profile rows.
 
 The visual map should communicate travel fantasy, not precise logistics.
 
 ## Map Strategy
 
-Do not implement a full map system in the first mascot screen.
+The map is now a central gameplay surface, not a decorative preview.
 
-First map implementation should be a small route preview.
+The first mascot screen used a small SVG route preview, but the next validation step should
+use a real map library because the product depends on map interaction, route rewards, and
+custom map presentation.
 
-Recommended later stack:
+Recommended validation stack:
 
-React Simple Maps
-d3-geo
-SVG or TopoJSON map data
+MapLibre GL JS
 
 Reasons:
 
-- lightweight;
-- visually customizable;
-- compatible with sketch style;
-- avoids dependence on external map tile services;
-- easier to make the world feel illustrated.
+- open source;
+- strong support for custom map styles;
+- supports lines, markers, layers, popups, and GeoJSON sources;
+- works well with computed pet position along a route;
+- avoids locking the product directly to Google Maps or Mapbox SDKs;
+- can support future custom tiles or compatible tile providers.
 
-Avoid in the first prototype:
+Validation goals:
 
-- Mapbox;
-- MapLibre;
-- Leaflet;
-- Cesium;
-- Three.js;
-- full globe rendering;
-- real map tiles.
+- render a real interactive map;
+- show origin and destination;
+- draw a straight-line route;
+- show the pet at computed progress;
+- show mocked route reward points;
+- test whether MapLibre can be styled toward DUIF's illustrated postal direction.
 
-These may be useful later, but they are not needed to validate the first loop.
+Open decisions:
+
+- production tile provider;
+- final map style source;
+- whether DUIF eventually hosts custom tiles;
+- how illustrated the production map should become;
+- whether route reward areas use points, polygons, or administrative boundaries.
 
 ## Asset Strategy
 
