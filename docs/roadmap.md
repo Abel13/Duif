@@ -680,6 +680,11 @@ Success criteria:
 - existing app tests and build still pass;
 - backend scope remains limited to persistence for the validated loop.
 
+Implementation notes:
+
+- local ports use the `56321-56329` range to avoid conflicts with another local Supabase app;
+- schema documentation lives in `docs/backend-schema.md`.
+
 ## Suggested First Execution Order
 
 Use this order for the first development pass:

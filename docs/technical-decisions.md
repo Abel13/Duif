@@ -222,6 +222,10 @@ Use Supabase first if the goal is to move quickly with:
 
 The recommended next backend step is a local Supabase foundation with a minimal schema for profiles, mascots, friendships, deliveries, rewards, and inventory. Do not include shop, map providers, chat, trading, payments, or production auth polish in that first backend milestone.
 
+The local schema and non-default development ports are documented in:
+
+docs/backend-schema.md
+
 Use a custom Node backend later if the game needs:
 
 - complex economy;
