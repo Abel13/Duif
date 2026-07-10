@@ -14,12 +14,15 @@ export {
 } from "./inventory";
 export { currentPlayer, getDeliveryById, getMascotById, nuvemDelivery, starterMascots } from "./mockData";
 export {
+  createMapPlaceLabelsGeoJson,
   createDeliveryRouteGeoJson,
   createRouteRewardsGeoJson,
   getPetMapPosition,
   getRouteRewardDiscoveries,
   interpolateCoordinates,
   toLngLat,
+  type MapPlaceLabel,
+  type MapPlaceLabelKind,
   type PetMapPosition,
   type RouteRewardDiscovery,
   type RouteRewardKind,

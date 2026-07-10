@@ -8,15 +8,52 @@ import type {
 } from "../../game/mapTravel";
 import {
   createDeliveryRouteGeoJson,
+  createMapPlaceLabelsGeoJson,
   createRouteRewardsGeoJson,
   toLngLat,
+  type MapPlaceLabel,
 } from "../../game/mapTravel";
 import type { Delivery } from "../../game/types";
 import styles from "./TravelMap.module.css";
 
-const demoStyleUrl = "https://demotiles.maplibre.org/globe.json";
 const routeSourceId = "duif-route";
 const rewardSourceId = "duif-route-rewards";
+const placeLabelsSourceId = "duif-place-labels";
+
+const postalMapStyle = {
+  version: 8,
+  name: "DUIF Postal Preview",
+  glyphs: "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
+  sources: {
+    osm: {
+      type: "raster",
+      tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
+      tileSize: 256,
+      attribution: "© OpenStreetMap contributors",
+    },
+  },
+  layers: [
+    {
+      id: "postal-paper",
+      type: "background",
+      paint: {
+        "background-color": "#eadfca",
+      },
+    },
+    {
+      id: "osm-raster",
+      type: "raster",
+      source: "osm",
+      paint: {
+        "raster-opacity": 0.62,
+        "raster-saturation": -0.72,
+        "raster-contrast": -0.18,
+        "raster-brightness-min": 0.12,
+        "raster-brightness-max": 0.9,
+      },
+    },
+  ],
+} satisfies maplibregl.StyleSpecification;
 
 export type TravelMapProps = {
   delivery: Delivery;
@@ -25,6 +62,7 @@ export type TravelMapProps = {
   originLabel: string;
   petLabel: string;
   petPosition: MapCoordinate;
+  placeLabels: MapPlaceLabel[];
   rewards: RouteRewardDiscovery[];
 };
 
@@ -35,6 +73,7 @@ export function TravelMap({
   originLabel,
   petLabel,
   petPosition,
+  placeLabels,
   rewards,
 }: TravelMapProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -57,7 +96,7 @@ export function TravelMap({
         container: containerRef.current,
         cooperativeGestures: true,
         pitchWithRotate: false,
-        style: demoStyleUrl,
+        style: postalMapStyle,
         zoom: 2,
       });
     } catch {
@@ -79,7 +118,7 @@ export function TravelMap({
 
     map.on("load", () => {
       isLoadedRef.current = true;
-      addMapLayers(map, delivery, rewards);
+      addMapLayers(map, delivery, rewards, placeLabels);
       fitMapToDelivery(map, delivery);
     });
 
@@ -101,11 +140,13 @@ export function TravelMap({
 
     const routeSource = map.getSource(routeSourceId) as GeoJSONSource | undefined;
     const rewardSource = map.getSource(rewardSourceId) as GeoJSONSource | undefined;
+    const placeLabelsSource = map.getSource(placeLabelsSourceId) as GeoJSONSource | undefined;
 
     routeSource?.setData(createDeliveryRouteGeoJson(delivery));
     rewardSource?.setData(createRouteRewardsGeoJson(rewards));
+    placeLabelsSource?.setData(createMapPlaceLabelsGeoJson(placeLabels));
     petMarkerRef.current?.setLngLat(toLngLat(petPosition));
-  }, [delivery, petPosition, rewards]);
+  }, [delivery, petPosition, placeLabels, rewards]);
 
   return (
     <div className={styles.mapFrame}>
@@ -123,6 +164,7 @@ function addMapLayers(
   map: maplibregl.Map,
   delivery: Delivery,
   rewards: RouteRewardDiscovery[],
+  placeLabels: MapPlaceLabel[],
 ) {
   if (!map.getSource(routeSourceId)) {
     map.addSource(routeSourceId, {
@@ -134,6 +176,13 @@ function addMapLayers(
   if (!map.getSource(rewardSourceId)) {
     map.addSource(rewardSourceId, {
       data: createRouteRewardsGeoJson(rewards),
+      type: "geojson",
+    });
+  }
+
+  if (!map.getSource(placeLabelsSourceId)) {
+    map.addSource(placeLabelsSourceId, {
+      data: createMapPlaceLabelsGeoJson(placeLabels),
       type: "geojson",
     });
   }
@@ -189,6 +238,47 @@ function addMapLayers(
       type: "circle",
     });
   }
+
+  if (!map.getLayer("duif-place-labels")) {
+    map.addLayer({
+      id: "duif-place-labels",
+      layout: {
+        "text-allow-overlap": false,
+        "text-anchor": [
+          "case",
+          ["==", ["get", "kind"], "origin"],
+          "bottom-left",
+          ["==", ["get", "kind"], "destination"],
+          "top-right",
+          "top",
+        ],
+        "text-field": ["get", "label"],
+        "text-font": ["Open Sans Regular"],
+        "text-offset": [
+          "case",
+          ["==", ["get", "kind"], "origin"],
+          ["literal", [0.8, -0.8]],
+          ["==", ["get", "kind"], "destination"],
+          ["literal", [-0.8, 0.8]],
+          ["literal", [0, 0.9]],
+        ],
+        "text-size": [
+          "case",
+          ["any", ["==", ["get", "kind"], "origin"], ["==", ["get", "kind"], "destination"]],
+          14,
+          12,
+        ],
+      },
+      paint: {
+        "text-color": "#2e2a24",
+        "text-halo-blur": 0.5,
+        "text-halo-color": "#fff8e8",
+        "text-halo-width": 2,
+      },
+      source: placeLabelsSourceId,
+      type: "symbol",
+    });
+  }
 }
 
 function fitMapToDelivery(map: maplibregl.Map, delivery: Delivery) {
@@ -205,6 +295,11 @@ function fitMapToDelivery(map: maplibregl.Map, delivery: Delivery) {
 
   map.fitBounds(bounds, {
     duration: 0,
-    padding: 52,
+    padding: {
+      bottom: 104,
+      left: 44,
+      right: 44,
+      top: 96,
+    },
   });
 }

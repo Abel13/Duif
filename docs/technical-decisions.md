@@ -361,12 +361,12 @@ Recommended validation stack:
 
 MapLibre GL JS
 
-Milestone 24 uses the public MapLibre demo style for validation only:
-
-`https://demotiles.maplibre.org/globe.json`
+Milestone 24 uses MapLibre with public raster tiles for validation only, then adds DUIF
+route, reward, pet, and place-label layers on top.
 
 This avoids adding a provider key before the product validates whether MapLibre feels right
-for DUIF. It is not a production tile/style decision.
+for DUIF. It is not a production tile/style decision. The first production map decision
+still needs a proper tile/style provider and usage review.
 
 Reasons:
 
@@ -384,6 +384,7 @@ Validation goals:
 - draw a straight-line route;
 - show the pet at computed progress;
 - show mocked route reward points;
+- show city/region labels relevant to the route through DUIF-owned map layers;
 - test whether MapLibre can be styled toward DUIF's illustrated postal direction.
 
 Nearby-pet direction:

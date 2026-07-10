@@ -892,8 +892,10 @@ Includes:
 - create a mobile-first `/map` route;
 - create a reusable map component under `src/components/map`;
 - render a real interactive MapLibre map;
+- make `/map` a full-screen map experience with postal cards overlaid on top;
 - show a straight-line route using the current Nuvem delivery as the first case;
 - show origin, destination, and current pet position calculated from timestamps;
+- show route-relevant city/region labels through DUIF-owned layers;
 - add mocked city/state reward markers along or near the route;
 - show a small list/panel of route discoveries tied to the visible map markers;
 - link the `Mapa` bottom nav tab to `/map`;

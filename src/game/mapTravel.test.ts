@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import { nuvemDelivery } from "./mockData";
 import {
   createDeliveryRouteGeoJson,
+  createMapPlaceLabelsGeoJson,
   createRouteRewardsGeoJson,
   getPetMapPosition,
   getRouteRewardDiscoveries,
@@ -91,5 +92,26 @@ describe("map travel helpers", () => {
     ]);
     expect(rewardGeoJson.features).toHaveLength(3);
     expect(rewardGeoJson.features[0]?.properties.discovered).toBe(true);
+  });
+
+  it("creates place label GeoJSON collections", () => {
+    const labelGeoJson = createMapPlaceLabelsGeoJson([
+      {
+        coordinates: nuvemDelivery.origin,
+        id: "origin",
+        kind: "origin",
+        label: "São Paulo",
+      },
+      {
+        coordinates: nuvemDelivery.destination,
+        id: "destination",
+        kind: "destination",
+        label: "Lisboa",
+      },
+    ]);
+
+    expect(labelGeoJson.features).toHaveLength(2);
+    expect(labelGeoJson.features[0]?.properties.label).toBe("São Paulo");
+    expect(labelGeoJson.features[1]?.geometry.coordinates).toEqual([-9.1393, 38.7223]);
   });
 });

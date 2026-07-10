@@ -26,6 +26,15 @@ export type RouteRewardDiscovery = {
   titleKey: TranslationKey;
 };
 
+export type MapPlaceLabelKind = "origin" | "destination" | "reward";
+
+export type MapPlaceLabel = {
+  coordinates: MapCoordinate;
+  id: string;
+  kind: MapPlaceLabelKind;
+  label: string;
+};
+
 type LineStringFeatureCollection = {
   type: "FeatureCollection";
   features: Array<{
@@ -50,6 +59,22 @@ type PointFeatureCollection = {
       kind: RouteRewardKind;
       rarity: RewardRarity;
       titleKey: TranslationKey;
+    };
+    geometry: {
+      type: "Point";
+      coordinates: [number, number];
+    };
+  }>;
+};
+
+type PlaceLabelFeatureCollection = {
+  type: "FeatureCollection";
+  features: Array<{
+    type: "Feature";
+    properties: {
+      id: string;
+      kind: MapPlaceLabelKind;
+      label: string;
     };
     geometry: {
       type: "Point";
@@ -244,6 +269,26 @@ export function createRouteRewardsGeoJson(
       geometry: {
         type: "Point",
         coordinates: toLngLat(reward.coordinates),
+      },
+    })),
+  };
+}
+
+export function createMapPlaceLabelsGeoJson(
+  labels: MapPlaceLabel[],
+): PlaceLabelFeatureCollection {
+  return {
+    type: "FeatureCollection",
+    features: labels.map((label) => ({
+      type: "Feature",
+      properties: {
+        id: label.id,
+        kind: label.kind,
+        label: label.label,
+      },
+      geometry: {
+        type: "Point",
+        coordinates: toLngLat(label.coordinates),
       },
     })),
   };

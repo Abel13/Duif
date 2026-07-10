@@ -1,40 +1,50 @@
 .mapFrame {
   position: relative;
+  width: 100%;
+  height: 100%;
   min-width: 0;
   overflow: hidden;
-  border: 2px solid rgba(46, 42, 36, 0.42);
-  border-radius: 0.7rem 0.25rem 0.85rem 0.35rem;
   background:
-    linear-gradient(120deg, rgba(255, 248, 232, 0.75), transparent 44%),
+    radial-gradient(circle at 18% 20%, rgba(247, 241, 227, 0.38), transparent 14rem),
+    linear-gradient(135deg, rgba(111, 145, 168, 0.18), rgba(196, 154, 74, 0.1)),
     var(--color-paper-dark);
-  box-shadow: var(--shadow-paper);
 }
 
 .mapFrame::before {
   content: "";
   position: absolute;
-  z-index: 2;
-  top: 0.65rem;
-  left: 50%;
-  width: 5.5rem;
-  height: 1.3rem;
-  border: 1px solid rgba(46, 42, 36, 0.18);
-  border-radius: 0.1rem;
-  background: rgba(255, 248, 232, 0.72);
-  box-shadow: 0 0.18rem 0.4rem rgba(46, 42, 36, 0.12);
+  z-index: 1;
+  inset: 0;
+  background:
+    linear-gradient(rgba(255, 248, 232, 0.2) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(46, 42, 36, 0.08) 1px, transparent 1px),
+    radial-gradient(circle at 80% 15%, rgba(164, 74, 63, 0.1), transparent 14rem);
+  background-size: 4rem 4rem, 4rem 4rem, auto;
+  mix-blend-mode: multiply;
   pointer-events: none;
-  transform: translateX(-50%) rotate(-1.5deg);
+}
+
+.mapFrame::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  box-shadow:
+    inset 0 0 0 2px rgba(46, 42, 36, 0.18),
+    inset 0 0 5rem rgba(46, 42, 36, 0.22);
+  pointer-events: none;
 }
 
 .map {
-  min-height: min(68vh, 32rem);
-  height: clamp(24rem, 74vh, 38rem);
+  width: 100%;
+  height: 100%;
+  min-height: 100dvh;
 }
 
 .mapFallback {
   position: absolute;
   inset: var(--space-4);
-  z-index: 3;
+  z-index: 6;
   display: grid;
   place-items: center;
   padding: var(--space-4);
@@ -49,6 +59,11 @@
 
 .map :global(.maplibregl-canvas) {
   outline: none;
+}
+
+.map :global(.maplibregl-ctrl-top-right) {
+  top: max(var(--space-3), env(safe-area-inset-top));
+  right: var(--space-3);
 }
 
 .map :global(.maplibregl-ctrl-group) {
@@ -70,26 +85,26 @@
 
 .petMarker {
   position: relative;
-  width: 1.65rem;
-  height: 1.65rem;
+  width: 1.9rem;
+  height: 1.9rem;
   border: 2px solid var(--color-ink);
   border-radius: 50% 50% 50% 0;
   background:
-    radial-gradient(circle at 58% 38%, var(--color-paper-light) 0 0.18rem, transparent 0.2rem),
+    radial-gradient(circle at 58% 38%, var(--color-paper-light) 0 0.2rem, transparent 0.22rem),
     var(--color-rare-gold);
   box-shadow:
-    0 0 0 0.25rem rgba(255, 248, 232, 0.66),
-    0.15rem 0.22rem 0 rgba(46, 42, 36, 0.2);
+    0 0 0 0.35rem rgba(255, 248, 232, 0.72),
+    0.18rem 0.24rem 0 rgba(46, 42, 36, 0.22);
   transform: rotate(-45deg);
 }
 
 .petMarker::after {
   content: "";
   position: absolute;
-  right: -0.32rem;
-  bottom: 0.42rem;
-  width: 0.52rem;
-  height: 0.26rem;
+  right: -0.36rem;
+  bottom: 0.48rem;
+  width: 0.56rem;
+  height: 0.3rem;
   border: 1px solid var(--color-ink);
   border-left: 0;
   border-radius: 0 0.4rem 0.4rem 0;
@@ -100,7 +115,7 @@
   position: absolute;
   z-index: 2;
   right: var(--space-3);
-  bottom: var(--space-3);
+  bottom: calc(10rem + env(safe-area-inset-bottom));
   left: var(--space-3);
   display: flex;
   flex-wrap: wrap;
@@ -123,19 +138,29 @@
   text-transform: uppercase;
 }
 
-@media (max-width: 420px) {
-  .map {
-    min-height: 23rem;
-    height: 62vh;
+@media (max-width: 460px) {
+  .map :global(.maplibregl-ctrl-top-right) {
+    top: max(var(--space-2), env(safe-area-inset-top));
+    right: var(--space-2);
   }
 
   .labels {
-    position: static;
-    padding: var(--space-2);
-    background: rgba(255, 248, 232, 0.78);
+    right: var(--space-2);
+    bottom: calc(8.9rem + env(safe-area-inset-bottom));
+    left: var(--space-2);
+  }
+}
+
+@media (min-width: 820px) {
+  .map :global(.maplibregl-ctrl-top-right) {
+    top: max(var(--space-4), env(safe-area-inset-top));
+    right: var(--space-4);
   }
 
-  .labels span {
-    flex: 1 1 9rem;
+  .labels {
+    right: auto;
+    bottom: calc(5.5rem + env(safe-area-inset-bottom));
+    left: var(--space-4);
+    width: min(33rem, calc(100vw - 2 * var(--space-4)));
   }
 }

@@ -31,6 +31,8 @@ Measured on the local production build during Milestone 15:
 
 - MapLibre GL JS is allowed for the real map validation milestone because the map is now a core mechanic.
 - The MapLibre route is lazy-loaded so the large map runtime does not ship in the initial app shell.
+- The validation map uses external public raster tiles plus lightweight DUIF GeoJSON layers;
+  production still needs a tile/style provider decision.
 - No 3D libraries, date libraries, animation libraries, or utility bundles are installed.
 - No remote fetching, local persistence, polling, or animation loops are used in the current app.
 - Existing CSS uses gradients and shadows for the paper style, but no expensive blur/backdrop-filter pattern was found.
