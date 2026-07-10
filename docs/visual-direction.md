@@ -421,10 +421,21 @@ Use system fonts initially.
 
 The first implementation should not depend on external fonts.
 
-Later, the product may use:
+The long-term direction is documented in `docs/typography.md`.
 
-- one readable body font;
-- one expressive hand-drawn or postal display font.
+DUIF should use typography by role:
+
+- a readable UI/body font;
+- a postal/editorial display font;
+- a controlled handwritten note font;
+- a stamp/code font for postal labels.
+
+The recommended first external font pair is:
+
+- `Atkinson Hyperlegible` for interface text;
+- `Fraunces` for display titles and mascot names.
+
+Handwritten and stamp fonts should be deferred until the art direction slice.
 
 Typography should remain readable on mobile.
 

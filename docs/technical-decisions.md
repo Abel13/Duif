@@ -447,6 +447,32 @@ When real assets are added:
 - lazy-load secondary and below-the-fold images;
 - define image dimensions to reduce layout shift.
 
+## Typography Strategy
+
+DUIF will use the typography roles documented in `docs/typography.md`.
+
+For now, keep system fonts in the runtime app. Do not add external font files or font
+packages while the core flows are still moving.
+
+When the app reaches typography polish or the art direction asset slice, the first external
+font pair should be:
+
+- `Atkinson Hyperlegible` for UI/body text;
+- `Fraunces` for display titles and mascot names.
+
+Keep handwritten and stamp fonts planned but deferred:
+
+- `Caveat` for short handwritten notes;
+- `Special Elite` for stamps, delivery codes, and postal labels.
+
+Rules:
+
+- load WOFF2 when self-hosting;
+- load only required weights;
+- avoid more than two external families before visual validation;
+- preserve readable system fallbacks;
+- do not use decorative fonts for long paragraphs or dense data.
+
 ## PWA
 
 Basic PWA setup is enabled with:

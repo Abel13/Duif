@@ -1099,6 +1099,7 @@ full final asset pack.
 Includes:
 
 - add a few optimized runtime assets following `docs/assets.md`;
+- validate the first typography pair from `docs/typography.md`;
 - validate portraits for Nuvem, Trovão, and Pipoca;
 - add a small sample of equipment, reward, texture, and postal-mark assets;
 - keep CSS fallbacks intact for every asset surface;
