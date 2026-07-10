@@ -76,6 +76,7 @@ export const ptBR = {
     selectedMascot: "Mascote selecionado",
     chooseMascot: "Escolher mascote",
     bottomNav: "Navegação principal",
+    loadingCatalog: "Atualizando caderno",
   },
   send: {
     startAction: "Enviar",

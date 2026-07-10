@@ -72,6 +72,7 @@ export type TranslationDictionary = {
     selectedMascot: string;
     chooseMascot: string;
     bottomNav: string;
+    loadingCatalog: string;
   };
   send: {
     startAction: string;
@@ -383,6 +384,7 @@ export type TranslationKey =
   | "mascot.selectedMascot"
   | "mascot.chooseMascot"
   | "mascot.bottomNav"
+  | "mascot.loadingCatalog"
   | "send.startAction"
   | "send.eyebrow"
   | "send.title"

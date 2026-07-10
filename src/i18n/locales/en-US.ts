@@ -76,6 +76,7 @@ export const enUS = {
     selectedMascot: "Selected mascot",
     chooseMascot: "Choose mascot",
     bottomNav: "Main navigation",
+    loadingCatalog: "Updating notebook",
   },
   send: {
     startAction: "Send",

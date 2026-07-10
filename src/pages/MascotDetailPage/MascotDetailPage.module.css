@@ -16,6 +16,18 @@
   min-width: 0;
 }
 
+.dataNotice {
+  width: fit-content;
+  margin: var(--space-3) 0 0;
+  padding: 0.35rem 0.6rem;
+  border: 1px dashed rgba(46, 42, 36, 0.45);
+  border-radius: 0.2rem;
+  color: var(--color-postal-brown);
+  background: var(--color-postal-label);
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
 .content {
   display: grid;
   gap: var(--space-4);

@@ -685,6 +685,38 @@ Implementation notes:
 - local ports use the `56321-56329` range to avoid conflicts with another local Supabase app;
 - schema documentation lives in `docs/backend-schema.md`.
 
+## Milestone 18: Supabase Read Layer, Catalog First
+
+Goal:
+
+Add the first real frontend Supabase integration without weakening RLS or replacing the
+mock-driven prototype.
+
+Includes:
+
+- typed Supabase browser client;
+- environment-driven data source selection;
+- public catalog reads from `mascot_templates`;
+- pure mappers from Supabase rows to existing game types;
+- mock fallback when Supabase is unavailable or disabled;
+- documentation for `.env.local` setup and RLS boundaries.
+
+Does not include:
+
+- auth;
+- writes;
+- service role usage in the browser;
+- reading player-owned tables from the frontend;
+- migrating send, friends, inventory, rewards, or deliveries to live data.
+
+Success criteria:
+
+- app works with no `.env.local`;
+- app can read starter mascot catalog rows when `VITE_DUIF_DATA_SOURCE=supabase`;
+- `/mascots/:mascotId` keeps the same user-facing behavior;
+- player-owned data remains protected behind RLS;
+- tests and build continue passing.
+
 ## Suggested First Execution Order
 
 Use this order for the first development pass:

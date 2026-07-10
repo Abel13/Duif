@@ -226,6 +226,11 @@ The local schema and non-default development ports are documented in:
 
 docs/backend-schema.md
 
+The first frontend integration is catalog-first. The browser client may read public
+definition tables such as `mascot_templates`, while player-owned tables remain protected
+by RLS until auth or a server-side read boundary exists. Mock data remains the default
+runtime source, with Supabase enabled only through environment configuration.
+
 Use a custom Node backend later if the game needs:
 
 - complex economy;

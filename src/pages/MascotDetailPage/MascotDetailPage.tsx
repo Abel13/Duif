@@ -8,7 +8,7 @@ import { MascotSkillsPanel } from "../../components/mascot/MascotSkillsPanel";
 import { MascotStatsPanel } from "../../components/mascot/MascotStatsPanel";
 import { MascotTraitCard } from "../../components/mascot/MascotTraitCard";
 import { MascotTravelCard } from "../../components/mascot/MascotTravelCard";
-import { getMascotById, starterMascots } from "../../game";
+import { useMascotCatalog } from "../../game/useMascotCatalog";
 import { useTranslation } from "../../i18n";
 import { SketchPanel, StampButton } from "../../components/ui";
 import styles from "./MascotDetailPage.module.css";
@@ -18,7 +18,8 @@ const defaultMascotId = "mascot-nuvem";
 export function MascotDetailPage() {
   const { mascotId } = useParams();
   const navigate = useNavigate();
-  const mascot = getMascotById(mascotId ?? defaultMascotId);
+  const { isLoading, mascots } = useMascotCatalog();
+  const mascot = mascots.find((catalogMascot) => catalogMascot.id === (mascotId ?? defaultMascotId));
   const { t } = useTranslation();
 
   if (!mascot) {
@@ -29,10 +30,15 @@ export function MascotDetailPage() {
     <main className={styles.page}>
       <div className={styles.shell}>
         <aside className={styles.sidebar}>
-          <MascotSelector mascots={starterMascots} selectedMascotId={mascot.id} />
+          <MascotSelector mascots={mascots} selectedMascotId={mascot.id} />
+          {isLoading && <p className={styles.dataNotice}>{t("mascot.loadingCatalog")}</p>}
         </aside>
 
-        <section className={styles.content} aria-label={t("mascot.selectedMascot")}>
+        <section
+          aria-busy={isLoading}
+          aria-label={t("mascot.selectedMascot")}
+          className={styles.content}
+        >
           <div className={styles.hero}>
             <SketchPanel className={styles.heroPanel} eyebrow={t(mascot.speciesKey)} title={mascot.name}>
               <div className={styles.heroLabels}>

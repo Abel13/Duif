@@ -2,7 +2,8 @@
 
 This document describes the first local Supabase foundation for DUIF.
 
-The goal of this backend pass is to model the current playable loop without moving the UI away from mock data yet.
+The goal of the backend foundation is to model the current playable loop while keeping
+frontend migration gradual and safe.
 
 ## Local Ports
 
@@ -96,14 +97,37 @@ Static definition tables are not RLS-gated in this first pass:
 - `correspondence_options`;
 - `reward_items`.
 
-This should be revisited when the app adds a Supabase client and real authenticated sessions.
+The first frontend Supabase read layer uses only these public catalog tables. Player-owned
+tables stay protected until DUIF adds auth or a server-side read boundary.
+
+## Frontend Read Layer
+
+The app can optionally read public catalog data from Supabase by copying `.env.example`
+to `.env.local` and setting:
+
+```sh
+VITE_SUPABASE_URL=http://127.0.0.1:56321
+VITE_SUPABASE_ANON_KEY=<local anon key from supabase status>
+VITE_DUIF_DATA_SOURCE=supabase
+```
+
+By default `VITE_DUIF_DATA_SOURCE=mock`, so the app keeps using local mocks. If the
+Supabase URL/key are missing, the local server is stopped, or catalog rows are not
+available, the UI falls back to mocks.
+
+The current read layer intentionally reads only:
+
+- `mascot_templates`;
+- later public catalog rows such as `correspondence_options` and `reward_items`.
+
+It does not read `player_mascots`, `deliveries`, `friendships`, `delivery_rewards`,
+or `inventory_items` from the browser yet because those tables depend on authenticated
+RLS policies.
 
 ## Out Of Scope
 
 This milestone does not include:
 
-- `@supabase/supabase-js`;
-- frontend client setup;
 - production auth;
 - remote Supabase project linking;
 - Edge Functions;
