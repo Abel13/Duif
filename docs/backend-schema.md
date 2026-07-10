@@ -139,7 +139,16 @@ The current read layer intentionally reads only:
 
 The mascot detail screen is the first authenticated gameplay consumer. When Supabase
 data mode is enabled and the user is signed in, it reads `player_mascots` and matching
-`deliveries` through RLS. Other gameplay screens still use mock data.
+`deliveries` through RLS.
+
+The send flow is the first authenticated gameplay write. It uses the
+`create_delivery_from_selection` RPC to create rows in `deliveries`. The RPC validates
+the current profile, owned mascot, accepted friendship, and active correspondence option
+before inserting. It also computes route distance, travel timestamps, status, and reward
+seed server-side.
+
+Friend profile reads are limited to accepted friends through RLS. Inventory, rewards,
+collection, and history screens still use mock data.
 
 ## Out Of Scope
 

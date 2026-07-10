@@ -236,9 +236,12 @@ player profile so existing RLS policies can be exercised without building final
 onboarding yet.
 
 The first authenticated gameplay read is the mascot detail screen. It may read
-`player_mascots` and `deliveries` for the claimed profile, but send flow, friends,
-inventory, rewards, and collection still use mocks until they receive dedicated
-migration milestones.
+`player_mascots` and `deliveries` for the claimed profile.
+
+The first authenticated gameplay write is the send flow. It creates deliveries through
+a validating `security definer` RPC instead of direct broad insert policies. Inventory,
+rewards, collection, history, realtime, and notifications remain separate future
+milestones.
 
 Use a custom Node backend later if the game needs:
 

@@ -535,6 +535,43 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      create_delivery_from_selection: {
+        Args: {
+          correspondence_mock_key: string
+          friend_mock_key: string
+          mascot_mock_key: string
+        }
+        Returns: {
+          animal_speed_kmh: number
+          correspondence_option_id: string | null
+          created_at: string
+          destination_label_key: string
+          destination_latitude: number
+          destination_longitude: number
+          distance_km: number
+          id: string
+          mascot_id: string
+          mock_key: string | null
+          origin_label_key: string
+          origin_latitude: number
+          origin_longitude: number
+          outbound_arrival_at: string
+          outbound_start_at: string
+          receiver_profile_id: string
+          return_arrival_at: string | null
+          return_start_at: string | null
+          reward_seed: string
+          sender_profile_id: string
+          status: Database["public"]["Enums"]["delivery_status"]
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "deliveries"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
     }
     Enums: {
       correspondence_type: "letter" | "postcard" | "sticker" | "smallGift"

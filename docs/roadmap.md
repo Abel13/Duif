@@ -778,6 +778,38 @@ Success criteria:
 - invalid mascot IDs still redirect to Nuvem;
 - tests and build pass.
 
+## Milestone 21: Persisted Send Flow
+
+Goal:
+
+Make `/send` create real delivery rows when the user is authenticated, while preserving
+the mock send flow as fallback.
+
+Includes:
+
+- `create_delivery_from_selection` RPC for validated delivery creation;
+- accepted-friend profile reads for send destinations;
+- authenticated send data for friends, mascots, and correspondence options;
+- `/send` confirmation powered by persisted deliveries when Supabase data mode is active;
+- mock fallback without auth or env configuration.
+
+Does not include:
+
+- inventory changes;
+- reward generation;
+- collection persistence;
+- delivery history;
+- realtime updates;
+- notifications.
+
+Success criteria:
+
+- `/send` works with mocks when Supabase is unavailable;
+- authenticated users can create a real `deliveries` row;
+- the new delivery appears on the mascot screen;
+- direct inserts are not exposed through broad client-side policies;
+- tests and build pass.
+
 ## Suggested First Execution Order
 
 Use this order for the first development pass:

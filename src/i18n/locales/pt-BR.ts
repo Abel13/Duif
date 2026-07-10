@@ -120,6 +120,9 @@ export const ptBR = {
     selectedCorrespondence: "Envio selecionado",
     readyHint: "Tudo pronto para despachar esta entrega.",
     incompleteHint: "Complete as três escolhas para confirmar o envio.",
+    loadingData: "Atualizando opções do caderno",
+    sending: "Despachando",
+    errorMessage: "Não foi possível criar a entrega. Tente novamente.",
   },
   species: {
     carrierPigeon: "Pombo-correio",

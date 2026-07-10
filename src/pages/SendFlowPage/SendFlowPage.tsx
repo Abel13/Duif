@@ -1,11 +1,10 @@
 import { Link, useSearchParams } from "react-router-dom";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 
 import { RoutePreview } from "../../components/map/RoutePreview";
 import { ItemCard, SketchPanel, StampButton } from "../../components/ui";
 import {
-  correspondenceOptions,
   createMockDeliveryFromSelection,
   currentPlayer,
   estimateMascotSpeedKmh,
@@ -14,15 +13,15 @@ import {
   getDeliveryStatus,
   getTravelProgress,
   haversineDistanceKm,
-  mockFriends,
-  starterMascots,
   type CorrespondenceOption,
   type Delivery,
   type FriendProfile,
   type Mascot,
   type SendFlowSelection,
 } from "../../game";
+import { useSendFlowData } from "../../game/useSendFlowData";
 import { useTranslation } from "../../i18n";
+import { createAuthenticatedDeliveryFromSelection } from "../../integrations/supabase/authenticatedSendFlow";
 import styles from "./SendFlowPage.module.css";
 
 const defaultMascotId = "mascot-nuvem";
@@ -39,22 +38,36 @@ export function SendFlowPage() {
   const [searchParams] = useSearchParams();
   const requestedMascotId = searchParams.get("mascotId");
   const requestedFriendId = searchParams.get("friendId");
-  const initialMascotId = starterMascots.some((mascot) => mascot.id === requestedMascotId)
-    ? requestedMascotId ?? defaultMascotId
-    : defaultMascotId;
-  const initialFriendId = mockFriends.some((friend) => friend.id === requestedFriendId)
-    ? requestedFriendId ?? mockFriends[0]?.id
-    : mockFriends[0]?.id;
+  const {
+    data: sendFlowData,
+    isAuthenticatedSource,
+    isLoading: isSendFlowLoading,
+  } = useSendFlowData();
+  const { friends, mascots, correspondenceOptions: availableCorrespondence } = sendFlowData;
+  const initialMascotId = getInitialMascotId(mascots, requestedMascotId);
+  const initialFriendId = getInitialFriendId(friends, requestedFriendId);
   const [selection, setSelection] = useState<SendFlowSelection>({
     friendId: initialFriendId,
     mascotId: initialMascotId,
-    correspondenceId: correspondenceOptions[0]?.id,
+    correspondenceId: availableCorrespondence[0]?.id,
   });
   const [confirmedSend, setConfirmedSend] = useState<ConfirmedSend | undefined>();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasSubmitError, setHasSubmitError] = useState(false);
 
-  const selectedFriend = mockFriends.find((friend) => friend.id === selection.friendId);
-  const selectedMascot = starterMascots.find((mascot) => mascot.id === selection.mascotId);
-  const selectedCorrespondence = correspondenceOptions.find(
+  useEffect(() => {
+    setSelection({
+      correspondenceId: availableCorrespondence[0]?.id,
+      friendId: getInitialFriendId(friends, requestedFriendId),
+      mascotId: getInitialMascotId(mascots, requestedMascotId),
+    });
+    setConfirmedSend(undefined);
+    setHasSubmitError(false);
+  }, [availableCorrespondence, friends, mascots, requestedFriendId, requestedMascotId]);
+
+  const selectedFriend = friends.find((friend) => friend.id === selection.friendId);
+  const selectedMascot = mascots.find((mascot) => mascot.id === selection.mascotId);
+  const selectedCorrespondence = availableCorrespondence.find(
     (option) => option.id === selection.correspondenceId,
   );
   const isSelectionComplete = Boolean(selectedFriend && selectedMascot && selectedCorrespondence);
@@ -79,13 +92,45 @@ export function SendFlowPage() {
       ...nextSelection,
     }));
     setConfirmedSend(undefined);
+    setHasSubmitError(false);
   }
 
-  function handleConfirmSend() {
-    const result = createMockDeliveryFromSelection(selection);
+  async function handleConfirmSend() {
+    if (!selectedFriend || !selectedMascot || !selectedCorrespondence || isSubmitting) {
+      return;
+    }
 
-    if (result) {
-      setConfirmedSend(result);
+    setHasSubmitError(false);
+    setIsSubmitting(true);
+
+    try {
+      if (isAuthenticatedSource) {
+        const delivery = await createAuthenticatedDeliveryFromSelection({
+          correspondence: selectedCorrespondence,
+          friend: selectedFriend,
+          mascot: selectedMascot,
+        });
+
+        if (delivery) {
+          setConfirmedSend({
+            correspondence: selectedCorrespondence,
+            delivery,
+            friend: selectedFriend,
+            mascot: selectedMascot,
+          });
+        }
+        return;
+      }
+
+      const result = createMockDeliveryFromSelection(selection);
+
+      if (result) {
+        setConfirmedSend(result);
+      }
+    } catch {
+      setHasSubmitError(true);
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -93,7 +138,11 @@ export function SendFlowPage() {
     setConfirmedSend(undefined);
   }
 
-  const summaryHint = isSelectionComplete ? t("send.readyHint") : t("send.incompleteHint");
+  const summaryHint = isSendFlowLoading
+    ? t("send.loadingData")
+    : isSelectionComplete
+      ? t("send.readyHint")
+      : t("send.incompleteHint");
 
   return (
     <main className={styles.page}>
@@ -104,7 +153,7 @@ export function SendFlowPage() {
 
         <div className={styles.flowGrid}>
           <ChoiceSection title={t("send.chooseFriend")}>
-            {mockFriends.map((friend) => (
+            {friends.map((friend) => (
               <div
                 className={styles.optionFrame}
                 data-selected={friend.id === selection.friendId || undefined}
@@ -127,7 +176,7 @@ export function SendFlowPage() {
           </ChoiceSection>
 
           <ChoiceSection title={t("send.chooseMascot")}>
-            {starterMascots.map((mascot) => (
+            {mascots.map((mascot) => (
               <div
                 className={styles.optionFrame}
                 data-selected={mascot.id === selection.mascotId || undefined}
@@ -150,7 +199,7 @@ export function SendFlowPage() {
           </ChoiceSection>
 
           <ChoiceSection title={t("send.chooseCorrespondence")}>
-            {correspondenceOptions.map((option) => (
+            {availableCorrespondence.map((option) => (
               <div
                 className={styles.optionFrame}
                 data-selected={option.id === selection.correspondenceId || undefined}
@@ -177,6 +226,7 @@ export function SendFlowPage() {
             ) : (
               <div className={styles.summary}>
                 <p className={styles.hint}>{summaryHint}</p>
+                {hasSubmitError && <p className={styles.error}>{t("send.errorMessage")}</p>}
                 <dl className={styles.summaryList}>
                   <SummaryRow
                     fallback={t("common.unavailable")}
@@ -206,8 +256,11 @@ export function SendFlowPage() {
                     value={estimate ? formatDurationHours(estimate.durationHours) : undefined}
                   />
                 </dl>
-                <StampButton disabled={!isSelectionComplete} onClick={handleConfirmSend}>
-                  {t("send.sendButton")}
+                <StampButton
+                  disabled={!isSelectionComplete || isSubmitting || isSendFlowLoading}
+                  onClick={handleConfirmSend}
+                >
+                  {isSubmitting ? t("send.sending") : t("send.sendButton")}
                 </StampButton>
               </div>
             )}
@@ -298,4 +351,16 @@ function formatDurationHours(durationHours: number) {
   }
 
   return minutes > 0 ? `${hours}h ${minutes}m` : `${hours}h`;
+}
+
+function getInitialMascotId(mascots: Mascot[], requestedMascotId: string | null) {
+  return mascots.some((mascot) => mascot.id === requestedMascotId)
+    ? requestedMascotId ?? mascots[0]?.id
+    : (mascots[0]?.id ?? defaultMascotId);
+}
+
+function getInitialFriendId(friends: FriendProfile[], requestedFriendId: string | null) {
+  return friends.some((friend) => friend.id === requestedFriendId)
+    ? requestedFriendId ?? friends[0]?.id
+    : friends[0]?.id;
 }

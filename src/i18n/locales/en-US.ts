@@ -119,6 +119,9 @@ export const enUS = {
     selectedCorrespondence: "Selected correspondence",
     readyHint: "Everything is ready to dispatch this delivery.",
     incompleteHint: "Complete the three choices to confirm the send.",
+    loadingData: "Updating notebook options",
+    sending: "Dispatching",
+    errorMessage: "The delivery could not be created. Try again.",
   },
   species: {
     carrierPigeon: "Carrier pigeon",

@@ -114,6 +114,9 @@ export type TranslationDictionary = {
     selectedCorrespondence: string;
     readyHint: string;
     incompleteHint: string;
+    loadingData: string;
+    sending: string;
+    errorMessage: string;
   };
   species: {
     carrierPigeon: string;
@@ -442,6 +445,9 @@ export type TranslationKey =
   | "send.selectedCorrespondence"
   | "send.readyHint"
   | "send.incompleteHint"
+  | "send.loadingData"
+  | "send.sending"
+  | "send.errorMessage"
   | "species.carrierPigeon"
   | "species.messengerFalcon"
   | "species.mailDuck"
