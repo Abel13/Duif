@@ -67,6 +67,7 @@ export type TranslationDictionary = {
     backToNest: string;
     nest: string;
     letters: string;
+    collection: string;
     map: string;
     friends: string;
     shop: string;
@@ -448,6 +449,7 @@ export type TranslationKey =
   | "navigation.backToFriends"
   | "navigation.backToNest"
   | "navigation.letters"
+  | "navigation.collection"
   | "navigation.map"
   | "navigation.friends"
   | "navigation.shop"

@@ -63,7 +63,8 @@ Example shape:
 export const ptBR = {
   navigation: {
     nest: "Ninho",
-    letters: "Cartas",
+    collection: "Coleção",
+    letters: "Caixa Postal",
     map: "Mapa",
     friends: "Amigos",
     shop: "Loja",

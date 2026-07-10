@@ -934,7 +934,7 @@ Includes:
 - create shared layout primitives for page padding, bottom navigation, and secondary-flow
   top bars;
 - replace the old mascot-specific bottom nav with an app-level bottom nav;
-- keep main routes reachable through bottom navigation: Ninho, Caixa Postal, Mapa, Amigos,
+- keep main routes reachable through bottom navigation: Ninho, Coleção, Mapa, Amigos,
   and disabled Loja;
 - add consistent back navigation to send, rewards, friend profile, and auth flows;
 - reduce mobile scroll pressure with denser cards, compact grids, and sticky action panels
@@ -1121,19 +1121,19 @@ Success criteria:
 - assets work across mascot, map, reward, inventory, and friend contexts;
 - fallback rendering still works when files are missing or fail to load.
 
-## Milestone 28: Persisted Inventory Album
+## Milestone 28: Persisted Collection
 
 Goal:
 
-Migrate the inventory album to read persisted inventory items while keeping the album as
-the collectible visual experience, not the full inventory/economy system.
+Migrate the collection screen to read persisted inventory items while keeping album pages as
+the visual metaphor for collectible progress, not the full inventory/economy system.
 
 Includes:
 
 - authenticated read layer for `inventory_items`;
-- rename received-correspondence inventory surfaces to "Caixa Postal" in pt-BR UI;
-- category filtering from persisted data;
-- album slots for collection progress;
+- keep received-correspondence surfaces reserved for "Caixa Postal" in pt-BR UI;
+- collection-page filtering from persisted data;
+- album-style slots for collection progress;
 - duplicate policy display where available;
 - route rewards collected into inventory after return;
 - mock fallback without auth or Supabase config.

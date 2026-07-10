@@ -19,7 +19,7 @@ export function AppBottomNav() {
         {t("navigation.nest")}
       </PaperTab>
       <PaperTab active={isInventoryActive} className={styles.tab} onClick={() => navigate("/inventory")}>
-        {t("navigation.letters")}
+        {t("navigation.collection")}
       </PaperTab>
       <PaperTab active={isMapActive} className={styles.tab} onClick={() => navigate("/map")}>
         {t("navigation.map")}

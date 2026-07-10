@@ -259,27 +259,31 @@ Open balancing question:
 
 ## Inventory and Album Rules
 
-Inventory and album are related but not identical.
+Inventory, collection, album, and mailbox are related but not identical.
 
 Definitions:
 
 - Inventory is the player's owned item storage.
+- Collection is the player-facing area for discovered travel rewards and collectible
+  progress.
 - Mailbox, or "Caixa Postal" in pt-BR UI, is the received-correspondence inventory:
   letters, postcards, stickers, gifts, and visible received items from friends.
-- Album is the collectible visual experience for viewing discovered items, rarity, empty
-  slots, and collection progress.
+- Album is a visual metaphor inside collection for pages, empty slots, rarity, and
+  completion progress. It is not the whole inventory system.
 - Cargo is the pet's delivery-specific carrying limit.
 
 Rules:
 
 - Received correspondence should use the product metaphor "Caixa Postal" instead of a
   generic inventory label.
-- The mailbox is part of inventory, but it is not the same thing as the collectible album.
-- The album can remain the main UI metaphor for collection.
-- The album is not the entire inventory system.
+- The current bottom-nav entry should use "Coleção" for discovered items, not "Caixa
+  Postal", until a dedicated received-correspondence mailbox exists.
+- The mailbox is part of owned content, but it is not the same thing as the collection.
+- The album can remain a UI metaphor inside collection, but avoid using "album categories"
+  as visible copy; prefer "Páginas da coleção".
 - Functional items, consumables, cosmetics, postcards, stickers, rewards, and materials may
   all live in inventory.
-- The album should highlight collection progress and discoveries.
+- Collection should highlight progress and discoveries.
 
 Duplicate item policies:
 
