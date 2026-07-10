@@ -243,6 +243,11 @@ a validating `security definer` RPC instead of direct broad insert policies. Inv
 rewards, collection, history, realtime, and notifications remain separate future
 milestones.
 
+Reward collection is now the second authenticated gameplay write. It uses a dedicated
+`collect_delivery_reward` RPC instead of direct client writes, because collection touches
+three protected tables at once: `delivery_rewards`, `deliveries`, and `inventory_items`.
+The inventory album remains mock-first until it has its own persisted read milestone.
+
 Use a custom Node backend later if the game needs:
 
 - complex economy;

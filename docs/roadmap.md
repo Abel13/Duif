@@ -810,6 +810,39 @@ Success criteria:
 - direct inserts are not exposed through broad client-side policies;
 - tests and build pass.
 
+## Milestone 22: Persisted Reward Collection
+
+Goal:
+
+Make `/rewards/:deliveryId` collect returned delivery rewards through Supabase when the
+user is authenticated, while preserving the mock reward flow as fallback.
+
+Includes:
+
+- `collect_delivery_reward` RPC for validated collection;
+- deterministic `delivery_rewards` creation or reuse;
+- `deliveries.status = 'completed'` after collection;
+- `inventory_items` insertion for the collected item;
+- authenticated reward read layer for the reward page;
+- mock fallback without auth or env configuration.
+
+Does not include:
+
+- persisted inventory album UI;
+- economy balancing;
+- shop;
+- trading;
+- reward history;
+- realtime updates.
+
+Success criteria:
+
+- `/rewards/delivery-nuvem-lisbon` still works with mocks;
+- authenticated users can collect a returned delivery reward;
+- collection creates or reuses a delivery reward and writes an inventory item;
+- already collected rewards render as completed;
+- tests and build pass.
+
 ## Suggested First Execution Order
 
 Use this order for the first development pass:

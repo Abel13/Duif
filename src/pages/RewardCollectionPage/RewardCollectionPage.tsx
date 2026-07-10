@@ -1,21 +1,17 @@
 import { Link, Navigate, useParams } from "react-router-dom";
-import { useState } from "react";
 
 import { RoutePreview } from "../../components/map/RoutePreview";
 import { ItemCard, SketchPanel, StampButton } from "../../components/ui";
 import {
-  createMockRewardFromDelivery,
   formatRemainingTime,
-  getDeliveryById,
   getDeliveryStatus,
   getMascotById,
   getTravelProgress,
-  initialMockInventory,
+  useRewardCollectionData,
   type Delivery,
   type DeliveryReward,
-  type InventoryItem,
 } from "../../game";
-import { useTranslation } from "../../i18n";
+import { useTranslation, type TranslationKey } from "../../i18n";
 import styles from "./RewardCollectionPage.module.css";
 
 const defaultMascotId = "mascot-nuvem";
@@ -23,37 +19,38 @@ const defaultMascotId = "mascot-nuvem";
 export function RewardCollectionPage() {
   const { t } = useTranslation();
   const { deliveryId } = useParams();
-  const delivery = deliveryId ? getDeliveryById(deliveryId) : undefined;
-  const [collectedReward, setCollectedReward] = useState<DeliveryReward | undefined>();
-  const [inventory, setInventory] = useState<InventoryItem[]>(initialMockInventory);
+  const {
+    collectReward,
+    delivery,
+    error,
+    inventoryCount,
+    isCollected,
+    isLoading,
+    isMutating,
+    reward,
+  } = useRewardCollectionData(deliveryId);
+
+  if (isLoading) {
+    return (
+      <main className={styles.page}>
+        <div className={styles.shell}>
+          <SketchPanel eyebrow={t("rewards.eyebrow")} title={t("rewards.title")}>
+            <p className={styles.subtitle}>{t("rewards.loading")}</p>
+          </SketchPanel>
+        </div>
+      </main>
+    );
+  }
 
   if (!delivery) {
     return <Navigate replace to={`/mascots/${defaultMascotId}`} />;
   }
 
   const mascot = getMascotById(delivery.mascotId);
-  const reward = createMockRewardFromDelivery(delivery);
-  const status = collectedReward ? "completed" : getDeliveryStatus(delivery);
+  const status = isCollected ? "completed" : getDeliveryStatus(delivery);
   const isReady = status === "returned" && reward;
-  const isCollected = status === "completed" && collectedReward;
-
-  function handleCollect() {
-    if (!reward) {
-      return;
-    }
-
-    setCollectedReward(reward);
-    setInventory((currentInventory) => [
-      ...currentInventory,
-      {
-        ...reward.item,
-        category: "keepsakes",
-        collectedAt: new Date().toISOString(),
-        equipped: false,
-        sourceKey: "inventory.sources.routeReward",
-      },
-    ]);
-  }
+  const displayReward = reward;
+  const shouldShowReward = Boolean(displayReward && (isReady || isCollected));
 
   return (
     <main className={styles.page}>
@@ -93,13 +90,15 @@ export function RewardCollectionPage() {
             </div>
           </SketchPanel>
 
-          {isReady || isCollected ? (
+          {shouldShowReward ? (
             <RewardPanel
-              inventoryCount={inventory.length}
+              error={error}
+              inventoryCount={inventoryCount}
               isCollected={Boolean(isCollected)}
+              isMutating={isMutating}
               mascotId={delivery.mascotId}
-              onCollect={handleCollect}
-              reward={(collectedReward ?? reward) as DeliveryReward}
+              onCollect={collectReward}
+              reward={displayReward as DeliveryReward}
             />
           ) : (
             <TravelingPanel delivery={delivery} />
@@ -111,14 +110,18 @@ export function RewardCollectionPage() {
 }
 
 function RewardPanel({
+  error,
   inventoryCount,
   isCollected,
+  isMutating,
   mascotId,
   onCollect,
   reward,
 }: {
+  error?: TranslationKey;
   inventoryCount: number;
   isCollected: boolean;
+  isMutating: boolean;
   mascotId: string;
   onCollect: () => void;
   reward: DeliveryReward;
@@ -151,8 +154,11 @@ function RewardPanel({
             {t("rewards.backToMascot")}
           </Link>
         ) : (
-          <StampButton onClick={onCollect}>{t("rewards.collectButton")}</StampButton>
+          <StampButton disabled={isMutating} onClick={onCollect}>
+            {isMutating ? t("rewards.collecting") : t("rewards.collectButton")}
+          </StampButton>
         )}
+        {error ? <p className={styles.feedback}>{t(error)}</p> : null}
       </div>
     </SketchPanel>
   );

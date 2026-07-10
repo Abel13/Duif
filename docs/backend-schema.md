@@ -147,8 +147,15 @@ the current profile, owned mascot, accepted friendship, and active correspondenc
 before inserting. It also computes route distance, travel timestamps, status, and reward
 seed server-side.
 
+Reward collection is the second authenticated gameplay write. It uses the
+`collect_delivery_reward` RPC to validate the current profile, verify that the delivery
+has returned, create or reuse the deterministic `delivery_rewards` row, mark the delivery
+as `completed`, and insert the collected item into `inventory_items`.
+
 Friend profile reads are limited to accepted friends through RLS. Inventory, rewards,
-collection, and history screens still use mock data.
+and history screens are still not fully migrated. The reward collection screen can now
+use authenticated delivery/reward data, but the inventory album UI remains mock-first
+until the persisted inventory milestone.
 
 ## Out Of Scope
 

@@ -14,6 +14,7 @@ export {
 } from "./inventory";
 export { currentPlayer, getDeliveryById, getMascotById, nuvemDelivery, starterMascots } from "./mockData";
 export { createMockRewardFromDelivery, initialMockInventory } from "./rewards";
+export { useRewardCollectionData } from "./useRewardCollectionData";
 export {
   correspondenceOptions,
   createMockDeliveryFromSelection,

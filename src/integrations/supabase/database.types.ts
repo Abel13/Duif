@@ -535,6 +535,10 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      collect_delivery_reward: {
+        Args: { delivery_public_id: string }
+        Returns: Json
+      }
       create_delivery_from_selection: {
         Args: {
           correspondence_mock_key: string

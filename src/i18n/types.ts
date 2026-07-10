@@ -221,7 +221,10 @@ export type TranslationDictionary = {
     travelingDescription: string;
     completedTitle: string;
     completedDescription: string;
+    loading: string;
     collectButton: string;
+    collecting: string;
+    collectError: string;
     backToMascot: string;
     xpGained: string;
     itemFound: string;
@@ -504,7 +507,10 @@ export type TranslationKey =
   | "rewards.travelingDescription"
   | "rewards.completedTitle"
   | "rewards.completedDescription"
+  | "rewards.loading"
   | "rewards.collectButton"
+  | "rewards.collecting"
+  | "rewards.collectError"
   | "rewards.backToMascot"
   | "rewards.xpGained"
   | "rewards.itemFound"

@@ -120,6 +120,14 @@
   outline-offset: 3px;
 }
 
+.feedback {
+  margin: 0;
+  color: var(--color-postal-red);
+  font-size: 0.9rem;
+  font-weight: 800;
+  line-height: 1.5;
+}
+
 @media (min-width: 760px) {
   .page {
     padding: var(--space-5);
