@@ -10,6 +10,7 @@ export function MascotBottomNav() {
   const navigate = useNavigate();
   const isFriendsActive = location.pathname.startsWith("/friends");
   const isInventoryActive = location.pathname.startsWith("/inventory");
+  const isMapActive = location.pathname.startsWith("/map");
   const isNestActive = location.pathname.startsWith("/mascots");
 
   return (
@@ -20,7 +21,9 @@ export function MascotBottomNav() {
       <PaperTab active={isInventoryActive} onClick={() => navigate("/inventory")}>
         {t("navigation.letters")}
       </PaperTab>
-      <PaperTab>{t("navigation.map")}</PaperTab>
+      <PaperTab active={isMapActive} onClick={() => navigate("/map")}>
+        {t("navigation.map")}
+      </PaperTab>
       <PaperTab active={isFriendsActive} onClick={() => navigate("/friends")}>
         {t("navigation.friends")}
       </PaperTab>

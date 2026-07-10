@@ -13,6 +13,18 @@ export {
   mockInventoryItems,
 } from "./inventory";
 export { currentPlayer, getDeliveryById, getMascotById, nuvemDelivery, starterMascots } from "./mockData";
+export {
+  createDeliveryRouteGeoJson,
+  createRouteRewardsGeoJson,
+  getPetMapPosition,
+  getRouteRewardDiscoveries,
+  interpolateCoordinates,
+  toLngLat,
+  type PetMapPosition,
+  type RouteRewardDiscovery,
+  type RouteRewardKind,
+  type TravelLeg,
+} from "./mapTravel";
 export { createMockRewardFromDelivery, initialMockInventory } from "./rewards";
 export { useRewardCollectionData } from "./useRewardCollectionData";
 export {

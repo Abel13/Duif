@@ -123,6 +123,42 @@ export const enUS = {
     sending: "Dispatching",
     errorMessage: "The delivery could not be created. Try again.",
   },
+  map: {
+    eyebrow: "Postal map",
+    title: "Real-time trip",
+    subtitle:
+      "Follow the mascot across the route and see mocked discoveries appearing along the way.",
+    tripStatus: "Trip status",
+    currentLeg: "Current leg",
+    discoveries: "Route discoveries",
+    mockedRewards: "Mocked rewards",
+    discovered: "Discovered",
+    onTheRoute: "On the route",
+    backToMascot: "Back to mascot",
+    unavailable: "The real map could not be loaded right now. The route is still available in trip details.",
+    legs: {
+      preparing: "Preparing",
+      outbound: "Outbound",
+      delivered: "At destination",
+      returning: "Returning",
+      returned: "Returned",
+      completed: "Completed",
+    },
+    rewards: {
+      rioPostcard: {
+        name: "Rio postcard",
+        description: "A coastal view stamped when the route crosses the southeast.",
+      },
+      capeVerdeBadge: {
+        name: "Atlantic badge",
+        description: "A small emblem found on the crossing between continents.",
+      },
+      madeiraStamp: {
+        name: "Madeira stamp",
+        description: "A rare passage stamp near the islands before reaching Lisbon.",
+      },
+    },
+  },
   species: {
     carrierPigeon: "Carrier pigeon",
     messengerFalcon: "Messenger falcon",

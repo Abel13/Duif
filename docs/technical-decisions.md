@@ -361,6 +361,13 @@ Recommended validation stack:
 
 MapLibre GL JS
 
+Milestone 24 uses the public MapLibre demo style for validation only:
+
+`https://demotiles.maplibre.org/globe.json`
+
+This avoids adding a provider key before the product validates whether MapLibre feels right
+for DUIF. It is not a production tile/style decision.
+
 Reasons:
 
 - open source;
@@ -378,6 +385,24 @@ Validation goals:
 - show the pet at computed progress;
 - show mocked route reward points;
 - test whether MapLibre can be styled toward DUIF's illustrated postal direction.
+
+Nearby-pet direction:
+
+DUIF may show other pets passing near the player's pet to make the map feel alive. Treat
+this as route-based presence, not second-by-second multiplayer location streaming.
+
+Preferred technical shape:
+
+- backend stores authoritative active deliveries, route endpoints, timestamps, effective
+  speed, mascot preview data, and visibility rules;
+- client requests only pets relevant to the current viewport, route, or proximity window;
+- backend returns sanitized route snapshots, never private street/neighborhood data;
+- client interpolates visible pet positions locally from timestamps and route progress;
+- friends and explicit visibility settings can unlock richer labels, but public nearby pets
+  should stay anonymous or minimally identified.
+
+This keeps the first version closer to "postal traffic" than to an MMO simulation, while
+leaving room for a richer live map if the experience proves strong.
 
 Open decisions:
 

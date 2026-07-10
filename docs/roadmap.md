@@ -904,6 +904,7 @@ Does not include:
 - custom tile hosting;
 - final illustrated map art;
 - real route geometry beyond straight lines;
+- nearby pets or live postal traffic;
 - backend reward-area tables;
 - live sockets;
 - inventory writes from route discoveries;
@@ -1020,6 +1021,38 @@ Success criteria:
 - collected-along-the-way items remain tied to delivery state until reward collection;
 - tests and build pass.
 
+## Milestone 27.5: Postal Traffic Design Spike
+
+Goal:
+
+Validate whether showing other pets passing near the player's pet should become a default
+part of the map experience.
+
+Includes:
+
+- define "postal traffic" as nearby active deliveries, not chat or full real-time multiplayer;
+- decide what information is visible for friends, non-friends, and anonymous public pets;
+- prototype a few nearby pet route snapshots on `/map`;
+- animate nearby pets client-side from route endpoints, timestamps, and speed;
+- document backend query shape for viewport/route proximity;
+- confirm privacy rules so no street, neighborhood, or precise private base data is exposed.
+
+Does not include:
+
+- live sockets;
+- global real-time player tracking;
+- precise residential location sharing;
+- messaging between nearby players;
+- production anti-abuse or moderation tooling.
+
+Success criteria:
+
+- the map feels more alive without becoming noisy;
+- nearby pets are useful or delightful enough to keep as a default map layer;
+- privacy expectations remain clear;
+- the technical model can scale through interest management instead of broadcasting every
+  active pet to every client.
+
 ## Milestone 28: Persisted Inventory Album
 
 Goal:
@@ -1030,6 +1063,7 @@ the collectible visual experience, not the full inventory/economy system.
 Includes:
 
 - authenticated read layer for `inventory_items`;
+- rename received-correspondence inventory surfaces to "Caixa Postal" in pt-BR UI;
 - category filtering from persisted data;
 - album slots for collection progress;
 - duplicate policy display where available;

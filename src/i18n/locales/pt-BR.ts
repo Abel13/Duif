@@ -124,6 +124,42 @@ export const ptBR = {
     sending: "Despachando",
     errorMessage: "Não foi possível criar a entrega. Tente novamente.",
   },
+  map: {
+    eyebrow: "Mapa postal",
+    title: "Viagem em tempo real",
+    subtitle:
+      "Acompanhe o mascote cruzando a rota e veja as descobertas mockadas que aparecem pelo caminho.",
+    tripStatus: "Status da viagem",
+    currentLeg: "Trecho atual",
+    discoveries: "Descobertas da rota",
+    mockedRewards: "Recompensas mockadas",
+    discovered: "Descoberto",
+    onTheRoute: "No caminho",
+    backToMascot: "Voltar ao mascote",
+    unavailable: "Não foi possível carregar o mapa real agora. A rota continua disponível nos detalhes da viagem.",
+    legs: {
+      preparing: "Preparando",
+      outbound: "Indo",
+      delivered: "No destino",
+      returning: "Voltando",
+      returned: "Retornou",
+      completed: "Concluída",
+    },
+    rewards: {
+      rioPostcard: {
+        name: "Cartão postal do Rio",
+        description: "Uma vista costeira carimbada quando a rota passa pelo sudeste.",
+      },
+      capeVerdeBadge: {
+        name: "Badge do Atlântico",
+        description: "Um pequeno emblema encontrado no caminho entre continentes.",
+      },
+      madeiraStamp: {
+        name: "Selo da Madeira",
+        description: "Um selo raro de passagem perto das ilhas antes de chegar a Lisboa.",
+      },
+    },
+  },
   species: {
     carrierPigeon: "Pombo-correio",
     messengerFalcon: "Falcão-mensageiro",

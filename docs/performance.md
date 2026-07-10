@@ -20,16 +20,18 @@ Measured on the local production build during Milestone 15:
 
 ## Decisions
 
-- Keep runtime dependencies limited to React, React DOM, and React Router while the prototype remains local/mock-only.
+- Keep runtime dependencies limited and add heavier runtime libraries only when they validate a core product need.
 - Keep large source images outside `public/` because Vite copies public assets directly into `dist`.
 - Use exact-size generated PWA icons in the manifest and Apple touch metadata.
 - Allow CSS gradients, paper textures, and small shadows as part of the postal notebook identity.
-- Avoid heavy visual effects such as blur filters, backdrop filters, map tiles, canvas rendering, and 3D until there is a clear product need.
+- Avoid heavy visual effects such as blur filters, backdrop filters, canvas rendering, and 3D until there is a clear product need.
 - Keep animations limited to lightweight interaction polish, preferably `transform` and `opacity`.
 
 ## Audit Notes
 
-- No map libraries, 3D libraries, date libraries, animation libraries, or utility bundles are installed.
+- MapLibre GL JS is allowed for the real map validation milestone because the map is now a core mechanic.
+- The MapLibre route is lazy-loaded so the large map runtime does not ship in the initial app shell.
+- No 3D libraries, date libraries, animation libraries, or utility bundles are installed.
 - No remote fetching, local persistence, polling, or animation loops are used in the current app.
 - Existing CSS uses gradients and shadows for the paper style, but no expensive blur/backdrop-filter pattern was found.
 - The main performance risk before this pass was the multi-megabyte app icon being copied into the production build.

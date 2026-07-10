@@ -118,6 +118,41 @@ export type TranslationDictionary = {
     sending: string;
     errorMessage: string;
   };
+  map: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    tripStatus: string;
+    currentLeg: string;
+    discoveries: string;
+    mockedRewards: string;
+    discovered: string;
+    onTheRoute: string;
+    backToMascot: string;
+    unavailable: string;
+    legs: {
+      preparing: string;
+      outbound: string;
+      delivered: string;
+      returning: string;
+      returned: string;
+      completed: string;
+    };
+    rewards: {
+      rioPostcard: {
+        name: string;
+        description: string;
+      };
+      capeVerdeBadge: {
+        name: string;
+        description: string;
+      };
+      madeiraStamp: {
+        name: string;
+        description: string;
+      };
+    };
+  };
   species: {
     carrierPigeon: string;
     messengerFalcon: string;
@@ -451,6 +486,29 @@ export type TranslationKey =
   | "send.loadingData"
   | "send.sending"
   | "send.errorMessage"
+  | "map.eyebrow"
+  | "map.title"
+  | "map.subtitle"
+  | "map.tripStatus"
+  | "map.currentLeg"
+  | "map.discoveries"
+  | "map.mockedRewards"
+  | "map.discovered"
+  | "map.onTheRoute"
+  | "map.backToMascot"
+  | "map.unavailable"
+  | "map.legs.preparing"
+  | "map.legs.outbound"
+  | "map.legs.delivered"
+  | "map.legs.returning"
+  | "map.legs.returned"
+  | "map.legs.completed"
+  | "map.rewards.rioPostcard.name"
+  | "map.rewards.rioPostcard.description"
+  | "map.rewards.capeVerdeBadge.name"
+  | "map.rewards.capeVerdeBadge.description"
+  | "map.rewards.madeiraStamp.name"
+  | "map.rewards.madeiraStamp.description"
   | "species.carrierPigeon"
   | "species.messengerFalcon"
   | "species.mailDuck"

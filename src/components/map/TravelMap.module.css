@@ -1,0 +1,141 @@
+.mapFrame {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  border: 2px solid rgba(46, 42, 36, 0.42);
+  border-radius: 0.7rem 0.25rem 0.85rem 0.35rem;
+  background:
+    linear-gradient(120deg, rgba(255, 248, 232, 0.75), transparent 44%),
+    var(--color-paper-dark);
+  box-shadow: var(--shadow-paper);
+}
+
+.mapFrame::before {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  top: 0.65rem;
+  left: 50%;
+  width: 5.5rem;
+  height: 1.3rem;
+  border: 1px solid rgba(46, 42, 36, 0.18);
+  border-radius: 0.1rem;
+  background: rgba(255, 248, 232, 0.72);
+  box-shadow: 0 0.18rem 0.4rem rgba(46, 42, 36, 0.12);
+  pointer-events: none;
+  transform: translateX(-50%) rotate(-1.5deg);
+}
+
+.map {
+  min-height: min(68vh, 32rem);
+  height: clamp(24rem, 74vh, 38rem);
+}
+
+.mapFallback {
+  position: absolute;
+  inset: var(--space-4);
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  padding: var(--space-4);
+  border: 2px dashed rgba(46, 42, 36, 0.42);
+  border-radius: 0.55rem;
+  color: var(--color-ink);
+  background: rgba(255, 248, 232, 0.92);
+  font-weight: 900;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.map :global(.maplibregl-canvas) {
+  outline: none;
+}
+
+.map :global(.maplibregl-ctrl-group) {
+  overflow: hidden;
+  border: 1px solid rgba(46, 42, 36, 0.34);
+  border-radius: 0.4rem;
+  background: rgba(255, 248, 232, 0.92);
+  box-shadow: var(--shadow-paper);
+}
+
+.map :global(.maplibregl-ctrl button) {
+  color: var(--color-ink);
+}
+
+.map :global(.maplibregl-ctrl-attrib) {
+  color: var(--color-ink-soft);
+  background: rgba(255, 248, 232, 0.82);
+}
+
+.petMarker {
+  position: relative;
+  width: 1.65rem;
+  height: 1.65rem;
+  border: 2px solid var(--color-ink);
+  border-radius: 50% 50% 50% 0;
+  background:
+    radial-gradient(circle at 58% 38%, var(--color-paper-light) 0 0.18rem, transparent 0.2rem),
+    var(--color-rare-gold);
+  box-shadow:
+    0 0 0 0.25rem rgba(255, 248, 232, 0.66),
+    0.15rem 0.22rem 0 rgba(46, 42, 36, 0.2);
+  transform: rotate(-45deg);
+}
+
+.petMarker::after {
+  content: "";
+  position: absolute;
+  right: -0.32rem;
+  bottom: 0.42rem;
+  width: 0.52rem;
+  height: 0.26rem;
+  border: 1px solid var(--color-ink);
+  border-left: 0;
+  border-radius: 0 0.4rem 0.4rem 0;
+  background: var(--color-postal-blue);
+}
+
+.labels {
+  position: absolute;
+  z-index: 2;
+  right: var(--space-3);
+  bottom: var(--space-3);
+  left: var(--space-3);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.labels span {
+  max-width: min(15rem, 100%);
+  padding: 0.45rem 0.65rem;
+  border: 1px dashed rgba(46, 42, 36, 0.36);
+  border-radius: 0.25rem;
+  color: var(--color-ink);
+  background: rgba(255, 248, 232, 0.88);
+  font-size: 0.78rem;
+  font-weight: 900;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+  text-transform: uppercase;
+}
+
+@media (max-width: 420px) {
+  .map {
+    min-height: 23rem;
+    height: 62vh;
+  }
+
+  .labels {
+    position: static;
+    padding: var(--space-2);
+    background: rgba(255, 248, 232, 0.78);
+  }
+
+  .labels span {
+    flex: 1 1 9rem;
+  }
+}

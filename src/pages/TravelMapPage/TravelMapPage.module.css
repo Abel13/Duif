@@ -1,0 +1,131 @@
+.page {
+  min-height: 100vh;
+  padding: var(--space-4) var(--space-3) var(--space-6);
+  background:
+    radial-gradient(circle at 18% 8%, rgba(196, 154, 74, 0.18), transparent 6rem),
+    linear-gradient(135deg, rgba(111, 145, 168, 0.13), transparent 40%),
+    var(--color-paper);
+}
+
+.shell {
+  display: grid;
+  gap: var(--space-4);
+  width: min(100%, 76rem);
+  margin: 0 auto;
+}
+
+.subtitle {
+  max-width: 52rem;
+  margin: 0;
+  color: var(--color-ink-soft);
+  font-weight: 800;
+  line-height: 1.6;
+}
+
+.layout {
+  display: grid;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.mapColumn,
+.sidebar {
+  min-width: 0;
+}
+
+.sidebar {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.summary {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+}
+
+.summary div {
+  min-width: 0;
+  padding-bottom: var(--space-2);
+  border-bottom: 1px dashed rgba(46, 42, 36, 0.28);
+}
+
+.summary dt {
+  color: var(--color-ink-soft);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.summary dd {
+  margin: var(--space-1) 0 0;
+  color: var(--color-ink);
+  font-weight: 900;
+  overflow-wrap: anywhere;
+}
+
+.routeLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.8rem;
+  width: fit-content;
+  max-width: 100%;
+  margin-top: var(--space-3);
+  padding: 0.65rem 1rem;
+  border: 2px dashed rgba(46, 42, 36, 0.55);
+  border-radius: 0.25rem;
+  color: var(--color-ink);
+  background: var(--color-postal-label);
+  font-size: 0.82rem;
+  font-weight: 900;
+  text-decoration: none;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.routeLink:focus-visible {
+  outline: 3px solid rgba(164, 74, 63, 0.52);
+  outline-offset: 3px;
+}
+
+.discoveryHeader {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-3);
+  color: var(--color-ink);
+  font-size: 0.82rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.discoveryHeader span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.discoveryList {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+@media (min-width: 860px) {
+  .page {
+    padding: var(--space-5);
+  }
+
+  .layout {
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 24rem);
+    align-items: start;
+  }
+
+  .mapColumn {
+    position: sticky;
+    top: var(--space-4);
+  }
+}

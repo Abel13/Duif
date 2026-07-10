@@ -83,6 +83,19 @@ Route rewards:
 - The final reward collection remains tied to the pet returning home.
 - The backend should be authoritative for which map rewards are granted.
 
+Nearby pets:
+
+- The map should explore showing other pets passing near the player's active pet.
+- This may become part of the default map experience if it makes the world feel alive
+  without creating noisy real-time social pressure.
+- Nearby pets should be treated as postal traffic, not as a real-time chat or MMO layer.
+- The client should not receive exact private addresses or precise personal location data
+  for other players.
+- The backend should decide which pets are eligible to appear based on privacy, friendship,
+  visibility rules, viewport/route proximity, and current active deliveries.
+- The frontend can animate visible pets from route snapshots, timestamps, and speed instead
+  of receiving live position updates every second.
+
 Technical direction:
 
 - Validate the real map stack early with MapLibre GL JS.
@@ -251,12 +264,17 @@ Inventory and album are related but not identical.
 Definitions:
 
 - Inventory is the player's owned item storage.
+- Mailbox, or "Caixa Postal" in pt-BR UI, is the received-correspondence inventory:
+  letters, postcards, stickers, gifts, and visible received items from friends.
 - Album is the collectible visual experience for viewing discovered items, rarity, empty
   slots, and collection progress.
 - Cargo is the pet's delivery-specific carrying limit.
 
 Rules:
 
+- Received correspondence should use the product metaphor "Caixa Postal" instead of a
+  generic inventory label.
+- The mailbox is part of inventory, but it is not the same thing as the collectible album.
 - The album can remain the main UI metaphor for collection.
 - The album is not the entire inventory system.
 - Functional items, consumables, cosmetics, postcards, stickers, rewards, and materials may
