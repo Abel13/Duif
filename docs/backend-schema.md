@@ -25,7 +25,8 @@ The initial schema lives in `supabase/migrations/20260709200000_initial_duif_sch
 
 ### Core Player Data
 
-- `profiles`: player or friend profile, display name, home coordinates, and optional future auth user link.
+- `profiles`: player or friend profile, display name, private calculation coordinates,
+  postal-base fields, and optional future auth user link.
 - `mascot_templates`: static starter mascot definitions.
 - `player_mascots`: owned mascot state copied from templates for a profile.
 - `friendships`: simple profile-to-profile relationship with friendship level and exchange count.
@@ -53,8 +54,9 @@ These match the current TypeScript game unions closely enough for future mapping
 
 `supabase/seed.sql` mirrors the current prototype data:
 
-- current player profile: Abel in Sao Paulo;
-- friend profiles: Lia, Caio, and Mina;
+- current player profile: Abel in Sao Paulo, with private street/neighborhood seed data;
+- friend profiles: Lia, Caio, and Mina, with private street/neighborhood seed data and
+  public city/state/country fields;
 - starter mascots: Nuvem, Trovao, and Pipoca;
 - friend mascot previews: Aurora, Brisa, Tico, Atlas, and Luma;
 - correspondence options: letter, postcard, sticker, and small gift;
@@ -77,6 +79,23 @@ Some nested game data is stored as `jsonb` in this first pass:
 This keeps the schema close to the current prototype and avoids premature normalization. These fields can be split into dedicated tables later when customization, equipping, balance, or inventory rules become interactive.
 
 Translation keys and asset paths are stored as `text`. The database stores identifiers, not translated display copy.
+
+## Postal Base Privacy
+
+`profiles` now stores explicit postal-base fields:
+
+- `postal_base_street`
+- `postal_base_neighborhood`
+- `postal_base_city`
+- `postal_base_state`
+- `postal_base_country`
+
+Street, neighborhood, latitude, and longitude are private calculation/reference data. The
+frontend social surfaces should render only city, state, and country for accepted friends.
+
+Accepted-friend reads use the `get_accepted_friend_profiles` RPC instead of direct
+`profiles` reads. The RPC returns only the friend profile id/mock key, display name,
+city/state/country, friendship level, exchange count, and favorite note key.
 
 ## RLS Strategy
 
@@ -152,10 +171,11 @@ Reward collection is the second authenticated gameplay write. It uses the
 has returned, create or reuse the deterministic `delivery_rewards` row, mark the delivery
 as `completed`, and insert the collected item into `inventory_items`.
 
-Friend profile reads are limited to accepted friends through RLS. Inventory, rewards,
-and history screens are still not fully migrated. The reward collection screen can now
-use authenticated delivery/reward data, but the inventory album UI remains mock-first
-until the persisted inventory milestone.
+Friend profile reads for social UI use `get_accepted_friend_profiles`, not unrestricted
+`profiles` rows. The owner can still read their own full profile through RLS. Inventory,
+rewards, and history screens are still not fully migrated. The reward collection screen can
+now use authenticated delivery/reward data, but the collection UI remains mock-first until
+the persisted collection milestone.
 
 ## Out Of Scope
 

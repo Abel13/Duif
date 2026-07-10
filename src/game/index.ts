@@ -3,6 +3,7 @@ export {
   friendMascots,
   getFriendById,
   getFriendCorrespondence,
+  getFriendLocationLabel,
   getFriendMascots,
   mockFriends,
 } from "./friends";
@@ -35,6 +36,7 @@ export {
   createMockDeliveryFromSelection,
   estimateMascotSpeedKmh,
   getCorrespondenceById,
+  getFriendCoordinates,
 } from "./sendFlow";
 export {
   clampProgress,
@@ -55,6 +57,7 @@ export type {
   EquipmentRarity,
   EquipmentType,
   FriendMascotPreview,
+  FriendLocation,
   FriendProfile,
   InventoryCategory,
   InventoryItem,

@@ -94,10 +94,19 @@ export type InventoryItem = RewardItem & {
   thumbnailAssetPath?: string;
 };
 
+export type FriendLocation = {
+  city: string;
+  state: string;
+  country: string;
+  labelKey?: TranslationKey;
+  latitude?: number;
+  longitude?: number;
+};
+
 export type FriendProfile = {
   id: string;
   name: string;
-  location: Coordinates;
+  location: FriendLocation;
   favoriteNoteKey?: TranslationKey;
   friendshipLevel: number;
   exchangeCount: number;

@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 import { AppBottomNav, PageShell } from "../../components/layout";
 import { ItemCard, SketchPanel } from "../../components/ui";
-import { mockFriends } from "../../game";
+import { getFriendLocationLabel, mockFriends } from "../../game";
 import { useTranslation } from "../../i18n";
 import styles from "./FriendsPage.module.css";
 
@@ -20,7 +20,7 @@ export function FriendsPage() {
           {mockFriends.map((friend) => (
             <article className={styles.friendCard} key={friend.id}>
               <ItemCard
-                label={t(friend.location.labelKey)}
+                label={getFriendLocationLabel(friend.location, t)}
                 title={friend.name}
                 description={friend.favoriteNoteKey ? t(friend.favoriteNoteKey) : undefined}
                 meta={`${t("friends.friendshipLevel")} ${friend.friendshipLevel}`}

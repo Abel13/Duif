@@ -5,17 +5,27 @@ insert into public.profiles (
   display_name,
   home_latitude,
   home_longitude,
-  home_label_key
+  home_label_key,
+  postal_base_street,
+  postal_base_neighborhood,
+  postal_base_city,
+  postal_base_state,
+  postal_base_country
 ) values
-  ('00000000-0000-4000-8000-000000000001', null, 'player-current', 'Abel', -23.5505, -46.6333, 'locations.saoPaulo'),
-  ('00000000-0000-4000-8000-000000000101', null, 'friend-lisbon', 'Lia', 38.7223, -9.1393, 'locations.lisbon'),
-  ('00000000-0000-4000-8000-000000000102', null, 'friend-curitiba', 'Caio', -25.4284, -49.2733, 'locations.curitiba'),
-  ('00000000-0000-4000-8000-000000000103', null, 'friend-toronto', 'Mina', 43.6532, -79.3832, 'locations.toronto')
+  ('00000000-0000-4000-8000-000000000001', null, 'player-current', 'Abel', -23.5505, -46.6333, 'locations.saoPaulo', 'Rua das Cartas', 'Centro Postal', 'Sao Paulo', 'SP', 'Brasil'),
+  ('00000000-0000-4000-8000-000000000101', null, 'friend-lisbon', 'Lia', 38.7223, -9.1393, 'locations.lisbon', 'Rua dos Azulejos', 'Alfama', 'Lisboa', 'Lisboa', 'Portugal'),
+  ('00000000-0000-4000-8000-000000000102', null, 'friend-curitiba', 'Caio', -25.4284, -49.2733, 'locations.curitiba', 'Rua das Araucarias', 'Batel', 'Curitiba', 'PR', 'Brasil'),
+  ('00000000-0000-4000-8000-000000000103', null, 'friend-toronto', 'Mina', 43.6532, -79.3832, 'locations.toronto', 'Maple Letter Street', 'Harbourfront', 'Toronto', 'ON', 'Canada')
 on conflict (mock_key) do update set
   display_name = excluded.display_name,
   home_latitude = excluded.home_latitude,
   home_longitude = excluded.home_longitude,
   home_label_key = excluded.home_label_key,
+  postal_base_street = excluded.postal_base_street,
+  postal_base_neighborhood = excluded.postal_base_neighborhood,
+  postal_base_city = excluded.postal_base_city,
+  postal_base_state = excluded.postal_base_state,
+  postal_base_country = excluded.postal_base_country,
   updated_at = now();
 
 insert into public.mascot_templates (

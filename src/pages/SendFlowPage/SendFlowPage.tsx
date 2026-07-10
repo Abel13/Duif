@@ -11,6 +11,8 @@ import {
   estimateMascotSpeedKmh,
   estimateTravelDurationHours,
   formatRemainingTime,
+  getFriendCoordinates,
+  getFriendLocationLabel,
   getDeliveryStatus,
   getTravelProgress,
   haversineDistanceKm,
@@ -78,7 +80,13 @@ export function SendFlowPage() {
       return undefined;
     }
 
-    const distanceKm = haversineDistanceKm(currentPlayer.homeBase, selectedFriend.location);
+    const selectedFriendCoordinates = getFriendCoordinates(selectedFriend);
+
+    if (!selectedFriendCoordinates) {
+      return undefined;
+    }
+
+    const distanceKm = haversineDistanceKm(currentPlayer.homeBase, selectedFriendCoordinates);
     const speedKmh = estimateMascotSpeedKmh(selectedMascot);
 
     return {
@@ -165,7 +173,7 @@ export function SendFlowPage() {
                 key={friend.id}
               >
                 <ItemCard
-                  label={t(friend.location.labelKey)}
+                  label={getFriendLocationLabel(friend.location, t)}
                   title={friend.name}
                   description={friend.favoriteNoteKey ? t(friend.favoriteNoteKey) : undefined}
                   selected={friend.id === selection.friendId}
@@ -324,7 +332,7 @@ function ConfirmationPanel({
       <p className={styles.hint}>{t("send.confirmationDescription")}</p>
       <RoutePreview
         originLabel={t(delivery.origin.labelKey)}
-        destinationLabel={t(delivery.destination.labelKey)}
+        destinationLabel={getFriendLocationLabel(friend.location, t)}
         progress={progress}
         statusLabel={t(`delivery.status.${status}`)}
         remainingTime={remainingTime}

@@ -11,6 +11,7 @@ import {
   type FriendProfile,
   type Mascot,
   type SendFlowSelection,
+  getFriendCoordinates,
 } from "../../game";
 import type { TranslationKey } from "../../i18n";
 import { getSupabaseClient } from "./client";
@@ -18,9 +19,19 @@ import { readString, readTranslationKey } from "./catalogMappers";
 import type { Database } from "./database.types";
 import { fetchAuthenticatedMascots, mapDeliveryRowToDelivery, type DeliveryRow } from "./authenticatedMascots";
 
-export type FriendshipRow = Database["public"]["Tables"]["friendships"]["Row"];
-export type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"];
 export type CorrespondenceOptionRow = Database["public"]["Tables"]["correspondence_options"]["Row"];
+
+export type SanitizedFriendProfileRow = {
+  display_name: string;
+  exchange_count: number;
+  favorite_note_key: string | null;
+  friendship_level: number;
+  mock_key: string | null;
+  postal_base_city: string;
+  postal_base_country: string;
+  postal_base_state: string;
+  profile_id: string;
+};
 
 export type AuthenticatedSendFlowData = {
   correspondenceOptions: CorrespondenceOption[];
@@ -50,54 +61,23 @@ export function mapCorrespondenceOptionRow(row: CorrespondenceOptionRow): Corres
   };
 }
 
-export function mapFriendProfileRow({
-  friendship,
-  profile,
-}: {
-  friendship: FriendshipRow;
-  profile: ProfileRow;
-}): FriendProfile {
+export function mapSanitizedFriendProfileRow(row: SanitizedFriendProfileRow): FriendProfile {
   return {
-    exchangeCount: friendship.exchange_count,
-    favoriteNoteKey: friendship.favorite_note_key
-      ? (friendship.favorite_note_key as TranslationKey)
+    exchangeCount: row.exchange_count,
+    favoriteNoteKey: row.favorite_note_key
+      ? (row.favorite_note_key as TranslationKey)
       : undefined,
-    friendshipLevel: friendship.friendship_level,
-    id: readString(profile.mock_key, profile.id),
+    friendshipLevel: row.friendship_level,
+    id: readString(row.mock_key, row.profile_id),
     location: {
-      labelKey: profile.home_label_key as TranslationKey,
-      latitude: profile.home_latitude,
-      longitude: profile.home_longitude,
+      city: row.postal_base_city,
+      country: row.postal_base_country,
+      state: row.postal_base_state,
     },
     mascotIds: [],
-    name: profile.display_name,
+    name: row.display_name,
     receivedCorrespondence: [],
   };
-}
-
-export function composeAuthenticatedFriends({
-  currentProfileId,
-  friendships,
-  profiles,
-}: {
-  currentProfileId: string;
-  friendships: FriendshipRow[];
-  profiles: ProfileRow[];
-}) {
-  const profilesById = new Map(profiles.map((profile) => [profile.id, profile]));
-
-  return friendships
-    .filter((friendship) => friendship.status === "accepted")
-    .map((friendship) => {
-      const friendProfileId =
-        friendship.requester_profile_id === currentProfileId
-          ? friendship.addressee_profile_id
-          : friendship.requester_profile_id;
-      const profile = profilesById.get(friendProfileId);
-
-      return profile ? mapFriendProfileRow({ friendship, profile }) : undefined;
-    })
-    .filter((friend): friend is FriendProfile => Boolean(friend));
 }
 
 export function getDefaultSendFlowSelection({
@@ -131,7 +111,16 @@ export function createLocalDeliveryPreview({
   friend: FriendProfile;
   mascot: Mascot;
 }) {
-  const distanceKm = haversineDistanceKm(currentPlayer.homeBase, friend.location);
+  const friendCoordinates = getFriendCoordinates(friend);
+
+  if (!friendCoordinates) {
+    return {
+      distanceKm: 0,
+      durationHours: 0,
+    };
+  }
+
+  const distanceKm = haversineDistanceKm(currentPlayer.homeBase, friendCoordinates);
   const speedKmh = estimateMascotSpeedKmh(mascot);
 
   return {
@@ -149,35 +138,19 @@ export async function fetchAuthenticatedSendFlowData(
     return undefined;
   }
 
-  const [{ data: friendships }, { data: options }, mascots] = await Promise.all([
-    supabase.from("friendships").select("*").eq("status", "accepted"),
+  const [{ data: friends }, { data: options }, mascots] = await Promise.all([
+    supabase.rpc("get_accepted_friend_profiles"),
     supabase.from("correspondence_options").select("*").eq("active", true).order("sort_order"),
     fetchAuthenticatedMascots(profileId),
   ]);
 
-  if (!friendships || !options || mascots.length === 0) {
-    return undefined;
-  }
-
-  const friendProfileIds = friendships.map((friendship) =>
-    friendship.requester_profile_id === profileId
-      ? friendship.addressee_profile_id
-      : friendship.requester_profile_id,
-  );
-
-  const { data: profiles } = await supabase.from("profiles").select("*").in("id", friendProfileIds);
-
-  if (!profiles || profiles.length === 0) {
+  if (!friends || !options || mascots.length === 0) {
     return undefined;
   }
 
   return {
     correspondenceOptions: options.map(mapCorrespondenceOptionRow),
-    friends: composeAuthenticatedFriends({
-      currentProfileId: profileId,
-      friendships,
-      profiles,
-    }),
+    friends: (friends as SanitizedFriendProfileRow[]).map(mapSanitizedFriendProfileRow),
     mascots,
   };
 }

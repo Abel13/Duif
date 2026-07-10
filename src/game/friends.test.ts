@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 
-import { getFriendById, getFriendCorrespondence, getFriendMascots } from "./friends";
+import {
+  getFriendById,
+  getFriendCorrespondence,
+  getFriendLocationLabel,
+  getFriendMascots,
+} from "./friends";
 
 describe("friend helpers", () => {
   it("finds a friend by id", () => {
@@ -19,6 +24,20 @@ describe("friend helpers", () => {
 
     expect(correspondence).toHaveLength(1);
     expect(correspondence[0]?.type).toBe("letter");
+  });
+
+  it("formats public postal-base location labels", () => {
+    expect(
+      getFriendLocationLabel(
+        {
+          city: "Lisboa",
+          country: "Portugal",
+          labelKey: "locations.lisbon",
+          state: "Lisboa",
+        },
+        (key) => key,
+      ),
+    ).toBe("Lisboa, Lisboa, Portugal");
   });
 
   it("returns empty values for an invalid friend id", () => {

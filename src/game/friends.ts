@@ -1,4 +1,5 @@
-import type { FriendMascotPreview, FriendProfile } from "./types";
+import type { FriendLocation, FriendMascotPreview, FriendProfile } from "./types";
+import type { TranslationKey } from "../i18n";
 import { assetPaths } from "./assets";
 
 export const friendMascots: FriendMascotPreview[] = [
@@ -69,9 +70,12 @@ export const mockFriends: FriendProfile[] = [
     id: "friend-lisbon",
     name: "Lia",
     location: {
+      city: "Lisboa",
+      country: "Portugal",
       latitude: 38.7223,
       longitude: -9.1393,
       labelKey: "locations.lisbon",
+      state: "Lisboa",
     },
     favoriteNoteKey: "friends.lia.note",
     friendshipLevel: 4,
@@ -100,9 +104,12 @@ export const mockFriends: FriendProfile[] = [
     id: "friend-curitiba",
     name: "Caio",
     location: {
+      city: "Curitiba",
+      country: "Brasil",
       latitude: -25.4284,
       longitude: -49.2733,
       labelKey: "locations.curitiba",
+      state: "PR",
     },
     favoriteNoteKey: "friends.caio.note",
     friendshipLevel: 2,
@@ -123,9 +130,12 @@ export const mockFriends: FriendProfile[] = [
     id: "friend-toronto",
     name: "Mina",
     location: {
+      city: "Toronto",
+      country: "Canada",
       latitude: 43.6532,
       longitude: -79.3832,
       labelKey: "locations.toronto",
+      state: "ON",
     },
     favoriteNoteKey: "friends.mina.note",
     friendshipLevel: 5,
@@ -146,6 +156,19 @@ export const mockFriends: FriendProfile[] = [
 
 export function getFriendById(friendId: string) {
   return mockFriends.find((friend) => friend.id === friendId);
+}
+
+export function getFriendLocationLabel(
+  location: FriendLocation,
+  translate: (key: TranslationKey) => string,
+) {
+  const publicParts = [location.city, location.state, location.country].filter(Boolean);
+
+  if (publicParts.length > 0) {
+    return publicParts.join(", ");
+  }
+
+  return location.labelKey ? translate(location.labelKey) : "";
 }
 
 export function getFriendMascots(friendId: string) {

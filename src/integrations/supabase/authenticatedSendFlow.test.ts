@@ -2,43 +2,28 @@ import { describe, expect, it } from "vitest";
 
 import type {
   CorrespondenceOptionRow,
-  FriendshipRow,
-  ProfileRow,
+  SanitizedFriendProfileRow,
 } from "./authenticatedSendFlow";
 import {
-  composeAuthenticatedFriends,
   createLocalDeliveryPreview,
   getDefaultSendFlowSelection,
   mapCorrespondenceOptionRow,
+  mapSanitizedFriendProfileRow,
 } from "./authenticatedSendFlow";
 import { starterMascots } from "../../game/mockData";
 
-const currentProfileId = "00000000-0000-4000-8000-000000000001";
 const friendProfileId = "00000000-0000-4000-8000-000000000101";
 
-const friendshipRow: FriendshipRow = {
-  addressee_profile_id: friendProfileId,
-  created_at: "2026-07-10T13:00:00.000Z",
+const sanitizedFriendRow: SanitizedFriendProfileRow = {
+  display_name: "Lia",
   exchange_count: 18,
   favorite_note_key: "friends.lia.note",
   friendship_level: 4,
-  id: "00000000-0000-4000-8000-000000000301",
-  mock_key: "friendship-lia",
-  requester_profile_id: currentProfileId,
-  status: "accepted",
-  updated_at: "2026-07-10T13:00:00.000Z",
-};
-
-const friendProfileRow: ProfileRow = {
-  auth_user_id: null,
-  created_at: "2026-07-10T13:00:00.000Z",
-  display_name: "Lia",
-  home_label_key: "locations.lisbon",
-  home_latitude: 38.7223,
-  home_longitude: -9.1393,
-  id: friendProfileId,
   mock_key: "friend-lisbon",
-  updated_at: "2026-07-10T13:00:00.000Z",
+  postal_base_city: "Lisboa",
+  postal_base_country: "Portugal",
+  postal_base_state: "Lisboa",
+  profile_id: friendProfileId,
 };
 
 const correspondenceOptionRow: CorrespondenceOptionRow = {
@@ -61,34 +46,25 @@ describe("authenticated send flow mappers", () => {
     });
   });
 
-  it("composes accepted friendship rows with readable profiles", () => {
-    const friends = composeAuthenticatedFriends({
-      currentProfileId,
-      friendships: [friendshipRow],
-      profiles: [friendProfileRow],
-    });
+  it("maps sanitized friend rows without private postal-base fields", () => {
+    const friend = mapSanitizedFriendProfileRow(sanitizedFriendRow);
 
-    expect(friends).toHaveLength(1);
-    expect(friends[0]).toMatchObject({
+    expect(friend).toMatchObject({
       exchangeCount: 18,
       favoriteNoteKey: "friends.lia.note",
       friendshipLevel: 4,
       id: "friend-lisbon",
       name: "Lia",
       location: {
-        labelKey: "locations.lisbon",
+        city: "Lisboa",
+        country: "Portugal",
+        state: "Lisboa",
       },
     });
-  });
-
-  it("ignores friendships without a matching profile", () => {
-    expect(
-      composeAuthenticatedFriends({
-        currentProfileId,
-        friendships: [friendshipRow],
-        profiles: [],
-      }),
-    ).toEqual([]);
+    expect(friend.location).not.toHaveProperty("latitude");
+    expect(friend.location).not.toHaveProperty("longitude");
+    expect(friend.location).not.toHaveProperty("street");
+    expect(friend.location).not.toHaveProperty("neighborhood");
   });
 
   it("uses requested ids when they exist in available send flow data", () => {
@@ -100,9 +76,12 @@ describe("authenticated send flow mappers", () => {
           friendshipLevel: 4,
           id: "friend-lisbon",
           location: {
+            city: "Lisboa",
+            country: "Portugal",
             labelKey: "locations.lisbon",
             latitude: 38.7223,
             longitude: -9.1393,
+            state: "Lisboa",
           },
           mascotIds: [],
           name: "Lia",
@@ -128,9 +107,12 @@ describe("authenticated send flow mappers", () => {
         friendshipLevel: 4,
         id: "friend-lisbon",
         location: {
+          city: "Lisboa",
+          country: "Portugal",
           labelKey: "locations.lisbon",
           latitude: 38.7223,
           longitude: -9.1393,
+          state: "Lisboa",
         },
         mascotIds: [],
         name: "Lia",
@@ -141,5 +123,17 @@ describe("authenticated send flow mappers", () => {
 
     expect(estimate.distanceKm).toBeGreaterThan(7900);
     expect(estimate.durationHours).toBeGreaterThan(100);
+  });
+
+  it("returns an empty preview estimate when sanitized friends omit coordinates", () => {
+    const estimate = createLocalDeliveryPreview({
+      friend: mapSanitizedFriendProfileRow(sanitizedFriendRow),
+      mascot: starterMascots[0],
+    });
+
+    expect(estimate).toEqual({
+      distanceKm: 0,
+      durationHours: 0,
+    });
   });
 });

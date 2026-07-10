@@ -457,6 +457,11 @@ export type Database = {
           home_longitude: number
           id: string
           mock_key: string | null
+          postal_base_city: string
+          postal_base_country: string
+          postal_base_neighborhood: string
+          postal_base_state: string
+          postal_base_street: string
           updated_at: string
         }
         Insert: {
@@ -468,6 +473,11 @@ export type Database = {
           home_longitude: number
           id: string
           mock_key?: string | null
+          postal_base_city: string
+          postal_base_country: string
+          postal_base_neighborhood: string
+          postal_base_state: string
+          postal_base_street: string
           updated_at?: string
         }
         Update: {
@@ -479,6 +489,11 @@ export type Database = {
           home_longitude?: number
           id?: string
           mock_key?: string | null
+          postal_base_city?: string
+          postal_base_country?: string
+          postal_base_neighborhood?: string
+          postal_base_state?: string
+          postal_base_street?: string
           updated_at?: string
         }
         Relationships: []
@@ -526,6 +541,11 @@ export type Database = {
           home_longitude: number
           id: string
           mock_key: string | null
+          postal_base_city: string
+          postal_base_country: string
+          postal_base_neighborhood: string
+          postal_base_state: string
+          postal_base_street: string
           updated_at: string
         }
         SetofOptions: {
@@ -575,6 +595,20 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      get_accepted_friend_profiles: {
+        Args: never
+        Returns: {
+          display_name: string
+          exchange_count: number
+          favorite_note_key: string
+          friendship_level: number
+          mock_key: string
+          postal_base_city: string
+          postal_base_country: string
+          postal_base_state: string
+          profile_id: string
+        }[]
       }
     }
     Enums: {

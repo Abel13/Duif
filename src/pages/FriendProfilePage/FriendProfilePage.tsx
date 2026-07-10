@@ -6,6 +6,7 @@ import { AssetImage, ItemCard, SketchPanel } from "../../components/ui";
 import {
   getFriendById,
   getFriendCorrespondence,
+  getFriendLocationLabel,
   getFriendMascots,
   type FriendMascotPreview,
   type ReceivedCorrespondencePreview,
@@ -45,7 +46,10 @@ export function FriendProfilePage() {
         <div className={styles.grid}>
           <SketchPanel title={t("friends.profileTitle")} variant="note">
             <dl className={styles.summary}>
-              <SummaryRow label={t("friends.location")} value={t(friend.location.labelKey)} />
+              <SummaryRow
+                label={t("friends.location")}
+                value={getFriendLocationLabel(friend.location, t)}
+              />
               <SummaryRow
                 label={t("friends.friendshipLevel")}
                 value={`${friend.friendshipLevel}`}

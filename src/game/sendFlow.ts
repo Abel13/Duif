@@ -1,6 +1,8 @@
 import type {
+  Coordinates,
   CorrespondenceOption,
   Delivery,
+  FriendProfile,
   Mascot,
   SendFlowSelection,
 } from "./types";
@@ -59,11 +61,13 @@ export function createMockDeliveryFromSelection(
     ? getCorrespondenceById(selection.correspondenceId)
     : undefined;
 
-  if (!friend || !mascot || !correspondence) {
+  const friendCoordinates = getFriendCoordinates(friend);
+
+  if (!friend || !mascot || !correspondence || !friendCoordinates) {
     return undefined;
   }
 
-  const distanceKm = haversineDistanceKm(currentPlayer.homeBase, friend.location);
+  const distanceKm = haversineDistanceKm(currentPlayer.homeBase, friendCoordinates);
   const animalSpeedKmh = estimateMascotSpeedKmh(mascot);
   const outboundDurationHours = estimateTravelDurationHours(distanceKm, animalSpeedKmh);
   const outboundStartAt = now;
@@ -77,7 +81,7 @@ export function createMockDeliveryFromSelection(
     receiverId: friend.id,
     mascotId: mascot.id,
     origin: currentPlayer.homeBase,
-    destination: friend.location,
+    destination: friendCoordinates,
     distanceKm,
     animalSpeedKmh,
     outboundStartAt: outboundStartAt.toISOString(),
@@ -93,5 +97,21 @@ export function createMockDeliveryFromSelection(
     friend,
     mascot,
     correspondence,
+  };
+}
+
+export function getFriendCoordinates(friend: FriendProfile | undefined): Coordinates | undefined {
+  if (
+    !friend ||
+    typeof friend.location.latitude !== "number" ||
+    typeof friend.location.longitude !== "number"
+  ) {
+    return undefined;
+  }
+
+  return {
+    labelKey: friend.location.labelKey ?? "locations.saoPaulo",
+    latitude: friend.location.latitude,
+    longitude: friend.location.longitude,
   };
 }
