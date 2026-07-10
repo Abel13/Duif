@@ -137,9 +137,9 @@ The current read layer intentionally reads only:
 - `mascot_templates`;
 - later public catalog rows such as `correspondence_options` and `reward_items`.
 
-Gameplay screens still do not read `player_mascots`, `deliveries`, `friendships`,
-`delivery_rewards`, or `inventory_items` from the browser yet. Auth now makes those
-reads possible in the next milestone, but this milestone keeps gameplay on mocks.
+The mascot detail screen is the first authenticated gameplay consumer. When Supabase
+data mode is enabled and the user is signed in, it reads `player_mascots` and matching
+`deliveries` through RLS. Other gameplay screens still use mock data.
 
 ## Out Of Scope
 

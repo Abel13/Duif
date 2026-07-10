@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 
+import { useAuth } from "../integrations/supabase/AuthProvider";
+import { fetchAuthenticatedMascots } from "../integrations/supabase/authenticatedMascots";
 import { fetchStarterMascotCatalog } from "../integrations/supabase/catalog";
 import { isSupabaseCatalogEnabled } from "../integrations/supabase/config";
 import { starterMascots } from "./mockData";
@@ -11,6 +13,7 @@ type MascotCatalogState = {
 };
 
 export function useMascotCatalog(): MascotCatalogState {
+  const { isLoading: isAuthLoading, profile, session } = useAuth();
   const [state, setState] = useState<MascotCatalogState>({
     isLoading: isSupabaseCatalogEnabled(),
     mascots: starterMascots,
@@ -22,11 +25,23 @@ export function useMascotCatalog(): MascotCatalogState {
       return;
     }
 
+    if (isAuthLoading) {
+      setState((currentState) => ({ ...currentState, isLoading: true }));
+      return;
+    }
+
     let isMounted = true;
 
     setState((currentState) => ({ ...currentState, isLoading: true }));
 
-    fetchStarterMascotCatalog()
+    const mascotSource =
+      session && profile
+        ? fetchAuthenticatedMascots(profile.id).then((authenticatedMascots) =>
+            authenticatedMascots.length > 0 ? authenticatedMascots : fetchStarterMascotCatalog(),
+          )
+        : fetchStarterMascotCatalog();
+
+    mascotSource
       .then((mascots) => {
         if (isMounted) {
           setState({ isLoading: false, mascots });
@@ -41,7 +56,7 @@ export function useMascotCatalog(): MascotCatalogState {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [isAuthLoading, profile, session]);
 
   return state;
 }

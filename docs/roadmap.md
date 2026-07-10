@@ -748,6 +748,36 @@ Success criteria:
 - logout clears the local session;
 - existing routes keep rendering with mock gameplay data.
 
+## Milestone 20: Authenticated Mascot Data
+
+Goal:
+
+Make the mascot detail screen read authenticated player mascot data from Supabase while
+preserving the existing prototype routes and visual experience.
+
+Includes:
+
+- authenticated `player_mascots` reads for the claimed current profile;
+- authenticated `deliveries` reads for the player's mascots;
+- mappers from database rows to existing `Mascot` and `Delivery` types;
+- fallback to public catalog or mocks when auth/Supabase data is unavailable;
+- documentation that only the mascot screen has moved to authenticated data.
+
+Does not include:
+
+- creating real deliveries from `/send`;
+- migrating friends, inventory, rewards, or collection flows;
+- new RLS policies;
+- backend writes for gameplay.
+
+Success criteria:
+
+- `/mascots/mascot-nuvem` works without Supabase env vars;
+- with Supabase data mode and an authenticated profile, Nuvem shows the seeded Lisbon delivery;
+- Trovão and Pipoca render without deliveries;
+- invalid mascot IDs still redirect to Nuvem;
+- tests and build pass.
+
 ## Suggested First Execution Order
 
 Use this order for the first development pass:

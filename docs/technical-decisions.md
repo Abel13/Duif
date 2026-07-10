@@ -235,6 +235,11 @@ small `claim_current_profile` RPC links the authenticated user to the seeded cur
 player profile so existing RLS policies can be exercised without building final
 onboarding yet.
 
+The first authenticated gameplay read is the mascot detail screen. It may read
+`player_mascots` and `deliveries` for the claimed profile, but send flow, friends,
+inventory, rewards, and collection still use mocks until they receive dedicated
+migration milestones.
+
 Use a custom Node backend later if the game needs:
 
 - complex economy;

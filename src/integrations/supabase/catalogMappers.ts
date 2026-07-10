@@ -35,23 +35,23 @@ function isRecord(value: Json | unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-function readString(value: unknown, fallback: string) {
+export function readString(value: unknown, fallback: string) {
   return typeof value === "string" && value.trim().length > 0 ? value : fallback;
 }
 
-function readNumber(value: unknown, fallback: number) {
+export function readNumber(value: unknown, fallback: number) {
   return typeof value === "number" && Number.isFinite(value) ? value : fallback;
 }
 
-function readBoolean(value: unknown, fallback: boolean) {
+export function readBoolean(value: unknown, fallback: boolean) {
   return typeof value === "boolean" ? value : fallback;
 }
 
-function readTranslationKey(value: unknown, fallback: TranslationKey) {
+export function readTranslationKey(value: unknown, fallback: TranslationKey) {
   return readString(value, fallback) as TranslationKey;
 }
 
-function mapAttributes(value: Json, fallback: MascotAttributeSet): MascotAttributeSet {
+export function mapAttributes(value: Json, fallback: MascotAttributeSet): MascotAttributeSet {
   if (!isRecord(value)) {
     return fallback;
   }
@@ -64,7 +64,7 @@ function mapAttributes(value: Json, fallback: MascotAttributeSet): MascotAttribu
   };
 }
 
-function mapTrait(value: Json, fallback: MascotTrait): MascotTrait {
+export function mapTrait(value: Json, fallback: MascotTrait): MascotTrait {
   if (!isRecord(value)) {
     return fallback;
   }
@@ -104,7 +104,7 @@ function mapEquipmentItem(value: unknown, fallback?: EquipmentItem): EquipmentIt
   };
 }
 
-function mapEquipment(value: Json, fallback: EquipmentItem[]): EquipmentItem[] {
+export function mapEquipment(value: Json, fallback: EquipmentItem[]): EquipmentItem[] {
   if (!Array.isArray(value)) {
     return fallback;
   }
@@ -129,7 +129,7 @@ function mapSkill(value: unknown, fallback?: Skill): Skill | undefined {
   };
 }
 
-function mapSkills(value: Json, fallback: Skill[]): Skill[] {
+export function mapSkills(value: Json, fallback: Skill[]): Skill[] {
   if (!Array.isArray(value)) {
     return fallback;
   }
@@ -141,7 +141,7 @@ function mapSkills(value: Json, fallback: Skill[]): Skill[] {
   return mappedSkills.length > 0 ? mappedSkills : fallback;
 }
 
-function mapAppearance(value: Json, fallback: MascotAppearance): MascotAppearance {
+export function mapAppearance(value: Json, fallback: MascotAppearance): MascotAppearance {
   if (!isRecord(value)) {
     return fallback;
   }
