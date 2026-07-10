@@ -34,9 +34,17 @@ export { useRewardCollectionData } from "./useRewardCollectionData";
 export {
   correspondenceOptions,
   createMockDeliveryFromSelection,
+  createDefaultCorrespondenceContent,
   estimateMascotSpeedKmh,
   getCorrespondenceById,
+  getCorrespondenceContentCount,
   getFriendCoordinates,
+  isCorrespondenceContentValid,
+  LETTER_MAX_CHARACTERS,
+  mockPostcardOptions,
+  mockStickerOptions,
+  POSTCARD_MAX_CHARACTERS,
+  STICKER_MAX_SELECTION,
 } from "./sendFlow";
 export {
   clampProgress,
@@ -49,6 +57,7 @@ export {
 } from "./travel";
 export type {
   Coordinates,
+  CorrespondenceContent,
   CorrespondenceOption,
   CorrespondenceType,
   Delivery,
@@ -59,17 +68,22 @@ export type {
   FriendMascotPreview,
   FriendLocation,
   FriendProfile,
+  GiftContentPlaceholder,
   InventoryCategory,
   InventoryItem,
+  LetterContent,
   Mascot,
   MascotAppearance,
   MascotAttributeSet,
   MascotTrait,
   Player,
+  PostcardContent,
+  PostcardVariant,
   DeliveryReward,
   RewardItem,
   RewardRarity,
   ReceivedCorrespondencePreview,
   SendFlowSelection,
   Skill,
+  StickerContent,
 } from "./types";

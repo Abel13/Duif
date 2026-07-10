@@ -2,11 +2,14 @@ import { describe, expect, it } from "vitest";
 
 import type {
   CorrespondenceOptionRow,
+  DeliveryCorrespondenceContentRow,
   SanitizedFriendProfileRow,
 } from "./authenticatedSendFlow";
 import {
+  createCorrespondenceContentPayload,
   createLocalDeliveryPreview,
   getDefaultSendFlowSelection,
+  mapCorrespondenceContentRow,
   mapCorrespondenceOptionRow,
   mapSanitizedFriendProfileRow,
 } from "./authenticatedSendFlow";
@@ -34,6 +37,19 @@ const correspondenceOptionRow: CorrespondenceOptionRow = {
   name_key: "correspondence.postcard.name",
   sort_order: 2,
   type: "postcard",
+};
+
+const letterContentRow: DeliveryCorrespondenceContentRow = {
+  correspondence_type: "letter",
+  created_at: "2026-07-10T13:00:00.000Z",
+  delivery_id: "00000000-0000-4000-8000-000000000501",
+  gift_note: null,
+  id: "00000000-0000-4000-8000-000000000901",
+  letter_text: "Oi, Lia!",
+  metadata: { prototype: true },
+  postcard_message: null,
+  postcard_variant: null,
+  sticker_ids: [],
 };
 
 describe("authenticated send flow mappers", () => {
@@ -65,6 +81,27 @@ describe("authenticated send flow mappers", () => {
     expect(friend.location).not.toHaveProperty("longitude");
     expect(friend.location).not.toHaveProperty("street");
     expect(friend.location).not.toHaveProperty("neighborhood");
+  });
+
+  it("maps persisted correspondence content rows", () => {
+    expect(mapCorrespondenceContentRow(letterContentRow)).toEqual({
+      letterText: "Oi, Lia!",
+      type: "letter",
+    });
+  });
+
+  it("creates RPC-safe correspondence content payloads", () => {
+    expect(
+      createCorrespondenceContentPayload({
+        postcardMessage: "Saudades do caminho.",
+        postcardVariant: "event",
+        type: "postcard",
+      }),
+    ).toEqual({
+      postcardMessage: "Saudades do caminho.",
+      postcardVariant: "event",
+      type: "postcard",
+    });
   });
 
   it("uses requested ids when they exist in available send flow data", () => {

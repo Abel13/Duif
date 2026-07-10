@@ -422,6 +422,24 @@ on conflict (mock_key) do update set
   reward_seed = excluded.reward_seed,
   updated_at = now();
 
+insert into public.delivery_correspondence_contents (
+  id,
+  delivery_id,
+  correspondence_type,
+  letter_text,
+  metadata
+) values (
+  '00000000-0000-4000-8000-000000000901',
+  '00000000-0000-4000-8000-000000000501',
+  'letter',
+  'Oi, Lia! Nuvem levou esta carta devagar pelo caminho postal.',
+  '{"prototype":true,"seed":"nuvem-lisbon-welcome-letter"}'::jsonb
+)
+on conflict (delivery_id) do update set
+  correspondence_type = excluded.correspondence_type,
+  letter_text = excluded.letter_text,
+  metadata = excluded.metadata;
+
 insert into public.reward_items (
   id,
   mock_key,

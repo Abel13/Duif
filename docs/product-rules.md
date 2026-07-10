@@ -109,7 +109,7 @@ Correspondence is the main social interaction.
 Letters:
 
 - Written by the player.
-- Have a character limit.
+- Have a character limit. The current prototype uses 500 characters.
 - May contain emojis.
 - May include stickers purchased or earned in the shop.
 - Should feel personal and expressive.
@@ -118,7 +118,8 @@ Postcards:
 
 - Can be app-sold cards based on cities, events, routes, or collections.
 - Can use user-uploaded photos.
-- May include a short written message on the back.
+- May include a short written message on the back. The current prototype uses 180
+  characters.
 - Need moderation/privacy decisions before user-uploaded images go live.
 
 Stickers:
@@ -126,6 +127,7 @@ Stickers:
 - Can be sold in the shop.
 - Can be sent as standalone correspondence.
 - Can be attached to letters/postcards if the later composition rules allow it.
+- The current prototype uses mock sticker ids and does not consume inventory.
 
 Gifts:
 
@@ -133,6 +135,7 @@ Gifts:
 - Candidate gift contents include inventory items, cosmetics, fuel, materials, equipment,
   or surprise bundles.
 - Gift rules must be designed together with economy, abuse prevention, and shop policy.
+- The current prototype persists only an optional note for small gifts.
 
 Reward impact:
 

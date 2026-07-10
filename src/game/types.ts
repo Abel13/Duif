@@ -132,6 +132,34 @@ export type ReceivedCorrespondencePreview = {
 };
 
 export type CorrespondenceType = "letter" | "postcard" | "sticker" | "smallGift";
+export type PostcardVariant = "city" | "event" | "photo";
+
+export type LetterContent = {
+  type: "letter";
+  letterText: string;
+};
+
+export type PostcardContent = {
+  type: "postcard";
+  postcardMessage: string;
+  postcardVariant: PostcardVariant;
+};
+
+export type StickerContent = {
+  type: "sticker";
+  stickerIds: string[];
+};
+
+export type GiftContentPlaceholder = {
+  type: "smallGift";
+  giftNote: string;
+};
+
+export type CorrespondenceContent =
+  | LetterContent
+  | PostcardContent
+  | StickerContent
+  | GiftContentPlaceholder;
 
 export type CorrespondenceOption = {
   id: string;

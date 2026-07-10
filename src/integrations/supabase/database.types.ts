@@ -168,6 +168,53 @@ export type Database = {
           },
         ]
       }
+      delivery_correspondence_contents: {
+        Row: {
+          correspondence_type: Database["public"]["Enums"]["correspondence_type"]
+          created_at: string
+          delivery_id: string
+          gift_note: string | null
+          id: string
+          letter_text: string | null
+          metadata: Json
+          postcard_message: string | null
+          postcard_variant: string | null
+          sticker_ids: string[]
+        }
+        Insert: {
+          correspondence_type: Database["public"]["Enums"]["correspondence_type"]
+          created_at?: string
+          delivery_id: string
+          gift_note?: string | null
+          id: string
+          letter_text?: string | null
+          metadata?: Json
+          postcard_message?: string | null
+          postcard_variant?: string | null
+          sticker_ids?: string[]
+        }
+        Update: {
+          correspondence_type?: Database["public"]["Enums"]["correspondence_type"]
+          created_at?: string
+          delivery_id?: string
+          gift_note?: string | null
+          id?: string
+          letter_text?: string | null
+          metadata?: Json
+          postcard_message?: string | null
+          postcard_variant?: string | null
+          sticker_ids?: string[]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "delivery_correspondence_contents_delivery_id_fkey"
+            columns: ["delivery_id"]
+            isOneToOne: true
+            referencedRelation: "deliveries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       delivery_rewards: {
         Row: {
           collected_at: string | null
@@ -561,6 +608,7 @@ export type Database = {
       }
       create_delivery_from_selection: {
         Args: {
+          content_payload: Json
           correspondence_mock_key: string
           friend_mock_key: string
           mascot_mock_key: string

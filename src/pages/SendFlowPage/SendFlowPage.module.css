@@ -135,6 +135,104 @@
   flex: 1 1 9rem;
 }
 
+.composer {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.textField {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.textField span,
+.fieldset legend {
+  color: var(--color-ink-soft);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.textField textarea {
+  width: 100%;
+  min-height: 8.5rem;
+  resize: vertical;
+  padding: var(--space-3);
+  border: 2px dashed rgba(139, 94, 60, 0.72);
+  border-radius: 0.35rem 0.7rem 0.45rem 0.55rem;
+  color: var(--color-ink);
+  background:
+    linear-gradient(rgba(46, 42, 36, 0.07) 1px, transparent 1px) 0 1.85rem / 100% 1.85rem,
+    var(--color-paper-light);
+  font: inherit;
+  line-height: 1.85;
+  box-shadow: inset 0.15rem 0.15rem 0 rgba(46, 42, 36, 0.06);
+}
+
+.textField textarea:focus-visible,
+.segment:focus-visible {
+  outline: 3px solid rgba(111, 145, 168, 0.72);
+  outline-offset: 3px;
+}
+
+.textField small,
+.counter {
+  margin: 0;
+  color: var(--color-ink-soft);
+  font-weight: 800;
+}
+
+.fieldset {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+  padding: 0;
+  border: 0;
+}
+
+.segmented {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.segment {
+  min-height: 2.6rem;
+  padding: 0.65rem 0.85rem;
+  border: 2px dashed rgba(139, 94, 60, 0.7);
+  border-radius: 0.25rem 0.55rem 0.28rem 0.6rem;
+  color: var(--color-postal-brown);
+  background: var(--color-paper-light);
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0.14rem 0.16rem 0 rgba(46, 42, 36, 0.1);
+}
+
+.segment[data-active="true"] {
+  border-color: var(--color-postal-red);
+  color: var(--color-ink);
+  background: var(--color-paper-dark);
+}
+
+.pendingGift {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-3);
+  border: 1px dashed rgba(46, 42, 36, 0.24);
+  color: var(--color-ink);
+  background: rgba(196, 154, 74, 0.12);
+  font-weight: 800;
+}
+
+.pendingGift span {
+  color: var(--color-ink-soft);
+}
+
 .returnLink {
   display: inline-grid;
   min-height: 2.75rem;

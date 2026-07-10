@@ -35,6 +35,8 @@ The initial schema lives in `supabase/migrations/20260709200000_initial_duif_sch
 
 - `correspondence_options`: static sendable correspondence types.
 - `deliveries`: sender, receiver, mascot, coordinates, timestamps, status, speed, and reward seed.
+- `delivery_correspondence_contents`: persisted letter/postcard/sticker/gift prototype
+  content attached to a delivery.
 - `reward_items`: static reward item definitions.
 - `delivery_rewards`: reward generated for a delivery, including XP and collection state.
 - `inventory_items`: player-owned inventory item state.
@@ -60,7 +62,7 @@ These match the current TypeScript game unions closely enough for future mapping
 - starter mascots: Nuvem, Trovao, and Pipoca;
 - friend mascot previews: Aurora, Brisa, Tico, Atlas, and Luma;
 - correspondence options: letter, postcard, sticker, and small gift;
-- Nuvem's Lisbon delivery;
+- Nuvem's Lisbon delivery with a seeded letter content row;
 - reward item definitions;
 - current inventory album items.
 
@@ -165,6 +167,17 @@ The send flow is the first authenticated gameplay write. It uses the
 the current profile, owned mascot, accepted friendship, and active correspondence option
 before inserting. It also computes route distance, travel timestamps, status, and reward
 seed server-side.
+
+The same RPC now accepts a `content_payload` JSON object and writes
+`delivery_correspondence_contents`. It validates prototype limits before inserting:
+
+- letters require 1 to 500 characters;
+- postcards allow a city/event/photo placeholder variant and up to 180 message characters;
+- stickers allow 1 to 3 mock sticker ids;
+- small gifts allow an optional note up to 180 characters.
+
+There is no direct insert policy for correspondence content. Delivery participants can read
+content through RLS, and writes go through the RPC.
 
 Reward collection is the second authenticated gameplay write. It uses the
 `collect_delivery_reward` RPC to validate the current profile, verify that the delivery

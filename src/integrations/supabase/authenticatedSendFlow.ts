@@ -7,6 +7,7 @@ import {
   mockFriends,
   starterMascots,
   type CorrespondenceOption,
+  type CorrespondenceContent,
   type Delivery,
   type FriendProfile,
   type Mascot,
@@ -20,6 +21,8 @@ import type { Database } from "./database.types";
 import { fetchAuthenticatedMascots, mapDeliveryRowToDelivery, type DeliveryRow } from "./authenticatedMascots";
 
 export type CorrespondenceOptionRow = Database["public"]["Tables"]["correspondence_options"]["Row"];
+export type DeliveryCorrespondenceContentRow =
+  Database["public"]["Tables"]["delivery_correspondence_contents"]["Row"];
 
 export type SanitizedFriendProfileRow = {
   display_name: string;
@@ -41,6 +44,7 @@ export type AuthenticatedSendFlowData = {
 
 export type ConfirmedAuthenticatedSend = {
   correspondence: CorrespondenceOption;
+  content: CorrespondenceContent;
   delivery: Delivery;
   friend: FriendProfile;
   mascot: Mascot;
@@ -77,6 +81,67 @@ export function mapSanitizedFriendProfileRow(row: SanitizedFriendProfileRow): Fr
     mascotIds: [],
     name: row.display_name,
     receivedCorrespondence: [],
+  };
+}
+
+export function mapCorrespondenceContentRow(
+  row: DeliveryCorrespondenceContentRow,
+): CorrespondenceContent {
+  if (row.correspondence_type === "postcard") {
+    return {
+      postcardMessage: row.postcard_message ?? "",
+      postcardVariant:
+        row.postcard_variant === "event" || row.postcard_variant === "photo" ? row.postcard_variant : "city",
+      type: "postcard",
+    };
+  }
+
+  if (row.correspondence_type === "sticker") {
+    return {
+      stickerIds: row.sticker_ids,
+      type: "sticker",
+    };
+  }
+
+  if (row.correspondence_type === "smallGift") {
+    return {
+      giftNote: row.gift_note ?? "",
+      type: "smallGift",
+    };
+  }
+
+  return {
+    letterText: row.letter_text ?? "",
+    type: "letter",
+  };
+}
+
+export function createCorrespondenceContentPayload(content: CorrespondenceContent) {
+  if (content.type === "postcard") {
+    return {
+      postcardMessage: content.postcardMessage,
+      postcardVariant: content.postcardVariant,
+      type: content.type,
+    };
+  }
+
+  if (content.type === "sticker") {
+    return {
+      stickerIds: content.stickerIds,
+      type: content.type,
+    };
+  }
+
+  if (content.type === "smallGift") {
+    return {
+      giftNote: content.giftNote,
+      type: content.type,
+    };
+  }
+
+  return {
+    letterText: content.letterText,
+    type: content.type,
   };
 }
 
@@ -157,10 +222,12 @@ export async function fetchAuthenticatedSendFlowData(
 
 export async function createAuthenticatedDeliveryFromSelection({
   correspondence,
+  content,
   friend,
   mascot,
 }: {
   correspondence: CorrespondenceOption;
+  content: CorrespondenceContent;
   friend: FriendProfile;
   mascot: Mascot;
 }): Promise<Delivery | undefined> {
@@ -172,6 +239,7 @@ export async function createAuthenticatedDeliveryFromSelection({
 
   const { data, error } = await supabase.rpc("create_delivery_from_selection", {
     correspondence_mock_key: correspondence.id,
+    content_payload: createCorrespondenceContentPayload(content),
     friend_mock_key: friend.id,
     mascot_mock_key: mascot.id,
   });

@@ -128,6 +128,34 @@ export type TranslationDictionary = {
     loadingData: string;
     sending: string;
     errorMessage: string;
+    composeTitle: string;
+    contentPreview: string;
+    contentInvalid: string;
+    characterCount: string;
+    selectedStickers: string;
+    letterPlaceholder: string;
+    postcardPlaceholder: string;
+    giftPlaceholder: string;
+    giftPendingTitle: string;
+    giftPendingDescription: string;
+    content: {
+      letterLabel: string;
+      postcardLabel: string;
+      postcardVariantLabel: string;
+      stickerLabel: string;
+      giftLabel: string;
+      emptyPreview: string;
+      stickers: {
+        sunStamp: string;
+        blueEnvelope: string;
+        routeSpark: string;
+      };
+      postcardVariants: {
+        city: string;
+        event: string;
+        photo: string;
+      };
+    };
   };
   map: {
     eyebrow: string;
@@ -506,6 +534,28 @@ export type TranslationKey =
   | "send.loadingData"
   | "send.sending"
   | "send.errorMessage"
+  | "send.composeTitle"
+  | "send.contentPreview"
+  | "send.contentInvalid"
+  | "send.characterCount"
+  | "send.selectedStickers"
+  | "send.letterPlaceholder"
+  | "send.postcardPlaceholder"
+  | "send.giftPlaceholder"
+  | "send.giftPendingTitle"
+  | "send.giftPendingDescription"
+  | "send.content.letterLabel"
+  | "send.content.postcardLabel"
+  | "send.content.postcardVariantLabel"
+  | "send.content.stickerLabel"
+  | "send.content.giftLabel"
+  | "send.content.emptyPreview"
+  | "send.content.stickers.sunStamp"
+  | "send.content.stickers.blueEnvelope"
+  | "send.content.stickers.routeSpark"
+  | "send.content.postcardVariants.city"
+  | "send.content.postcardVariants.event"
+  | "send.content.postcardVariants.photo"
   | "map.eyebrow"
   | "map.title"
   | "map.subtitle"

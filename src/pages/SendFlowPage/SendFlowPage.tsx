@@ -7,15 +7,24 @@ import { RoutePreview } from "../../components/map/RoutePreview";
 import { ItemCard, SketchPanel, StampButton } from "../../components/ui";
 import {
   createMockDeliveryFromSelection,
+  createDefaultCorrespondenceContent,
   currentPlayer,
   estimateMascotSpeedKmh,
   estimateTravelDurationHours,
   formatRemainingTime,
+  getCorrespondenceContentCount,
   getFriendCoordinates,
   getFriendLocationLabel,
   getDeliveryStatus,
   getTravelProgress,
   haversineDistanceKm,
+  isCorrespondenceContentValid,
+  LETTER_MAX_CHARACTERS,
+  mockPostcardOptions,
+  mockStickerOptions,
+  POSTCARD_MAX_CHARACTERS,
+  STICKER_MAX_SELECTION,
+  type CorrespondenceContent,
   type CorrespondenceOption,
   type Delivery,
   type FriendProfile,
@@ -34,6 +43,7 @@ type ConfirmedSend = {
   friend: FriendProfile;
   mascot: Mascot;
   correspondence: CorrespondenceOption;
+  content: CorrespondenceContent;
 };
 
 export function SendFlowPage() {
@@ -54,16 +64,22 @@ export function SendFlowPage() {
     mascotId: initialMascotId,
     correspondenceId: availableCorrespondence[0]?.id,
   });
+  const [content, setContent] = useState<CorrespondenceContent>(() =>
+    createDefaultCorrespondenceContent(availableCorrespondence[0]?.type ?? "letter"),
+  );
   const [confirmedSend, setConfirmedSend] = useState<ConfirmedSend | undefined>();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasSubmitError, setHasSubmitError] = useState(false);
 
   useEffect(() => {
+    const nextCorrespondence = availableCorrespondence[0];
+
     setSelection({
-      correspondenceId: availableCorrespondence[0]?.id,
+      correspondenceId: nextCorrespondence?.id,
       friendId: getInitialFriendId(friends, requestedFriendId),
       mascotId: getInitialMascotId(mascots, requestedMascotId),
     });
+    setContent(createDefaultCorrespondenceContent(nextCorrespondence?.type ?? "letter"));
     setConfirmedSend(undefined);
     setHasSubmitError(false);
   }, [availableCorrespondence, friends, mascots, requestedFriendId, requestedMascotId]);
@@ -74,6 +90,7 @@ export function SendFlowPage() {
     (option) => option.id === selection.correspondenceId,
   );
   const isSelectionComplete = Boolean(selectedFriend && selectedMascot && selectedCorrespondence);
+  const isContentValid = isCorrespondenceContentValid(content);
 
   const estimate = useMemo(() => {
     if (!selectedFriend || !selectedMascot) {
@@ -104,6 +121,11 @@ export function SendFlowPage() {
     setHasSubmitError(false);
   }
 
+  function handleCorrespondenceSelect(option: CorrespondenceOption) {
+    updateSelection({ correspondenceId: option.id });
+    setContent(createDefaultCorrespondenceContent(option.type));
+  }
+
   async function handleConfirmSend() {
     if (!selectedFriend || !selectedMascot || !selectedCorrespondence || isSubmitting) {
       return;
@@ -116,6 +138,7 @@ export function SendFlowPage() {
       if (isAuthenticatedSource) {
         const delivery = await createAuthenticatedDeliveryFromSelection({
           correspondence: selectedCorrespondence,
+          content,
           friend: selectedFriend,
           mascot: selectedMascot,
         });
@@ -123,6 +146,7 @@ export function SendFlowPage() {
         if (delivery) {
           setConfirmedSend({
             correspondence: selectedCorrespondence,
+            content,
             delivery,
             friend: selectedFriend,
             mascot: selectedMascot,
@@ -131,7 +155,7 @@ export function SendFlowPage() {
         return;
       }
 
-      const result = createMockDeliveryFromSelection(selection);
+      const result = createMockDeliveryFromSelection(selection, content);
 
       if (result) {
         setConfirmedSend(result);
@@ -149,8 +173,10 @@ export function SendFlowPage() {
 
   const summaryHint = isSendFlowLoading
     ? t("send.loadingData")
-    : isSelectionComplete
+    : isSelectionComplete && isContentValid
       ? t("send.readyHint")
+      : isSelectionComplete
+        ? t("send.contentInvalid")
       : t("send.incompleteHint");
   const backTo = selectedFriend
     ? `/friends/${selectedFriend.id}`
@@ -227,11 +253,15 @@ export function SendFlowPage() {
                   aria-label={`${t("send.selectedCorrespondence")}: ${t(option.nameKey)}`}
                   className={styles.optionButton}
                   type="button"
-                  onClick={() => updateSelection({ correspondenceId: option.id })}
+                  onClick={() => handleCorrespondenceSelect(option)}
                 />
               </div>
             ))}
           </ChoiceSection>
+
+          <SketchPanel title={t("send.composeTitle")}>
+            <CorrespondenceComposer content={content} onChange={setContent} />
+          </SketchPanel>
 
           <SketchPanel
             className={styles.summaryPanel}
@@ -261,6 +291,11 @@ export function SendFlowPage() {
                     value={selectedCorrespondence ? t(selectedCorrespondence.nameKey) : undefined}
                   />
                   <SummaryRow
+                    fallback={t("send.content.emptyPreview")}
+                    label={t("send.contentPreview")}
+                    value={<CorrespondenceContentPreview content={content} />}
+                  />
+                  <SummaryRow
                     fallback={t("common.unavailable")}
                     label={t("mascot.distance")}
                     value={
@@ -274,7 +309,7 @@ export function SendFlowPage() {
                   />
                 </dl>
                 <StampButton
-                  disabled={!isSelectionComplete || isSubmitting || isSendFlowLoading}
+                  disabled={!isSelectionComplete || !isContentValid || isSubmitting || isSendFlowLoading}
                   onClick={handleConfirmSend}
                 >
                   {isSubmitting ? t("send.sending") : t("send.sendButton")}
@@ -302,7 +337,7 @@ function SummaryRow({
   fallback = "",
 }: {
   label: string;
-  value?: string;
+  value?: ReactNode;
   fallback?: string;
 }) {
   return (
@@ -313,6 +348,180 @@ function SummaryRow({
   );
 }
 
+function CorrespondenceComposer({
+  content,
+  onChange,
+}: {
+  content: CorrespondenceContent;
+  onChange: (content: CorrespondenceContent) => void;
+}) {
+  const { t } = useTranslation();
+
+  if (content.type === "postcard") {
+    return (
+      <div className={styles.composer}>
+        <fieldset className={styles.fieldset}>
+          <legend>{t("send.content.postcardVariantLabel")}</legend>
+          <div className={styles.segmented}>
+            {mockPostcardOptions.map((option) => (
+              <button
+                className={styles.segment}
+                data-active={content.postcardVariant === option.id || undefined}
+                key={option.id}
+                onClick={() => onChange({ ...content, postcardVariant: option.id })}
+                type="button"
+              >
+                {t(option.nameKey)}
+              </button>
+            ))}
+          </div>
+        </fieldset>
+        <TextComposerField
+          count={getCorrespondenceContentCount(content)}
+          label={t("send.content.postcardLabel")}
+          maxLength={POSTCARD_MAX_CHARACTERS}
+          onChange={(value) => onChange({ ...content, postcardMessage: value })}
+          placeholder={t("send.postcardPlaceholder")}
+          value={content.postcardMessage}
+        />
+      </div>
+    );
+  }
+
+  if (content.type === "sticker") {
+    return (
+      <div className={styles.composer}>
+        <fieldset className={styles.fieldset}>
+          <legend>{t("send.content.stickerLabel")}</legend>
+          <div className={styles.segmented}>
+            {mockStickerOptions.map((option) => {
+              const isSelected = content.stickerIds.includes(option.id);
+
+              return (
+                <button
+                  className={styles.segment}
+                  data-active={isSelected || undefined}
+                  key={option.id}
+                  onClick={() => {
+                    const stickerIds = isSelected
+                      ? content.stickerIds.filter((stickerId) => stickerId !== option.id)
+                      : [...content.stickerIds, option.id].slice(0, STICKER_MAX_SELECTION);
+                    onChange({ ...content, stickerIds });
+                  }}
+                  type="button"
+                >
+                  {t(option.nameKey)}
+                </button>
+              );
+            })}
+          </div>
+          <p className={styles.counter}>
+            {t("send.selectedStickers")}: {content.stickerIds.length}/{STICKER_MAX_SELECTION}
+          </p>
+        </fieldset>
+      </div>
+    );
+  }
+
+  if (content.type === "smallGift") {
+    return (
+      <div className={styles.composer}>
+        <div className={styles.pendingGift}>
+          <strong>{t("send.giftPendingTitle")}</strong>
+          <span>{t("send.giftPendingDescription")}</span>
+        </div>
+        <TextComposerField
+          count={getCorrespondenceContentCount(content)}
+          label={t("send.content.giftLabel")}
+          maxLength={POSTCARD_MAX_CHARACTERS}
+          onChange={(value) => onChange({ ...content, giftNote: value })}
+          placeholder={t("send.giftPlaceholder")}
+          value={content.giftNote}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.composer}>
+      <TextComposerField
+        count={getCorrespondenceContentCount(content)}
+        label={t("send.content.letterLabel")}
+        maxLength={LETTER_MAX_CHARACTERS}
+        onChange={(value) => onChange({ ...content, letterText: value })}
+        placeholder={t("send.letterPlaceholder")}
+        required
+        value={content.letterText}
+      />
+    </div>
+  );
+}
+
+function TextComposerField({
+  count,
+  label,
+  maxLength,
+  onChange,
+  placeholder,
+  required = false,
+  value,
+}: {
+  count: number;
+  label: string;
+  maxLength: number;
+  onChange: (value: string) => void;
+  placeholder: string;
+  required?: boolean;
+  value: string;
+}) {
+  const { t } = useTranslation();
+
+  return (
+    <label className={styles.textField}>
+      <span>{label}</span>
+      <textarea
+        maxLength={maxLength}
+        onChange={(event) => onChange(event.currentTarget.value)}
+        placeholder={placeholder}
+        required={required}
+        value={value}
+      />
+      <small>
+        {t("send.characterCount")}: {count}/{maxLength}
+      </small>
+    </label>
+  );
+}
+
+function CorrespondenceContentPreview({ content }: { content: CorrespondenceContent }) {
+  const { t } = useTranslation();
+
+  if (content.type === "postcard") {
+    const variant = mockPostcardOptions.find((option) => option.id === content.postcardVariant);
+    return (
+      <span>
+        {variant ? t(variant.nameKey) : t("correspondence.postcard.name")}
+        {content.postcardMessage ? ` / ${content.postcardMessage}` : ""}
+      </span>
+    );
+  }
+
+  if (content.type === "sticker") {
+    const stickerNames = content.stickerIds
+      .map((stickerId) => mockStickerOptions.find((option) => option.id === stickerId))
+      .filter((option): option is (typeof mockStickerOptions)[number] => Boolean(option))
+      .map((option) => t(option.nameKey));
+
+    return <span>{stickerNames.join(" / ") || t("send.content.emptyPreview")}</span>;
+  }
+
+  if (content.type === "smallGift") {
+    return <span>{content.giftNote || t("send.giftPendingDescription")}</span>;
+  }
+
+  return <span>{content.letterText || t("send.content.emptyPreview")}</span>;
+}
+
 function ConfirmationPanel({
   confirmedSend,
   onReset,
@@ -321,7 +530,7 @@ function ConfirmationPanel({
   onReset: () => void;
 }) {
   const { t } = useTranslation();
-  const { delivery, friend, mascot, correspondence } = confirmedSend;
+  const { delivery, friend, mascot, correspondence, content } = confirmedSend;
   const status = getDeliveryStatus(delivery);
   const progress = getTravelProgress(delivery);
   const remainingTime = formatRemainingTime(delivery);
@@ -342,6 +551,10 @@ function ConfirmationPanel({
         <SummaryRow label={t("send.selectedFriend")} value={friend.name} />
         <SummaryRow label={t("send.selectedMascot")} value={mascot.name} />
         <SummaryRow label={t("send.selectedCorrespondence")} value={t(correspondence.nameKey)} />
+        <SummaryRow
+          label={t("send.contentPreview")}
+          value={<CorrespondenceContentPreview content={content} />}
+        />
         <SummaryRow label={t("mascot.status")} value={t(`delivery.status.${status}`)} />
       </dl>
       <div className={styles.actions}>
