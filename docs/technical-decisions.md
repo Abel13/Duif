@@ -227,9 +227,13 @@ The local schema and non-default development ports are documented in:
 docs/backend-schema.md
 
 The first frontend integration is catalog-first. The browser client may read public
-definition tables such as `mascot_templates`, while player-owned tables remain protected
-by RLS until auth or a server-side read boundary exists. Mock data remains the default
-runtime source, with Supabase enabled only through environment configuration.
+definition tables such as `mascot_templates`, while mock data remains the default
+runtime source.
+
+The first auth layer uses Supabase Auth with email/password for local development. A
+small `claim_current_profile` RPC links the authenticated user to the seeded current
+player profile so existing RLS policies can be exercised without building final
+onboarding yet.
 
 Use a custom Node backend later if the game needs:
 
@@ -242,7 +246,7 @@ Use a custom Node backend later if the game needs:
 
 ## Authentication
 
-Do not implement authentication in the first prototype.
+Do not implement authentication in the first visual prototype.
 
 When needed later, evaluate:
 

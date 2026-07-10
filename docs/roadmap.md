@@ -717,6 +717,37 @@ Success criteria:
 - player-owned data remains protected behind RLS;
 - tests and build continue passing.
 
+## Milestone 19: Auth Foundation
+
+Goal:
+
+Add minimal Supabase Auth so DUIF can safely read player-owned rows in later milestones.
+
+Includes:
+
+- `/auth` route with a mobile-first email/password form;
+- Supabase session provider and auth helpers;
+- `claim_current_profile` RPC to connect the local auth user to the seeded Abel profile;
+- authenticated read of the current profile through existing RLS;
+- docs for local auth setup and scope.
+
+Does not include:
+
+- OAuth;
+- magic link;
+- password reset;
+- production onboarding;
+- public profile editing;
+- migrating gameplay screens away from mocks.
+
+Success criteria:
+
+- app still works without Supabase env vars;
+- local email/password sign up and login work when Supabase is configured;
+- the current profile can be claimed only by one auth user;
+- logout clears the local session;
+- existing routes keep rendering with mock gameplay data.
+
 ## Suggested First Execution Order
 
 Use this order for the first development pass:

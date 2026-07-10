@@ -8,6 +8,28 @@ export const ptBR = {
     loading: "Carregando",
     unavailable: "Indisponível",
   },
+  auth: {
+    eyebrow: "Acesso local",
+    title: "Conta do caderno",
+    subtitle:
+      "Entre com email e senha para ligar sua sessão local ao perfil seedado do protótipo.",
+    unavailableTitle: "Supabase não configurado",
+    unavailableDescription:
+      "Configure as variáveis locais para testar login. O app continua usando mocks enquanto isso.",
+    loadingSession: "Carregando sessão",
+    signedInTitle: "Sessão ativa",
+    signedInDescription: "Seu perfil local já está ligado ao caderno postal.",
+    modeLabel: "Modo de acesso",
+    signIn: "Entrar",
+    signUp: "Criar conta",
+    signOut: "Sair",
+    email: "Email",
+    password: "Senha",
+    currentProfile: "Perfil atual",
+    backToNest: "Voltar ao ninho",
+    submitting: "Enviando",
+    errorMessage: "Não foi possível completar a ação. Verifique os dados e tente novamente.",
+  },
   units: {
     kilometers: "km",
   },

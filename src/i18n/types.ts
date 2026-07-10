@@ -8,6 +8,26 @@ export type TranslationDictionary = {
     loading: string;
     unavailable: string;
   };
+  auth: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    unavailableTitle: string;
+    unavailableDescription: string;
+    loadingSession: string;
+    signedInTitle: string;
+    signedInDescription: string;
+    modeLabel: string;
+    signIn: string;
+    signUp: string;
+    signOut: string;
+    email: string;
+    password: string;
+    currentProfile: string;
+    backToNest: string;
+    submitting: string;
+    errorMessage: string;
+  };
   units: {
     kilometers: string;
   };
@@ -329,6 +349,24 @@ export type TranslationKey =
   | "app.title"
   | "common.loading"
   | "common.unavailable"
+  | "auth.eyebrow"
+  | "auth.title"
+  | "auth.subtitle"
+  | "auth.unavailableTitle"
+  | "auth.unavailableDescription"
+  | "auth.loadingSession"
+  | "auth.signedInTitle"
+  | "auth.signedInDescription"
+  | "auth.modeLabel"
+  | "auth.signIn"
+  | "auth.signUp"
+  | "auth.signOut"
+  | "auth.email"
+  | "auth.password"
+  | "auth.currentProfile"
+  | "auth.backToNest"
+  | "auth.submitting"
+  | "auth.errorMessage"
   | "units.kilometers"
   | "home.eyebrow"
   | "home.iconAlt"

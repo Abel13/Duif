@@ -1,0 +1,147 @@
+.page {
+  min-height: 100vh;
+  padding: clamp(1rem, 4vw, 3rem);
+  overflow-x: clip;
+}
+
+.shell {
+  display: grid;
+  width: min(100%, 34rem);
+  margin-inline: auto;
+  min-width: 0;
+}
+
+.description {
+  margin: 0 0 var(--space-4);
+  color: rgba(46, 42, 36, 0.78);
+  line-height: 1.6;
+}
+
+.form,
+.signedIn {
+  display: grid;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.modeTabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2);
+  padding: 0.25rem;
+  border: 1px dashed rgba(46, 42, 36, 0.35);
+  background: rgba(255, 248, 232, 0.55);
+}
+
+.modeTabs button {
+  min-height: 2.75rem;
+  border: 1px solid transparent;
+  color: var(--color-postal-brown);
+  background: transparent;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.modeTabs button:focus-visible,
+.field input:focus-visible,
+.backLink:focus-visible {
+  outline: 3px solid rgba(164, 74, 63, 0.55);
+  outline-offset: 3px;
+}
+
+.modeTabs .activeMode {
+  border-color: rgba(46, 42, 36, 0.5);
+  background: var(--color-paper);
+  box-shadow: 0.12rem 0.12rem 0 rgba(46, 42, 36, 0.08);
+}
+
+.field {
+  display: grid;
+  gap: var(--space-2);
+  color: var(--color-ink);
+  font-weight: 800;
+}
+
+.field span,
+.profileList dt {
+  color: var(--color-postal-brown);
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.field input {
+  width: 100%;
+  min-height: 3rem;
+  min-width: 0;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid rgba(46, 42, 36, 0.42);
+  border-radius: 0.25rem;
+  color: var(--color-ink);
+  background: rgba(255, 248, 232, 0.72);
+  font: inherit;
+}
+
+.statusBlock {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 1px dashed rgba(46, 42, 36, 0.45);
+  background: var(--color-postal-label);
+  color: rgba(46, 42, 36, 0.82);
+}
+
+.statusBlock strong {
+  color: var(--color-postal-brown);
+}
+
+.profileList {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+}
+
+.profileList div {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.profileList dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-weight: 800;
+}
+
+.error {
+  margin: 0;
+  color: var(--color-postal-red);
+  font-weight: 800;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.actions > * {
+  flex: 1 1 10rem;
+}
+
+.backLink {
+  display: inline-grid;
+  min-height: 2.75rem;
+  place-items: center;
+  padding: 0.6rem 0.85rem;
+  border: 1px dashed rgba(46, 42, 36, 0.45);
+  color: var(--color-postal-brown);
+  background: var(--color-postal-label);
+  font-weight: 900;
+  text-align: center;
+  text-decoration: none;
+}

@@ -89,7 +89,9 @@ RLS is enabled on player-owned or relationship-sensitive tables:
 - `delivery_rewards`;
 - `inventory_items`.
 
-The first policies are read-focused and tied to `profiles.auth_user_id = auth.uid()`. Seeded local rows do not yet have real auth users attached because auth is not wired into the app in this milestone.
+The first policies are read-focused and tied to `profiles.auth_user_id = auth.uid()`.
+Seeded rows start without an auth user, then the local auth foundation can claim the
+current player profile through the `claim_current_profile` RPC.
 
 Static definition tables are not RLS-gated in this first pass:
 
@@ -99,6 +101,21 @@ Static definition tables are not RLS-gated in this first pass:
 
 The first frontend Supabase read layer uses only these public catalog tables. Player-owned
 tables stay protected until DUIF adds auth or a server-side read boundary.
+
+## Auth Foundation
+
+DUIF uses Supabase Auth with email/password for local development. The `/auth` route
+creates or signs in a local user, then calls `claim_current_profile`.
+
+`claim_current_profile` is a `security definer` RPC that:
+
+- requires `auth.uid()`;
+- attaches `profiles.mock_key = 'player-current'` to the current auth user if the profile is unclaimed;
+- returns the profile when it already belongs to the current auth user;
+- rejects attempts to claim a profile already linked to another user.
+
+This is a prototype bridge for RLS, not final onboarding. It does not create public
+profiles, password reset, OAuth providers, or production auth polish.
 
 ## Frontend Read Layer
 
@@ -120,9 +137,9 @@ The current read layer intentionally reads only:
 - `mascot_templates`;
 - later public catalog rows such as `correspondence_options` and `reward_items`.
 
-It does not read `player_mascots`, `deliveries`, `friendships`, `delivery_rewards`,
-or `inventory_items` from the browser yet because those tables depend on authenticated
-RLS policies.
+Gameplay screens still do not read `player_mascots`, `deliveries`, `friendships`,
+`delivery_rewards`, or `inventory_items` from the browser yet. Auth now makes those
+reads possible in the next milestone, but this milestone keeps gameplay on mocks.
 
 ## Out Of Scope
 

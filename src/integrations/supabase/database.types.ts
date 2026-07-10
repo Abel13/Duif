@@ -515,7 +515,26 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      claim_current_profile: {
+        Args: never
+        Returns: {
+          auth_user_id: string | null
+          created_at: string
+          display_name: string
+          home_label_key: string
+          home_latitude: number
+          home_longitude: number
+          id: string
+          mock_key: string | null
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "profiles"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
     }
     Enums: {
       correspondence_type: "letter" | "postcard" | "sticker" | "smallGift"

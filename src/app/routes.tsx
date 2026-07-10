@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 
+import { AuthPage } from "../pages/AuthPage/AuthPage";
 import { FriendProfilePage } from "../pages/FriendProfilePage/FriendProfilePage";
 import { FriendsPage } from "../pages/FriendsPage/FriendsPage";
 import { InventoryAlbumPage } from "../pages/InventoryAlbumPage/InventoryAlbumPage";
@@ -11,6 +12,7 @@ export function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/mascots/mascot-nuvem" replace />} />
+      <Route path="/auth" element={<AuthPage />} />
       <Route path="/mascots/:mascotId" element={<MascotDetailPage />} />
       <Route path="/inventory" element={<InventoryAlbumPage />} />
       <Route path="/friends" element={<FriendsPage />} />

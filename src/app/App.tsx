@@ -1,5 +1,10 @@
 import { AppRoutes } from "./routes";
+import { AuthProvider } from "../integrations/supabase/AuthProvider";
 
 export function App() {
-  return <AppRoutes />;
+  return (
+    <AuthProvider>
+      <AppRoutes />
+    </AuthProvider>
+  );
 }
