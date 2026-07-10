@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 
-import { MascotBottomNav } from "../../components/mascot/MascotBottomNav";
+import { AppBottomNav, PageShell } from "../../components/layout";
 import { AssetImage, ItemCard, PaperTab, SketchPanel } from "../../components/ui";
 import {
   getInventoryItemsByCategory,
@@ -21,7 +21,7 @@ export function InventoryAlbumPage() {
   const summary = useMemo(() => getInventorySummary(items), [items]);
 
   return (
-    <main className={styles.page}>
+    <PageShell hasBottomNav>
       <div className={styles.shell}>
         <SketchPanel eyebrow={t("inventory.eyebrow")} title={t("inventory.title")}>
           <p className={styles.subtitle}>{t("inventory.subtitle")}</p>
@@ -73,9 +73,9 @@ export function InventoryAlbumPage() {
             ))}
           </section>
         </div>
-        <MascotBottomNav />
       </div>
-    </main>
+      <AppBottomNav />
+    </PageShell>
   );
 }
 

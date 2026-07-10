@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 
+import { AppBottomNav, PageShell } from "../../components/layout";
 import { ItemCard, SketchPanel } from "../../components/ui";
 import { mockFriends } from "../../game";
 import { useTranslation } from "../../i18n";
@@ -9,7 +10,7 @@ export function FriendsPage() {
   const { t } = useTranslation();
 
   return (
-    <main className={styles.page}>
+    <PageShell hasBottomNav>
       <div className={styles.shell}>
         <SketchPanel eyebrow={t("friends.eyebrow")} title={t("friends.title")}>
           <p className={styles.subtitle}>{t("friends.subtitle")}</p>
@@ -50,6 +51,7 @@ export function FriendsPage() {
           ))}
         </section>
       </div>
-    </main>
+      <AppBottomNav />
+    </PageShell>
   );
 }

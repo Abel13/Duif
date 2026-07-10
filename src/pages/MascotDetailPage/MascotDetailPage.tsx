@@ -1,6 +1,6 @@
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 
-import { MascotBottomNav } from "../../components/mascot/MascotBottomNav";
+import { AppBottomNav, PageShell } from "../../components/layout";
 import { MascotEquipmentGrid } from "../../components/mascot/MascotEquipmentGrid";
 import { MascotPortrait } from "../../components/mascot/MascotPortrait";
 import { MascotSelector } from "../../components/mascot/MascotSelector";
@@ -27,7 +27,7 @@ export function MascotDetailPage() {
   }
 
   return (
-    <main className={styles.page}>
+    <PageShell hasBottomNav>
       <div className={styles.shell}>
         <aside className={styles.sidebar}>
           <MascotSelector mascots={mascots} selectedMascotId={mascot.id} />
@@ -84,9 +84,9 @@ export function MascotDetailPage() {
             </SketchPanel>
           </div>
 
-          <MascotBottomNav />
         </section>
       </div>
-    </main>
+      <AppBottomNav />
+    </PageShell>
   );
 }

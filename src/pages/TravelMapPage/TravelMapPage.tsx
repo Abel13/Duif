@@ -1,7 +1,7 @@
 import { useMemo, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import { MascotBottomNav } from "../../components/mascot/MascotBottomNav";
+import { AppBottomNav } from "../../components/layout";
 import { TravelMap } from "../../components/map/TravelMap";
 import { ItemCard, SketchPanel } from "../../components/ui";
 import {
@@ -105,7 +105,7 @@ export function TravelMapPage() {
         </aside>
 
         <div className={styles.bottomNav}>
-          <MascotBottomNav />
+          <AppBottomNav />
         </div>
       </section>
     </main>

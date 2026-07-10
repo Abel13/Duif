@@ -1,0 +1,45 @@
+.nav {
+  position: fixed;
+  z-index: 20;
+  right: var(--space-2);
+  bottom: max(var(--space-2), env(safe-area-inset-bottom));
+  left: var(--space-2);
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.28rem;
+  padding: 0.42rem;
+  border: 2px solid rgba(46, 42, 36, 0.28);
+  border-radius: 0.78rem 0.42rem 0.96rem 0.36rem;
+  background:
+    linear-gradient(90deg, rgba(46, 42, 36, 0.08), transparent 1.2rem, transparent calc(100% - 1.2rem), rgba(46, 42, 36, 0.08)),
+    rgba(247, 241, 227, 0.94);
+  box-shadow: 0 0.75rem 2rem rgba(46, 42, 36, 0.22);
+}
+
+.tab {
+  min-height: 2.72rem;
+  padding: 0.5rem 0.28rem;
+  border-radius: 0.52rem 0.32rem 0.22rem 0.18rem;
+  font-size: clamp(0.68rem, 2.7vw, 0.82rem);
+  letter-spacing: 0;
+}
+
+.tab:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  transform: none;
+}
+
+@media (min-width: 620px) {
+  .nav {
+    right: 50%;
+    left: auto;
+    width: min(36rem, calc(100vw - 2 * var(--space-4)));
+    gap: var(--space-2);
+    transform: translateX(50%);
+  }
+
+  .tab {
+    padding-inline: 0.6rem;
+  }
+}

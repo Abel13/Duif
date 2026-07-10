@@ -1,6 +1,6 @@
 import { FormEvent, useState } from "react";
-import { Link } from "react-router-dom";
 
+import { MobileTopBar, PageShell } from "../../components/layout";
 import { SketchPanel, StampButton } from "../../components/ui";
 import { useTranslation } from "../../i18n";
 import { useAuth } from "../../integrations/supabase/AuthProvider";
@@ -53,7 +53,8 @@ export function AuthPage() {
   }
 
   return (
-    <main className={styles.page}>
+    <PageShell hasTopBar>
+      <MobileTopBar backLabelKey="navigation.backToNest" backTo="/mascots/mascot-nuvem" title={t("auth.title")} />
       <div className={styles.shell}>
         <SketchPanel eyebrow={t("auth.eyebrow")} title={t("auth.title")} variant="note">
           <p className={styles.description}>{t("auth.subtitle")}</p>
@@ -95,9 +96,6 @@ export function AuthPage() {
                 <StampButton disabled={isSubmitting} onClick={handleSignOut} variant="secondary">
                   {t("auth.signOut")}
                 </StampButton>
-                <Link className={styles.backLink} to="/mascots/mascot-nuvem">
-                  {t("auth.backToNest")}
-                </Link>
               </div>
             </div>
           )}
@@ -159,6 +157,6 @@ export function AuthPage() {
           )}
         </SketchPanel>
       </div>
-    </main>
+    </PageShell>
   );
 }

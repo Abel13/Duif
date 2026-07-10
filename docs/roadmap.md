@@ -921,6 +921,40 @@ Success criteria:
 - `/mascots/mascot-nuvem`, `/send`, `/friends`, `/inventory`, and `/rewards` still work;
 - tests and build pass.
 
+## Milestone 24.5: Mobile Navigation And Flow Polish
+
+Goal:
+
+Turn the existing screens into a coherent mobile app experience before expanding backend,
+privacy, or economy work.
+
+Includes:
+
+- create shared layout primitives for page padding, bottom navigation, and secondary-flow
+  top bars;
+- replace the old mascot-specific bottom nav with an app-level bottom nav;
+- keep main routes reachable through bottom navigation: Ninho, Caixa Postal, Mapa, Amigos,
+  and disabled Loja;
+- add consistent back navigation to send, rewards, friend profile, and auth flows;
+- reduce mobile scroll pressure with denser cards, compact grids, and sticky action panels
+  where useful;
+- ensure content is not hidden behind fixed mobile navigation.
+
+Does not include:
+
+- new gameplay;
+- route changes;
+- Supabase schema or policy changes;
+- shop implementation;
+- new animation or UI dependencies.
+
+Success criteria:
+
+- every screen has either bottom nav or a clear top-bar return action;
+- primary actions remain reachable on mobile;
+- mobile layouts avoid accidental horizontal overflow;
+- tests and build pass.
+
 ## Milestone 25: Postal Base Privacy Model
 
 Goal:
@@ -1054,6 +1088,36 @@ Success criteria:
 - privacy expectations remain clear;
 - the technical model can scale through interest management instead of broadcasting every
   active pet to every client.
+
+## Milestone 27.75: Art Direction Asset Slice
+
+Goal:
+
+Validate a small set of real DUIF assets inside the actual mobile UI before producing a
+full final asset pack.
+
+Includes:
+
+- add a few optimized runtime assets following `docs/assets.md`;
+- validate portraits for Nuvem, Trovão, and Pipoca;
+- add a small sample of equipment, reward, texture, and postal-mark assets;
+- keep CSS fallbacks intact for every asset surface;
+- review build size after assets are added.
+
+Does not include:
+
+- full cosmetic catalog;
+- final shop inventory art;
+- seasonal/event asset packs;
+- production map tiles;
+- large background illustrations.
+
+Success criteria:
+
+- real assets improve emotional appeal without breaking mobile layouts;
+- the app remains lightweight;
+- assets work across mascot, map, reward, inventory, and friend contexts;
+- fallback rendering still works when files are missing or fail to load.
 
 ## Milestone 28: Persisted Inventory Album
 

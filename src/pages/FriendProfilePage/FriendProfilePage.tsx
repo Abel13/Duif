@@ -1,6 +1,7 @@
 import { Link, Navigate, useParams } from "react-router-dom";
 import type { CSSProperties } from "react";
 
+import { MobileTopBar, PageShell } from "../../components/layout";
 import { AssetImage, ItemCard, SketchPanel } from "../../components/ui";
 import {
   getFriendById,
@@ -25,7 +26,8 @@ export function FriendProfilePage() {
   const correspondence = getFriendCorrespondence(friend.id);
 
   return (
-    <main className={styles.page}>
+    <PageShell hasTopBar>
+      <MobileTopBar backLabelKey="navigation.backToFriends" backTo="/friends" title={friend.name} />
       <div className={styles.shell}>
         <SketchPanel eyebrow={t("friends.eyebrow")} title={friend.name}>
           <div className={styles.hero}>
@@ -35,9 +37,6 @@ export function FriendProfilePage() {
             <div className={styles.actions}>
               <Link className={styles.primaryLink} to={`/send?friendId=${friend.id}`}>
                 {t("friends.sendToFriend")}
-              </Link>
-              <Link className={styles.secondaryLink} to="/friends">
-                {t("friends.backToFriends")}
               </Link>
             </div>
           </div>
@@ -76,7 +75,7 @@ export function FriendProfilePage() {
           </SketchPanel>
         </div>
       </div>
-    </main>
+    </PageShell>
   );
 }
 

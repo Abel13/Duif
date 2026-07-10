@@ -2,6 +2,32 @@
 
 This document defines the first asset pipeline conventions for DUIF.
 
+## Asset Timing Strategy
+
+DUIF should not wait until the end to support assets, but it should wait to produce the
+full final asset pack.
+
+Use three phases:
+
+1. Pipeline and fallbacks now.
+   - Keep stable asset paths in data.
+   - Keep `AssetImage` fallbacks working.
+   - Use CSS placeholders for mascots, items, equipment, rewards, and map details.
+   - Do not block gameplay or mobile UX work on final art.
+
+2. Art direction slice before final polish.
+   - Add a small number of real assets once the main flows feel stable.
+   - Use these assets to validate emotion, silhouette, scale, and the postal identity.
+   - Keep the slice intentionally small so design can still change.
+
+3. Full asset pack near the MVP finish.
+   - Produce broader variations, rarities, cosmetics, shop items, map art, and final icons.
+   - Only expand the pack once gameplay, navigation, inventory, shop direction, and reward
+     loops are clearer.
+
+This avoids locking the visual direction too early while still making sure every screen can
+accept real art without layout rewrites.
+
 ## Folder Conventions
 
 Use stable public paths under `public/assets/`:
@@ -12,6 +38,8 @@ Use stable public paths under `public/assets/`:
 - `items/thumbnails/` for inventory, reward, and collectible thumbnails.
 - `equipment/icons/` for equipment icons.
 - `textures/` for small paper or stamp textures.
+- `maps/` for future lightweight map overlays, labels, stamps, or texture details.
+- `stamps/` for reusable postal marks, cancellation marks, and collectible stamp art.
 
 Keep asset names lowercase and hyphenated, such as `nuvem.webp` or `worn-route-stamp.webp`.
 
@@ -23,16 +51,37 @@ Keep large source files outside `public/` so they are not copied into the produc
 - Friend mascot portraits: `512x512` or smaller.
 - Item thumbnails: `256x256` or smaller.
 - Equipment icons: `192x192` or smaller.
+- Sticker and stamp art: `256x256` or smaller unless it must be inspected in detail.
 - Textures: tileable and as small as possible, usually `512x512` or smaller.
 - PWA icons: keep generated runtime icons at the exact manifest sizes, such as `192x192`, `512x512`, and `180x180` for Apple touch icons.
+
+Recommended runtime budgets:
+
+- Single mascot portrait: ideally under `150KB`.
+- Item, reward, sticker, or equipment thumbnail: ideally under `60KB`.
+- Small texture: ideally under `80KB`.
+- Avoid any individual runtime asset above `300KB` without a performance review.
+- Avoid adding more than `1MB` of new runtime assets in one milestone without a build-size
+  note in `docs/performance.md`.
 
 ## Formats
 
 - Prefer `webp` for painted or textured art.
+- Prefer `avif` only after checking browser quality and decode cost for the specific asset.
 - Use `png` only when transparency is important.
+- Use `svg` for simple marks, stamps, labels, and UI-like vector shapes when it stays small
+  and maintainable.
 - Avoid large source files in the app repository.
 - Never keep multi-megabyte source images in `public/`; Vite copies that folder directly into `dist`.
 - Do not add multi-megabyte asset packs without a separate review.
+
+Source files:
+
+- Keep layered originals, high-resolution exports, prompts, and experiments outside
+  `public/`.
+- If source files are committed, place them under `assets-source/` and make sure they are
+  not referenced by the runtime app.
+- Runtime files must be optimized exports under `public/assets/`.
 
 ## Loading Rules
 
@@ -40,6 +89,8 @@ Keep large source files outside `public/` so they are not copied into the produc
 - Secondary images, inventory thumbnails, equipment icons, and friend mascot portraits should use `loading="lazy"`.
 - Every image surface must keep a CSS fallback so missing or failed assets never break layout.
 - Do not rely on a single full-screen image for the UI.
+- Do not preload large art until a route has proved it needs that asset immediately.
+- Keep map tiles/provider assets separate from DUIF-owned static art decisions.
 
 ## Fallback Rules
 
@@ -50,3 +101,78 @@ Real assets are optional in the prototype. Components should render CSS placehol
 - the browser fails to load the image.
 
 This lets the team wire stable asset paths before final art production.
+
+Fallback requirements:
+
+- Mascot portrait fallback should preserve the mascot colors from `appearance`.
+- Item/equipment fallback should still show name, rarity, category, and equipped/stored
+  state.
+- Reward fallback should still show rarity and collection status.
+- Missing images must not create layout shifts, empty boxes, or broken image icons.
+- Any new asset-rendering component should support meaningful `alt` text or explicitly mark
+  decorative images as decorative.
+
+## Art Direction Slice
+
+Before producing the final asset pack, create a small validation slice.
+
+Recommended slice:
+
+- Nuvem, Trovão, and Pipoca portraits.
+- One friend mascot portrait.
+- Three equipment icons: postal bag, scarf, and goggles.
+- Three route reward thumbnails: postcard, badge, and stamp.
+- One lightweight paper texture.
+- One or two reusable postal marks or stamp overlays.
+
+Success criteria:
+
+- Mascots feel emotionally appealing in the actual mobile UI.
+- The app still feels lightweight after assets are added.
+- The same assets work in mascot, map, reward, inventory, and friend contexts.
+- CSS fallbacks remain intact when assets fail.
+
+Do not include in the slice:
+
+- full cosmetic catalog;
+- shop inventory pack;
+- seasonal/event packs;
+- final custom map tiles;
+- large background illustrations;
+- generated variants for every rarity.
+
+## Final Asset Pack
+
+The final MVP asset pack should wait until the following are stable:
+
+- mobile navigation and screen hierarchy;
+- postal-base privacy model;
+- correspondence content rules;
+- route reward model;
+- persisted inventory behavior;
+- shop/economy direction;
+- first visual feedback from the art direction slice.
+
+The full pack can then include:
+
+- mascot portrait variants;
+- equipment/cosmetic variants;
+- sticker and postcard sets;
+- reward and rarity variants;
+- shop item art;
+- final app icons;
+- optimized textures;
+- production map overlays if the map direction requires them.
+
+## Review Checklist
+
+Before adding any runtime asset:
+
+- Is the file in the correct `public/assets/` folder?
+- Is the filename lowercase and hyphenated?
+- Is the format appropriate for the visual type?
+- Is the runtime size within budget?
+- Does the component still have a fallback?
+- Does the image have useful alt text when meaningful?
+- Did `npm run build` keep the production bundle/assets reasonable?
+- Does `docs/performance.md` need a note for a larger asset change?

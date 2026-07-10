@@ -2,6 +2,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 
+import { MobileTopBar, PageShell } from "../../components/layout";
 import { RoutePreview } from "../../components/map/RoutePreview";
 import { ItemCard, SketchPanel, StampButton } from "../../components/ui";
 import {
@@ -143,13 +144,17 @@ export function SendFlowPage() {
     : isSelectionComplete
       ? t("send.readyHint")
       : t("send.incompleteHint");
+  const backTo = selectedFriend
+    ? `/friends/${selectedFriend.id}`
+    : selectedMascot
+      ? `/mascots/${selectedMascot.id}`
+      : `/mascots/${defaultMascotId}`;
 
   return (
-    <main className={styles.page}>
+    <PageShell hasTopBar>
+      <MobileTopBar backTo={backTo} title={t("send.title")} />
       <div className={styles.shell}>
-        <SketchPanel eyebrow={t("send.eyebrow")} title={t("send.title")}>
-          <p className={styles.subtitle}>{t("send.subtitle")}</p>
-        </SketchPanel>
+        <p className={styles.subtitle}>{t("send.subtitle")}</p>
 
         <div className={styles.flowGrid}>
           <ChoiceSection title={t("send.chooseFriend")}>
@@ -220,7 +225,11 @@ export function SendFlowPage() {
             ))}
           </ChoiceSection>
 
-          <SketchPanel title={confirmedSend ? t("send.confirmationTitle") : t("send.summary")} variant="note">
+          <SketchPanel
+            className={styles.summaryPanel}
+            title={confirmedSend ? t("send.confirmationTitle") : t("send.summary")}
+            variant="note"
+          >
             {confirmedSend ? (
               <ConfirmationPanel confirmedSend={confirmedSend} onReset={handleReset} />
             ) : (
@@ -267,7 +276,7 @@ export function SendFlowPage() {
           </SketchPanel>
         </div>
       </div>
-    </main>
+    </PageShell>
   );
 }
 

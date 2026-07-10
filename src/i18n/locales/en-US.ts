@@ -61,11 +61,15 @@ export const enUS = {
     },
   },
   navigation: {
+    back: "Back",
+    backToFriends: "Back to friends",
+    backToNest: "Back to nest",
     nest: "Nest",
-    letters: "Letters",
+    letters: "Mailbox",
     map: "Map",
     friends: "Friends",
     shop: "Shop",
+    shopUnavailable: "Shop is not available yet",
   },
   mascot: {
     myMascots: "My Mascots",

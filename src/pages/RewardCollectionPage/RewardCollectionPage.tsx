@@ -1,5 +1,6 @@
 import { Link, Navigate, useParams } from "react-router-dom";
 
+import { MobileTopBar, PageShell } from "../../components/layout";
 import { RoutePreview } from "../../components/map/RoutePreview";
 import { ItemCard, SketchPanel, StampButton } from "../../components/ui";
 import {
@@ -32,13 +33,14 @@ export function RewardCollectionPage() {
 
   if (isLoading) {
     return (
-      <main className={styles.page}>
+      <PageShell className={styles.page} hasTopBar>
+        <MobileTopBar backLabelKey="navigation.backToNest" backTo={`/mascots/${defaultMascotId}`} title={t("rewards.title")} />
         <div className={styles.shell}>
           <SketchPanel eyebrow={t("rewards.eyebrow")} title={t("rewards.title")}>
             <p className={styles.subtitle}>{t("rewards.loading")}</p>
           </SketchPanel>
         </div>
-      </main>
+      </PageShell>
     );
   }
 
@@ -53,18 +55,9 @@ export function RewardCollectionPage() {
   const shouldShowReward = Boolean(displayReward && (isReady || isCollected));
 
   return (
-    <main className={styles.page}>
+    <PageShell className={styles.page} hasTopBar>
+      <MobileTopBar backLabelKey="navigation.backToNest" backTo={`/mascots/${delivery.mascotId}`} title={t("rewards.title")} />
       <div className={styles.shell}>
-        <SketchPanel eyebrow={t("rewards.eyebrow")} title={t("rewards.title")}>
-          <p className={styles.subtitle}>
-            {isCollected
-              ? t("rewards.completedDescription")
-              : isReady
-                ? t("rewards.readyDescription")
-                : t("rewards.travelingDescription")}
-          </p>
-        </SketchPanel>
-
         <div className={styles.grid}>
           <SketchPanel
             title={
@@ -76,6 +69,13 @@ export function RewardCollectionPage() {
             }
             variant="note"
           >
+            <p className={styles.subtitle}>
+              {isCollected
+                ? t("rewards.completedDescription")
+                : isReady
+                  ? t("rewards.readyDescription")
+                  : t("rewards.travelingDescription")}
+            </p>
             <div className={styles.envelope}>
               <div className={styles.envelopeFlap} aria-hidden="true" />
               <dl className={styles.summary}>
@@ -105,7 +105,7 @@ export function RewardCollectionPage() {
           )}
         </div>
       </div>
-    </main>
+    </PageShell>
   );
 }
 

@@ -56,11 +56,15 @@ export type TranslationDictionary = {
     };
   };
   navigation: {
+    back: string;
+    backToFriends: string;
+    backToNest: string;
     nest: string;
     letters: string;
     map: string;
     friends: string;
     shop: string;
+    shopUnavailable: string;
   };
   mascot: {
     myMascots: string;
@@ -430,10 +434,14 @@ export type TranslationKey =
   | "home.demo.secondCardDescription"
   | "home.demo.secondCardMeta"
   | "navigation.nest"
+  | "navigation.back"
+  | "navigation.backToFriends"
+  | "navigation.backToNest"
   | "navigation.letters"
   | "navigation.map"
   | "navigation.friends"
   | "navigation.shop"
+  | "navigation.shopUnavailable"
   | "mascot.myMascots"
   | "mascot.level"
   | "mascot.xp"

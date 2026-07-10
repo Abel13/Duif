@@ -62,11 +62,15 @@ export const ptBR = {
     },
   },
   navigation: {
+    back: "Voltar",
+    backToFriends: "Voltar aos amigos",
+    backToNest: "Voltar ao ninho",
     nest: "Ninho",
-    letters: "Cartas",
+    letters: "Caixa Postal",
     map: "Mapa",
     friends: "Amigos",
     shop: "Loja",
+    shopUnavailable: "Loja ainda indisponível",
   },
   mascot: {
     myMascots: "Meus Mascotes",
