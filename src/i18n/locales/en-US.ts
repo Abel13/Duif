@@ -8,6 +8,13 @@ export const enUS = {
     loading: "Loading",
     unavailable: "Unavailable",
   },
+  notFound: {
+    eyebrow: "Misrouted letter",
+    title: "Route not found",
+    description:
+      "This page left the postal route. Go back to the nest or choose another destination from navigation.",
+    backToNest: "Back to nest",
+  },
   auth: {
     eyebrow: "Local access",
     title: "Notebook account",

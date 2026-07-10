@@ -8,6 +8,13 @@ export const ptBR = {
     loading: "Carregando",
     unavailable: "Indisponível",
   },
+  notFound: {
+    eyebrow: "Carta extraviada",
+    title: "Rota não encontrada",
+    description:
+      "Essa página saiu da rota postal. Volte para o ninho ou escolha outro destino pela navegação.",
+    backToNest: "Voltar ao ninho",
+  },
   auth: {
     eyebrow: "Acesso local",
     title: "Conta do caderno",

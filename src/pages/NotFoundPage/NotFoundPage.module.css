@@ -1,0 +1,74 @@
+.shell {
+  display: grid;
+  width: min(100%, 34rem);
+  min-height: calc(100dvh - 8rem);
+  margin-inline: auto;
+  place-items: center;
+}
+
+.content {
+  display: grid;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.mark {
+  width: fit-content;
+  padding: 0.45rem 0.85rem;
+  border: 2px dashed rgba(46, 42, 36, 0.5);
+  border-radius: 0.22rem;
+  color: var(--color-postal-red);
+  background:
+    linear-gradient(rgba(46, 42, 36, 0.035) 1px, transparent 1px),
+    var(--color-postal-label);
+  background-size: 100% 0.72rem;
+  font-size: clamp(2.4rem, 18vw, 4.8rem);
+  font-weight: 900;
+  line-height: 1;
+  transform: rotate(-2deg);
+  box-shadow: 0.22rem 0.25rem 0 rgba(46, 42, 36, 0.1);
+}
+
+.description,
+.path {
+  margin: 0;
+  color: var(--color-ink-soft);
+  font-weight: 800;
+  line-height: 1.55;
+}
+
+.path {
+  width: fit-content;
+  max-width: 100%;
+  padding: 0.45rem 0.65rem;
+  border: 1px dashed rgba(46, 42, 36, 0.3);
+  border-radius: 0.2rem;
+  color: var(--color-postal-brown);
+  background: rgba(255, 248, 232, 0.68);
+  font-size: 0.82rem;
+  overflow-wrap: anywhere;
+}
+
+.action {
+  display: inline-grid;
+  min-height: 2.85rem;
+  width: fit-content;
+  max-width: 100%;
+  place-items: center;
+  padding: 0.78rem 1rem;
+  border: 2px dashed rgba(164, 74, 63, 0.64);
+  border-radius: 0.22rem;
+  color: var(--color-paper);
+  background: var(--color-postal-red);
+  font-size: 0.82rem;
+  font-weight: 900;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  box-shadow: 0 0.28rem 0 rgba(46, 42, 36, 0.14);
+}
+
+.action:focus-visible {
+  outline: 3px solid rgba(164, 74, 63, 0.52);
+  outline-offset: 3px;
+}

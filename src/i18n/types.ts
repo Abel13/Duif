@@ -8,6 +8,12 @@ export type TranslationDictionary = {
     loading: string;
     unavailable: string;
   };
+  notFound: {
+    eyebrow: string;
+    title: string;
+    description: string;
+    backToNest: string;
+  };
   auth: {
     eyebrow: string;
     title: string;
@@ -394,6 +400,10 @@ export type TranslationKey =
   | "app.title"
   | "common.loading"
   | "common.unavailable"
+  | "notFound.eyebrow"
+  | "notFound.title"
+  | "notFound.description"
+  | "notFound.backToNest"
   | "auth.eyebrow"
   | "auth.title"
   | "auth.subtitle"
