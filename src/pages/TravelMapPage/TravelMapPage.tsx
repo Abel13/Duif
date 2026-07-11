@@ -182,7 +182,9 @@ function RewardDiscoveryCard({ reward }: { reward: RouteRewardDiscovery }) {
       label={t(`equipment.rarity.${reward.rarity}`)}
       title={t(reward.titleKey)}
       description={t(reward.descriptionKey)}
-      meta={reward.discovered ? t("map.discovered") : t("map.onTheRoute")}
+      meta={`${t(`map.rewardKinds.${reward.kind}`)} / ${
+        reward.discovered ? t("map.discovered") : t("map.onTheRoute")
+      }`}
       selected={reward.discovered}
     />
   );

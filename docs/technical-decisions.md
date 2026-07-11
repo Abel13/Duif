@@ -391,6 +391,17 @@ Validation goals:
 - show city/region labels relevant to the route through DUIF-owned map layers;
 - test whether MapLibre can be styled toward DUIF's illustrated postal direction.
 
+Route reward prototype:
+
+Milestone 27 keeps route rewards as pure TypeScript client logic. A small mocked catalog
+defines reward points by city, state, country, or event with coordinates, rarity, reward
+type, and an eligibility radius in kilometers. The client checks whether the straight route
+passes close enough to each point, calculates the point's progress along the route, and
+marks it discovered once the outbound pet progress reaches that point.
+
+This is a product-design prototype only. The future backend should remain authoritative for
+reward eligibility, grant creation, anti-cheat, event availability, and inventory writes.
+
 Nearby-pet direction:
 
 DUIF may show other pets passing near the player's pet to make the map feel alive. Treat

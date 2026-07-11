@@ -184,18 +184,38 @@ export const enUS = {
       returned: "Returned",
       completed: "Completed",
     },
+    rewardKinds: {
+      badge: "Badge",
+      postcard: "Postcard",
+      stamp: "Stamp",
+      souvenir: "Souvenir",
+      material: "Material",
+      eventItem: "Event item",
+    },
     rewards: {
       rioPostcard: {
         name: "Rio postcard",
         description: "A coastal view stamped when the route crosses the southeast.",
       },
+      bahiaSouvenir: {
+        name: "Bahia souvenir",
+        description: "A small route keepsake found while crossing the northeastern coast.",
+      },
       capeVerdeBadge: {
         name: "Atlantic badge",
         description: "A small emblem found on the crossing between continents.",
       },
+      canaryMaterial: {
+        name: "Canary fiber",
+        description: "A lightweight material used for equipment repairs and upgrades.",
+      },
       madeiraStamp: {
         name: "Madeira stamp",
         description: "A rare passage stamp near the islands before reaching Lisbon.",
+      },
+      atlanticEvent: {
+        name: "Atlantic invitation",
+        description: "An event item from a special crossing over the ocean.",
       },
     },
   },

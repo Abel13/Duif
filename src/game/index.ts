@@ -17,16 +17,23 @@ export { currentPlayer, getDeliveryById, getMascotById, nuvemDelivery, starterMa
 export {
   createMapPlaceLabelsGeoJson,
   createDeliveryRouteGeoJson,
+  createRouteRewardDiscoveries,
   createRouteRewardsGeoJson,
+  getDistanceFromPointToRouteKm,
+  getEligibleRouteRewards,
   getPetMapPosition,
   getRouteRewardDiscoveries,
+  getRouteRewardProgress,
   interpolateCoordinates,
+  mockRouteRewardPoints,
   toLngLat,
   type MapPlaceLabel,
   type MapPlaceLabelKind,
   type PetMapPosition,
   type RouteRewardDiscovery,
   type RouteRewardKind,
+  type RouteRewardPoint,
+  type RouteRewardRegionKind,
   type TravelLeg,
 } from "./mapTravel";
 export { createMockRewardFromDelivery, initialMockInventory } from "./rewards";

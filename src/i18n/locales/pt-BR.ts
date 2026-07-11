@@ -185,18 +185,38 @@ export const ptBR = {
       returned: "Retornou",
       completed: "Concluída",
     },
+    rewardKinds: {
+      badge: "Badge",
+      postcard: "Cartão postal",
+      stamp: "Selo",
+      souvenir: "Lembrança",
+      material: "Material",
+      eventItem: "Item de evento",
+    },
     rewards: {
       rioPostcard: {
         name: "Cartão postal do Rio",
         description: "Uma vista costeira carimbada quando a rota passa pelo sudeste.",
       },
+      bahiaSouvenir: {
+        name: "Lembrança da Bahia",
+        description: "Uma pequena lembrança de rota encontrada ao cruzar o litoral nordeste.",
+      },
       capeVerdeBadge: {
         name: "Badge do Atlântico",
         description: "Um pequeno emblema encontrado no caminho entre continentes.",
       },
+      canaryMaterial: {
+        name: "Fibra das Canárias",
+        description: "Um material leve usado em consertos e melhorias de equipamento.",
+      },
       madeiraStamp: {
         name: "Selo da Madeira",
         description: "Um selo raro de passagem perto das ilhas antes de chegar a Lisboa.",
+      },
+      atlanticEvent: {
+        name: "Convite do Atlântico",
+        description: "Um item de evento de uma travessia especial sobre o oceano.",
       },
     },
   },

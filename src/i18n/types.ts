@@ -177,8 +177,20 @@ export type TranslationDictionary = {
       returned: string;
       completed: string;
     };
+    rewardKinds: {
+      badge: string;
+      postcard: string;
+      stamp: string;
+      souvenir: string;
+      material: string;
+      eventItem: string;
+    };
     rewards: {
       rioPostcard: {
+        name: string;
+        description: string;
+      };
+      bahiaSouvenir: {
         name: string;
         description: string;
       };
@@ -186,7 +198,15 @@ export type TranslationDictionary = {
         name: string;
         description: string;
       };
+      canaryMaterial: {
+        name: string;
+        description: string;
+      };
       madeiraStamp: {
+        name: string;
+        description: string;
+      };
+      atlanticEvent: {
         name: string;
         description: string;
       };
@@ -573,12 +593,24 @@ export type TranslationKey =
   | "map.legs.returning"
   | "map.legs.returned"
   | "map.legs.completed"
+  | "map.rewardKinds.badge"
+  | "map.rewardKinds.postcard"
+  | "map.rewardKinds.stamp"
+  | "map.rewardKinds.souvenir"
+  | "map.rewardKinds.material"
+  | "map.rewardKinds.eventItem"
   | "map.rewards.rioPostcard.name"
   | "map.rewards.rioPostcard.description"
+  | "map.rewards.bahiaSouvenir.name"
+  | "map.rewards.bahiaSouvenir.description"
   | "map.rewards.capeVerdeBadge.name"
   | "map.rewards.capeVerdeBadge.description"
+  | "map.rewards.canaryMaterial.name"
+  | "map.rewards.canaryMaterial.description"
   | "map.rewards.madeiraStamp.name"
   | "map.rewards.madeiraStamp.description"
+  | "map.rewards.atlanticEvent.name"
+  | "map.rewards.atlanticEvent.description"
   | "species.carrierPigeon"
   | "species.messengerFalcon"
   | "species.mailDuck"

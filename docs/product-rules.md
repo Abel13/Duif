@@ -79,6 +79,10 @@ Route rewards:
 - Rewards can be distributed by city, state, country, route segment, or event area.
 - If a pet crosses an eligible region, the delivery can collect badges, postcards, stamps,
   souvenirs, materials, or seasonal items.
+- The current prototype represents these regions as small mocked reward points with an
+  eligibility radius in kilometers around the straight route.
+- Discovery during the trip is based on outbound route progress: a reward can appear as
+  discovered once the pet has passed that point on the outbound leg.
 - The player may see discoveries during the journey.
 - The final reward collection remains tied to the pet returning home.
 - The backend should be authoritative for which map rewards are granted.
