@@ -2,18 +2,17 @@ import { describe, expect, it } from "vitest";
 
 import type {
   DeliveryRewardRow,
-  InventoryItemRow,
   RewardItemRow,
 } from "./authenticatedRewards";
 import {
   composeAuthenticatedRewardCollection,
   mapCollectRewardPayload,
   mapDeliveryRewardRowToReward,
-  mapInventoryItemRow,
   mapRewardItemRowToRewardItem,
 } from "./authenticatedRewards";
 import type { DeliveryRow } from "./authenticatedMascots";
 import { mapDeliveryRowToDelivery } from "./authenticatedMascots";
+import { mapInventoryItemRow, type InventoryItemRow } from "./inventoryMappers";
 
 const rewardItemRow: RewardItemRow = {
   description_key: "rewards.items.goldenCompassPin.description",

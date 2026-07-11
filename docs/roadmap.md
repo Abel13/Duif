@@ -1121,7 +1121,7 @@ Success criteria:
 - assets work across mascot, map, reward, inventory, and friend contexts;
 - fallback rendering still works when files are missing or fail to load.
 
-## Milestone 28: Persisted Collection
+## Milestone 28: Persisted Collection Inventory
 
 Goal:
 
@@ -1134,7 +1134,6 @@ Includes:
 - keep received-correspondence surfaces reserved for "Caixa Postal" in pt-BR UI;
 - collection-page filtering from persisted data;
 - album-style slots for collection progress;
-- duplicate policy display where available;
 - route rewards collected into inventory after return;
 - mock fallback without auth or Supabase config.
 
@@ -1144,6 +1143,7 @@ Does not include:
 - shop purchases;
 - cargo capacity enforcement;
 - duplicate conversion economy;
+- Caixa Postal for received correspondence;
 - premium currency.
 
 Success criteria:

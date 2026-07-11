@@ -67,16 +67,36 @@ export const mockInventoryItems: InventoryItem[] = [
   },
 ];
 
-export function getInventoryItemsByCategory(category: InventoryCategory) {
+export function filterInventoryItemsByCategory(
+  items: InventoryItem[],
+  category: InventoryCategory,
+) {
   if (category === "all") {
-    return mockInventoryItems;
+    return items;
   }
 
   if (!inventoryCategories.includes(category)) {
     return [];
   }
 
-  return mockInventoryItems.filter((item) => item.category === category);
+  return items.filter((item) => item.category === category);
+}
+
+export function getInventoryItemsByCategory(
+  category: InventoryCategory,
+  items: InventoryItem[] = mockInventoryItems,
+) {
+  return filterInventoryItemsByCategory(items, category);
+}
+
+export function getInventoryCategoryCounts(items: InventoryItem[]) {
+  return inventoryCategories.reduce(
+    (counts, category) => ({
+      ...counts,
+      [category]: filterInventoryItemsByCategory(items, category).length,
+    }),
+    {} as Record<InventoryCategory, number>,
+  );
 }
 
 export function getInventorySummary(items: InventoryItem[]) {

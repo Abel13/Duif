@@ -246,7 +246,9 @@ milestones.
 Reward collection is now the second authenticated gameplay write. It uses a dedicated
 `collect_delivery_reward` RPC instead of direct client writes, because collection touches
 three protected tables at once: `delivery_rewards`, `deliveries`, and `inventory_items`.
-The inventory album remains mock-first until it has its own persisted read milestone.
+The collection inventory page is the first authenticated read of `inventory_items`. It
+uses the existing owner RLS policy, maps rows to the app `InventoryItem` shape, and falls
+back to mocks when Supabase data mode, auth, or the local backend are unavailable.
 
 Use a custom Node backend later if the game needs:
 

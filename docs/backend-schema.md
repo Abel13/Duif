@@ -185,10 +185,11 @@ has returned, create or reuse the deterministic `delivery_rewards` row, mark the
 as `completed`, and insert the collected item into `inventory_items`.
 
 Friend profile reads for social UI use `get_accepted_friend_profiles`, not unrestricted
-`profiles` rows. The owner can still read their own full profile through RLS. Inventory,
-rewards, and history screens are still not fully migrated. The reward collection screen can
-now use authenticated delivery/reward data, but the collection UI remains mock-first until
-the persisted collection milestone.
+`profiles` rows. The owner can still read their own full profile through RLS. The reward
+collection screen can use authenticated delivery/reward data, and the collection inventory
+screen now reads `inventory_items` for the current profile through the existing owner RLS
+policy. Caixa Postal, delivery history, equipment management, and inventory writes outside
+reward collection remain future milestones.
 
 ## Out Of Scope
 

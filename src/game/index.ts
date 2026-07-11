@@ -8,6 +8,8 @@ export {
   mockFriends,
 } from "./friends";
 export {
+  filterInventoryItemsByCategory,
+  getInventoryCategoryCounts,
   getInventoryItemsByCategory,
   getInventorySummary,
   inventoryCategories,
@@ -48,6 +50,7 @@ export {
   type PostalTrafficVisibility,
 } from "./postalTraffic";
 export { createMockRewardFromDelivery, initialMockInventory } from "./rewards";
+export { useInventoryData } from "./useInventoryData";
 export { useRewardCollectionData } from "./useRewardCollectionData";
 export {
   correspondenceOptions,

@@ -289,7 +289,7 @@ Rules:
   Postal", until a dedicated received-correspondence mailbox exists.
 - The mailbox is part of owned content, but it is not the same thing as the collection.
 - The album can remain a UI metaphor inside collection, but avoid using "album categories"
-  as visible copy; prefer "Páginas da coleção".
+  as visible copy; use filter language such as "Filtrar coleção" for category controls.
 - Functional items, consumables, cosmetics, postcards, stickers, rewards, and materials may
   all live in inventory.
 - Collection should highlight progress and discoveries.

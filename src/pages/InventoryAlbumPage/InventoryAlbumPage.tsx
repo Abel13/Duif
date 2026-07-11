@@ -3,9 +3,11 @@ import { useMemo, useState } from "react";
 import { AppBottomNav, PageShell } from "../../components/layout";
 import { AssetImage, ItemCard, SketchPanel } from "../../components/ui";
 import {
-  getInventoryItemsByCategory,
+  filterInventoryItemsByCategory,
+  getInventoryCategoryCounts,
   getInventorySummary,
   inventoryCategories,
+  useInventoryData,
   type InventoryCategory,
   type InventoryItem,
 } from "../../game";
@@ -17,7 +19,15 @@ const emptySlotCount = 4;
 export function InventoryAlbumPage() {
   const { t } = useTranslation();
   const [selectedCategory, setSelectedCategory] = useState<InventoryCategory>("all");
-  const items = useMemo(() => getInventoryItemsByCategory(selectedCategory), [selectedCategory]);
+  const { items: inventoryItems } = useInventoryData();
+  const items = useMemo(
+    () => filterInventoryItemsByCategory(inventoryItems, selectedCategory),
+    [inventoryItems, selectedCategory],
+  );
+  const categoryCounts = useMemo(
+    () => getInventoryCategoryCounts(inventoryItems),
+    [inventoryItems],
+  );
   const summary = useMemo(() => getInventorySummary(items), [items]);
 
   return (
@@ -33,7 +43,7 @@ export function InventoryAlbumPage() {
               <div className={styles.filters} aria-label={t("inventory.categoriesLabel")}>
                 {inventoryCategories.map((category) => {
                   const label = t(`inventory.categories.${category}`);
-                  const count = getInventoryItemsByCategory(category).length;
+                  const count = categoryCounts[category];
                   const isSelected = category === selectedCategory;
 
                   return (

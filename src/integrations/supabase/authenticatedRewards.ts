@@ -5,15 +5,14 @@ import {
   type InventoryItem,
   type RewardItem,
 } from "../../game";
-import type { TranslationKey } from "../../i18n";
 import { mapDeliveryRowToDelivery, type DeliveryRow } from "./authenticatedMascots";
 import { readString, readTranslationKey } from "./catalogMappers";
 import { getSupabaseClient } from "./client";
 import type { Database, Json } from "./database.types";
+import { mapInventoryItemRow, type InventoryItemRow } from "./inventoryMappers";
 
 export type RewardItemRow = Database["public"]["Tables"]["reward_items"]["Row"];
 export type DeliveryRewardRow = Database["public"]["Tables"]["delivery_rewards"]["Row"];
-export type InventoryItemRow = Database["public"]["Tables"]["inventory_items"]["Row"];
 export type PlayerMascotRouteRow = Pick<
   Database["public"]["Tables"]["player_mascots"]["Row"],
   "id" | "mock_key"
@@ -84,20 +83,6 @@ export function mapDeliveryRewardRowToReward({
     id: readString(rewardRow.mock_key, rewardRow.id),
     item: mapRewardItemRowToRewardItem(itemRow),
     xpGained: rewardRow.xp_gained,
-  };
-}
-
-export function mapInventoryItemRow(row: InventoryItemRow): InventoryItem {
-  return {
-    category: row.category,
-    collectedAt: row.collected_at,
-    descriptionKey: readTranslationKey(row.description_key, "rewards.items.wornRouteStamp.description"),
-    equipped: row.equipped,
-    id: readString(row.mock_key, row.id),
-    nameKey: readTranslationKey(row.name_key, "rewards.items.wornRouteStamp.name"),
-    rarity: row.rarity,
-    sourceKey: row.source_key ? (row.source_key as TranslationKey) : undefined,
-    thumbnailAssetPath: row.thumbnail_asset_path ?? undefined,
   };
 }
 
