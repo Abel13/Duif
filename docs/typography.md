@@ -135,8 +135,8 @@ Good alternatives:
 - `Kalam` for a more natural handwritten feel;
 - `Patrick Hand SC` for drawn uppercase notes.
 
-Default decision for DUIF: keep `Caveat` planned, but defer loading it until the art
-direction slice.
+Default decision for DUIF: keep `Caveat` planned, but defer loading it beyond the first art
+direction slice until handwritten notes prove they need a dedicated font.
 
 ### Stamp And Postal Marks: Special Elite
 
@@ -162,8 +162,8 @@ Good alternatives:
 - `Roboto Slab` for a more neutral stamp feel;
 - `Courier Prime` for typed-letter moments.
 
-Default decision for DUIF: keep `Special Elite` planned, but defer loading it until the art
-direction slice.
+Default decision for DUIF: keep `Special Elite` planned, but defer loading it beyond the
+first art direction slice until stamp/code labels prove they need a dedicated font.
 
 ## Loading Rules
 
@@ -174,6 +174,14 @@ direction slice.
   licensing and production choices are confirmed.
 - Do not block first paint on decorative fonts.
 - Critical body text must remain readable with system fallback fonts.
+
+Milestone 27.75 loaded the first two runtime families:
+
+- `Atkinson Hyperlegible` latin subset at weights `400` and `700`;
+- `Fraunces` latin subset as one variable WOFF2 covering display weights `700` to `900`.
+
+Runtime files live under `public/assets/fonts/`. `Caveat` and `Special Elite` remain planned
+roles only and are not loaded yet.
 
 ## CSS Token Plan
 
@@ -198,15 +206,14 @@ Then apply them by role:
 
 ## Implementation Timing
 
-Do not install or load external fonts immediately.
+Current path:
 
-Recommended path:
-
-1. Keep current system fonts while navigation, privacy, correspondence, map rewards, and
-   persisted inventory continue to evolve.
-2. Add `Atkinson Hyperlegible` and `Fraunces` in a typography polish milestone or as part of
-   the art direction asset slice.
-3. Validate mobile readability, layout shifts, bundle/build size, and visual identity.
+1. The app used system fonts through the core navigation, privacy, correspondence, map
+   rewards, and postal traffic milestones.
+2. Milestone 27.75 added `Atkinson Hyperlegible` and `Fraunces` as the first self-hosted
+   typography pair.
+3. Continue validating mobile readability, layout shifts, bundle/build size, and visual
+   identity before adding more font roles.
 4. Add `Caveat` and `Special Elite` only if short notes and postal marks need more identity.
 
 ## Review Checklist

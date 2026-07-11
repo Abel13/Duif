@@ -38,6 +38,37 @@ Measured on the local production build during Milestone 15:
 - Existing CSS uses gradients and shadows for the paper style, but no expensive blur/backdrop-filter pattern was found.
 - The main performance risk before this pass was the multi-megabyte app icon being copied into the production build.
 
+## Milestone 27.75 Asset Slice
+
+Measured after adding the first real art and typography slice:
+
+- Public runtime assets: about `1.2M`.
+- Production `dist`: about `3.0M`.
+- PWA precache after Milestone 27.8 navigation icons: `32` entries, about `2.7M`.
+- Main CSS bundles:
+  - `index`: about `48K` raw;
+  - `TravelMapPage`: about `78K` raw.
+- Main JS bundles remain dominated by the app shell and lazy map chunk:
+  - `index`: about `492K` raw;
+  - `TravelMapPage`: about `1.07M` raw.
+
+The added art slice stays within the current asset budget:
+
+- mascot portraits: `59K` to `68K` each;
+- friend mascot portrait: about `57K`;
+- equipment icons: under `10K` each;
+- reward thumbnails: `15K` to `16K` each;
+- paper texture and postal marks: `4K` to `20K`;
+- navigation icons: `44K` total, with each icon under `12K`;
+- self-hosted fonts: about `88K` total.
+
+Decisions:
+
+- Keep the generated raster assets as a validation slice, not final art.
+- Keep every individual runtime asset under `300K`.
+- Keep `Caveat` and `Special Elite` unloaded until they are justified by a specific UI role.
+- Continue treating MapLibre chunk size as a separate map-code-splitting concern.
+
 ## Future Checks
 
 - Re-run a build-size review whenever real mascot portraits, item art, or textures are added.

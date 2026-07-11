@@ -49,21 +49,13 @@
   right: clamp(0.75rem, 4vw, 1rem);
   width: clamp(4rem, 20vw, 5.4rem);
   height: clamp(1.8rem, 9vw, 2.5rem);
-  border-top: 2px solid rgba(164, 74, 63, 0.34);
-  border-bottom: 2px solid rgba(164, 74, 63, 0.34);
+  background: url("/assets/textures/postal-cancel-mark.webp") center / contain no-repeat;
   transform: rotate(7deg);
   opacity: 0.78;
 }
 
 .postmark::before {
-  content: "";
-  position: absolute;
-  top: -0.5rem;
-  left: -0.25rem;
-  width: 2.3rem;
-  aspect-ratio: 1;
-  border: 2px solid rgba(164, 74, 63, 0.28);
-  border-radius: 50%;
+  content: none;
 }
 
 .sheet {
@@ -80,12 +72,17 @@
 }
 
 .assetFrame[data-has-image="true"] {
-  border: 3px solid var(--color-ink);
-  border-radius: 44% 56% 48% 52% / 52% 42% 58% 48%;
-  background: rgba(255, 248, 232, 0.62);
-  box-shadow: 0.4rem 0.55rem 0 rgba(46, 42, 36, 0.16);
+  width: min(100%, clamp(14.5rem, 78vw, 22rem));
+  border: 2px solid rgba(46, 42, 36, 0.28);
+  border-radius: 0.55rem 0.24rem 0.68rem 0.3rem;
+  background:
+    linear-gradient(135deg, rgba(255, 248, 232, 0.76), rgba(232, 221, 199, 0.44)),
+    var(--color-paper-light);
+  box-shadow:
+    0 0 0 0.55rem rgba(255, 248, 232, 0.38),
+    0.45rem 0.55rem 0 rgba(46, 42, 36, 0.14);
   overflow: hidden;
-  transform: rotate(-2deg);
+  transform: rotate(-1deg);
 }
 
 .figure {
@@ -154,6 +151,7 @@
 .mark {
   position: relative;
   color: var(--mascot-accent);
+  font-family: var(--font-display);
   font-size: clamp(4rem, 22vw, 7rem);
   font-weight: 900;
   line-height: 1;

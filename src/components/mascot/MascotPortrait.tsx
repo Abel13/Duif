@@ -15,6 +15,7 @@ export function MascotPortrait({ mascot }: MascotPortraitProps) {
     "--mascot-primary": mascot.appearance.primaryColor,
     "--mascot-accent": mascot.appearance.accentColor,
   } as CSSProperties;
+  const hasPortraitAsset = Boolean(mascot.appearance.portraitAssetPath);
 
   return (
     <section className={styles.portrait} style={portraitStyle} aria-label={t("mascot.visualPreview")}>
@@ -34,7 +35,9 @@ export function MascotPortrait({ mascot }: MascotPortraitProps) {
             <span className={styles.badge} aria-hidden="true" />
           </div>
         </AssetImage>
-        <p className={styles.caption}>{t(mascot.appearance.portraitPlaceholderKey)}</p>
+        {!hasPortraitAsset && (
+          <p className={styles.caption}>{t(mascot.appearance.portraitPlaceholderKey)}</p>
+        )}
       </div>
     </section>
   );

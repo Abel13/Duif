@@ -13,6 +13,9 @@ export const assetPaths = {
   equipment: {
     icon: (fileName: string) => `${PUBLIC_ASSET_ROOT}/equipment/icons/${fileName}`,
   },
+  navigation: {
+    icon: (fileName: string) => `${PUBLIC_ASSET_ROOT}/navigation/${fileName}`,
+  },
   textures: {
     image: (fileName: string) => `${PUBLIC_ASSET_ROOT}/textures/${fileName}`,
   },

@@ -471,14 +471,13 @@ When real assets are added:
 
 DUIF will use the typography roles documented in `docs/typography.md`.
 
-For now, keep system fonts in the runtime app. Do not add external font files or font
-packages while the core flows are still moving.
-
-When the app reaches typography polish or the art direction asset slice, the first external
-font pair should be:
+Milestone 27.75 introduced the first self-hosted runtime font pair:
 
 - `Atkinson Hyperlegible` for UI/body text;
 - `Fraunces` for display titles and mascot names.
+
+The app loads latin WOFF2 subsets from `public/assets/fonts/` and keeps system fallbacks in
+the CSS tokens.
 
 Keep handwritten and stamp fonts planned but deferred:
 

@@ -1,7 +1,8 @@
 import { useLocation, useNavigate } from "react-router-dom";
 
+import { assetPaths } from "../../game";
 import { useTranslation } from "../../i18n";
-import { PaperTab } from "../ui";
+import { AssetImage, PaperTab } from "../ui";
 import styles from "./AppBottomNav.module.css";
 
 export function AppBottomNav() {
@@ -12,28 +13,75 @@ export function AppBottomNav() {
   const isInventoryActive = location.pathname.startsWith("/inventory");
   const isMapActive = location.pathname.startsWith("/map");
   const isNestActive = location.pathname.startsWith("/mascots");
+  const items = [
+    {
+      active: isNestActive,
+      icon: assetPaths.navigation.icon("nest.webp"),
+      label: t("navigation.nest"),
+      onClick: () => navigate("/mascots/mascot-nuvem"),
+    },
+    {
+      active: isInventoryActive,
+      icon: assetPaths.navigation.icon("collection.webp"),
+      label: t("navigation.collection"),
+      onClick: () => navigate("/inventory"),
+    },
+    {
+      active: isMapActive,
+      icon: assetPaths.navigation.icon("map.webp"),
+      label: t("navigation.map"),
+      onClick: () => navigate("/map"),
+    },
+    {
+      active: isFriendsActive,
+      icon: assetPaths.navigation.icon("friends.webp"),
+      label: t("navigation.friends"),
+      onClick: () => navigate("/friends"),
+    },
+  ];
 
   return (
     <nav className={styles.nav} aria-label={t("mascot.bottomNav")}>
-      <PaperTab active={isNestActive} className={styles.tab} onClick={() => navigate("/mascots/mascot-nuvem")}>
-        {t("navigation.nest")}
-      </PaperTab>
-      <PaperTab active={isInventoryActive} className={styles.tab} onClick={() => navigate("/inventory")}>
-        {t("navigation.collection")}
-      </PaperTab>
-      <PaperTab active={isMapActive} className={styles.tab} onClick={() => navigate("/map")}>
-        {t("navigation.map")}
-      </PaperTab>
-      <PaperTab active={isFriendsActive} className={styles.tab} onClick={() => navigate("/friends")}>
-        {t("navigation.friends")}
-      </PaperTab>
+      {items.map((item) => (
+        <PaperTab
+          active={item.active}
+          aria-label={item.label}
+          className={styles.tab}
+          key={item.label}
+          onClick={item.onClick}
+        >
+          <span className={styles.iconFrame} aria-hidden="true">
+            <AssetImage
+              alt=""
+              className={styles.icon}
+              draggable="false"
+              loading="eager"
+              src={item.icon}
+            >
+              <span className={styles.iconFallback} />
+            </AssetImage>
+          </span>
+          <span className={styles.label}>{item.label}</span>
+        </PaperTab>
+      ))}
       <PaperTab
         aria-label={t("navigation.shopUnavailable")}
         className={styles.tab}
         disabled
         title={t("navigation.shopUnavailable")}
       >
-        {t("navigation.shop")}
+        <span className={styles.iconFrame} aria-hidden="true">
+          <AssetImage
+            alt=""
+            className={styles.icon}
+            draggable="false"
+            loading="eager"
+            src={assetPaths.navigation.icon("shop.webp")}
+          >
+            <span className={styles.iconFallback} />
+          </AssetImage>
+        </span>
+        <span className={styles.label}>{t("navigation.shop")}</span>
       </PaperTab>
     </nav>
   );

@@ -37,6 +37,7 @@ Use stable public paths under `public/assets/`:
 - `friends/mascots/` for friend mascot portraits.
 - `items/thumbnails/` for inventory, reward, and collectible thumbnails.
 - `equipment/icons/` for equipment icons.
+- `navigation/` for small bottom-navigation icon assets.
 - `textures/` for small paper or stamp textures.
 - `maps/` for future lightweight map overlays, labels, stamps, or texture details.
 - `stamps/` for reusable postal marks, cancellation marks, and collectible stamp art.
@@ -51,6 +52,7 @@ Keep large source files outside `public/` so they are not copied into the produc
 - Friend mascot portraits: `512x512` or smaller.
 - Item thumbnails: `256x256` or smaller.
 - Equipment icons: `192x192` or smaller.
+- Navigation icons: `160x160` or smaller.
 - Sticker and stamp art: `256x256` or smaller unless it must be inspected in detail.
 - Textures: tileable and as small as possible, usually `512x512` or smaller.
 - PWA icons: keep generated runtime icons at the exact manifest sizes, such as `192x192`, `512x512`, and `180x180` for Apple touch icons.
@@ -59,6 +61,7 @@ Recommended runtime budgets:
 
 - Single mascot portrait: ideally under `150KB`.
 - Item, reward, sticker, or equipment thumbnail: ideally under `60KB`.
+- Navigation icon: ideally under `30KB`.
 - Small texture: ideally under `80KB`.
 - Avoid any individual runtime asset above `300KB` without a performance review.
 - Avoid adding more than `1MB` of new runtime assets in one milestone without a build-size
@@ -108,6 +111,8 @@ Fallback requirements:
 - Item/equipment fallback should still show name, rarity, category, and equipped/stored
   state.
 - Reward fallback should still show rarity and collection status.
+- Navigation fallback should keep the real button, visible label, and accessible
+  `aria-label`; the image is decorative support, not the control itself.
 - Missing images must not create layout shifts, empty boxes, or broken image icons.
 - Any new asset-rendering component should support meaningful `alt` text or explicitly mark
   decorative images as decorative.
@@ -116,14 +121,45 @@ Fallback requirements:
 
 Before producing the final asset pack, create a small validation slice.
 
-Recommended slice:
+Milestone 27.75 added the first validation slice:
 
-- Nuvem, Trovão, and Pipoca portraits.
-- One friend mascot portrait.
-- Three equipment icons: postal bag, scarf, and goggles.
-- Three route reward thumbnails: postcard, badge, and stamp.
-- One lightweight paper texture.
-- One or two reusable postal marks or stamp overlays.
+- Mascot portraits:
+  - `public/assets/mascots/portraits/nuvem.webp` (`640x640`, about `59KB`);
+  - `public/assets/mascots/portraits/trovao.webp` (`640x640`, about `68KB`);
+  - `public/assets/mascots/portraits/pipoca.webp` (`640x640`, about `64KB`).
+- Friend mascot portrait:
+  - `public/assets/friends/mascots/aurora.webp` (`512x512`, about `57KB`).
+- Equipment icons:
+  - `canvas-postal-bag.webp`;
+  - `blue-route-scarf.webp`;
+  - `flight-goggles.webp`;
+  - `urgent-badge.webp`.
+- Route reward thumbnails:
+  - `worn-route-stamp.webp`;
+  - `blue-airmail-label.webp`;
+  - `golden-compass-pin.webp`;
+  - `atlantic-badge.webp`.
+- Texture and marks:
+  - `postal-paper-wash.webp`;
+  - `postal-cancel-mark.webp`;
+  - `route-doodle-mark.webp`.
+
+The slice was generated as AI raster artwork, cropped from small concept sheets, and exported
+as optimized WebP runtime files. The generated source sheets remain outside the runtime app
+under the local Codex generated image directory.
+
+Milestone 27.8 adds the first graphic navigation slice:
+
+- `public/assets/navigation/nest.webp`;
+- `public/assets/navigation/collection.webp`;
+- `public/assets/navigation/map.webp`;
+- `public/assets/navigation/friends.webp`;
+- `public/assets/navigation/shop.webp`.
+
+These icons are deliberately small `160x160` WebP assets, each under `30KB`. They are used as
+decorative visual language inside real navigation buttons with visible labels and `aria-label`s.
+Do not export the entire bottom navigation as one image; the button structure, focus state,
+disabled state, and translated text must remain in HTML/CSS.
 
 Success criteria:
 

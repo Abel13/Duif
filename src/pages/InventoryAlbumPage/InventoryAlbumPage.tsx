@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 
 import { AppBottomNav, PageShell } from "../../components/layout";
-import { AssetImage, ItemCard, PaperTab, SketchPanel } from "../../components/ui";
+import { AssetImage, ItemCard, SketchPanel } from "../../components/ui";
 import {
   getInventoryItemsByCategory,
   getInventorySummary,
@@ -30,17 +30,26 @@ export function InventoryAlbumPage() {
         <div className={styles.layout}>
           <aside className={styles.sidebar}>
             <SketchPanel title={t("inventory.categoriesLabel")} variant="note">
-              <div className={styles.tabs} role="list">
-                {inventoryCategories.map((category) => (
-                  <PaperTab
-                    active={category === selectedCategory}
-                    aria-label={t(`inventory.categories.${category}`)}
-                    key={category}
-                    onClick={() => setSelectedCategory(category)}
-                  >
-                    {t(`inventory.categories.${category}`)}
-                  </PaperTab>
-                ))}
+              <div className={styles.filters} aria-label={t("inventory.categoriesLabel")}>
+                {inventoryCategories.map((category) => {
+                  const label = t(`inventory.categories.${category}`);
+                  const count = getInventoryItemsByCategory(category).length;
+                  const isSelected = category === selectedCategory;
+
+                  return (
+                    <button
+                      aria-label={`${label}: ${count}`}
+                      aria-pressed={isSelected}
+                      className={styles.filterButton}
+                      key={category}
+                      onClick={() => setSelectedCategory(category)}
+                      type="button"
+                    >
+                      <span>{label}</span>
+                      <strong>{count}</strong>
+                    </button>
+                  );
+                })}
               </div>
             </SketchPanel>
 
