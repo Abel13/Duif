@@ -220,6 +220,16 @@ export const ptBR = {
       },
     },
   },
+  postalTraffic: {
+    title: "Tráfego postal",
+    nearbyPets: "Pets próximos",
+    anonymousPet: "Pet viajante",
+    empty: "Nenhum pet passando por perto agora.",
+    visibility: {
+      friend: "Amigo",
+      anonymous: "Anônimo",
+    },
+  },
   species: {
     carrierPigeon: "Pombo-correio",
     messengerFalcon: "Falcão-mensageiro",

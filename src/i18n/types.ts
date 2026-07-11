@@ -212,6 +212,16 @@ export type TranslationDictionary = {
       };
     };
   };
+  postalTraffic: {
+    title: string;
+    nearbyPets: string;
+    anonymousPet: string;
+    empty: string;
+    visibility: {
+      friend: string;
+      anonymous: string;
+    };
+  };
   species: {
     carrierPigeon: string;
     messengerFalcon: string;
@@ -611,6 +621,12 @@ export type TranslationKey =
   | "map.rewards.madeiraStamp.description"
   | "map.rewards.atlanticEvent.name"
   | "map.rewards.atlanticEvent.description"
+  | "postalTraffic.title"
+  | "postalTraffic.nearbyPets"
+  | "postalTraffic.anonymousPet"
+  | "postalTraffic.empty"
+  | "postalTraffic.visibility.friend"
+  | "postalTraffic.visibility.anonymous"
   | "species.carrierPigeon"
   | "species.messengerFalcon"
   | "species.mailDuck"

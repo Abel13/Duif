@@ -420,6 +420,11 @@ Preferred technical shape:
 This keeps the first version closer to "postal traffic" than to an MMO simulation, while
 leaving room for a richer live map if the experience proves strong.
 
+Milestone 27.5 prototypes this locally with mocked route snapshots. Friend pets can be
+identified by friend and mascot name; non-friend pets stay anonymous. The frontend
+interpolates marker positions from timestamps and never exposes street, neighborhood, or
+private postal-base coordinates in the map UI.
+
 Open decisions:
 
 - production tile provider;

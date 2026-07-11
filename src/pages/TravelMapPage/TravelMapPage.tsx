@@ -8,6 +8,7 @@ import {
   formatRemainingTime,
   getDeliveryStatus,
   getMascotById,
+  getNearbyPostalTrafficPets,
   getPetMapPosition,
   getRouteRewardDiscoveries,
   getTravelProgress,
@@ -16,6 +17,7 @@ import {
   type DeliveryStatus,
   type MapPlaceLabel,
   type Mascot,
+  type PostalTrafficPetSnapshot,
   type RouteRewardDiscovery,
   type TravelLeg,
 } from "../../game";
@@ -35,6 +37,15 @@ export function TravelMapPage() {
   const displayMascot = mascot ?? getMascotById(defaultMascotId);
   const petPosition = useMemo(() => getPetMapPosition(delivery, now), [delivery, now]);
   const rewards = useMemo(() => getRouteRewardDiscoveries(delivery, now), [delivery, now]);
+  const postalTraffic = useMemo(() => getNearbyPostalTrafficPets(delivery, now), [delivery, now]);
+  const localizedPostalTraffic = useMemo(
+    () =>
+      postalTraffic.map((pet) => ({
+        ...pet,
+        label: getPostalTrafficDisplayLabel(pet, t),
+      })),
+    [postalTraffic, t],
+  );
   const placeLabels = useMemo(
     () => createMapPlaceLabels(delivery, rewards, t),
     [delivery, rewards, t],
@@ -63,6 +74,7 @@ export function TravelMapPage() {
             petLabel={displayMascot?.name ?? t("common.unavailable")}
             placeLabels={placeLabels}
             petPosition={petPosition.coordinates}
+            postalTraffic={localizedPostalTraffic}
             rewards={rewards}
           />
         </div>
@@ -82,6 +94,7 @@ export function TravelMapPage() {
                 progressPercent={progressPercent}
                 status={status}
               />
+              <PostalTrafficContent postalTraffic={localizedPostalTraffic} />
               <DiscoveryContent discoveredCount={discoveredCount} rewards={rewards} />
             </div>
           </details>
@@ -98,6 +111,10 @@ export function TravelMapPage() {
               />
             </SketchPanel>
 
+            <SketchPanel title={t("postalTraffic.title")} variant="note">
+              <PostalTrafficContent postalTraffic={localizedPostalTraffic} />
+            </SketchPanel>
+
             <SketchPanel title={t("map.discoveries")} variant="map">
               <DiscoveryContent discoveredCount={discoveredCount} rewards={rewards} />
             </SketchPanel>
@@ -109,6 +126,40 @@ export function TravelMapPage() {
         </div>
       </section>
     </main>
+  );
+}
+
+function PostalTrafficContent({
+  postalTraffic,
+}: {
+  postalTraffic: PostalTrafficPetSnapshot[];
+}) {
+  const { t } = useTranslation();
+
+  return (
+    <>
+      <div className={styles.discoveryHeader}>
+        <span>{postalTraffic.length}</span>
+        <span>{t("postalTraffic.nearbyPets")}</span>
+      </div>
+      {postalTraffic.length > 0 ? (
+        <div className={styles.discoveryList}>
+          {postalTraffic.map((pet) => (
+            <ItemCard
+              description={t(pet.speciesKey)}
+              key={pet.id}
+              meta={`${t(`postalTraffic.visibility.${pet.visibility}`)} / ${Math.round(
+                pet.distanceFromRouteKm,
+              )} km`}
+              selected={pet.visibility === "friend"}
+              title={pet.label}
+            />
+          ))}
+        </div>
+      ) : (
+        <p className={styles.emptyNote}>{t("postalTraffic.empty")}</p>
+      )}
+    </>
   );
 }
 
@@ -231,4 +282,15 @@ function createMapPlaceLabels(
       label: t(reward.titleKey),
     })),
   ];
+}
+
+function getPostalTrafficDisplayLabel(
+  pet: PostalTrafficPetSnapshot,
+  t: (key: TranslationKey) => string,
+) {
+  if (pet.visibility === "anonymous") {
+    return t("postalTraffic.anonymousPet");
+  }
+
+  return pet.label;
 }

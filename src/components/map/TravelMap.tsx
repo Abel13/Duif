@@ -6,6 +6,7 @@ import type {
   MapCoordinate,
   RouteRewardDiscovery,
 } from "../../game/mapTravel";
+import type { PostalTrafficPetSnapshot } from "../../game/postalTraffic";
 import {
   createDeliveryRouteGeoJson,
   createMapPlaceLabelsGeoJson,
@@ -63,6 +64,7 @@ export type TravelMapProps = {
   petLabel: string;
   petPosition: MapCoordinate;
   placeLabels: MapPlaceLabel[];
+  postalTraffic: PostalTrafficPetSnapshot[];
   rewards: RouteRewardDiscovery[];
 };
 
@@ -74,11 +76,13 @@ export function TravelMap({
   petLabel,
   petPosition,
   placeLabels,
+  postalTraffic,
   rewards,
 }: TravelMapProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const petMarkerRef = useRef<maplibregl.Marker | null>(null);
+  const trafficMarkerRefs = useRef<Map<string, maplibregl.Marker>>(new Map());
   const isLoadedRef = useRef(false);
   const [hasMapError, setHasMapError] = useState(false);
 
@@ -119,11 +123,13 @@ export function TravelMap({
     map.on("load", () => {
       isLoadedRef.current = true;
       addMapLayers(map, delivery, rewards, placeLabels);
+      syncPostalTrafficMarkers(map, trafficMarkerRefs.current, postalTraffic);
       fitMapToDelivery(map, delivery);
     });
 
     return () => {
       petMarkerRef.current?.remove();
+      removePostalTrafficMarkers(trafficMarkerRefs.current);
       map.remove();
       petMarkerRef.current = null;
       mapRef.current = null;
@@ -146,7 +152,8 @@ export function TravelMap({
     rewardSource?.setData(createRouteRewardsGeoJson(rewards));
     placeLabelsSource?.setData(createMapPlaceLabelsGeoJson(placeLabels));
     petMarkerRef.current?.setLngLat(toLngLat(petPosition));
-  }, [delivery, petPosition, placeLabels, rewards]);
+    syncPostalTrafficMarkers(map, trafficMarkerRefs.current, postalTraffic);
+  }, [delivery, petPosition, placeLabels, postalTraffic, rewards]);
 
   return (
     <div className={styles.mapFrame}>
@@ -158,6 +165,49 @@ export function TravelMap({
       </div>
     </div>
   );
+}
+
+function syncPostalTrafficMarkers(
+  map: maplibregl.Map,
+  markers: Map<string, maplibregl.Marker>,
+  traffic: PostalTrafficPetSnapshot[],
+) {
+  const activeIds = new Set(traffic.map((pet) => pet.id));
+
+  markers.forEach((marker, id) => {
+    if (!activeIds.has(id)) {
+      marker.remove();
+      markers.delete(id);
+    }
+  });
+
+  traffic.forEach((pet) => {
+    const existingMarker = markers.get(pet.id);
+
+    if (existingMarker) {
+      existingMarker.setLngLat(toLngLat(pet.coordinates));
+      return;
+    }
+
+    const markerElement = document.createElement("div");
+    markerElement.className = [
+      styles.trafficMarker,
+      pet.visibility === "friend" ? styles.friendTrafficMarker : styles.anonymousTrafficMarker,
+    ].join(" ");
+    markerElement.setAttribute("aria-label", pet.label);
+    markerElement.title = pet.label;
+
+    const marker = new maplibregl.Marker({ element: markerElement })
+      .setLngLat(toLngLat(pet.coordinates))
+      .addTo(map);
+
+    markers.set(pet.id, marker);
+  });
+}
+
+function removePostalTrafficMarkers(markers: Map<string, maplibregl.Marker>) {
+  markers.forEach((marker) => marker.remove());
+  markers.clear();
 }
 
 function addMapLayers(

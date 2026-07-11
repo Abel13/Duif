@@ -111,6 +111,34 @@
   background: var(--color-postal-blue);
 }
 
+.trafficMarker {
+  width: 1.05rem;
+  height: 1.05rem;
+  border: 2px solid rgba(46, 42, 36, 0.82);
+  border-radius: 50% 50% 50% 0;
+  box-shadow:
+    0 0 0 0.22rem rgba(255, 248, 232, 0.62),
+    0.12rem 0.16rem 0 rgba(46, 42, 36, 0.18);
+  transform: rotate(-45deg);
+}
+
+.trafficMarker::after {
+  content: "";
+  position: absolute;
+  inset: 0.24rem;
+  border-radius: 999px;
+  background: rgba(255, 248, 232, 0.72);
+}
+
+.friendTrafficMarker {
+  background: var(--color-postal-blue);
+}
+
+.anonymousTrafficMarker {
+  background: var(--color-muted-green);
+  opacity: 0.82;
+}
+
 .labels {
   position: absolute;
   z-index: 2;

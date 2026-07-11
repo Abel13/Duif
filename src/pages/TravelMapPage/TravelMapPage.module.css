@@ -169,6 +169,14 @@
   min-width: 0;
 }
 
+.emptyNote {
+  margin: 0;
+  color: var(--color-ink-soft);
+  font-size: 0.9rem;
+  font-weight: 800;
+  line-height: 1.45;
+}
+
 .bottomNav {
   position: absolute;
   z-index: 5;

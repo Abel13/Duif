@@ -219,6 +219,16 @@ export const enUS = {
       },
     },
   },
+  postalTraffic: {
+    title: "Postal traffic",
+    nearbyPets: "Nearby pets",
+    anonymousPet: "Traveling pet",
+    empty: "No pets passing nearby right now.",
+    visibility: {
+      friend: "Friend",
+      anonymous: "Anonymous",
+    },
+  },
   species: {
     carrierPigeon: "Carrier pigeon",
     messengerFalcon: "Messenger falcon",

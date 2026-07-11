@@ -36,6 +36,17 @@ export {
   type RouteRewardRegionKind,
   type TravelLeg,
 } from "./mapTravel";
+export {
+  createPostalTrafficGeoJson,
+  getNearbyPostalTrafficPets,
+  getPostalTrafficLabel,
+  getPostalTrafficPetPosition,
+  mockPostalTrafficPets,
+  type PostalTrafficPet,
+  type PostalTrafficPetSnapshot,
+  type PostalTrafficRouteSnapshot,
+  type PostalTrafficVisibility,
+} from "./postalTraffic";
 export { createMockRewardFromDelivery, initialMockInventory } from "./rewards";
 export { useRewardCollectionData } from "./useRewardCollectionData";
 export {

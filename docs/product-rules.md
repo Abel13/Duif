@@ -93,6 +93,8 @@ Nearby pets:
 - This may become part of the default map experience if it makes the world feel alive
   without creating noisy real-time social pressure.
 - Nearby pets should be treated as postal traffic, not as a real-time chat or MMO layer.
+- The first prototype uses mixed safe visibility: friends can show friend and mascot names,
+  while non-friends appear as anonymous traveling pets.
 - The client should not receive exact private addresses or precise personal location data
   for other players.
 - The backend should decide which pets are eligible to appear based on privacy, friendship,
