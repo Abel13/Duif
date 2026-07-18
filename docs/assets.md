@@ -38,6 +38,7 @@ Use stable public paths under `public/assets/`:
 - `items/thumbnails/` for inventory, reward, and collectible thumbnails.
 - `equipment/icons/` for equipment icons.
 - `navigation/` for small bottom-navigation icon assets.
+- `currency/` for the standardized Stamp and Crystal balance icons.
 - `textures/` for small paper or stamp textures.
 - `maps/` for future lightweight map overlays, labels, stamps, or texture details.
 - `stamps/` for reusable postal marks, cancellation marks, and collectible stamp art.
@@ -53,6 +54,8 @@ Keep large source files outside `public/` so they are not copied into the produc
 - Item thumbnails: `256x256` or smaller.
 - Equipment icons: `192x192` or smaller.
 - Navigation icons: `160x160` or smaller.
+- Currency icons: SVG with a compact square view box when practical; raster fallback no
+  larger than `128x128`.
 - Sticker and stamp art: `256x256` or smaller unless it must be inspected in detail.
 - Textures: tileable and as small as possible, usually `512x512` or smaller.
 - PWA icons: keep generated runtime icons at the exact manifest sizes, such as `192x192`, `512x512`, and `180x180` for Apple touch icons.
@@ -62,6 +65,7 @@ Recommended runtime budgets:
 - Single mascot portrait: ideally under `150KB`.
 - Item, reward, sticker, or equipment thumbnail: ideally under `60KB`.
 - Navigation icon: ideally under `30KB`.
+- Currency icon: ideally under `15KB`.
 - Small texture: ideally under `80KB`.
 - Avoid any individual runtime asset above `300KB` without a performance review.
 - Avoid adding more than `1MB` of new runtime assets in one milestone without a build-size
@@ -160,6 +164,30 @@ These icons are deliberately small `160x160` WebP assets, each under `30KB`. The
 decorative visual language inside real navigation buttons with visible labels and `aria-label`s.
 Do not export the entire bottom navigation as one image; the button structure, focus state,
 disabled state, and translated text must remain in HTML/CSS.
+
+Milestone 30 adds a small read-only shop catalog slice:
+
+- `public/assets/shop/thumbnails/crimson-courier-scarf.webp`;
+- `public/assets/shop/thumbnails/meadow-post-cap.webp`;
+- `public/assets/shop/thumbnails/sunny-route-sticker.webp`;
+- `public/assets/shop/thumbnails/blue-envelope-sticker.webp`;
+- `public/assets/shop/thumbnails/coastal-town-postcard.webp`;
+- `public/assets/shop/thumbnails/lantern-festival-postcard.webp`;
+- `public/assets/shop/thumbnails/brass-nest-plaque.webp`;
+- `public/assets/shop/thumbnails/airmail-profile-ribbon.webp`.
+
+These catalog thumbnails are AI-generated watercolor-and-ink assets exported as `256x256`
+WebP files. They are prototype illustrations only: names, fictional prices, descriptions,
+and accessible interactions remain in HTML and translated copy. Every thumbnail stays below
+`60KB` and retains a CSS fallback in the shop UI.
+
+The currency naming pass adds two code-native balance marks:
+
+- `public/assets/currency/stamp.svg` for common-currency Selos/Stamps;
+- `public/assets/currency/crystal.svg` for premium-currency Cristais/Crystals.
+
+Both marks follow the visual rules in `docs/visual-direction.md`. They are decorative beside
+an accessible localized currency name and must retain a lightweight CSS fallback.
 
 Success criteria:
 

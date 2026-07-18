@@ -382,6 +382,66 @@ export const enUS = {
       longRouteFind: "Long-route find",
     },
   },
+  shop: {
+    eyebrow: "Postal counter",
+    title: "Shop",
+    subtitle: "Small details for personalizing mascots, notebooks, and correspondence.",
+    prototypeNotice: "Demonstration catalog: fictional prices, with no balance or purchases.",
+    categoriesLabel: "Filter catalog",
+    prototypePrice: "Prototype price",
+    viewDetails: "View details",
+    close: "Close",
+    detailsTitle: "Item details",
+    mascotPreview: "Preview with Nuvem",
+    mascotPreviewNote: "Illustrative composition; the item will not be equipped or saved.",
+    emptyTitle: "Empty shelf",
+    emptyDescription: "There are no items in this part of the postal counter yet.",
+    categories: {
+      all: "All",
+      cosmetics: "Cosmetics",
+      stickers: "Stickers",
+      postcards: "Postcards",
+      decorations: "Decorations",
+    },
+    currencies: {
+      free: "Stamps",
+      premium: "Crystals",
+    },
+    items: {
+      crimsonCourierScarf: {
+        name: "Crimson courier scarf",
+        description: "A light scarf with postal stitching for windy days.",
+      },
+      meadowPostCap: {
+        name: "Meadow post cap",
+        description: "A small green cap, worn at the edges and ready for new routes.",
+      },
+      sunnyRouteSticker: {
+        name: "Sunny route sticker",
+        description: "An ink-drawn sun for brightening letters and notebook pages.",
+      },
+      blueEnvelopeSticker: {
+        name: "Blue envelope sticker",
+        description: "An airmail envelope carrying a delicate travel mark.",
+      },
+      coastalTownPostcard: {
+        name: "Coastal town postcard",
+        description: "Bright houses, a calm sea, and a postal path beside the harbor.",
+      },
+      lanternFestivalPostcard: {
+        name: "Lantern festival postcard",
+        description: "A paper night warmed by lanterns and small golden postmarks.",
+      },
+      brassNestPlaque: {
+        name: "Brass nest plaque",
+        description: "An aged little plaque for marking a mascot's favorite corner.",
+      },
+      airmailProfileRibbon: {
+        name: "Airmail profile ribbon",
+        description: "A blue-and-red ribbon for framing portraits in the postal notebook.",
+      },
+    },
+  },
   locations: {
     saoPaulo: "São Paulo",
     lisbon: "Lisbon",

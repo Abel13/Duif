@@ -13,6 +13,12 @@ export const assetPaths = {
   equipment: {
     icon: (fileName: string) => `${PUBLIC_ASSET_ROOT}/equipment/icons/${fileName}`,
   },
+  shop: {
+    thumbnail: (fileName: string) => `${PUBLIC_ASSET_ROOT}/shop/thumbnails/${fileName}`,
+  },
+  currency: {
+    icon: (fileName: string) => `${PUBLIC_ASSET_ROOT}/currency/${fileName}`,
+  },
   navigation: {
     icon: (fileName: string) => `${PUBLIC_ASSET_ROOT}/navigation/${fileName}`,
   },

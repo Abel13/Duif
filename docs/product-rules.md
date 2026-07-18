@@ -306,7 +306,7 @@ Duplicate item policies:
 - Unique: one copy only.
 - Stackable: repeated items increase quantity.
 - Duplicate allowed: multiple copies can exist, possibly with different stats.
-- Convert on duplicate: repeat drops convert into fragments, soft currency, or upgrade
+- Convert on duplicate: repeat drops convert into fragments, Stamps, or upgrade
   progress.
 
 Category defaults:
@@ -346,7 +346,7 @@ Possible reward types:
 - equipment;
 - fuel;
 - materials;
-- soft currency;
+- currency Stamps;
 - route discoveries;
 - event collectibles.
 
@@ -357,20 +357,22 @@ Open design question:
 ## Shop and Monetization Rules
 
 The shop may eventually include cosmetics, social content, optional boosts, fuel, and two
-currencies. Their final player-facing names are intentionally undecided.
+currencies: **Stamps** as the common currency and **Crystals** as the premium currency.
 
 Currency boundaries:
 
-- Free currency is earned from deliveries, route rewards, collection progress, and events.
-- Premium currency may eventually be purchased, but is restricted to visual expression
+- Stamps are earned from deliveries, route rewards, collection progress, and events.
+- Currency Stamps are standardized balance tokens. They are not the collectible route and
+  album stamps stored as inventory items.
+- Crystals may eventually be purchased, but are restricted to visual expression
   and social content.
-- Premium currency may buy cosmetics, stickers, postcards, and profile or equipment
+- Crystals may buy cosmetics, stickers, postcards, and profile or equipment
   decoration.
-- Premium currency cannot directly buy mascot or player XP, attributes, route rewards,
+- Crystals cannot directly buy mascot or player XP, attributes, route rewards,
   cargo capacity, required travel-time reductions, or exclusive gameplay access.
-- Premium currency cannot be converted into free currency or transferred between players.
-- Earning curves, prices, currency names, purchase limits, and regional pricing remain
-  deferred until balance and payment milestones.
+- Crystals cannot be converted into Stamps or transferred between players.
+- Earning curves, prices, purchase limits, and regional pricing remain deferred until
+  balance and payment milestones.
 
 Initial catalog categories:
 
@@ -391,7 +393,7 @@ Paid-economy guardrails:
 - Do not sell XP, attributes, route discoveries, cargo capacity, exclusive functional
   equipment, or access to friends and destinations.
 - Do not add paid loot boxes, randomized paid rewards, anonymous gifts, player trading, or
-  premium-to-free currency conversion.
+  Crystal-to-Stamp conversion.
 - Account-bound premium items cannot be gifted.
 - No purchase, balance, entitlement, or consumption behavior should be implied before a
   backend-authoritative ledger and purchase-validation design exists.
@@ -411,7 +413,7 @@ The following topics still need explicit product decisions before deep implement
 - exact player XP formula;
 - level unlock cadence;
 - reward formulas and rarity tables;
-- final currency names, earning curves, prices, and purchase limits;
+- Stamp and Crystal earning curves, prices, and purchase limits;
 - fuel capacity, recharge rates, boost strength, and acquisition rates;
 - cargo units and item weights;
 - duplicate conversion rates, quantities, and overflow rewards;

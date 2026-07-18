@@ -9,6 +9,7 @@ import { MascotDetailPage } from "../pages/MascotDetailPage/MascotDetailPage";
 import { NotFoundPage } from "../pages/NotFoundPage/NotFoundPage";
 import { RewardCollectionPage } from "../pages/RewardCollectionPage/RewardCollectionPage";
 import { SendFlowPage } from "../pages/SendFlowPage/SendFlowPage";
+import { ShopPage } from "../pages/ShopPage/ShopPage";
 
 const TravelMapPage = lazy(() =>
   import("../pages/TravelMapPage/TravelMapPage").then((module) => ({
@@ -35,6 +36,7 @@ export function AppRoutes() {
       />
       <Route path="/rewards/:deliveryId" element={<RewardCollectionPage />} />
       <Route path="/send" element={<SendFlowPage />} />
+      <Route path="/shop" element={<ShopPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

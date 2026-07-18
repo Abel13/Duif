@@ -1144,7 +1144,7 @@ Does not include:
 - cargo capacity enforcement;
 - duplicate conversion economy;
 - Caixa Postal for received correspondence;
-- premium currency.
+- Crystals (premium currency).
 
 Success criteria:
 
@@ -1158,12 +1158,12 @@ Success criteria:
 Goal:
 
 Define the first safe economy rules before implementing a shop with cosmetics, useful
-items, boosts, fuel, stickers, postcards, gifts, and premium currency.
+items, boosts, fuel, stickers, postcards, gifts, Stamps, and Crystals.
 
 Includes:
 
 - item categories for shop inventory;
-- free vs premium currency boundaries;
+- Stamp vs Crystal currency boundaries;
 - paid-item guardrails;
 - fuel/recharge direction;
 - gift contents and restrictions;
@@ -1176,7 +1176,7 @@ Does not include:
 - payments;
 - real store UI;
 - Stripe/App Store integration;
-- premium currency ledger;
+- Crystal currency ledger;
 - backend purchase validation.
 
 Success criteria:
@@ -1188,8 +1188,8 @@ Success criteria:
 
 Decision outcome:
 
-- free currency comes from play, while future premium currency is limited to cosmetics and
-  social expression;
+- Stamps are the common currency earned through play, while Crystals are the future premium
+  currency limited to cosmetics and social expression;
 - normal deliveries never require fuel, and fuel applies only to optional boost equipment;
 - first-scope gifts contain only transferable stickers, postcards, or simple cosmetics;
 - duplicate behavior is defined by item category, while conversion quantities remain a

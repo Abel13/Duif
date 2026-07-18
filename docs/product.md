@@ -270,8 +270,8 @@ Rewards should make travel feel meaningful.
 Possible rewards:
 
 - experience;
-- soft currency;
-- stamps;
+- currency Stamps;
+- collectible stamps;
 - stickers;
 - equipment;
 - postcards;
@@ -323,22 +323,23 @@ Cosmetics should not be required for early gameplay, but they should give player
 
 ## Economy
 
-The first prototype should not include a complex economy. The product uses two functional
-currency concepts: free currency earned through play and a future premium currency limited
-to cosmetics and social expression. Final currency names and prices are not defined yet.
+The first prototype should not include a complex economy. The product uses **Stamps** as the
+common currency earned through play and **Crystals** as the future premium currency limited
+to cosmetics and social expression. Currency Stamps are separate from collectible stamps
+stored in the collection. Prices are not defined yet.
 
 A later version may include:
 
-- soft currency from deliveries;
+- Stamps from deliveries;
 - cosmetic shop;
 - seasonal items;
 - limited-time collections;
 - optional fuel-powered boosts available without requiring payment;
-- optional premium cosmetics.
+- optional cosmetics bought with Crystals.
 
 The full send-travel-return-collect loop remains free. Premium purchases cannot grant XP,
 attributes, route rewards, cargo capacity, exclusive gameplay access, or required travel
-speed. Paid loot boxes and premium-to-free currency conversion are not allowed. Detailed
+speed. Paid loot boxes and Crystal-to-Stamp conversion are not allowed. Detailed
 economy rules live in `docs/product-rules.md`.
 
 ## Events

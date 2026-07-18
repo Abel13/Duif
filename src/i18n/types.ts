@@ -375,6 +375,42 @@ export type TranslationDictionary = {
       longRouteFind: string;
     };
   };
+  shop: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    prototypeNotice: string;
+    categoriesLabel: string;
+    prototypePrice: string;
+    viewDetails: string;
+    close: string;
+    detailsTitle: string;
+    mascotPreview: string;
+    mascotPreviewNote: string;
+    emptyTitle: string;
+    emptyDescription: string;
+    categories: {
+      all: string;
+      cosmetics: string;
+      stickers: string;
+      postcards: string;
+      decorations: string;
+    };
+    currencies: {
+      free: string;
+      premium: string;
+    };
+    items: {
+      crimsonCourierScarf: { name: string; description: string };
+      meadowPostCap: { name: string; description: string };
+      sunnyRouteSticker: { name: string; description: string };
+      blueEnvelopeSticker: { name: string; description: string };
+      coastalTownPostcard: { name: string; description: string };
+      lanternFestivalPostcard: { name: string; description: string };
+      brassNestPlaque: { name: string; description: string };
+      airmailProfileRibbon: { name: string; description: string };
+    };
+  };
   locations: {
     saoPaulo: string;
     lisbon: string;
@@ -718,6 +754,42 @@ export type TranslationKey =
   | "inventory.sources.starterKit"
   | "inventory.sources.routeReward"
   | "inventory.sources.longRouteFind"
+  | "shop.eyebrow"
+  | "shop.title"
+  | "shop.subtitle"
+  | "shop.prototypeNotice"
+  | "shop.categoriesLabel"
+  | "shop.prototypePrice"
+  | "shop.viewDetails"
+  | "shop.close"
+  | "shop.detailsTitle"
+  | "shop.mascotPreview"
+  | "shop.mascotPreviewNote"
+  | "shop.emptyTitle"
+  | "shop.emptyDescription"
+  | "shop.categories.all"
+  | "shop.categories.cosmetics"
+  | "shop.categories.stickers"
+  | "shop.categories.postcards"
+  | "shop.categories.decorations"
+  | "shop.currencies.free"
+  | "shop.currencies.premium"
+  | "shop.items.crimsonCourierScarf.name"
+  | "shop.items.crimsonCourierScarf.description"
+  | "shop.items.meadowPostCap.name"
+  | "shop.items.meadowPostCap.description"
+  | "shop.items.sunnyRouteSticker.name"
+  | "shop.items.sunnyRouteSticker.description"
+  | "shop.items.blueEnvelopeSticker.name"
+  | "shop.items.blueEnvelopeSticker.description"
+  | "shop.items.coastalTownPostcard.name"
+  | "shop.items.coastalTownPostcard.description"
+  | "shop.items.lanternFestivalPostcard.name"
+  | "shop.items.lanternFestivalPostcard.description"
+  | "shop.items.brassNestPlaque.name"
+  | "shop.items.brassNestPlaque.description"
+  | "shop.items.airmailProfileRibbon.name"
+  | "shop.items.airmailProfileRibbon.description"
   | "locations.saoPaulo"
   | "locations.lisbon"
   | "locations.curitiba"

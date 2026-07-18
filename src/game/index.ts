@@ -50,6 +50,11 @@ export {
   type PostalTrafficVisibility,
 } from "./postalTraffic";
 export { createMockRewardFromDelivery, initialMockInventory } from "./rewards";
+export {
+  filterShopItemsByCategory,
+  mockShopCatalog,
+  shopCategories,
+} from "./shop";
 export { useInventoryData } from "./useInventoryData";
 export { useRewardCollectionData } from "./useRewardCollectionData";
 export {
@@ -105,6 +110,9 @@ export type {
   RewardRarity,
   ReceivedCorrespondencePreview,
   SendFlowSelection,
+  ShopCatalogItem,
+  ShopCategory,
+  ShopCurrency,
   Skill,
   StickerContent,
 } from "./types";

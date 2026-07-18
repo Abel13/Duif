@@ -391,6 +391,48 @@ Use SVG for simple icons.
 
 Avoid importing a generic icon set without customization.
 
+## Currency Visual Language
+
+The official player-facing currency names are **Stamps** for common currency and
+**Crystals** for premium currency. The technical values may remain `free` and `premium`, but
+those words should not appear as currency names in player-facing UI.
+
+Stamps:
+
+- Use a small horizontal perforated postage-stamp shape with a warm paper center.
+- Add one simple ink mark such as a wing, envelope, or short route line; never use readable
+  denominations inside the icon.
+- Use postal brown as the main ink, postal red as a restrained accent, and paper colors for
+  the body.
+- Keep the silhouette rectangular and visibly different from collectible route stamps,
+  which may use unique art, rarity borders, locations, and event marks.
+- Currency Stamps always use the same generic icon because they represent a balance, not an
+  inventory collectible.
+
+Crystals:
+
+- Use a small irregular faceted crystal with a compact diamond or teardrop silhouette.
+- Use postal blue as the main watercolor fill, dark ink for the outline, and one restrained
+  rare-gold highlight.
+- The material should feel hand-painted and slightly translucent without glow, neon,
+  glassmorphism, blur, or photorealistic rendering.
+- Use a single calm glint at most. Do not animate continuous sparkle or pulsing effects.
+
+Shared presentation rules:
+
+- Show the icon together with the localized name or an accessible label; never communicate
+  currency using color alone.
+- Display amounts as `120 Stamps` and `45 Crystals` in English, and `120 Selos` and
+  `45 Cristais` in Portuguese. Use singular forms for an amount of one when pluralization is
+  implemented.
+- Do not introduce standalone currency symbols. The names are the authoritative labels.
+- Default icon sizes are `16px` inline, `24px` in price labels, and `32px` in future balance
+  summaries. Preserve comfortable spacing and do not let the icon dominate an item image.
+- Price treatments should look like small postal labels: paper background, dashed ink edge,
+  strong readable amount, and quiet currency name.
+- When art assets are unavailable, render a lightweight CSS silhouette and keep the full
+  text label visible. Missing icons must not create layout shifts.
+
 ## Texture and Detail
 
 Use texture to add charm, not noise.

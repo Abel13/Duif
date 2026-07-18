@@ -383,6 +383,66 @@ export const ptBR = {
       longRouteFind: "Achado de rota longa",
     },
   },
+  shop: {
+    eyebrow: "Balcão postal",
+    title: "Loja",
+    subtitle: "Pequenos detalhes para personalizar mascotes, cadernos e correspondências.",
+    prototypeNotice: "Catálogo demonstrativo: preços fictícios, sem saldo ou compras.",
+    categoriesLabel: "Filtrar catálogo",
+    prototypePrice: "Preço de protótipo",
+    viewDetails: "Ver detalhes",
+    close: "Fechar",
+    detailsTitle: "Detalhes do item",
+    mascotPreview: "Prévia com Nuvem",
+    mascotPreviewNote: "Composição ilustrativa; o item não será equipado ou salvo.",
+    emptyTitle: "Prateleira vazia",
+    emptyDescription: "Ainda não há itens nesta parte do balcão postal.",
+    categories: {
+      all: "Todos",
+      cosmetics: "Cosméticos",
+      stickers: "Adesivos",
+      postcards: "Cartões-postais",
+      decorations: "Decorações",
+    },
+    currencies: {
+      free: "Selos",
+      premium: "Cristais",
+    },
+    items: {
+      crimsonCourierScarf: {
+        name: "Cachecol carmim de mensageiro",
+        description: "Um cachecol leve com costura postal para dias de vento.",
+      },
+      meadowPostCap: {
+        name: "Quepe postal do campo",
+        description: "Um pequeno quepe verde, gasto nas bordas e pronto para novas rotas.",
+      },
+      sunnyRouteSticker: {
+        name: "Adesivo rota ensolarada",
+        description: "Um sol desenhado a tinta para iluminar cartas e páginas do caderno.",
+      },
+      blueEnvelopeSticker: {
+        name: "Adesivo envelope azul",
+        description: "Um envelope de correio aéreo com uma delicada marca de viagem.",
+      },
+      coastalTownPostcard: {
+        name: "Cartão da vila costeira",
+        description: "Casas claras, mar calmo e um caminho postal junto ao porto.",
+      },
+      lanternFestivalPostcard: {
+        name: "Cartão do festival de lanternas",
+        description: "Uma noite de papel aquecida por lanternas e pequenos carimbos dourados.",
+      },
+      brassNestPlaque: {
+        name: "Placa de ninho em latão",
+        description: "Uma plaquinha envelhecida para marcar o cantinho favorito do mascote.",
+      },
+      airmailProfileRibbon: {
+        name: "Fita de perfil correio aéreo",
+        description: "Uma fita azul e vermelha para contornar retratos no caderno postal.",
+      },
+    },
+  },
   locations: {
     saoPaulo: "São Paulo",
     lisbon: "Lisboa",

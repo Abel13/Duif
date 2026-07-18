@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">Cristal</title>
+  <path fill="#6f91a8" stroke="#2e2a24" stroke-width="3" stroke-linejoin="round" d="m32 6 16 12 7 19-12 18H21L9 37l7-19L32 6Z"/>
+  <path fill="#a9c0cc" stroke="#2e2a24" stroke-width="1.8" stroke-linejoin="round" d="m32 6 4 20-18-8L32 6Zm4 20 12-8 7 19-19-11ZM9 37l27-11-15 29L9 37Z"/>
+  <path fill="#f7f1e3" fill-opacity=".55" d="m36 26 7 29H21l15-29Z"/>
+  <path fill="none" stroke="#c49a4a" stroke-width="3" stroke-linecap="round" d="m48 8 1.2 5.8L55 15l-5.8 1.2L48 22l-1.2-5.8L41 15l5.8-1.2L48 8Z"/>
+</svg>

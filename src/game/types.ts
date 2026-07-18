@@ -28,6 +28,21 @@ export type RewardRarity = "common" | "uncommon" | "rare";
 
 export type InventoryCategory = "all" | "equipment" | "stamps" | "keepsakes" | "routeMarks";
 
+export type ShopCategory = "all" | "cosmetics" | "stickers" | "postcards" | "decorations";
+
+export type ShopCurrency = "free" | "premium";
+
+export type ShopCatalogItem = {
+  id: string;
+  category: Exclude<ShopCategory, "all">;
+  currency: ShopCurrency;
+  price: number;
+  nameKey: TranslationKey;
+  descriptionKey: TranslationKey;
+  thumbnailAssetPath: string;
+  previewKind: "mascot" | "item";
+};
+
 export type EquipmentItem = {
   id: string;
   nameKey: TranslationKey;

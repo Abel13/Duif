@@ -828,7 +828,7 @@ The following decisions are intentionally deferred:
 - real map provider;
 - final asset pipeline;
 - native app strategy;
-- final currency names, pricing, earning curves, purchase limits, and payment architecture.
+- Stamp and Crystal pricing, earning curves, purchase limits, and payment architecture.
 
 These should be decided only after the core loop and visual identity are validated.
 

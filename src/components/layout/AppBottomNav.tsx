@@ -13,6 +13,7 @@ export function AppBottomNav() {
   const isInventoryActive = location.pathname.startsWith("/inventory");
   const isMapActive = location.pathname.startsWith("/map");
   const isNestActive = location.pathname.startsWith("/mascots");
+  const isShopActive = location.pathname.startsWith("/shop");
   const items = [
     {
       active: isNestActive,
@@ -37,6 +38,12 @@ export function AppBottomNav() {
       icon: assetPaths.navigation.icon("friends.webp"),
       label: t("navigation.friends"),
       onClick: () => navigate("/friends"),
+    },
+    {
+      active: isShopActive,
+      icon: assetPaths.navigation.icon("shop.webp"),
+      label: t("navigation.shop"),
+      onClick: () => navigate("/shop"),
     },
   ];
 
@@ -64,25 +71,6 @@ export function AppBottomNav() {
           <span className={styles.label}>{item.label}</span>
         </PaperTab>
       ))}
-      <PaperTab
-        aria-label={t("navigation.shopUnavailable")}
-        className={styles.tab}
-        disabled
-        title={t("navigation.shopUnavailable")}
-      >
-        <span className={styles.iconFrame} aria-hidden="true">
-          <AssetImage
-            alt=""
-            className={styles.icon}
-            draggable="false"
-            loading="eager"
-            src={assetPaths.navigation.icon("shop.webp")}
-          >
-            <span className={styles.iconFallback} />
-          </AssetImage>
-        </span>
-        <span className={styles.label}>{t("navigation.shop")}</span>
-      </PaperTab>
     </nav>
   );
 }
