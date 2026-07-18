@@ -237,29 +237,29 @@ export const ptBR = {
       eventItem: "Item de evento",
     },
     rewards: {
-      rioPostcard: {
-        name: "Cartão postal do Rio",
-        description: "Uma vista costeira carimbada quando a rota passa pelo sudeste.",
+      londrinaPostcard: {
+        name: "Cartão postal de Londrina",
+        description: "Uma lembrança ilustrada do começo da rota no norte do Paraná.",
       },
-      bahiaSouvenir: {
-        name: "Lembrança da Bahia",
-        description: "Uma pequena lembrança de rota encontrada ao cruzar o litoral nordeste.",
+      cambeSouvenir: {
+        name: "Lembrança de Cambé",
+        description: "Uma pequena lembrança encontrada logo depois da partida.",
       },
-      capeVerdeBadge: {
-        name: "Badge do Atlântico",
-        description: "Um pequeno emblema encontrado no caminho entre continentes.",
+      rolandiaBadge: {
+        name: "Distintivo de Rolândia",
+        description: "Um emblema postal encontrado entre as cidades da rota.",
       },
-      canaryMaterial: {
-        name: "Fibra das Canárias",
-        description: "Um material leve usado em consertos e melhorias de equipamento.",
+      arapongasMaterial: {
+        name: "Fibra de Arapongas",
+        description: "Um material leve recolhido durante a passagem por Arapongas.",
       },
-      madeiraStamp: {
-        name: "Selo da Madeira",
-        description: "Um selo raro de passagem perto das ilhas antes de chegar a Lisboa.",
+      apucaranaStamp: {
+        name: "Selo de Apucarana",
+        description: "Um selo raro marcado durante a passagem pela região de Apucarana.",
       },
-      atlanticEvent: {
-        name: "Convite do Atlântico",
-        description: "Um item de evento de uma travessia especial sobre o oceano.",
+      maringaEvent: {
+        name: "Convite de Maringá",
+        description: "Um item de evento encontrado na chegada a Maringá.",
       },
     },
   },
@@ -488,6 +488,8 @@ export const ptBR = {
     },
   },
   locations: {
+    londrina: "Londrina",
+    maringa: "Maringá",
     saoPaulo: "São Paulo",
     lisbon: "Lisboa",
     curitiba: "Curitiba",

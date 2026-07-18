@@ -67,8 +67,8 @@ describe("map travel helpers", () => {
     expect(position.leg).toBe("outbound");
     expect(position.legProgress).toBe(0.5);
     expect(position.outboundProgress).toBe(0.5);
-    expect(position.coordinates.latitude).toBeCloseTo(7.59, 2);
-    expect(position.coordinates.longitude).toBeCloseTo(-27.89, 2);
+    expect(position.coordinates.latitude).toBeCloseTo(-23.36, 2);
+    expect(position.coordinates.longitude).toBeCloseTo(-51.55, 2);
   });
 
   it("calculates pet position during return travel", () => {
@@ -80,8 +80,8 @@ describe("map travel helpers", () => {
     expect(position.leg).toBe("returning");
     expect(position.legProgress).toBe(0.5);
     expect(position.outboundProgress).toBe(1);
-    expect(position.coordinates.latitude).toBeCloseTo(7.59, 2);
-    expect(position.coordinates.longitude).toBeCloseTo(-27.89, 2);
+    expect(position.coordinates.latitude).toBeCloseTo(-23.36, 2);
+    expect(position.coordinates.longitude).toBeCloseTo(-51.55, 2);
   });
 
   it("calculates distance from a point to the route", () => {
@@ -189,8 +189,8 @@ describe("map travel helpers", () => {
     const rewardGeoJson = createRouteRewardsGeoJson(rewards);
 
     expect(routeGeoJson.features[0]?.geometry.coordinates).toEqual([
-      [-46.6333, -23.5505],
-      [-9.1393, 38.7223],
+      [-51.1696, -23.3045],
+      [-51.9333, -23.4205],
     ]);
     expect(rewardGeoJson.features.length).toBeGreaterThan(3);
     expect(rewardGeoJson.features[0]?.properties.discovered).toBe(true);
@@ -202,19 +202,19 @@ describe("map travel helpers", () => {
         coordinates: nuvemDelivery.origin,
         id: "origin",
         kind: "origin",
-        label: "São Paulo",
+        label: "Londrina",
       },
       {
         coordinates: nuvemDelivery.destination,
         id: "destination",
         kind: "destination",
-        label: "Lisboa",
+        label: "Maringá",
       },
     ]);
 
     expect(labelGeoJson.features).toHaveLength(2);
-    expect(labelGeoJson.features[0]?.properties.label).toBe("São Paulo");
-    expect(labelGeoJson.features[1]?.geometry.coordinates).toEqual([-9.1393, 38.7223]);
+    expect(labelGeoJson.features[0]?.properties.label).toBe("Londrina");
+    expect(labelGeoJson.features[1]?.geometry.coordinates).toEqual([-51.9333, -23.4205]);
   });
 
   it("resolves guided camera coordinates for every point target", () => {
@@ -329,14 +329,14 @@ function createTestRewardPoint(
 ): RouteRewardPoint {
   return {
     coordinates: { latitude: 0, longitude: 5 },
-    descriptionKey: "map.rewards.rioPostcard.description",
+    descriptionKey: "map.rewards.londrinaPostcard.description",
     eligibilityRadiusKm: 80,
     id: "route-reward-test",
     kind: "badge",
     rarity: "common",
     regionKind: "city",
     regionLabel: "Test City",
-    titleKey: "map.rewards.rioPostcard.name",
+    titleKey: "map.rewards.londrinaPostcard.name",
     ...overrides,
   };
 }

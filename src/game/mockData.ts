@@ -2,9 +2,9 @@ import { assetPaths } from "./assets";
 import type { Delivery, Mascot, Player } from "./types";
 
 const playerHomeBase = {
-  latitude: -23.5505,
-  longitude: -46.6333,
-  labelKey: "locations.saoPaulo",
+  latitude: -23.3045,
+  longitude: -51.1696,
+  labelKey: "locations.londrina",
 } as const;
 
 export const currentPlayer: Player = {
@@ -15,24 +15,24 @@ export const currentPlayer: Player = {
 };
 
 export const nuvemDelivery: Delivery = {
-  id: "delivery-nuvem-lisbon",
+  id: "delivery-nuvem-maringa",
   senderId: currentPlayer.id,
   receiverId: "friend-lisbon",
   mascotId: "mascot-nuvem",
   origin: playerHomeBase,
   destination: {
-    latitude: 38.7223,
-    longitude: -9.1393,
-    labelKey: "locations.lisbon",
+    latitude: -23.4205,
+    longitude: -51.9333,
+    labelKey: "locations.maringa",
   },
-  distanceKm: 7946,
+  distanceKm: 79,
   animalSpeedKmh: 62,
   outboundStartAt: "2026-07-18T12:00:00.000Z",
   outboundArrivalAt: "2026-07-18T18:00:00.000Z",
   returnStartAt: "2026-07-18T18:30:00.000Z",
   returnArrivalAt: "2026-07-19T00:30:00.000Z",
   status: "returning",
-  rewardSeed: "nuvem-lisbon-welcome-letter",
+  rewardSeed: "nuvem-maringa-welcome-letter",
 };
 
 export const starterMascots: Mascot[] = [

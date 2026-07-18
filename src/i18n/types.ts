@@ -229,27 +229,27 @@ export type TranslationDictionary = {
       eventItem: string;
     };
     rewards: {
-      rioPostcard: {
+      londrinaPostcard: {
         name: string;
         description: string;
       };
-      bahiaSouvenir: {
+      cambeSouvenir: {
         name: string;
         description: string;
       };
-      capeVerdeBadge: {
+      rolandiaBadge: {
         name: string;
         description: string;
       };
-      canaryMaterial: {
+      arapongasMaterial: {
         name: string;
         description: string;
       };
-      madeiraStamp: {
+      apucaranaStamp: {
         name: string;
         description: string;
       };
-      atlanticEvent: {
+      maringaEvent: {
         name: string;
         description: string;
       };
@@ -456,6 +456,8 @@ export type TranslationDictionary = {
     };
   };
   locations: {
+    londrina: string;
+    maringa: string;
     saoPaulo: string;
     lisbon: string;
     curitiba: string;
@@ -730,18 +732,18 @@ export type TranslationKey =
   | "map.rewardKinds.souvenir"
   | "map.rewardKinds.material"
   | "map.rewardKinds.eventItem"
-  | "map.rewards.rioPostcard.name"
-  | "map.rewards.rioPostcard.description"
-  | "map.rewards.bahiaSouvenir.name"
-  | "map.rewards.bahiaSouvenir.description"
-  | "map.rewards.capeVerdeBadge.name"
-  | "map.rewards.capeVerdeBadge.description"
-  | "map.rewards.canaryMaterial.name"
-  | "map.rewards.canaryMaterial.description"
-  | "map.rewards.madeiraStamp.name"
-  | "map.rewards.madeiraStamp.description"
-  | "map.rewards.atlanticEvent.name"
-  | "map.rewards.atlanticEvent.description"
+  | "map.rewards.londrinaPostcard.name"
+  | "map.rewards.londrinaPostcard.description"
+  | "map.rewards.cambeSouvenir.name"
+  | "map.rewards.cambeSouvenir.description"
+  | "map.rewards.rolandiaBadge.name"
+  | "map.rewards.rolandiaBadge.description"
+  | "map.rewards.arapongasMaterial.name"
+  | "map.rewards.arapongasMaterial.description"
+  | "map.rewards.apucaranaStamp.name"
+  | "map.rewards.apucaranaStamp.description"
+  | "map.rewards.maringaEvent.name"
+  | "map.rewards.maringaEvent.description"
   | "postalTraffic.title"
   | "postalTraffic.nearbyPets"
   | "postalTraffic.anonymousPet"
@@ -878,6 +880,8 @@ export type TranslationKey =
   | "shop.items.airmailProfileRibbon.description"
   | "locations.saoPaulo"
   | "locations.lisbon"
+  | "locations.londrina"
+  | "locations.maringa"
   | "locations.curitiba"
   | "locations.toronto"
   | "friends.eyebrow"

@@ -840,7 +840,7 @@ Does not include:
 
 Success criteria:
 
-- `/rewards/delivery-nuvem-lisbon` still works with mocks;
+- `/rewards/delivery-nuvem-maringa` still works with mocks;
 - authenticated users can collect a returned delivery reward;
 - collection creates or reuses a delivery reward and writes an inventory item;
 - already collected rewards render as completed;

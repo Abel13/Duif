@@ -236,29 +236,29 @@ export const enUS = {
       eventItem: "Event item",
     },
     rewards: {
-      rioPostcard: {
-        name: "Rio postcard",
-        description: "A coastal view stamped when the route crosses the southeast.",
+      londrinaPostcard: {
+        name: "Londrina postcard",
+        description: "An illustrated keepsake from the start of the route in northern Paraná.",
       },
-      bahiaSouvenir: {
-        name: "Bahia souvenir",
-        description: "A small route keepsake found while crossing the northeastern coast.",
+      cambeSouvenir: {
+        name: "Cambé souvenir",
+        description: "A small keepsake found shortly after departure.",
       },
-      capeVerdeBadge: {
-        name: "Atlantic badge",
-        description: "A small emblem found on the crossing between continents.",
+      rolandiaBadge: {
+        name: "Rolândia badge",
+        description: "A postal emblem found between the cities along the route.",
       },
-      canaryMaterial: {
-        name: "Canary fiber",
-        description: "A lightweight material used for equipment repairs and upgrades.",
+      arapongasMaterial: {
+        name: "Arapongas fiber",
+        description: "A lightweight material gathered while passing through Arapongas.",
       },
-      madeiraStamp: {
-        name: "Madeira stamp",
-        description: "A rare passage stamp near the islands before reaching Lisbon.",
+      apucaranaStamp: {
+        name: "Apucarana stamp",
+        description: "A rare stamp marked while passing through the Apucarana region.",
       },
-      atlanticEvent: {
-        name: "Atlantic invitation",
-        description: "An event item from a special crossing over the ocean.",
+      maringaEvent: {
+        name: "Maringá invitation",
+        description: "An event item found upon arrival in Maringá.",
       },
     },
   },
@@ -487,6 +487,8 @@ export const enUS = {
     },
   },
   locations: {
+    londrina: "Londrina",
+    maringa: "Maringá",
     saoPaulo: "São Paulo",
     lisbon: "Lisbon",
     curitiba: "Curitiba",

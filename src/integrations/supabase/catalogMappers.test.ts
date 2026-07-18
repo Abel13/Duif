@@ -75,7 +75,7 @@ describe("Supabase catalog mappers", () => {
         luck: 6,
       },
     });
-    expect(mascot.currentDelivery?.id).toBe("delivery-nuvem-lisbon");
+    expect(mascot.currentDelivery?.id).toBe("delivery-nuvem-maringa");
     expect(mascot.equipment[0]?.id).toBe("equipment-nuvem-canvas-bag");
   });
 

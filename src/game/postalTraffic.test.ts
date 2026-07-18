@@ -54,8 +54,8 @@ describe("postal traffic helpers", () => {
       ...testPet,
       route: {
         ...testPet.route,
-        origin: { latitude: -23.5505, longitude: -46.6333 },
-        destination: { latitude: 38.7223, longitude: -9.1393 },
+        origin: { latitude: -23.3045, longitude: -51.1696 },
+        destination: { latitude: -23.4205, longitude: -51.9333 },
       },
     };
     const farPet: PostalTrafficPet = {
@@ -109,8 +109,8 @@ describe("postal traffic helpers", () => {
           ...testPet,
           route: {
             ...testPet.route,
-            origin: { latitude: -23.5505, longitude: -46.6333 },
-            destination: { latitude: 38.7223, longitude: -9.1393 },
+            origin: { latitude: -23.3045, longitude: -51.1696 },
+            destination: { latitude: -23.4205, longitude: -51.9333 },
           },
         },
       ],
@@ -120,7 +120,7 @@ describe("postal traffic helpers", () => {
 
     expect(geoJson.features).toHaveLength(1);
     expect(geoJson.features[0]?.properties.visibility).toBe("friend");
-    expect(geoJson.features[0]?.geometry.coordinates[0]).toBeCloseTo(-27.8863, 4);
-    expect(geoJson.features[0]?.geometry.coordinates[1]).toBeCloseTo(7.5859, 4);
+    expect(geoJson.features[0]?.geometry.coordinates[0]).toBeCloseTo(-51.55145, 4);
+    expect(geoJson.features[0]?.geometry.coordinates[1]).toBeCloseTo(-23.3625, 4);
   });
 });
