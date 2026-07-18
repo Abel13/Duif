@@ -1345,6 +1345,42 @@ Success criteria:
 - the handoff reuses the current authoritative collection route;
 - repeat visits cannot duplicate the primary reward.
 
+## Milestone 34A: Mascot Travel Modifiers
+
+Goal:
+
+Make the starter mascots mechanically distinct before route discoveries become authoritative
+in the backend.
+
+Includes:
+
+- a pure `deriveMascotTravelModifiers(mascot, route)` resolver;
+- a typed `MascotTravelModifiers` result for outbound speed, return speed, preparation,
+  discovery radius, rarity weight, and long-route consistency;
+- immutable modifier snapshots calculated when a delivery is created;
+- Trovão returning approximately 10% faster through `Voo Direto`;
+- Pipoca receiving an approximately 15% wider discovery corridor through `Achador Curioso`;
+- Nuvem mitigating a bounded portion of long-route penalties through `Rota Segura`;
+- visible explanations in the send flow so mascot choice is understandable before dispatch;
+- deterministic tests for mascot, route, cap, invalid-value, and snapshot behavior.
+
+Does not include:
+
+- backend persistence or schema changes, which remain in Milestone 35;
+- paid stat advantages, fuel, consumable energy, or premium-only routes;
+- final rarity tables, duplicate conversion, cargo weights, or economy rewards;
+- unrestricted stacking between traits, skills, and equipment;
+- changing modifiers after a delivery has started.
+
+Success criteria:
+
+- each starter mascot has a noticeable but bounded delivery identity;
+- no starter mascot is universally superior across speed, safety, and exploration;
+- reopening the app cannot reroll or recalculate an active delivery differently;
+- discovery and timing calculations consume the same modifier snapshot;
+- existing deliveries without a modifier snapshot retain safe fallback behavior;
+- tests, build, and mock send-travel-return flow continue to pass.
+
 ## Milestone 35: Persisted Route Discoveries
 
 Goal:
@@ -1404,8 +1440,9 @@ Success criteria:
 - the panel does not introduce horizontal overflow on mobile.
 
 These milestones will be reviewed and adjusted individually before implementation. The sequence
-keeps one active delivery, excludes street navigation and global search, and introduces no map
-economy, payment flow, live multiplayer, or animation dependency.
+keeps one active delivery, introduces mascot modifiers before backend discovery materialization,
+excludes street navigation and global search, and introduces no map economy, payment flow, live
+multiplayer, or animation dependency.
 
 ## Suggested First Execution Order
 

@@ -228,6 +228,61 @@ Stamina:
 - Stamina is a passive attribute, not an energy meter.
 - It may help long routes, cargo penalties, return consistency, or boost efficiency.
 
+### Mascot Mechanical Identity
+
+Choosing a mascot should change how a delivery behaves, without creating a mandatory best
+mascot or making route content inaccessible to players who choose another companion.
+
+Attribute direction:
+
+- Speed determines the base travel duration.
+- Stamina reduces long-route penalties and may improve return consistency.
+- Orientation moderately expands the effective route-discovery corridor.
+- Luck modifies deterministic rarity weights; it never guarantees every reward is rare.
+- Attribute and skill bonuses must use explicit caps so later progression cannot create
+  unbounded speed, discovery, or rarity advantages.
+
+Starter mascot identities:
+
+- Nuvem is the safe long-route specialist. `Rota Segura` should mitigate part of the
+  long-route penalty and favor consistent delivery outcomes.
+- Trovão is the direct-flight specialist. `Voo Direto` should initially reduce return time
+  by approximately 10%, without moving outbound discovery thresholds.
+- Pipoca is the exploration specialist. `Achador Curioso` should initially expand the
+  route-discovery corridor by approximately 15% and may later improve deterministic rarity
+  weights within a capped range.
+
+Skill direction:
+
+- `Rota Longa` mitigates distance penalties.
+- `Pouso Suave` favors safe completion or later duplicate-preservation rules.
+- `Despacho Rápido` reduces preparation time.
+- `Instinto de Vento Cruzado` improves orientation on eligible routes.
+- `Coisa Brilhante` improves capped rarity weights.
+- `Desvio Feliz` expands discovery reach in exchange for a small travel-time cost.
+- Skill level scales an existing effect; it should not introduce hidden unrelated bonuses.
+
+Determinism and authority:
+
+- Mascot, attribute, trait, skill, equipment, and route modifiers are resolved when the
+  delivery is created.
+- A delivery stores an immutable snapshot of its effective travel modifiers.
+- Changing a mascot or equipment after dispatch affects only future deliveries.
+- Random-looking reward outcomes use a stable delivery seed so reopening the app cannot
+  reroll discoveries.
+- The client may preview modifier effects, but the backend becomes authoritative when route
+  discoveries are persisted.
+- Paid cosmetics and Crystals never improve these modifiers.
+
+Initial implementation boundary:
+
+- Start only with Trovão's faster return, Pipoca's wider discovery corridor, and Nuvem's
+  long-route consistency.
+- Validate whether the three choices feel distinct before enabling rarity upgrades,
+  duplicate preservation, cargo effects, or complex equipment synergies.
+- Exact orientation coefficients, luck weights, long-route thresholds, caps, and per-skill
+  level curves remain balancing decisions.
+
 Possible level unlocks:
 
 - functional equipment slots;
@@ -413,6 +468,7 @@ The following topics still need explicit product decisions before deep implement
 - exact player XP formula;
 - level unlock cadence;
 - reward formulas and rarity tables;
+- mascot modifier coefficients, caps, long-route thresholds, and skill-level curves;
 - Stamp and Crystal earning curves, prices, and purchase limits;
 - fuel capacity, recharge rates, boost strength, and acquisition rates;
 - cargo units and item weights;

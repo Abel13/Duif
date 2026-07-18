@@ -187,20 +187,23 @@ A mascot should have:
 - visual appearance;
 - current delivery status.
 
-Potential attributes:
+Core attributes:
 
 - speed;
 - stamina;
 - orientation;
 - luck.
 
-Potential traits:
+Mechanical direction:
 
-- better chance to find rare items;
-- faster return trips;
-- better delivery rewards;
-- improved event discovery;
-- stronger friendship bonus.
+- Nuvem specializes in safe, consistent long routes;
+- Trovão specializes in faster direct return trips;
+- Pipoca specializes in wider route exploration and later capped rarity bonuses;
+- traits and skills resolve into bounded delivery modifiers at dispatch time;
+- active deliveries keep an immutable modifier snapshot so later changes cannot reroll them.
+
+Detailed attribute, trait, skill, determinism, and balancing rules live in
+`docs/product-rules.md`.
 
 ## Travel System
 
@@ -211,6 +214,7 @@ A delivery should store:
 - sender id;
 - receiver id;
 - animal id;
+- effective mascot-modifier snapshot;
 - origin coordinates;
 - destination coordinates;
 - distance;
