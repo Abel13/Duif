@@ -8,6 +8,7 @@ import {
   createRouteRewardsGeoJson,
   getDistanceFromPointToRouteKm,
   getEligibleRouteRewards,
+  getMapFocusCoordinate,
   getPetMapPosition,
   getRouteRewardDiscoveries,
   getRouteRewardProgress,
@@ -199,6 +200,38 @@ describe("map travel helpers", () => {
     expect(labelGeoJson.features).toHaveLength(2);
     expect(labelGeoJson.features[0]?.properties.label).toBe("São Paulo");
     expect(labelGeoJson.features[1]?.geometry.coordinates).toEqual([-9.1393, 38.7223]);
+  });
+
+  it("resolves guided camera coordinates for every point target", () => {
+    const rewards = getRouteRewardDiscoveries(
+      nuvemDelivery,
+      new Date("2026-07-08T18:00:00.000Z"),
+    );
+    const mascotPosition = { latitude: 10, longitude: -20 };
+
+    expect(getMapFocusCoordinate({ kind: "mascot" }, nuvemDelivery, mascotPosition, rewards))
+      .toEqual(mascotPosition);
+    expect(getMapFocusCoordinate({ kind: "origin" }, nuvemDelivery, mascotPosition, rewards))
+      .toEqual(nuvemDelivery.origin);
+    expect(getMapFocusCoordinate({ kind: "destination" }, nuvemDelivery, mascotPosition, rewards))
+      .toEqual(nuvemDelivery.destination);
+    expect(getMapFocusCoordinate(
+      { kind: "reward", rewardId: rewards[0]!.id },
+      nuvemDelivery,
+      mascotPosition,
+      rewards,
+    )).toEqual(rewards[0]!.coordinates);
+    expect(getMapFocusCoordinate({ kind: "overview" }, nuvemDelivery, mascotPosition, rewards))
+      .toBeUndefined();
+  });
+
+  it("ignores an unknown reward camera target", () => {
+    expect(getMapFocusCoordinate(
+      { kind: "reward", rewardId: "missing-reward" },
+      nuvemDelivery,
+      nuvemDelivery.origin,
+      [],
+    )).toBeUndefined();
   });
 });
 

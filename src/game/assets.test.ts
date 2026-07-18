@@ -10,6 +10,9 @@ describe("asset helpers", () => {
     expect(assetPaths.items.thumbnail("worn-route-stamp.webp")).toBe(
       "/assets/items/thumbnails/worn-route-stamp.webp",
     );
+    expect(assetPaths.mapControls.icon("overview.webp")).toBe(
+      "/assets/map/controls/overview.webp",
+    );
   });
 
   it("detects usable asset paths", () => {

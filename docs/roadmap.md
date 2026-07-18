@@ -1230,6 +1230,183 @@ Success criteria:
 - current gameplay routes and mock/Supabase fallbacks remain unchanged;
 - tests and build pass.
 
+## Milestone 31: Guided Map Navigation And Selection
+
+Goal:
+
+Turn the passive map into an accessible route-inspection experience for one active delivery.
+
+Includes:
+
+- HTML controls to frame the route, follow the mascot, focus origin or destination, and return to the overview;
+- reward selection through either map markers or the discovery list, with synchronized state;
+- mobile bottom sheet and desktop side panel for selected details;
+- public frontend contracts for map focus and selection;
+- camera commands and selection callbacks in `TravelMap`;
+- preserved pan and zoom while details are open.
+
+Does not include:
+
+- global map search;
+- multiple active-delivery selection;
+- mascot switching on the map;
+- persistence or new backend contracts.
+
+Success criteria:
+
+- every guided action is keyboard accessible;
+- marker and list selection remain synchronized;
+- selection details do not block normal map navigation;
+- overview, origin, destination, mascot, and reward focus behave consistently on mobile and desktop.
+
+## Milestone 32: Continuous Postal Movement
+
+Goal:
+
+Make the active mascot's travel feel calm and continuous without adding React render work to every animation frame.
+
+Includes:
+
+- timestamp interpolation with `requestAnimationFrame` and MapLibre APIs;
+- a visual traveled-progress segment over the route;
+- outbound and return direction handling;
+- follow mode that is canceled by manual map movement;
+- animation pause while the page is hidden;
+- `prefers-reduced-motion` support;
+- defensive behavior for invalid timestamps.
+
+Does not include:
+
+- a new animation dependency;
+- particle effects or intense celebrations;
+- server-authoritative live positioning;
+- multiple simultaneous active routes.
+
+Success criteria:
+
+- movement is smooth without a React render per frame;
+- following stops immediately after manual navigation;
+- hidden tabs do not keep updating map animation;
+- reduced-motion users receive a stable, understandable state.
+
+## Milestone 33: Route Discoveries And Celebrations
+
+Goal:
+
+Make route discoveries visible and rewarding while preserving automatic eligibility and delayed collection.
+
+Includes:
+
+- automatic discovery when outbound progress crosses a reward threshold;
+- one short postal celebration only for a newly crossed discovery;
+- distinct future, newly discovered, and carried visual states;
+- selectable reward markers with art, rarity, region, and current state;
+- session-safe transition tracking so reopening a panel does not replay a celebration.
+
+Does not include:
+
+- requiring a tap to secure a discovery;
+- writing discoveries into inventory during travel;
+- random paid rewards or economy integration;
+- backend discovery persistence.
+
+Success criteria:
+
+- crossing the exact threshold discovers the reward once;
+- reopening or reselecting details does not repeat the celebration;
+- future discoveries remain understandable without revealing inventory ownership;
+- no reward can be collected before the mascot returns.
+
+## Milestone 34: Return Summary And Collection Handoff
+
+Goal:
+
+Connect the map's return state to the existing safe reward-collection flow.
+
+Includes:
+
+- cargo summary after the mascot returns;
+- CTA to `/rewards/:deliveryId` using the existing collection experience;
+- completed-trip state after collection;
+- link from the completed state to the Collection;
+- current mock fallback and authenticated behavior.
+
+Does not include:
+
+- a second collection implementation inside the map;
+- early inventory insertion;
+- changes to reward authorization or database schema;
+- duplicate conversion into Stamps.
+
+Success criteria:
+
+- discoveries happen outbound, remain carried during travel, and enter inventory only after return;
+- returned, collectable, and completed states are visually distinct;
+- the handoff reuses the current authoritative collection route;
+- repeat visits cannot duplicate the primary reward.
+
+## Milestone 35: Persisted Route Discoveries
+
+Goal:
+
+Make route discoveries deterministic and authoritative without breaking the existing collection response.
+
+Includes:
+
+- seeded route-reward-point catalog;
+- per-delivery discovery records linked to a `reward_item`;
+- deterministic materialization in the backend when a delivery is created;
+- participant-only RLS and no direct browser inserts;
+- idempotent collection of the primary reward and every eligible route discovery;
+- additive `routeInventoryItems` in the collection response;
+- updated generated database types and SQL coverage.
+
+Does not include:
+
+- client-authoritative discovery creation;
+- duplicate conversion into Stamps;
+- economy balancing or collection-conversion formulas;
+- removal or renaming of existing RPC response fields.
+
+Success criteria:
+
+- the same delivery always receives the same persisted discovery set;
+- another player cannot read or collect the delivery's discoveries;
+- collection is rejected before return and remains idempotent afterward;
+- existing collection consumers continue working without changes.
+
+## Milestone 36: Interactive Postal Traffic
+
+Goal:
+
+Make nearby postal traffic inspectable while maintaining strict location privacy.
+
+Includes:
+
+- selection from both map markers and the nearby-traffic list;
+- synchronized selection, camera focus, and detail panel;
+- friend details with mascot, species, approximate progress, and profile CTA;
+- anonymous details limited to species and a generic travel state;
+- mobile and keyboard interaction coverage.
+
+Does not include:
+
+- residential origins;
+- precise destinations;
+- street, neighborhood, or private coordinates;
+- live multiplayer tracking, messaging, or unsolicited social contact.
+
+Success criteria:
+
+- friend traffic links only to profiles the player may already visit;
+- anonymous traffic cannot reveal identity or precise route endpoints;
+- selection works consistently from marker and list;
+- the panel does not introduce horizontal overflow on mobile.
+
+These milestones will be reviewed and adjusted individually before implementation. The sequence
+keeps one active delivery, excludes street navigation and global search, and introduces no map
+economy, payment flow, live multiplayer, or animation dependency.
+
 ## Suggested First Execution Order
 
 Use this order for the first development pass:

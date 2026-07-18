@@ -17,6 +17,66 @@
   min-width: 0;
 }
 
+.cameraControls {
+  position: absolute;
+  z-index: 4;
+  top: max(4.6rem, calc(env(safe-area-inset-top) + 4.1rem));
+  left: var(--space-2);
+  display: grid;
+  gap: var(--space-2);
+  width: 3.75rem;
+  pointer-events: auto;
+}
+
+.cameraControls button {
+  width: 100%;
+  aspect-ratio: 1;
+  min-height: 3rem;
+  padding: 0.16rem;
+  border: 2px solid rgba(46, 42, 36, 0.55);
+  border-radius: 0.25rem 0.5rem 0.28rem 0.42rem;
+  color: var(--color-ink);
+  background: rgba(255, 248, 232, 0.94);
+  box-shadow: 0.12rem 0.16rem 0 rgba(46, 42, 36, 0.17);
+  font: inherit;
+  cursor: pointer;
+}
+
+.cameraControls button:nth-child(even) {
+  transform: rotate(-1deg);
+}
+
+.cameraControls button:hover {
+  background: var(--color-postal-label);
+}
+
+.cameraControlIcon {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 0.2rem 0.38rem 0.22rem 0.34rem;
+}
+
+.cameraControlFallback {
+  display: block;
+  width: 1.45rem;
+  height: 1.45rem;
+  border: 2px dashed var(--color-postal-brown);
+  border-radius: 50% 44% 48% 42%;
+  background: var(--color-paper-dark);
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .overlayPanel {
   position: absolute;
   z-index: 4;
@@ -92,6 +152,42 @@
   overflow: auto;
 }
 
+.mobileRewardDetails {
+  max-height: min(58dvh, 30rem);
+  overflow: auto;
+}
+
+.drawerBackButton,
+.panelBackButton {
+  min-height: 2.75rem;
+  padding: 0.6rem 0.8rem;
+  border: 0;
+  color: var(--color-ink);
+  background: transparent;
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 900;
+  text-align: left;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.drawerBackButton {
+  width: 100%;
+  border-bottom: 1px dashed rgba(46, 42, 36, 0.34);
+}
+
+.drawerBackButton::before,
+.panelBackButton::before {
+  content: "←";
+  margin-right: var(--space-2);
+}
+
+.panelBackButton {
+  margin: calc(-1 * var(--space-2)) 0 var(--space-2);
+  border-bottom: 1px dashed rgba(46, 42, 36, 0.3);
+}
+
 .summary {
   display: grid;
   gap: var(--space-3);
@@ -140,7 +236,11 @@
 }
 
 .routeLink:focus-visible,
-.mobileDrawer summary:focus-visible {
+.mobileDrawer summary:focus-visible,
+.cameraControls button:focus-visible,
+.drawerBackButton:focus-visible,
+.panelBackButton:focus-visible,
+.rewardListButton:focus-visible {
   outline: 3px solid rgba(164, 74, 63, 0.52);
   outline-offset: 3px;
 }
@@ -169,6 +269,139 @@
   min-width: 0;
 }
 
+.rewardListButton {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+  min-height: 4.5rem;
+  padding: var(--space-3);
+  border: 2px solid rgba(46, 42, 36, 0.42);
+  border-radius: 0.5rem 0.22rem 0.45rem 0.28rem;
+  color: var(--color-ink);
+  background: rgba(255, 248, 232, 0.78);
+  box-shadow: 0.12rem 0.16rem 0 rgba(46, 42, 36, 0.1);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.rewardListButton[aria-pressed="true"] {
+  border-color: var(--color-postal-red);
+  background: var(--color-postal-label);
+  box-shadow: inset 0 0 0 2px rgba(164, 74, 63, 0.12);
+}
+
+.rewardListVisual,
+.rewardDetailVisual {
+  position: relative;
+  display: block;
+  border: 2px solid var(--color-ink);
+  border-radius: 50% 43% 48% 40%;
+  background: var(--color-rare-gold);
+  transform: rotate(-4deg);
+}
+
+.rewardListVisual {
+  width: 3rem;
+  height: 3rem;
+}
+
+.rewardListVisual::after,
+.rewardDetailVisual::after {
+  content: "";
+  position: absolute;
+  inset: 27%;
+  border: 1px dashed currentColor;
+  border-radius: 50%;
+}
+
+.futureVisual {
+  border-style: dashed;
+  background: var(--color-paper-dark);
+  opacity: 0.76;
+}
+
+.futureVisual::after {
+  background: rgba(46, 42, 36, 0.18);
+}
+
+.rewardListContent {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.rewardListContent strong,
+.rewardListContent span,
+.rewardListContent small {
+  overflow-wrap: anywhere;
+}
+
+.rewardListContent span {
+  color: var(--color-ink-soft);
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.rewardListContent small {
+  color: var(--color-muted-green);
+  font-weight: 800;
+}
+
+.rewardDetails {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.rewardDetailVisual,
+.rewardDetailImage {
+  width: min(8rem, 36vw);
+  aspect-ratio: 1;
+  margin: 0 auto;
+  border-radius: 0.55rem 0.28rem 0.48rem 0.3rem;
+  box-shadow: 0.2rem 0.28rem 0 rgba(46, 42, 36, 0.14);
+}
+
+.rewardDetailImage {
+  display: block;
+  border: 2px solid rgba(46, 42, 36, 0.62);
+  object-fit: cover;
+}
+
+.rewardDetails h2,
+.rewardDetails p {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.rewardDetails h2 {
+  color: var(--color-ink);
+  font-size: 1.15rem;
+}
+
+.rewardDetails > p {
+  color: var(--color-ink-soft);
+  line-height: 1.45;
+}
+
+.detailState {
+  color: var(--color-postal-brown);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.rewardMetadata {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+}
+
 .emptyNote {
   margin: 0;
   color: var(--color-ink-soft);
@@ -194,6 +427,12 @@
 }
 
 @media (min-width: 820px) {
+  .cameraControls {
+    top: max(var(--space-4), env(safe-area-inset-top));
+    left: var(--space-4);
+    width: 4.1rem;
+  }
+
   .overlayPanel {
     top: max(var(--space-4), env(safe-area-inset-top));
     right: var(--space-4);

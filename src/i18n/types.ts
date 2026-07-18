@@ -169,6 +169,19 @@ export type TranslationDictionary = {
     onTheRoute: string;
     backToMascot: string;
     unavailable: string;
+    cameraControls: string;
+    overview: string;
+    focusMascot: string;
+    focusOrigin: string;
+    focusDestination: string;
+    backToTrip: string;
+    rewardDetails: string;
+    futureReward: string;
+    futureRewardState: string;
+    futureRewardHint: string;
+    approximateRegion: string;
+    rewardType: string;
+    rarity: string;
     legs: {
       preparing: string;
       outbound: string;
@@ -633,6 +646,19 @@ export type TranslationKey =
   | "map.onTheRoute"
   | "map.backToMascot"
   | "map.unavailable"
+  | "map.cameraControls"
+  | "map.overview"
+  | "map.focusMascot"
+  | "map.focusOrigin"
+  | "map.focusDestination"
+  | "map.backToTrip"
+  | "map.rewardDetails"
+  | "map.futureReward"
+  | "map.futureRewardState"
+  | "map.futureRewardHint"
+  | "map.approximateRegion"
+  | "map.rewardType"
+  | "map.rarity"
   | "map.legs.preparing"
   | "map.legs.outbound"
   | "map.legs.delivered"

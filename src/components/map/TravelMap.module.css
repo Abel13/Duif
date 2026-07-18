@@ -113,6 +113,68 @@
   background: var(--color-postal-blue);
 }
 
+.rewardMarker {
+  position: relative;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 0;
+  color: var(--color-ink);
+  background: transparent;
+  cursor: pointer;
+}
+
+.rewardMarker::before {
+  content: "";
+  position: absolute;
+  inset: 0.48rem;
+  border: 2px solid var(--color-ink);
+  border-radius: 50% 44% 48% 42%;
+  background: var(--color-paper-light);
+  box-shadow:
+    0 0 0 0.24rem rgba(255, 248, 232, 0.72),
+    0.12rem 0.16rem 0 rgba(46, 42, 36, 0.2);
+  transform: rotate(12deg);
+}
+
+.rewardMarker::after {
+  content: "";
+  position: absolute;
+  top: 0.93rem;
+  left: 1.02rem;
+  width: 0.66rem;
+  height: 0.48rem;
+  border: 1px dashed currentColor;
+  border-radius: 50%;
+}
+
+.discoveredRewardMarker::before {
+  background: var(--color-rare-gold);
+}
+
+.futureRewardMarker {
+  opacity: 0.82;
+}
+
+.futureRewardMarker::before {
+  border-style: dashed;
+  background: var(--color-paper-dark);
+}
+
+.selectedRewardMarker::before {
+  border-color: var(--color-postal-red);
+  box-shadow:
+    0 0 0 0.34rem rgba(164, 74, 63, 0.26),
+    0 0 0 0.58rem rgba(255, 248, 232, 0.72),
+    0.12rem 0.16rem 0 rgba(46, 42, 36, 0.2);
+}
+
+.rewardMarker:focus-visible {
+  outline: 3px solid rgba(164, 74, 63, 0.62);
+  outline-offset: 2px;
+  border-radius: 50%;
+}
+
 .trafficMarker {
   width: 1.05rem;
   height: 1.05rem;

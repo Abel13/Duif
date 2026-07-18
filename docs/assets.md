@@ -189,6 +189,17 @@ The currency naming pass adds two code-native balance marks:
 Both marks follow the visual rules in `docs/visual-direction.md`. They are decorative beside
 an accessible localized currency name and must retain a lightweight CSS fallback.
 
+Milestone 31 adds four code-native guided-map controls:
+
+- `public/assets/map/controls/overview.webp`;
+- `public/assets/map/controls/mascot.webp`;
+- `public/assets/map/controls/origin.webp`;
+- `public/assets/map/controls/destination.webp`.
+
+The `256x256` watercolor-and-ink illustrations use the existing postal palette and replace
+visible control text without removing localized `aria-label` and tooltip text. Each button
+retains a CSS fallback mark.
+
 Success criteria:
 
 - Mascots feel emotionally appealing in the actual mobile UI.

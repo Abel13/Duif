@@ -4,13 +4,15 @@ import "maplibre-gl/dist/maplibre-gl.css";
 
 import type {
   MapCoordinate,
+  MapFocusTarget,
+  MapSelection,
   RouteRewardDiscovery,
 } from "../../game/mapTravel";
 import type { PostalTrafficPetSnapshot } from "../../game/postalTraffic";
 import {
   createDeliveryRouteGeoJson,
   createMapPlaceLabelsGeoJson,
-  createRouteRewardsGeoJson,
+  getMapFocusCoordinate,
   toLngLat,
   type MapPlaceLabel,
 } from "../../game/mapTravel";
@@ -18,7 +20,6 @@ import type { Delivery } from "../../game/types";
 import styles from "./TravelMap.module.css";
 
 const routeSourceId = "duif-route";
-const rewardSourceId = "duif-route-rewards";
 const placeLabelsSourceId = "duif-place-labels";
 
 const postalMapStyle = {
@@ -60,31 +61,45 @@ export type TravelMapProps = {
   delivery: Delivery;
   destinationLabel: string;
   fallbackLabel: string;
+  focusTarget: MapFocusTarget;
   originLabel: string;
   petLabel: string;
   petPosition: MapCoordinate;
   placeLabels: MapPlaceLabel[];
   postalTraffic: PostalTrafficPetSnapshot[];
+  rewardLabels: Record<string, string>;
   rewards: RouteRewardDiscovery[];
+  selection: MapSelection;
+  onRewardSelect: (rewardId: string) => void;
 };
 
 export function TravelMap({
   delivery,
   destinationLabel,
   fallbackLabel,
+  focusTarget,
   originLabel,
   petLabel,
   petPosition,
   placeLabels,
   postalTraffic,
+  rewardLabels,
   rewards,
+  selection,
+  onRewardSelect,
 }: TravelMapProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const petMarkerRef = useRef<maplibregl.Marker | null>(null);
+  const rewardMarkerRefs = useRef<Map<string, maplibregl.Marker>>(new Map());
   const trafficMarkerRefs = useRef<Map<string, maplibregl.Marker>>(new Map());
   const isLoadedRef = useRef(false);
+  const focusTargetRef = useRef(focusTarget);
+  const selectionRef = useRef(selection);
   const [hasMapError, setHasMapError] = useState(false);
+
+  focusTargetRef.current = focusTarget;
+  selectionRef.current = selection;
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) {
@@ -122,13 +137,22 @@ export function TravelMap({
 
     map.on("load", () => {
       isLoadedRef.current = true;
-      addMapLayers(map, delivery, rewards, placeLabels);
+      addMapLayers(map, delivery, placeLabels);
+      syncRewardMarkers(
+        map,
+        rewardMarkerRefs.current,
+        rewards,
+        rewardLabels,
+        selectionRef.current,
+        onRewardSelect,
+      );
       syncPostalTrafficMarkers(map, trafficMarkerRefs.current, postalTraffic);
-      fitMapToDelivery(map, delivery);
+      focusMap(map, focusTargetRef.current, delivery, petPosition, rewards);
     });
 
     return () => {
       petMarkerRef.current?.remove();
+      removeMarkers(rewardMarkerRefs.current);
       removePostalTrafficMarkers(trafficMarkerRefs.current);
       map.remove();
       petMarkerRef.current = null;
@@ -145,15 +169,31 @@ export function TravelMap({
     }
 
     const routeSource = map.getSource(routeSourceId) as GeoJSONSource | undefined;
-    const rewardSource = map.getSource(rewardSourceId) as GeoJSONSource | undefined;
     const placeLabelsSource = map.getSource(placeLabelsSourceId) as GeoJSONSource | undefined;
 
     routeSource?.setData(createDeliveryRouteGeoJson(delivery));
-    rewardSource?.setData(createRouteRewardsGeoJson(rewards));
     placeLabelsSource?.setData(createMapPlaceLabelsGeoJson(placeLabels));
     petMarkerRef.current?.setLngLat(toLngLat(petPosition));
+    syncRewardMarkers(
+      map,
+      rewardMarkerRefs.current,
+      rewards,
+      rewardLabels,
+      selection,
+      onRewardSelect,
+    );
     syncPostalTrafficMarkers(map, trafficMarkerRefs.current, postalTraffic);
-  }, [delivery, petPosition, placeLabels, postalTraffic, rewards]);
+  }, [delivery, onRewardSelect, petPosition, placeLabels, postalTraffic, rewardLabels, rewards, selection]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+
+    if (!map || !isLoadedRef.current) {
+      return;
+    }
+
+    focusMap(map, focusTarget, delivery, petPosition, rewards);
+  }, [delivery, focusTarget, petPosition, rewards]);
 
   return (
     <div className={styles.mapFrame}>
@@ -210,22 +250,76 @@ function removePostalTrafficMarkers(markers: Map<string, maplibregl.Marker>) {
   markers.clear();
 }
 
+function syncRewardMarkers(
+  map: maplibregl.Map,
+  markers: Map<string, maplibregl.Marker>,
+  rewards: RouteRewardDiscovery[],
+  rewardLabels: Record<string, string>,
+  selection: MapSelection,
+  onSelect: (rewardId: string) => void,
+) {
+  const activeIds = new Set(rewards.map((reward) => reward.id));
+
+  markers.forEach((marker, id) => {
+    if (!activeIds.has(id)) {
+      marker.remove();
+      markers.delete(id);
+    }
+  });
+
+  rewards.forEach((reward) => {
+    const selected = selection?.kind === "reward" && selection.rewardId === reward.id;
+    const existingMarker = markers.get(reward.id);
+
+    if (existingMarker) {
+      existingMarker.setLngLat(toLngLat(reward.coordinates));
+      updateRewardMarker(existingMarker.getElement(), reward, rewardLabels[reward.id], selected);
+      return;
+    }
+
+    const markerElement = document.createElement("button");
+    markerElement.type = "button";
+    markerElement.addEventListener("click", () => onSelect(reward.id));
+    updateRewardMarker(markerElement, reward, rewardLabels[reward.id], selected);
+
+    markers.set(
+      reward.id,
+      new maplibregl.Marker({ element: markerElement })
+        .setLngLat(toLngLat(reward.coordinates))
+        .addTo(map),
+    );
+  });
+}
+
+function updateRewardMarker(
+  element: HTMLElement,
+  reward: RouteRewardDiscovery,
+  label: string | undefined,
+  selected: boolean,
+) {
+  element.className = [
+    styles.rewardMarker,
+    reward.discovered ? styles.discoveredRewardMarker : styles.futureRewardMarker,
+    selected ? styles.selectedRewardMarker : undefined,
+  ].filter(Boolean).join(" ");
+  element.setAttribute("aria-label", label ?? reward.regionLabel);
+  element.setAttribute("aria-pressed", String(selected));
+  element.title = label ?? reward.regionLabel;
+}
+
+function removeMarkers(markers: Map<string, maplibregl.Marker>) {
+  markers.forEach((marker) => marker.remove());
+  markers.clear();
+}
+
 function addMapLayers(
   map: maplibregl.Map,
   delivery: Delivery,
-  rewards: RouteRewardDiscovery[],
   placeLabels: MapPlaceLabel[],
 ) {
   if (!map.getSource(routeSourceId)) {
     map.addSource(routeSourceId, {
       data: createDeliveryRouteGeoJson(delivery),
-      type: "geojson",
-    });
-  }
-
-  if (!map.getSource(rewardSourceId)) {
-    map.addSource(rewardSourceId, {
-      data: createRouteRewardsGeoJson(rewards),
       type: "geojson",
     });
   }
@@ -262,30 +356,6 @@ function addMapLayers(
       },
       source: routeSourceId,
       type: "line",
-    });
-  }
-
-  if (!map.getLayer("duif-route-rewards")) {
-    map.addLayer({
-      id: "duif-route-rewards",
-      paint: {
-        "circle-color": [
-          "case",
-          ["==", ["get", "discovered"], true],
-          "#c49a4a",
-          "#fff8e8",
-        ],
-        "circle-radius": [
-          "case",
-          ["==", ["get", "discovered"], true],
-          8,
-          6,
-        ],
-        "circle-stroke-color": "#2e2a24",
-        "circle-stroke-width": 2,
-      },
-      source: rewardSourceId,
-      type: "circle",
     });
   }
 
@@ -331,7 +401,34 @@ function addMapLayers(
   }
 }
 
-function fitMapToDelivery(map: maplibregl.Map, delivery: Delivery) {
+function focusMap(
+  map: maplibregl.Map,
+  target: MapFocusTarget,
+  delivery: Delivery,
+  petPosition: MapCoordinate,
+  rewards: RouteRewardDiscovery[],
+) {
+  const duration = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 500;
+
+  if (target.kind === "overview") {
+    fitMapToDelivery(map, delivery, duration);
+    return;
+  }
+
+  const coordinates = getMapFocusCoordinate(target, delivery, petPosition, rewards);
+
+  if (!coordinates) {
+    return;
+  }
+
+  map.easeTo({
+    center: toLngLat(coordinates),
+    duration,
+    zoom: Math.max(map.getZoom(), target.kind === "reward" ? 5.5 : 4.5),
+  });
+}
+
+function fitMapToDelivery(map: maplibregl.Map, delivery: Delivery, duration = 0) {
   const bounds: LngLatBoundsLike = [
     [
       Math.min(delivery.origin.longitude, delivery.destination.longitude) - 8,
@@ -344,7 +441,7 @@ function fitMapToDelivery(map: maplibregl.Map, delivery: Delivery) {
   ];
 
   map.fitBounds(bounds, {
-    duration: 0,
+    duration,
     padding: {
       bottom: 104,
       left: 44,

@@ -19,6 +19,9 @@ export const assetPaths = {
   currency: {
     icon: (fileName: string) => `${PUBLIC_ASSET_ROOT}/currency/${fileName}`,
   },
+  mapControls: {
+    icon: (fileName: string) => `${PUBLIC_ASSET_ROOT}/map/controls/${fileName}`,
+  },
   navigation: {
     icon: (fileName: string) => `${PUBLIC_ASSET_ROOT}/navigation/${fileName}`,
   },

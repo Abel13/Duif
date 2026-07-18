@@ -1,8 +1,18 @@
 import type { TranslationKey } from "../i18n";
+import { assetPaths } from "./assets";
 import { clampProgress, getDeliveryStatus } from "./travel";
 import type { Coordinates, Delivery, RewardRarity } from "./types";
 
 export type MapCoordinate = Pick<Coordinates, "latitude" | "longitude">;
+
+export type MapFocusTarget =
+  | { kind: "overview" }
+  | { kind: "mascot" }
+  | { kind: "origin" }
+  | { kind: "destination" }
+  | { kind: "reward"; rewardId: string };
+
+export type MapSelection = { kind: "reward"; rewardId: string } | null;
 
 export type TravelLeg = "preparing" | "outbound" | "delivered" | "returning" | "returned" | "completed";
 
@@ -26,6 +36,7 @@ export type RouteRewardPoint = {
   regionKind: RouteRewardRegionKind;
   regionLabel: string;
   titleKey: TranslationKey;
+  thumbnailAssetPath?: string;
 };
 
 export type RouteRewardDiscovery = {
@@ -40,6 +51,7 @@ export type RouteRewardDiscovery = {
   regionLabel: string;
   routeProgress: number;
   titleKey: TranslationKey;
+  thumbnailAssetPath?: string;
 };
 
 export type MapPlaceLabelKind = "origin" | "destination" | "reward";
@@ -144,6 +156,7 @@ export const mockRouteRewardPoints: RouteRewardPoint[] = [
     regionKind: "country",
     regionLabel: "Cabo Verde",
     titleKey: "map.rewards.capeVerdeBadge.name",
+    thumbnailAssetPath: assetPaths.items.thumbnail("atlantic-badge.webp"),
   },
   {
     coordinates: {
@@ -418,6 +431,26 @@ export function createMapPlaceLabelsGeoJson(
 
 export function toLngLat(coordinates: MapCoordinate): [number, number] {
   return [coordinates.longitude, coordinates.latitude];
+}
+
+export function getMapFocusCoordinate(
+  target: MapFocusTarget,
+  delivery: Delivery,
+  mascotPosition: MapCoordinate,
+  rewards: RouteRewardDiscovery[],
+): MapCoordinate | undefined {
+  switch (target.kind) {
+    case "mascot":
+      return mascotPosition;
+    case "origin":
+      return delivery.origin;
+    case "destination":
+      return delivery.destination;
+    case "reward":
+      return rewards.find((reward) => reward.id === target.rewardId)?.coordinates;
+    case "overview":
+      return undefined;
+  }
 }
 
 function getProjectedRouteMetrics(
