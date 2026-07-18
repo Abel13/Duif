@@ -1,0 +1,112 @@
+.prompt {
+  position: fixed;
+  z-index: 20;
+  top: max(var(--space-3), env(safe-area-inset-top));
+  right: var(--space-3);
+  left: var(--space-3);
+  display: grid;
+  gap: var(--space-2);
+  max-width: 28rem;
+  margin-inline: auto;
+  padding: var(--space-4);
+  border: 2px solid rgba(46, 42, 36, 0.62);
+  border-radius: 0.4rem 0.8rem 0.35rem 0.65rem;
+  color: var(--color-ink);
+  background:
+    linear-gradient(115deg, rgba(255, 248, 232, 0.97), rgba(232, 221, 199, 0.96)),
+    var(--color-paper);
+  box-shadow: 0.35rem 0.45rem 0 rgba(46, 42, 36, 0.22);
+  transform: rotate(-0.35deg);
+}
+
+.prompt::after {
+  content: "";
+  position: absolute;
+  right: 1.1rem;
+  bottom: 0.8rem;
+  width: 3rem;
+  height: 3rem;
+  border: 2px dashed rgba(164, 74, 63, 0.3);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.eyebrow {
+  color: var(--color-postal-red);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.prompt strong {
+  padding-right: 2rem;
+  font-size: 1.1rem;
+}
+
+.prompt p {
+  margin: 0;
+  padding-right: 2rem;
+  color: var(--color-ink-soft);
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.closeButton {
+  position: absolute;
+  top: 0.35rem;
+  right: 0.45rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 0;
+  color: var(--color-ink);
+  background: transparent;
+  font: inherit;
+  font-size: 1.6rem;
+  cursor: pointer;
+}
+
+.actions {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+}
+
+.actions button {
+  min-height: 2.75rem;
+  padding: 0.55rem 0.9rem;
+  border: 2px dashed rgba(46, 42, 36, 0.55);
+  border-radius: 0.25rem 0.45rem 0.22rem 0.38rem;
+  color: var(--color-ink);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.installButton {
+  background: var(--color-rare-gold);
+}
+
+.laterButton {
+  background: var(--color-paper);
+}
+
+.actions button:focus-visible,
+.closeButton:focus-visible {
+  outline: 3px solid rgba(164, 74, 63, 0.52);
+  outline-offset: 2px;
+}
+
+@media (min-width: 820px) {
+  .prompt {
+    right: var(--space-4);
+    left: auto;
+    margin-inline: 0;
+  }
+}

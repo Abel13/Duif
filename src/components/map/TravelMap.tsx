@@ -36,7 +36,6 @@ const placeLabelsSourceId = "duif-place-labels";
 const postalMapStyle = {
   version: 8,
   name: "DUIF Postal Preview",
-  glyphs: "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
   sources: {
     osm: {
       type: "raster",

@@ -4,6 +4,17 @@ export type TranslationDictionary = {
   app: {
     title: string;
   };
+  pwaInstall: {
+    eyebrow: string;
+    title: string;
+    installDescription: string;
+    iosDescription: string;
+    browserDescription: string;
+    install: string;
+    later: string;
+    understood: string;
+    close: string;
+  };
   common: {
     loading: string;
     unavailable: string;
@@ -512,6 +523,15 @@ export type TranslationDictionary = {
 
 export type TranslationKey =
   | "app.title"
+  | "pwaInstall.eyebrow"
+  | "pwaInstall.title"
+  | "pwaInstall.installDescription"
+  | "pwaInstall.iosDescription"
+  | "pwaInstall.browserDescription"
+  | "pwaInstall.install"
+  | "pwaInstall.later"
+  | "pwaInstall.understood"
+  | "pwaInstall.close"
   | "common.loading"
   | "common.unavailable"
   | "notFound.eyebrow"

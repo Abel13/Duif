@@ -4,6 +4,17 @@ export const enUS = {
   app: {
     title: "DUIF",
   },
+  pwaInstall: {
+    eyebrow: "Special delivery",
+    title: "Bring DUIF to your home screen",
+    installDescription: "Install the postal notebook to open it faster and play like an app.",
+    iosDescription: "Tap Share, then choose “Add to Home Screen”.",
+    browserDescription: "Open the browser menu and choose “Install app” or “Add to Home screen”.",
+    install: "Install",
+    later: "Not now",
+    understood: "Got it",
+    close: "Close installation guidance",
+  },
   common: {
     loading: "Loading",
     unavailable: "Unavailable",

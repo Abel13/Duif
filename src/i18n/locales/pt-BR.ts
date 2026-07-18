@@ -4,6 +4,17 @@ export const ptBR = {
   app: {
     title: "DUIF",
   },
+  pwaInstall: {
+    eyebrow: "Entrega especial",
+    title: "Leve o DUIF para sua tela inicial",
+    installDescription: "Instale o caderno postal para abrir mais rápido e jogar como um aplicativo.",
+    iosDescription: "Toque em Compartilhar e depois em “Adicionar à Tela de Início”.",
+    browserDescription: "Abra o menu do navegador e escolha “Instalar aplicativo” ou “Adicionar à tela inicial”.",
+    install: "Instalar",
+    later: "Agora não",
+    understood: "Entendi",
+    close: "Fechar orientação de instalação",
+  },
   common: {
     loading: "Carregando",
     unavailable: "Indisponível",
