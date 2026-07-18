@@ -20,7 +20,7 @@ const TravelMapPage = lazy(() =>
 export function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/mascots/mascot-nuvem" replace />} />
+      <Route path="/" element={<Navigate to="/map" replace />} />
       <Route path="/auth" element={<AuthPage />} />
       <Route path="/mascots/:mascotId" element={<MascotDetailPage />} />
       <Route path="/inventory" element={<InventoryAlbumPage />} />
