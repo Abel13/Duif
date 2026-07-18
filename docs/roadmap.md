@@ -1392,17 +1392,26 @@ Make route discoveries deterministic and authoritative without breaking the exis
 
 Includes:
 
-- seeded route-reward-point catalog;
-- per-delivery discovery records linked to a `reward_item`;
-- deterministic materialization in the backend when a delivery is created;
-- participant-only RLS and no direct browser inserts;
-- idempotent collection of the primary reward and every eligible route discovery;
+- a seeded catalog for Londrina, Cambé, Rolândia, Arapongas, Apucarana, and Maringá,
+  each linked to its own regional `reward_item`;
+- per-delivery discovery records with route progress, corridor distance, collection time,
+  and resulting inventory item;
+- deterministic materialization of every eligible point in the backend when a delivery is
+  created, using the immutable mascot discovery-radius snapshot;
+- nullable `route_discovery_version`, set to `1` even for new routes with no eligible point;
+- participant-only reads, no direct browser writes, and sender-only collection;
+- atomic, idempotent collection of the primary reward and every eligible route discovery;
 - additive `routeInventoryItems` in the collection response;
-- updated generated database types and SQL coverage.
+- authenticated UI backed by persisted discoveries and a session-idempotent mock fallback;
+- a single complete-cargo collection action and confirmation of all collected items;
+- updated generated database types and SQL coverage for corridor boundaries, authorization,
+  category mapping, and repeat collection.
 
 Does not include:
 
 - client-authoritative discovery creation;
+- backfilling deliveries created before this milestone;
+- using rarity weight to remove or reroll one of the fixed regional discoveries;
 - duplicate conversion into Stamps;
 - economy balancing or collection-conversion formulas;
 - removal or renaming of existing RPC response fields.
@@ -1410,8 +1419,9 @@ Does not include:
 Success criteria:
 
 - the same delivery always receives the same persisted discovery set;
-- another player cannot read or collect the delivery's discoveries;
+- only participants can read discoveries, and only the mascot owner/sender can collect them;
 - collection is rejected before return and remains idempotent afterward;
+- the Londrina–Maringá route materializes all six current points with stable progress;
 - existing collection consumers continue working without changes.
 
 ## Milestone 36: Interactive Postal Traffic

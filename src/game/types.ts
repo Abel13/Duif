@@ -95,6 +95,7 @@ export type Delivery = {
   returnArrivalAt?: string;
   status: DeliveryStatus;
   rewardSeed: string;
+  routeDiscoveryVersion?: number;
   travelModifiers?: MascotTravelModifiers;
 };
 

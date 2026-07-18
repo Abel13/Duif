@@ -94,6 +94,28 @@
   min-width: 0;
 }
 
+.cargoTitle {
+  margin: 0;
+  color: var(--color-postal-brown);
+  font-size: 0.82rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.routeCargo,
+.routeCargoGrid {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+@media (min-width: 560px) {
+  .routeCargoGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 .returnLink {
   display: inline-flex;
   align-items: center;

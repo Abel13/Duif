@@ -85,6 +85,7 @@ export type Database = {
           return_arrival_at: string | null
           return_start_at: string | null
           reward_seed: string
+          route_discovery_version: number | null
           sender_profile_id: string
           status: Database["public"]["Enums"]["delivery_status"]
           travel_modifiers: Json | null
@@ -110,6 +111,7 @@ export type Database = {
           return_arrival_at?: string | null
           return_start_at?: string | null
           reward_seed: string
+          route_discovery_version?: number | null
           sender_profile_id: string
           status: Database["public"]["Enums"]["delivery_status"]
           travel_modifiers?: Json | null
@@ -135,6 +137,7 @@ export type Database = {
           return_arrival_at?: string | null
           return_start_at?: string | null
           reward_seed?: string
+          route_discovery_version?: number | null
           sender_profile_id?: string
           status?: Database["public"]["Enums"]["delivery_status"]
           travel_modifiers?: Json | null
@@ -214,6 +217,71 @@ export type Database = {
             columns: ["delivery_id"]
             isOneToOne: true
             referencedRelation: "deliveries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      delivery_route_discoveries: {
+        Row: {
+          collected_at: string | null
+          created_at: string
+          delivery_id: string
+          distance_from_route_km: number
+          id: string
+          inventory_item_id: string | null
+          reward_item_id: string
+          route_progress: number
+          route_reward_point_id: string
+        }
+        Insert: {
+          collected_at?: string | null
+          created_at?: string
+          delivery_id: string
+          distance_from_route_km: number
+          id: string
+          inventory_item_id?: string | null
+          reward_item_id: string
+          route_progress: number
+          route_reward_point_id: string
+        }
+        Update: {
+          collected_at?: string | null
+          created_at?: string
+          delivery_id?: string
+          distance_from_route_km?: number
+          id?: string
+          inventory_item_id?: string | null
+          reward_item_id?: string
+          route_progress?: number
+          route_reward_point_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "delivery_route_discoveries_delivery_id_fkey"
+            columns: ["delivery_id"]
+            isOneToOne: false
+            referencedRelation: "deliveries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "delivery_route_discoveries_inventory_item_id_fkey"
+            columns: ["inventory_item_id"]
+            isOneToOne: false
+            referencedRelation: "inventory_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "delivery_route_discoveries_reward_item_id_fkey"
+            columns: ["reward_item_id"]
+            isOneToOne: false
+            referencedRelation: "reward_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "delivery_route_discoveries_route_reward_point_id_fkey"
+            columns: ["route_reward_point_id"]
+            isOneToOne: false
+            referencedRelation: "route_reward_points"
             referencedColumns: ["id"]
           },
         ]
@@ -575,6 +643,68 @@ export type Database = {
         }
         Relationships: []
       }
+      route_reward_points: {
+        Row: {
+          active: boolean
+          created_at: string
+          description_key: string
+          eligibility_radius_km: number
+          id: string
+          inventory_category: Database["public"]["Enums"]["inventory_category"]
+          kind: string
+          latitude: number
+          longitude: number
+          mock_key: string
+          region_kind: string
+          region_label: string
+          reward_item_id: string
+          sort_order: number
+          title_key: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          description_key: string
+          eligibility_radius_km: number
+          id: string
+          inventory_category: Database["public"]["Enums"]["inventory_category"]
+          kind: string
+          latitude: number
+          longitude: number
+          mock_key: string
+          region_kind: string
+          region_label: string
+          reward_item_id: string
+          sort_order?: number
+          title_key: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          description_key?: string
+          eligibility_radius_km?: number
+          id?: string
+          inventory_category?: Database["public"]["Enums"]["inventory_category"]
+          kind?: string
+          latitude?: number
+          longitude?: number
+          mock_key?: string
+          region_kind?: string
+          region_label?: string
+          reward_item_id?: string
+          sort_order?: number
+          title_key?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "route_reward_points_reward_item_id_fkey"
+            columns: ["reward_item_id"]
+            isOneToOne: false
+            referencedRelation: "reward_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -636,6 +766,7 @@ export type Database = {
           return_arrival_at: string | null
           return_start_at: string | null
           reward_seed: string
+          route_discovery_version: number | null
           sender_profile_id: string
           status: Database["public"]["Enums"]["delivery_status"]
           travel_modifiers: Json | null

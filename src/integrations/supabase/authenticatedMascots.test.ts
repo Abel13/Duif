@@ -76,6 +76,7 @@ const nuvemDeliveryRow: DeliveryRow = {
   outbound_start_at: "2026-07-08T12:00:00.000Z",
   receiver_profile_id: "00000000-0000-4000-8000-000000000101",
   return_arrival_at: "2026-07-09T00:30:00.000Z",
+  route_discovery_version: null,
   return_start_at: "2026-07-08T18:30:00.000Z",
   reward_seed: "nuvem-lisbon-welcome-letter",
   sender_profile_id: "00000000-0000-4000-8000-000000000001",

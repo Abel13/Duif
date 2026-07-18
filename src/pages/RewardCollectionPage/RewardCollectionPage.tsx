@@ -23,12 +23,14 @@ export function RewardCollectionPage() {
   const {
     collectReward,
     delivery,
+    canCollect,
     error,
     inventoryCount,
     isCollected,
     isLoading,
     isMutating,
     reward,
+    routeDiscoveries,
   } = useRewardCollectionData(deliveryId);
 
   if (isLoading) {
@@ -94,11 +96,13 @@ export function RewardCollectionPage() {
             <RewardPanel
               error={error}
               inventoryCount={inventoryCount}
+              canCollect={canCollect}
               isCollected={Boolean(isCollected)}
               isMutating={isMutating}
               deliveryId={delivery.id}
               onCollect={collectReward}
               reward={displayReward as DeliveryReward}
+              routeDiscoveries={routeDiscoveries}
             />
           ) : (
             <TravelingPanel delivery={delivery} />
@@ -110,6 +114,7 @@ export function RewardCollectionPage() {
 }
 
 function RewardPanel({
+  canCollect,
   error,
   inventoryCount,
   isCollected,
@@ -117,7 +122,9 @@ function RewardPanel({
   deliveryId,
   onCollect,
   reward,
+  routeDiscoveries,
 }: {
+  canCollect: boolean;
   error?: TranslationKey;
   inventoryCount: number;
   isCollected: boolean;
@@ -125,12 +132,14 @@ function RewardPanel({
   deliveryId: string;
   onCollect: () => void;
   reward: DeliveryReward;
+  routeDiscoveries: ReturnType<typeof useRewardCollectionData>["routeDiscoveries"];
 }) {
   const { t } = useTranslation();
 
   return (
-    <SketchPanel title={t("rewards.itemFound")}>
+    <SketchPanel title={t("rewards.fullCargoTitle")}>
       <div className={styles.rewardStack}>
+        <h3 className={styles.cargoTitle}>{t("rewards.primaryReward")}</h3>
         <ItemCard
           label={t(`equipment.rarity.${reward.item.rarity}`)}
           title={t(reward.item.nameKey)}
@@ -138,6 +147,25 @@ function RewardPanel({
           meta={isCollected ? t("rewards.collected") : `${t("rewards.xpGained")}: ${reward.xpGained}`}
           selected={isCollected}
         />
+        {routeDiscoveries.length > 0 ? (
+          <section className={styles.routeCargo} aria-labelledby="route-cargo-title">
+            <h3 className={styles.cargoTitle} id="route-cargo-title">
+              {t("rewards.routeCargo")} ({routeDiscoveries.length})
+            </h3>
+            <div className={styles.routeCargoGrid}>
+              {routeDiscoveries.map((discovery) => (
+                <ItemCard
+                  description={t(discovery.descriptionKey)}
+                  key={discovery.id}
+                  label={t(`equipment.rarity.${discovery.rarity}`)}
+                  meta={isCollected ? t("rewards.collected") : t("rewards.collectionPending")}
+                  selected={isCollected}
+                  title={t(discovery.titleKey)}
+                />
+              ))}
+            </div>
+          </section>
+        ) : null}
         <dl className={styles.rewardDetails}>
           <SummaryRow
             label={t("rewards.xpGained")}
@@ -153,10 +181,12 @@ function RewardPanel({
           <Link className={styles.returnLink} to={`/map?deliveryId=${encodeURIComponent(deliveryId)}`}>
             {t("rewards.backToMap")}
           </Link>
-        ) : (
+        ) : canCollect ? (
           <StampButton disabled={isMutating} onClick={onCollect}>
-            {isMutating ? t("rewards.collecting") : t("rewards.collectButton")}
+            {isMutating ? t("rewards.collecting") : t("rewards.collectAllButton")}
           </StampButton>
+        ) : (
+          <p className={styles.feedback}>{t("rewards.ownerCollectionOnly")}</p>
         )}
         {error ? <p className={styles.feedback}>{t(error)}</p> : null}
       </div>

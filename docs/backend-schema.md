@@ -34,11 +34,15 @@ The initial schema lives in `supabase/migrations/20260709200000_initial_duif_sch
 ### Delivery Loop
 
 - `correspondence_options`: static sendable correspondence types.
-- `deliveries`: sender, receiver, mascot, coordinates, timestamps, status, speed, and reward seed.
+- `deliveries`: sender, receiver, mascot, coordinates, timestamps, status, speed, reward seed,
+  immutable travel modifiers, and nullable route-discovery version.
 - `delivery_correspondence_contents`: persisted letter/postcard/sticker/gift prototype
   content attached to a delivery.
 - `reward_items`: static reward item definitions.
 - `delivery_rewards`: reward generated for a delivery, including XP and collection state.
+- `route_reward_points`: read-only regional discovery catalog with corridor radius and item link.
+- `delivery_route_discoveries`: authoritative per-delivery cargo with route progress, corridor
+  distance, and idempotent collection references.
 - `inventory_items`: player-owned inventory item state.
 
 ## Enums
@@ -108,6 +112,7 @@ RLS is enabled on player-owned or relationship-sensitive tables:
 - `friendships`;
 - `deliveries`;
 - `delivery_rewards`;
+- `delivery_route_discoveries`;
 - `inventory_items`.
 
 The first policies are read-focused and tied to `profiles.auth_user_id = auth.uid()`.
@@ -181,8 +186,15 @@ content through RLS, and writes go through the RPC.
 
 Reward collection is the second authenticated gameplay write. It uses the
 `collect_delivery_reward` RPC to validate the current profile, verify that the delivery
-has returned, create or reuse the deterministic `delivery_rewards` row, mark the delivery
-as `completed`, and insert the collected item into `inventory_items`.
+has returned, lock it against concurrent collection, create or reuse the deterministic
+`delivery_rewards` row, collect every materialized route discovery, mark the delivery as
+`completed`, and return the primary item plus `routeInventoryItems`. Only the sender who
+owns the traveling mascot may collect; both delivery participants may read discoveries.
+
+New deliveries materialize every eligible `route_reward_points` row in an `after insert`
+trigger and receive `route_discovery_version = 1`, including routes with no eligible point.
+Legacy deliveries remain nullable and are not backfilled. Browser roles have no insert,
+update, or delete policies for the point catalog or discovery rows.
 
 Friend profile reads for social UI use `get_accepted_friend_profiles`, not unrestricted
 `profiles` rows. The owner can still read their own full profile through RLS. The reward

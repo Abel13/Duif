@@ -417,6 +417,28 @@ Open design question:
 
 - Exact reward formula and rarity tables are not defined yet.
 
+### Authoritative route discoveries
+
+For deliveries created with route-discovery version `1`, route cargo is decided once by the
+backend when the delivery is created:
+
+- every active catalog point inside `eligibility radius × mascot discovery multiplier` is
+  materialized; there is no random draw that can remove an eligible point;
+- the backend stores the point's projected outbound progress and distance from the route, while
+  the client only decides when that stored discovery becomes visible;
+- rarity potential remains in the mascot snapshot but does not change the six fixed regional
+  items yet;
+- route discoveries are carried during travel and enter inventory only through the atomic return
+  collection;
+- only the sender, who owns the traveling mascot, may collect the primary reward and route cargo;
+  the recipient may view the shared delivery and its discoveries;
+- repeated collection returns the same inventory records and never duplicates cargo;
+- route stamps are collectible inventory items and remain distinct from the spendable common
+  currency named Stamps.
+
+Deliveries created before this version keep `route_discovery_version = null`. They receive no
+backfill and continue using the local visual fallback, preserving their historical outcome.
+
 ## Shop and Monetization Rules
 
 The shop may eventually include cosmetics, social content, optional boosts, fuel, and two

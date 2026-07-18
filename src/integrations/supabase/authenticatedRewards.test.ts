@@ -1,13 +1,16 @@
 import { describe, expect, it } from "vitest";
 
 import type {
+  DeliveryRouteDiscoveryRow,
   DeliveryRewardRow,
   RewardItemRow,
+  RouteRewardPointRow,
 } from "./authenticatedRewards";
 import {
   composeAuthenticatedRewardCollection,
   mapCollectRewardPayload,
   mapDeliveryRewardRowToReward,
+  mapPersistedRouteDiscovery,
   mapRewardItemRowToRewardItem,
 } from "./authenticatedRewards";
 import type { DeliveryRow } from "./authenticatedMascots";
@@ -67,12 +70,43 @@ const deliveryRow: DeliveryRow = {
   outbound_start_at: "2026-07-08T12:00:00.000Z",
   receiver_profile_id: "00000000-0000-4000-8000-000000000101",
   return_arrival_at: "2026-07-09T00:30:00.000Z",
+  route_discovery_version: null,
   return_start_at: "2026-07-08T18:30:00.000Z",
   reward_seed: "nuvem-lisbon-welcome-letter",
   sender_profile_id: "00000000-0000-4000-8000-000000000001",
   status: "returning",
   travel_modifiers: null,
   updated_at: "2026-07-09T20:00:00.000Z",
+};
+
+const routePointRow: RouteRewardPointRow = {
+  active: true,
+  created_at: "2026-07-18T20:00:00.000Z",
+  description_key: "map.rewards.londrinaPostcard.description",
+  eligibility_radius_km: 18,
+  id: "00000000-0000-4000-8000-000000001001",
+  inventory_category: "keepsakes",
+  kind: "postcard",
+  latitude: -23.3045,
+  longitude: -51.1696,
+  mock_key: "route-reward-londrina-postcard",
+  region_kind: "city",
+  region_label: "Londrina, PR, Brasil",
+  reward_item_id: "00000000-0000-4000-8000-000000000611",
+  sort_order: 10,
+  title_key: "map.rewards.londrinaPostcard.name",
+};
+
+const routeDiscoveryRow: DeliveryRouteDiscoveryRow = {
+  collected_at: null,
+  created_at: "2026-07-18T20:00:00.000Z",
+  delivery_id: deliveryRow.id,
+  distance_from_route_km: 0,
+  id: "00000000-0000-4000-8000-000000002001",
+  inventory_item_id: null,
+  reward_item_id: routePointRow.reward_item_id,
+  route_progress: 0,
+  route_reward_point_id: routePointRow.id,
 };
 
 describe("authenticated reward mappers", () => {
@@ -106,6 +140,25 @@ describe("authenticated reward mappers", () => {
       category: "keepsakes",
       id: "inventory-reward-delivery-nuvem-lisbon",
       sourceKey: "inventory.sources.routeReward",
+    });
+  });
+
+  it("maps persisted discoveries without deciding their temporal visibility", () => {
+    expect(mapPersistedRouteDiscovery({
+      discoveryRow: routeDiscoveryRow,
+      itemRow: {
+        ...rewardItemRow,
+        id: routePointRow.reward_item_id,
+        mock_key: "reward-londrina-postcard",
+        rarity: "common",
+      },
+      pointRow: routePointRow,
+    })).toMatchObject({
+      discovered: false,
+      id: "route-reward-londrina-postcard",
+      kind: "postcard",
+      regionLabel: "Londrina, PR, Brasil",
+      routeProgress: 0,
     });
   });
 
@@ -154,6 +207,13 @@ describe("authenticated reward mappers", () => {
           collected_at: "2026-07-10T15:05:00.000Z",
         },
         rewardItem: rewardItemRow,
+        routeInventoryItems: [
+          {
+            ...inventoryItemRow,
+            id: "00000000-0000-4000-8000-000000000902",
+            mock_key: "inventory-route-discovery-londrina",
+          },
+        ],
       },
       "mascot-nuvem",
     );
@@ -161,6 +221,7 @@ describe("authenticated reward mappers", () => {
     expect(result?.delivery.status).toBe("completed");
     expect(result?.inventoryItem.id).toBe("inventory-reward-delivery-nuvem-lisbon");
     expect(result?.reward.item.id).toBe("reward-golden-compass-pin");
+    expect(result?.routeInventoryItems).toHaveLength(1);
   });
 
   it("ignores invalid collect RPC payloads", () => {

@@ -50,6 +50,7 @@ export function mapDeliveryRowToDelivery(row: DeliveryRow, mascotPublicId: strin
     returnArrivalAt: row.return_arrival_at ?? undefined,
     returnStartAt: row.return_start_at ?? undefined,
     rewardSeed: row.reward_seed,
+    routeDiscoveryVersion: row.route_discovery_version ?? undefined,
     senderId: row.sender_profile_id,
     status: row.status,
     travelModifiers: mapTravelModifiers(row.travel_modifiers),

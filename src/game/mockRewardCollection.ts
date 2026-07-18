@@ -1,3 +1,4 @@
+import type { RouteRewardDiscovery } from "./mapTravel";
 import type { Delivery, DeliveryReward, InventoryItem } from "./types";
 
 const storageKey = "duif.mock-reward-collection.v1";
@@ -32,11 +33,13 @@ export function collectMockRewardOnce({
   delivery,
   now = new Date(),
   reward,
+  routeDiscoveries = [],
   storage = getSessionStorage(),
 }: {
   delivery: Delivery;
   now?: Date;
   reward: DeliveryReward;
+  routeDiscoveries?: RouteRewardDiscovery[];
   storage?: StorageLike;
 }): MockRewardCollectionSnapshot {
   const current = readMockRewardCollection(storage);
@@ -50,9 +53,20 @@ export function collectMockRewardOnce({
     equipped: false,
     sourceKey: "inventory.sources.routeReward",
   };
+  const routeInventoryItems: InventoryItem[] = routeDiscoveries.map((discovery) => ({
+    category: getRouteInventoryCategory(discovery.kind),
+    collectedAt: now.toISOString(),
+    descriptionKey: discovery.descriptionKey,
+    equipped: false,
+    id: `mock-inventory-route-${delivery.id}-${discovery.id}`,
+    nameKey: discovery.titleKey,
+    rarity: discovery.rarity,
+    sourceKey: "inventory.sources.routeReward",
+    thumbnailAssetPath: discovery.thumbnailAssetPath,
+  }));
   const next = {
     collectedDeliveryIds: [...current.collectedDeliveryIds, delivery.id],
-    inventory: [...current.inventory, inventoryItem],
+    inventory: [...current.inventory, inventoryItem, ...routeInventoryItems],
   };
 
   try {
@@ -61,6 +75,14 @@ export function collectMockRewardOnce({
     // Keep the current view usable when browser storage is unavailable.
   }
   return next;
+}
+
+function getRouteInventoryCategory(
+  kind: RouteRewardDiscovery["kind"],
+): InventoryItem["category"] {
+  if (kind === "stamp") return "stamps";
+  if (kind === "badge") return "routeMarks";
+  return "keepsakes";
 }
 
 function getSessionStorage(): StorageLike | undefined {

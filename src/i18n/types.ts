@@ -200,8 +200,10 @@ export type TranslationDictionary = {
     noPrimaryReward: string;
     routeCargoPreviewNote: string;
     goToCollection: string;
+    ownerCollectionOnly: string;
     openCollection: string;
     mockedRewards: string;
+    persistedRewards: string;
     discovered: string;
     newDiscovery: string;
     carriedDiscovery: string;
@@ -383,12 +385,18 @@ export type TranslationDictionary = {
     completedDescription: string;
     loading: string;
     collectButton: string;
+    collectAllButton: string;
     collecting: string;
     collectError: string;
     backToMascot: string;
     backToMap: string;
     xpGained: string;
     itemFound: string;
+    fullCargoTitle: string;
+    primaryReward: string;
+    routeCargo: string;
+    collectionPending: string;
+    ownerCollectionOnly: string;
     inventory: string;
     collected: string;
     rarity: string;
@@ -721,8 +729,10 @@ export type TranslationKey =
   | "map.noPrimaryReward"
   | "map.routeCargoPreviewNote"
   | "map.goToCollection"
+  | "map.ownerCollectionOnly"
   | "map.openCollection"
   | "map.mockedRewards"
+  | "map.persistedRewards"
   | "map.discovered"
   | "map.newDiscovery"
   | "map.carriedDiscovery"
@@ -834,12 +844,18 @@ export type TranslationKey =
   | "rewards.completedDescription"
   | "rewards.loading"
   | "rewards.collectButton"
+  | "rewards.collectAllButton"
   | "rewards.collecting"
   | "rewards.collectError"
   | "rewards.backToMascot"
   | "rewards.backToMap"
   | "rewards.xpGained"
   | "rewards.itemFound"
+  | "rewards.fullCargoTitle"
+  | "rewards.primaryReward"
+  | "rewards.routeCargo"
+  | "rewards.collectionPending"
+  | "rewards.ownerCollectionOnly"
   | "rewards.inventory"
   | "rewards.collected"
   | "rewards.rarity"

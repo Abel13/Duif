@@ -12,10 +12,12 @@ import type { TranslationKey } from "../i18n";
 import { mockInventoryItems } from "./inventory";
 import { collectMockRewardOnce, readMockRewardCollection } from "./mockRewardCollection";
 import { createMockRewardFromDelivery } from "./rewards";
+import { getRouteRewardDiscoveries, type RouteRewardDiscovery } from "./mapTravel";
 import { getDeliveryById } from "./mockData";
 import type { Delivery, DeliveryReward } from "./types";
 
 type RewardCollectionState = {
+  canCollect: boolean;
   delivery?: Delivery;
   error?: TranslationKey;
   inventoryCount: number;
@@ -24,6 +26,7 @@ type RewardCollectionState = {
   isLoading: boolean;
   isMutating: boolean;
   reward?: DeliveryReward;
+  routeDiscoveries: RouteRewardDiscovery[];
 };
 
 type RewardCollectionActions = {
@@ -33,8 +36,10 @@ type RewardCollectionActions = {
 function createMockRewardCollectionState(deliveryId?: string): RewardCollectionState {
   const delivery = deliveryId ? getDeliveryById(deliveryId) : undefined;
   const snapshot = readMockRewardCollection();
+  const routeDiscoveries = delivery ? getRouteRewardDiscoveries(delivery) : [];
 
   return {
+    canCollect: true,
     delivery,
     inventoryCount: mockInventoryItems.length + snapshot.inventory.length,
     isAuthenticatedSource: false,
@@ -42,17 +47,20 @@ function createMockRewardCollectionState(deliveryId?: string): RewardCollectionS
     isLoading: false,
     isMutating: false,
     reward: createMockRewardFromDelivery(delivery),
+    routeDiscoveries,
   };
 }
 
 function mapAuthenticatedState(
   data: AuthenticatedRewardCollection | undefined,
+  profileId: string,
 ): RewardCollectionState | undefined {
   if (!data) {
     return undefined;
   }
 
   return {
+    canCollect: data.delivery.senderId === profileId,
     delivery: data.delivery,
     inventoryCount: data.inventoryCount,
     isAuthenticatedSource: true,
@@ -60,6 +68,7 @@ function mapAuthenticatedState(
     isLoading: false,
     isMutating: false,
     reward: data.reward,
+    routeDiscoveries: data.routeDiscoveries,
   };
 }
 
@@ -98,7 +107,7 @@ export function useRewardCollectionData(
         }
 
         setState(
-          mapAuthenticatedState(data) ?? {
+          mapAuthenticatedState(data, profile.id) ?? {
             ...createMockRewardCollectionState(deliveryId),
           },
         );
@@ -125,6 +134,7 @@ export function useRewardCollectionData(
       const snapshot = collectMockRewardOnce({
         delivery: state.delivery,
         reward: state.reward,
+        routeDiscoveries: state.routeDiscoveries,
       });
       setState((currentState) => ({
         ...currentState,
@@ -149,7 +159,7 @@ export function useRewardCollectionData(
       setState((currentState) => ({
         ...currentState,
         delivery: result.delivery,
-        inventoryCount: currentState.inventoryCount + 1,
+        inventoryCount: currentState.inventoryCount + 1 + result.routeInventoryItems.length,
         isCollected: true,
         isMutating: false,
         reward: result.reward,

@@ -65,7 +65,15 @@ export function TravelMapPage() {
     ?? activeMascot
     ?? getMascotById(defaultMascotId);
   const petPosition = useMemo(() => getPetMapPosition(delivery, now), [delivery, now]);
-  const baseRewards = useMemo(() => getRouteRewardDiscoveries(delivery, now), [delivery, now]);
+  const baseRewards = useMemo(
+    () => delivery.routeDiscoveryVersion
+      ? collectionState.routeDiscoveries.map((reward) => ({
+          ...reward,
+          discovered: petPosition.outboundProgress >= reward.routeProgress,
+        }))
+      : getRouteRewardDiscoveries(delivery, now),
+    [collectionState.routeDiscoveries, delivery, now, petPosition.outboundProgress],
+  );
   const rewards = useMemo(
     () => baseRewards.map((reward) => runtimeDiscoveryIds.has(reward.id)
       ? { ...reward, discovered: true }
@@ -257,6 +265,7 @@ export function TravelMapPage() {
                 <div className={styles.drawerContent}>
                   <CargoSummary
                     delivery={delivery}
+                    canCollect={collectionState.canCollect}
                     journeyPhase={journeyPhase}
                     primaryReward={collectionState.reward}
                     rewards={rewards.filter((reward) => reward.discovered)}
@@ -270,6 +279,7 @@ export function TravelMapPage() {
                 >
                   <CargoSummary
                     delivery={delivery}
+                    canCollect={collectionState.canCollect}
                     journeyPhase={journeyPhase}
                     primaryReward={collectionState.reward}
                     rewards={rewards.filter((reward) => reward.discovered)}
@@ -306,6 +316,7 @@ export function TravelMapPage() {
                     <PostalTrafficContent postalTraffic={localizedPostalTraffic} />
                     <DiscoveryContent
                       discoveredCount={discoveredCount}
+                      sourceLabel={t(delivery.routeDiscoveryVersion ? "map.persistedRewards" : "map.mockedRewards")}
                       onSelect={selectReward}
                       rewards={rewards}
                       rewardStates={rewardStates}
@@ -342,6 +353,7 @@ export function TravelMapPage() {
                   ) : (
                     <DiscoveryContent
                       discoveredCount={discoveredCount}
+                      sourceLabel={t(delivery.routeDiscoveryVersion ? "map.persistedRewards" : "map.mockedRewards")}
                       onSelect={selectReward}
                       rewards={rewards}
                       rewardStates={rewardStates}
@@ -363,11 +375,13 @@ export function TravelMapPage() {
 }
 
 function CargoSummary({
+  canCollect,
   delivery,
   journeyPhase,
   primaryReward,
   rewards,
 }: {
+  canCollect: boolean;
   delivery: Delivery;
   journeyPhase: Exclude<MapJourneyPhase, "traveling">;
   primaryReward?: DeliveryReward;
@@ -428,10 +442,12 @@ function CargoSummary({
       {journeyPhase === "returned" ? (
         <>
           <p className={styles.cargoNote}>{t("map.routeCargoPreviewNote")}</p>
-          {primaryReward ? (
+          {primaryReward && canCollect ? (
             <Link className={styles.routeLink} to={`/rewards/${delivery.id}`}>
               {t("map.goToCollection")}
             </Link>
+          ) : primaryReward ? (
+            <p className={styles.cargoNote}>{t("map.ownerCollectionOnly")}</p>
           ) : null}
         </>
       ) : (
@@ -519,12 +535,14 @@ function DiscoveryContent({
   rewards,
   rewardStates,
   selectedRewardId,
+  sourceLabel,
 }: {
   discoveredCount: number;
   onSelect: (rewardId: string) => void;
   rewards: RouteRewardDiscovery[];
   rewardStates: Record<string, RouteDiscoveryVisualState>;
   selectedRewardId?: string;
+  sourceLabel: string;
 }) {
   const { t } = useTranslation();
 
@@ -534,7 +552,7 @@ function DiscoveryContent({
         <span>
           {discoveredCount}/{rewards.length}
         </span>
-        <span>{t("map.mockedRewards")}</span>
+        <span>{sourceLabel}</span>
       </div>
       <div className={styles.discoveryList}>
         {rewards.map((reward) => (

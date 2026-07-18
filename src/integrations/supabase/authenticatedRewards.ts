@@ -4,6 +4,7 @@ import {
   type DeliveryReward,
   type InventoryItem,
   type RewardItem,
+  type RouteRewardDiscovery,
 } from "../../game";
 import { mapDeliveryRowToDelivery, type DeliveryRow } from "./authenticatedMascots";
 import { readString, readTranslationKey } from "./catalogMappers";
@@ -13,6 +14,8 @@ import { mapInventoryItemRow, type InventoryItemRow } from "./inventoryMappers";
 
 export type RewardItemRow = Database["public"]["Tables"]["reward_items"]["Row"];
 export type DeliveryRewardRow = Database["public"]["Tables"]["delivery_rewards"]["Row"];
+export type DeliveryRouteDiscoveryRow = Database["public"]["Tables"]["delivery_route_discoveries"]["Row"];
+export type RouteRewardPointRow = Database["public"]["Tables"]["route_reward_points"]["Row"];
 export type PlayerMascotRouteRow = Pick<
   Database["public"]["Tables"]["player_mascots"]["Row"],
   "id" | "mock_key"
@@ -23,12 +26,14 @@ export type AuthenticatedRewardCollection = {
   inventoryCount: number;
   isCollected: boolean;
   reward?: DeliveryReward;
+  routeDiscoveries: RouteRewardDiscovery[];
 };
 
 export type CollectedRewardResult = {
   delivery: Delivery;
   inventoryItem: InventoryItem;
   reward: DeliveryReward;
+  routeInventoryItems: InventoryItem[];
 };
 
 type CollectionRpcPayload = {
@@ -36,6 +41,7 @@ type CollectionRpcPayload = {
   inventoryItem: InventoryItemRow;
   reward: DeliveryRewardRow;
   rewardItem: RewardItemRow;
+  routeInventoryItems?: InventoryItemRow[];
 };
 
 function isObject(value: unknown): value is Record<string, unknown> {
@@ -86,16 +92,43 @@ export function mapDeliveryRewardRowToReward({
   };
 }
 
+export function mapPersistedRouteDiscovery({
+  discoveryRow,
+  itemRow,
+  pointRow,
+}: {
+  discoveryRow: DeliveryRouteDiscoveryRow;
+  itemRow: RewardItemRow;
+  pointRow: RouteRewardPointRow;
+}): RouteRewardDiscovery {
+  return {
+    coordinates: { latitude: pointRow.latitude, longitude: pointRow.longitude },
+    descriptionKey: readTranslationKey(pointRow.description_key, "map.rewards.londrinaPostcard.description"),
+    discovered: false,
+    distanceFromRouteKm: discoveryRow.distance_from_route_km,
+    id: readString(pointRow.mock_key, discoveryRow.id),
+    kind: readRouteRewardKind(pointRow.kind),
+    rarity: itemRow.rarity,
+    regionKind: readRouteRegionKind(pointRow.region_kind),
+    regionLabel: pointRow.region_label,
+    routeProgress: discoveryRow.route_progress,
+    thumbnailAssetPath: itemRow.thumbnail_asset_path ?? undefined,
+    titleKey: readTranslationKey(pointRow.title_key, "map.rewards.londrinaPostcard.name"),
+  };
+}
+
 export function composeAuthenticatedRewardCollection({
   delivery,
   inventoryCount,
   rewardItemRow,
   rewardRow,
+  routeDiscoveries = [],
 }: {
   delivery: Delivery;
   inventoryCount: number;
   rewardItemRow?: RewardItemRow;
   rewardRow?: DeliveryRewardRow;
+  routeDiscoveries?: RouteRewardDiscovery[];
 }): AuthenticatedRewardCollection {
   const persistedReward =
     rewardRow && rewardItemRow
@@ -107,6 +140,7 @@ export function composeAuthenticatedRewardCollection({
     inventoryCount,
     isCollected: Boolean(rewardRow?.collected_at),
     reward: persistedReward ?? createMockRewardFromDelivery(delivery),
+    routeDiscoveries,
   };
 }
 
@@ -127,7 +161,23 @@ export function mapCollectRewardPayload(
       itemRow: payload.rewardItem,
       rewardRow: payload.reward,
     }),
+    routeInventoryItems: Array.isArray(payload.routeInventoryItems)
+      ? payload.routeInventoryItems.map(mapInventoryItemRow)
+      : [],
   };
+}
+
+function readRouteRewardKind(value: string): RouteRewardDiscovery["kind"] {
+  return value === "badge" || value === "postcard" || value === "stamp" ||
+    value === "souvenir" || value === "material" || value === "eventItem"
+    ? value
+    : "souvenir";
+}
+
+function readRouteRegionKind(value: string): RouteRewardDiscovery["regionKind"] {
+  return value === "city" || value === "state" || value === "country" || value === "event"
+    ? value
+    : "country";
 }
 
 async function fetchDeliveryByPublicId(deliveryId: string) {
@@ -161,6 +211,43 @@ async function fetchMascotPublicId(mascotId: string) {
   return data?.mock_key ?? data?.id;
 }
 
+async function fetchPersistedRouteDiscoveries(
+  deliveryId: string,
+): Promise<RouteRewardDiscovery[]> {
+  const supabase = getSupabaseClient();
+  if (!supabase) return [];
+
+  const { data: discoveryRows } = await supabase
+    .from("delivery_route_discoveries")
+    .select("*")
+    .eq("delivery_id", deliveryId)
+    .order("route_progress");
+
+  if (!discoveryRows || discoveryRows.length === 0) return [];
+
+  const [{ data: pointRows }, { data: itemRows }] = await Promise.all([
+    supabase
+      .from("route_reward_points")
+      .select("*")
+      .in("id", discoveryRows.map((row) => row.route_reward_point_id)),
+    supabase
+      .from("reward_items")
+      .select("*")
+      .in("id", discoveryRows.map((row) => row.reward_item_id)),
+  ]);
+
+  const pointsById = new Map((pointRows ?? []).map((row) => [row.id, row]));
+  const itemsById = new Map((itemRows ?? []).map((row) => [row.id, row]));
+
+  return discoveryRows.flatMap((discoveryRow) => {
+    const pointRow = pointsById.get(discoveryRow.route_reward_point_id);
+    const itemRow = itemsById.get(discoveryRow.reward_item_id);
+    return pointRow && itemRow
+      ? [mapPersistedRouteDiscovery({ discoveryRow, itemRow, pointRow })]
+      : [];
+  });
+}
+
 export async function fetchAuthenticatedRewardCollection(
   deliveryId: string,
   profileId: string,
@@ -180,7 +267,7 @@ export async function fetchAuthenticatedRewardCollection(
   const mascotPublicId = (await fetchMascotPublicId(deliveryRow.mascot_id)) ?? "mascot-nuvem";
   const delivery = mapDeliveryRowToDelivery(deliveryRow, mascotPublicId);
 
-  const [{ data: rewardRow }, { count: inventoryCount }] = await Promise.all([
+  const [{ data: rewardRow }, { count: inventoryCount }, routeDiscoveries] = await Promise.all([
     supabase
       .from("delivery_rewards")
       .select("*")
@@ -190,6 +277,9 @@ export async function fetchAuthenticatedRewardCollection(
       .from("inventory_items")
       .select("id", { count: "exact", head: true })
       .eq("owner_profile_id", profileId),
+    delivery.routeDiscoveryVersion
+      ? fetchPersistedRouteDiscoveries(deliveryRow.id)
+      : Promise.resolve([]),
   ]);
 
   const rewardItemRow = rewardRow
@@ -206,6 +296,7 @@ export async function fetchAuthenticatedRewardCollection(
     inventoryCount: inventoryCount ?? 0,
     rewardItemRow,
     rewardRow: rewardRow ?? undefined,
+    routeDiscoveries,
   });
 }
 
