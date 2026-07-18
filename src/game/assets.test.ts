@@ -13,6 +13,9 @@ describe("asset helpers", () => {
     expect(assetPaths.mapControls.icon("overview.webp")).toBe(
       "/assets/map/controls/overview.webp",
     );
+    expect(assetPaths.mapPins.image("nest.webp")).toBe(
+      "/assets/map/pins/nest.webp",
+    );
   });
 
   it("detects usable asset paths", () => {

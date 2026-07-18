@@ -26,6 +26,7 @@ import {
   type MapPlaceLabel,
 } from "../../game/mapTravel";
 import type { Delivery } from "../../game/types";
+import { assetPaths } from "../../game/assets";
 import styles from "./TravelMap.module.css";
 import {
   getMapFocusZoom,
@@ -123,6 +124,7 @@ export function TravelMap({
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const petMarkerRef = useRef<maplibregl.Marker | null>(null);
+  const routeEndpointMarkerRefs = useRef<Map<string, maplibregl.Marker>>(new Map());
   const rewardMarkerRefs = useRef<Map<string, maplibregl.Marker>>(new Map());
   const trafficMarkerRefs = useRef<Map<string, maplibregl.Marker>>(new Map());
   const isLoadedRef = useRef(false);
@@ -206,6 +208,7 @@ export function TravelMap({
 
     const petElement = document.createElement("div");
     petElement.className = styles.petMarker;
+    petElement.style.zIndex = "3";
     petElement.setAttribute("aria-label", petLabel);
     syncPetPortrait(petElement, petPortraitAssetPath);
     updatePetDirection(
@@ -235,6 +238,13 @@ export function TravelMap({
         selectionRef.current,
         onRewardSelect,
       );
+      syncRouteEndpointMarkers(
+        map,
+        routeEndpointMarkerRefs.current,
+        delivery,
+        originLabel,
+        destinationLabel,
+      );
       syncRewardMarkerVisibility(map, rewardMarkerRefs.current);
       syncPostalTrafficMarkers(map, trafficMarkerRefs.current, postalTraffic);
       focusMap(map, focusTargetRef.current, delivery, petPosition, rewards);
@@ -255,6 +265,7 @@ export function TravelMap({
 
     return () => {
       petMarkerRef.current?.remove();
+      removeMarkers(routeEndpointMarkerRefs.current);
       removeMarkers(rewardMarkerRefs.current);
       removePostalTrafficMarkers(trafficMarkerRefs.current);
       map.remove();
@@ -281,6 +292,13 @@ export function TravelMap({
     routeSource?.setData(createDeliveryRouteGeoJson(delivery));
     placeLabelsSource?.setData(createMapPlaceLabelsGeoJson(placeLabels));
     petMarkerRef.current?.setLngLat(toLngLat(petPosition));
+    syncRouteEndpointMarkers(
+      map,
+      routeEndpointMarkerRefs.current,
+      delivery,
+      originLabel,
+      destinationLabel,
+    );
     const petElement = petMarkerRef.current?.getElement();
     if (petElement) {
       petElement.setAttribute("aria-label", petLabel);
@@ -316,6 +334,8 @@ export function TravelMap({
     petLabel,
     petPortraitAssetPath,
     petPosition,
+    originLabel,
+    destinationLabel,
     placeLabels,
     postalTraffic,
     rewardLabels,
@@ -551,6 +571,63 @@ function updateRewardMarker(
   element.setAttribute("aria-label", label ?? reward.regionLabel);
   element.setAttribute("aria-pressed", String(selected));
   element.title = label ?? reward.regionLabel;
+}
+
+function syncRouteEndpointMarkers(
+  map: maplibregl.Map,
+  markers: Map<string, maplibregl.Marker>,
+  delivery: Delivery,
+  originLabel: string,
+  destinationLabel: string,
+) {
+  const endpoints = [
+    {
+      coordinates: delivery.origin,
+      id: "origin",
+      imagePath: assetPaths.mapPins.image("nest.webp"),
+      label: originLabel,
+    },
+    {
+      coordinates: delivery.destination,
+      id: "destination",
+      imagePath: assetPaths.mapPins.image("destination.webp"),
+      label: destinationLabel,
+    },
+  ];
+
+  endpoints.forEach((endpoint) => {
+    const existingMarker = markers.get(endpoint.id);
+
+    if (existingMarker) {
+      existingMarker.setLngLat(toLngLat(endpoint.coordinates));
+      existingMarker.getElement().setAttribute("aria-label", endpoint.label);
+      return;
+    }
+
+    const element = document.createElement("div");
+    element.className = styles.routeEndpointPin;
+    element.dataset.kind = endpoint.id;
+    element.setAttribute("aria-label", endpoint.label);
+    element.setAttribute("role", "img");
+    element.style.zIndex = "1";
+
+    const image = document.createElement("img");
+    image.alt = "";
+    image.draggable = false;
+    image.src = endpoint.imagePath;
+    image.addEventListener("error", () => {
+      element.dataset.imageError = "true";
+      image.remove();
+    });
+    element.append(image);
+
+    markers.set(
+      endpoint.id,
+      new maplibregl.Marker({ anchor: "bottom", element, offset: [0, 2] })
+        .setLngLat(toLngLat(endpoint.coordinates))
+        .addTo(map),
+    );
+  });
 }
 
 function removeMarkers(markers: Map<string, maplibregl.Marker>) {

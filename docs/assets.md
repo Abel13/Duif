@@ -200,6 +200,15 @@ The `256x256` watercolor-and-ink illustrations use the existing postal palette a
 visible control text without removing localized `aria-label` and tooltip text. Each button
 retains a CSS fallback mark.
 
+The guided map now also includes two watercolor route pins:
+
+- `public/assets/map/pins/nest.webp` for the route origin;
+- `public/assets/map/pins/destination.webp` for the delivery destination.
+
+Both are transparent `256x256` WebP assets under `15KB`, anchored to their real route
+coordinates. They remain non-interactive map decoration with localized accessible labels and
+a CSS fallback if an image fails to load.
+
 Success criteria:
 
 - Mascots feel emotionally appealing in the actual mobile UI.

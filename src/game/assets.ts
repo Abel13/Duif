@@ -22,6 +22,9 @@ export const assetPaths = {
   mapControls: {
     icon: (fileName: string) => `${PUBLIC_ASSET_ROOT}/map/controls/${fileName}`,
   },
+  mapPins: {
+    image: (fileName: string) => `${PUBLIC_ASSET_ROOT}/map/pins/${fileName}`,
+  },
   navigation: {
     icon: (fileName: string) => `${PUBLIC_ASSET_ROOT}/navigation/${fileName}`,
   },
