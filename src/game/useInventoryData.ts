@@ -4,6 +4,7 @@ import { fetchAuthenticatedInventoryItems } from "../integrations/supabase/authe
 import { useAuth } from "../integrations/supabase/AuthProvider";
 import { isSupabaseCatalogEnabled } from "../integrations/supabase/config";
 import { mockInventoryItems } from "./inventory";
+import { readMockRewardCollection } from "./mockRewardCollection";
 import type { InventoryItem } from "./types";
 
 type InventoryDataState = {
@@ -12,19 +13,21 @@ type InventoryDataState = {
   items: InventoryItem[];
 };
 
-const mockInventoryState: InventoryDataState = {
-  isAuthenticatedSource: false,
-  isLoading: false,
-  items: mockInventoryItems,
-};
+function createMockInventoryState(): InventoryDataState {
+  return {
+    isAuthenticatedSource: false,
+    isLoading: false,
+    items: [...mockInventoryItems, ...readMockRewardCollection().inventory],
+  };
+}
 
 export function useInventoryData(): InventoryDataState {
   const { isLoading: isAuthLoading, profile, session } = useAuth();
-  const [state, setState] = useState<InventoryDataState>(mockInventoryState);
+  const [state, setState] = useState<InventoryDataState>(createMockInventoryState);
 
   useEffect(() => {
     if (!isSupabaseCatalogEnabled()) {
-      setState(mockInventoryState);
+      setState(createMockInventoryState());
       return;
     }
 
@@ -34,7 +37,7 @@ export function useInventoryData(): InventoryDataState {
     }
 
     if (!session || !profile) {
-      setState(mockInventoryState);
+      setState(createMockInventoryState());
       return;
     }
 
@@ -56,7 +59,7 @@ export function useInventoryData(): InventoryDataState {
       })
       .catch(() => {
         if (isMounted) {
-          setState(mockInventoryState);
+          setState(createMockInventoryState());
         }
       });
 

@@ -1,7 +1,7 @@
 import type { TranslationKey } from "../i18n";
 import { assetPaths } from "./assets";
 import { clampProgress, getDeliveryStatus } from "./travel";
-import type { Coordinates, Delivery, RewardRarity } from "./types";
+import type { Coordinates, Delivery, DeliveryStatus, RewardRarity } from "./types";
 
 export type MapCoordinate = Pick<Coordinates, "latitude" | "longitude">;
 
@@ -16,6 +16,7 @@ export type MapSelection = { kind: "reward"; rewardId: string } | null;
 export type MapMotionPreference = "full" | "reduced";
 export type RouteDiscoveryVisualState = "future" | "new" | "carried";
 export type RouteDiscoveryEventOrigin = "visible" | "resume";
+export type MapJourneyPhase = "traveling" | "returned" | "completed";
 
 export type TravelLeg = "preparing" | "outbound" | "delivered" | "returning" | "returned" | "completed";
 
@@ -121,6 +122,15 @@ type PlaceLabelFeatureCollection = {
 };
 
 const earthRadiusKm = 6371;
+
+export function getMapJourneyPhase(
+  status: DeliveryStatus | string | undefined,
+  isCollected: boolean,
+): MapJourneyPhase {
+  if (isCollected || status === "completed") return "completed";
+  if (status === "returned") return "returned";
+  return "traveling";
+}
 
 export const mockRouteRewardPoints: RouteRewardPoint[] = [
   {

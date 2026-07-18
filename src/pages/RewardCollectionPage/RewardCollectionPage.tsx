@@ -96,7 +96,7 @@ export function RewardCollectionPage() {
               inventoryCount={inventoryCount}
               isCollected={Boolean(isCollected)}
               isMutating={isMutating}
-              mascotId={delivery.mascotId}
+              deliveryId={delivery.id}
               onCollect={collectReward}
               reward={displayReward as DeliveryReward}
             />
@@ -114,7 +114,7 @@ function RewardPanel({
   inventoryCount,
   isCollected,
   isMutating,
-  mascotId,
+  deliveryId,
   onCollect,
   reward,
 }: {
@@ -122,7 +122,7 @@ function RewardPanel({
   inventoryCount: number;
   isCollected: boolean;
   isMutating: boolean;
-  mascotId: string;
+  deliveryId: string;
   onCollect: () => void;
   reward: DeliveryReward;
 }) {
@@ -150,8 +150,8 @@ function RewardPanel({
           <SummaryRow label={t("rewards.inventory")} value={`${inventoryCount}`} />
         </dl>
         {isCollected ? (
-          <Link className={styles.returnLink} to={`/mascots/${mascotId}`}>
-            {t("rewards.backToMascot")}
+          <Link className={styles.returnLink} to={`/map?deliveryId=${encodeURIComponent(deliveryId)}`}>
+            {t("rewards.backToMap")}
           </Link>
         ) : (
           <StampButton disabled={isMutating} onClick={onCollect}>

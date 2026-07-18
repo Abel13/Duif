@@ -9,9 +9,11 @@ import {
 } from "../integrations/supabase/authenticatedRewards";
 import { isSupabaseCatalogEnabled } from "../integrations/supabase/config";
 import type { TranslationKey } from "../i18n";
-import { createMockRewardFromDelivery, initialMockInventory } from "./rewards";
+import { mockInventoryItems } from "./inventory";
+import { collectMockRewardOnce, readMockRewardCollection } from "./mockRewardCollection";
+import { createMockRewardFromDelivery } from "./rewards";
 import { getDeliveryById } from "./mockData";
-import type { Delivery, DeliveryReward, InventoryItem } from "./types";
+import type { Delivery, DeliveryReward } from "./types";
 
 type RewardCollectionState = {
   delivery?: Delivery;
@@ -30,12 +32,13 @@ type RewardCollectionActions = {
 
 function createMockRewardCollectionState(deliveryId?: string): RewardCollectionState {
   const delivery = deliveryId ? getDeliveryById(deliveryId) : undefined;
+  const snapshot = readMockRewardCollection();
 
   return {
     delivery,
-    inventoryCount: initialMockInventory.length,
+    inventoryCount: mockInventoryItems.length + snapshot.inventory.length,
     isAuthenticatedSource: false,
-    isCollected: false,
+    isCollected: Boolean(delivery && snapshot.collectedDeliveryIds.includes(delivery.id)),
     isLoading: false,
     isMutating: false,
     reward: createMockRewardFromDelivery(delivery),
@@ -64,17 +67,13 @@ export function useRewardCollectionData(
   deliveryId?: string,
 ): RewardCollectionState & RewardCollectionActions {
   const { isLoading: isAuthLoading, profile, session } = useAuth();
-  const [mockInventory, setMockInventory] = useState<InventoryItem[]>(initialMockInventory);
   const [state, setState] = useState<RewardCollectionState>(() =>
     createMockRewardCollectionState(deliveryId),
   );
 
   useEffect(() => {
     if (!isSupabaseCatalogEnabled() || !deliveryId) {
-      setState({
-        ...createMockRewardCollectionState(deliveryId),
-        inventoryCount: mockInventory.length,
-      });
+      setState(createMockRewardCollectionState(deliveryId));
       return;
     }
 
@@ -84,10 +83,7 @@ export function useRewardCollectionData(
     }
 
     if (!session || !profile) {
-      setState({
-        ...createMockRewardCollectionState(deliveryId),
-        inventoryCount: mockInventory.length,
-      });
+      setState(createMockRewardCollectionState(deliveryId));
       return;
     }
 
@@ -104,7 +100,6 @@ export function useRewardCollectionData(
         setState(
           mapAuthenticatedState(data) ?? {
             ...createMockRewardCollectionState(deliveryId),
-            inventoryCount: mockInventory.length,
           },
         );
       })
@@ -112,7 +107,6 @@ export function useRewardCollectionData(
         if (isMounted) {
           setState({
             ...createMockRewardCollectionState(deliveryId),
-            inventoryCount: mockInventory.length,
           });
         }
       });
@@ -120,7 +114,7 @@ export function useRewardCollectionData(
     return () => {
       isMounted = false;
     };
-  }, [deliveryId, isAuthLoading, mockInventory.length, profile, session]);
+  }, [deliveryId, isAuthLoading, profile, session]);
 
   async function collectReward() {
     if (!state.delivery || !state.reward || state.isCollected) {
@@ -128,18 +122,13 @@ export function useRewardCollectionData(
     }
 
     if (!state.isAuthenticatedSource) {
-      const inventoryItem: InventoryItem = {
-        ...state.reward.item,
-        category: "keepsakes",
-        collectedAt: new Date().toISOString(),
-        equipped: false,
-        sourceKey: "inventory.sources.routeReward",
-      };
-
-      setMockInventory((currentInventory) => [...currentInventory, inventoryItem]);
+      const snapshot = collectMockRewardOnce({
+        delivery: state.delivery,
+        reward: state.reward,
+      });
       setState((currentState) => ({
         ...currentState,
-        inventoryCount: currentState.inventoryCount + 1,
+        inventoryCount: mockInventoryItems.length + snapshot.inventory.length,
         isCollected: true,
       }));
       return;

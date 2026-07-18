@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 import { AppBottomNav } from "../../components/layout";
 import { TravelMap } from "../../components/map/TravelMap";
@@ -9,6 +9,7 @@ import {
   formatRemainingTime,
   getDeliveryStatus,
   getMascotById,
+  getMapJourneyPhase,
   getNearbyPostalTrafficPets,
   getRouteDiscoveryVisualState,
   getPetMapPosition,
@@ -17,8 +18,10 @@ import {
   nuvemDelivery,
   type Delivery,
   type DeliveryStatus,
+  type DeliveryReward,
   type MapFocusTarget,
   type MapMotionPreference,
+  type MapJourneyPhase,
   type MapPlaceLabel,
   type MapSelection,
   type Mascot,
@@ -28,6 +31,7 @@ import {
   type RouteDiscoveryVisualState,
   type TravelLeg,
 } from "../../game";
+import { useRewardCollectionData } from "../../game/useRewardCollectionData";
 import { useMascotCatalog } from "../../game/useMascotCatalog";
 import { type TranslationKey, useTranslation } from "../../i18n";
 import styles from "./TravelMapPage.module.css";
@@ -38,6 +42,7 @@ const discoveryHighlightMs = 4 * 1000;
 
 export function TravelMapPage() {
   const { t } = useTranslation();
+  const [searchParams] = useSearchParams();
   const { isLoading, mascots } = useMascotCatalog();
   const [now, setNow] = useState(() => new Date());
   const [focusTarget, setFocusTarget] = useState<MapFocusTarget>({ kind: "overview" });
@@ -46,12 +51,19 @@ export function TravelMapPage() {
   const [runtimeDiscoveryIds, setRuntimeDiscoveryIds] = useState<Set<string>>(() => new Set());
   const [newDiscoveryIds, setNewDiscoveryIds] = useState<Set<string>>(() => new Set());
   const [discoveryToast, setDiscoveryToast] = useState<string[] | null>(null);
+  const [returnSummaryOpen, setReturnSummaryOpen] = useState(false);
   const highlightTimersRef = useRef<Map<string, number>>(new Map());
   const toastTimerRef = useRef<number>();
   const motionPreference = useMotionPreference();
-  const mascot = useMemo(() => selectMapMascot(mascots), [mascots]);
-  const delivery = mascot?.currentDelivery ?? nuvemDelivery;
-  const displayMascot = mascot ?? getMascotById(defaultMascotId);
+  const activeMascot = useMemo(() => selectMapMascot(mascots), [mascots]);
+  const activeDelivery = activeMascot?.currentDelivery ?? nuvemDelivery;
+  const requestedDeliveryId = searchParams.get("deliveryId") ?? activeDelivery.id;
+  const collectionState = useRewardCollectionData(requestedDeliveryId);
+  const delivery = collectionState.delivery ?? activeDelivery;
+  const displayMascot = mascots.find((mascot) => mascot.id === delivery.mascotId)
+    ?? getMascotById(delivery.mascotId)
+    ?? activeMascot
+    ?? getMascotById(defaultMascotId);
   const petPosition = useMemo(() => getPetMapPosition(delivery, now), [delivery, now]);
   const baseRewards = useMemo(() => getRouteRewardDiscoveries(delivery, now), [delivery, now]);
   const rewards = useMemo(
@@ -82,6 +94,8 @@ export function TravelMapPage() {
   );
   const discoveredCount = rewards.filter((reward) => reward.discovered).length;
   const status = getDeliveryStatus(delivery, now);
+  const isCollected = collectionState.delivery?.id === delivery.id && collectionState.isCollected;
+  const journeyPhase = getMapJourneyPhase(status, isCollected);
   const progressPercent = Math.round(getTravelProgress(delivery, now) * 100);
   const selectedReward = selection?.kind === "reward"
     ? rewards.find((reward) => reward.id === selection.rewardId)
@@ -126,6 +140,30 @@ export function TravelMapPage() {
     setDiscoveryToast(null);
   }, [delivery.id]);
 
+  useEffect(() => {
+    if (journeyPhase === "traveling") return;
+    setFollowMascot(false);
+    setSelection(null);
+
+    const mobileQuery = window.matchMedia("(max-width: 819px)");
+    const openOnceOnMobile = () => {
+      if (!mobileQuery.matches) return;
+      const key = `duif-map-summary-opened:${delivery.id}:${journeyPhase}`;
+      try {
+        if (!window.sessionStorage.getItem(key)) {
+          setReturnSummaryOpen(true);
+          window.sessionStorage.setItem(key, "true");
+        }
+      } catch {
+        setReturnSummaryOpen(true);
+      }
+    };
+
+    openOnceOnMobile();
+    mobileQuery.addEventListener("change", openOnceOnMobile);
+    return () => mobileQuery.removeEventListener("change", openOnceOnMobile);
+  }, [delivery.id, journeyPhase]);
+
   function handleRewardDiscoveries(rewardIds: string[], _origin: RouteDiscoveryEventOrigin) {
     if (rewardIds.length === 0) return;
     setRuntimeDiscoveryIds((current) => new Set([...current, ...rewardIds]));
@@ -164,7 +202,7 @@ export function TravelMapPage() {
 
   return (
     <main className={styles.page}>
-      <section className={styles.stage} aria-busy={isLoading}>
+      <section className={styles.stage} aria-busy={isLoading || collectionState.isLoading}>
         <div className={styles.mapLayer}>
           <TravelMap
             delivery={delivery}
@@ -205,77 +243,115 @@ export function TravelMapPage() {
         />
 
         <aside className={styles.overlayPanel}>
-          {selectedReward ? (
-            <section className={`${styles.mobileDrawer} ${styles.mobileRewardDetails}`}>
-              <button className={styles.drawerBackButton} onClick={closeRewardDetails} type="button">
-                {t("map.backToTrip")}
-              </button>
-              <div className={styles.drawerContent}>
-                <RewardDetails reward={selectedReward} visualState={rewardStates[selectedReward.id]} />
+          {journeyPhase !== "traveling" ? (
+            <>
+              <details
+                className={styles.mobileDrawer}
+                onToggle={(event) => setReturnSummaryOpen(event.currentTarget.open)}
+                open={returnSummaryOpen}
+              >
+                <summary>
+                  <span>{journeyPhase === "completed" ? t("map.tripCompleted") : t("map.cargoFound")}</span>
+                  <strong>{discoveredCount}</strong>
+                </summary>
+                <div className={styles.drawerContent}>
+                  <CargoSummary
+                    delivery={delivery}
+                    journeyPhase={journeyPhase}
+                    primaryReward={collectionState.reward}
+                    rewards={rewards.filter((reward) => reward.discovered)}
+                  />
+                </div>
+              </details>
+              <div className={styles.desktopCards}>
+                <SketchPanel
+                  title={journeyPhase === "completed" ? t("map.tripCompleted") : t("map.cargoFound")}
+                  variant="map"
+                >
+                  <CargoSummary
+                    delivery={delivery}
+                    journeyPhase={journeyPhase}
+                    primaryReward={collectionState.reward}
+                    rewards={rewards.filter((reward) => reward.discovered)}
+                  />
+                </SketchPanel>
               </div>
-            </section>
+            </>
           ) : (
-            <details className={styles.mobileDrawer}>
-              <summary>
-                <span>{t("map.tripStatus")}</span>
-                <strong>{discoveredCount}/{rewards.length}</strong>
-              </summary>
-              <div className={styles.drawerContent}>
-                <TripStatusContent
-                  delivery={delivery}
-                  displayMascot={displayMascot}
-                  now={now}
-                  petLeg={petPosition.leg}
-                  progressPercent={progressPercent}
-                  status={status}
-                />
-                <PostalTrafficContent postalTraffic={localizedPostalTraffic} />
-                <DiscoveryContent
-                  discoveredCount={discoveredCount}
-                  onSelect={selectReward}
-                  rewards={rewards}
-                  rewardStates={rewardStates}
-                  selectedRewardId={selection?.kind === "reward" ? selection.rewardId : undefined}
-                />
-              </div>
-            </details>
-          )}
-
-          <div className={styles.desktopCards}>
-            <SketchPanel title={t("map.tripStatus")} variant="note">
-              <TripStatusContent
-                delivery={delivery}
-                displayMascot={displayMascot}
-                now={now}
-                petLeg={petPosition.leg}
-                progressPercent={progressPercent}
-                status={status}
-              />
-            </SketchPanel>
-
-            <SketchPanel title={t("postalTraffic.title")} variant="note">
-              <PostalTrafficContent postalTraffic={localizedPostalTraffic} />
-            </SketchPanel>
-
-            <SketchPanel title={selectedReward ? t("map.rewardDetails") : t("map.discoveries")} variant="map">
+            <>
               {selectedReward ? (
-                <>
-                  <button className={styles.panelBackButton} onClick={closeRewardDetails} type="button">
+                <section className={`${styles.mobileDrawer} ${styles.mobileRewardDetails}`}>
+                  <button className={styles.drawerBackButton} onClick={closeRewardDetails} type="button">
                     {t("map.backToTrip")}
                   </button>
-                  <RewardDetails reward={selectedReward} visualState={rewardStates[selectedReward.id]} />
-                </>
+                  <div className={styles.drawerContent}>
+                    <RewardDetails reward={selectedReward} visualState={rewardStates[selectedReward.id]} />
+                  </div>
+                </section>
               ) : (
-                <DiscoveryContent
-                  discoveredCount={discoveredCount}
-                  onSelect={selectReward}
-                  rewards={rewards}
-                  rewardStates={rewardStates}
-                  selectedRewardId={selection?.kind === "reward" ? selection.rewardId : undefined}
-                />
+                <details className={styles.mobileDrawer}>
+                  <summary>
+                    <span>{t("map.tripStatus")}</span>
+                    <strong>{discoveredCount}/{rewards.length}</strong>
+                  </summary>
+                  <div className={styles.drawerContent}>
+                    <TripStatusContent
+                      delivery={delivery}
+                      displayMascot={displayMascot}
+                      now={now}
+                      petLeg={petPosition.leg}
+                      progressPercent={progressPercent}
+                      status={status}
+                    />
+                    <PostalTrafficContent postalTraffic={localizedPostalTraffic} />
+                    <DiscoveryContent
+                      discoveredCount={discoveredCount}
+                      onSelect={selectReward}
+                      rewards={rewards}
+                      rewardStates={rewardStates}
+                      selectedRewardId={selection?.kind === "reward" ? selection.rewardId : undefined}
+                    />
+                  </div>
+                </details>
               )}
-            </SketchPanel>
-          </div>
+
+              <div className={styles.desktopCards}>
+                <SketchPanel title={t("map.tripStatus")} variant="note">
+                  <TripStatusContent
+                    delivery={delivery}
+                    displayMascot={displayMascot}
+                    now={now}
+                    petLeg={petPosition.leg}
+                    progressPercent={progressPercent}
+                    status={status}
+                  />
+                </SketchPanel>
+
+                <SketchPanel title={t("postalTraffic.title")} variant="note">
+                  <PostalTrafficContent postalTraffic={localizedPostalTraffic} />
+                </SketchPanel>
+
+                <SketchPanel title={selectedReward ? t("map.rewardDetails") : t("map.discoveries")} variant="map">
+                  {selectedReward ? (
+                    <>
+                      <button className={styles.panelBackButton} onClick={closeRewardDetails} type="button">
+                        {t("map.backToTrip")}
+                      </button>
+                      <RewardDetails reward={selectedReward} visualState={rewardStates[selectedReward.id]} />
+                    </>
+                  ) : (
+                    <DiscoveryContent
+                      discoveredCount={discoveredCount}
+                      onSelect={selectReward}
+                      rewards={rewards}
+                      rewardStates={rewardStates}
+                      selectedRewardId={selection?.kind === "reward" ? selection.rewardId : undefined}
+                    />
+                  )}
+                </SketchPanel>
+              </div>
+            </>
+          )}
         </aside>
 
         <div className={styles.bottomNav}>
@@ -283,6 +359,87 @@ export function TravelMapPage() {
         </div>
       </section>
     </main>
+  );
+}
+
+function CargoSummary({
+  delivery,
+  journeyPhase,
+  primaryReward,
+  rewards,
+}: {
+  delivery: Delivery;
+  journeyPhase: Exclude<MapJourneyPhase, "traveling">;
+  primaryReward?: DeliveryReward;
+  rewards: RouteRewardDiscovery[];
+}) {
+  const { t } = useTranslation();
+
+  return (
+    <div className={styles.cargoSummary}>
+      <p className={styles.cargoLead}>
+        {journeyPhase === "completed" ? t("map.completedDescription") : t("map.cargoFoundDescription")}
+      </p>
+
+      <section className={styles.cargoSection}>
+        <div className={styles.cargoHeading}>
+          <h3>{t("map.routeCargo")}</h3>
+          <span>{rewards.length}</span>
+        </div>
+        <div className={styles.cargoGrid}>
+          {rewards.map((reward) => (
+            <ItemCard
+              description={`${t(`map.rewardKinds.${reward.kind}`)} · ${reward.regionLabel}`}
+              key={reward.id}
+              label={t(`equipment.rarity.${reward.rarity}`)}
+              meta={t("map.visualCargo")}
+              title={t(reward.titleKey)}
+            >
+              <AssetImage alt={t(reward.titleKey)} className={styles.cargoImage} src={reward.thumbnailAssetPath}>
+                <span className={styles.cargoFallback} aria-hidden="true" />
+              </AssetImage>
+            </ItemCard>
+          ))}
+        </div>
+      </section>
+
+      <section className={styles.cargoSection}>
+        <div className={styles.cargoHeading}>
+          <h3>{t("map.primaryReward")}</h3>
+          <span>{primaryReward ? 1 : 0}</span>
+        </div>
+        {primaryReward ? (
+          <ItemCard
+            description={t(primaryReward.item.descriptionKey)}
+            label={t(`equipment.rarity.${primaryReward.item.rarity}`)}
+            meta={journeyPhase === "completed" ? t("map.rewardCollected") : t("map.collectionPending")}
+            selected={journeyPhase === "completed"}
+            title={t(primaryReward.item.nameKey)}
+          >
+            <AssetImage alt={t(primaryReward.item.nameKey)} className={styles.cargoImage} src={primaryReward.item.thumbnailAssetPath}>
+              <span className={styles.cargoFallback} aria-hidden="true" />
+            </AssetImage>
+          </ItemCard>
+        ) : (
+          <p className={styles.emptyNote}>{t("map.noPrimaryReward")}</p>
+        )}
+      </section>
+
+      {journeyPhase === "returned" ? (
+        <>
+          <p className={styles.cargoNote}>{t("map.routeCargoPreviewNote")}</p>
+          {primaryReward ? (
+            <Link className={styles.routeLink} to={`/rewards/${delivery.id}`}>
+              {t("map.goToCollection")}
+            </Link>
+          ) : null}
+        </>
+      ) : (
+        <Link className={styles.routeLink} to="/inventory">
+          {t("map.openCollection")}
+        </Link>
+      )}
+    </div>
   );
 }
 

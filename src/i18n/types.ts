@@ -175,6 +175,19 @@ export type TranslationDictionary = {
     tripStatus: string;
     currentLeg: string;
     discoveries: string;
+    cargoFound: string;
+    tripCompleted: string;
+    cargoFoundDescription: string;
+    completedDescription: string;
+    routeCargo: string;
+    primaryReward: string;
+    visualCargo: string;
+    collectionPending: string;
+    rewardCollected: string;
+    noPrimaryReward: string;
+    routeCargoPreviewNote: string;
+    goToCollection: string;
+    openCollection: string;
     mockedRewards: string;
     discovered: string;
     newDiscovery: string;
@@ -360,6 +373,7 @@ export type TranslationDictionary = {
     collecting: string;
     collectError: string;
     backToMascot: string;
+    backToMap: string;
     xpGained: string;
     itemFound: string;
     inventory: string;
@@ -667,6 +681,19 @@ export type TranslationKey =
   | "map.tripStatus"
   | "map.currentLeg"
   | "map.discoveries"
+  | "map.cargoFound"
+  | "map.tripCompleted"
+  | "map.cargoFoundDescription"
+  | "map.completedDescription"
+  | "map.routeCargo"
+  | "map.primaryReward"
+  | "map.visualCargo"
+  | "map.collectionPending"
+  | "map.rewardCollected"
+  | "map.noPrimaryReward"
+  | "map.routeCargoPreviewNote"
+  | "map.goToCollection"
+  | "map.openCollection"
   | "map.mockedRewards"
   | "map.discovered"
   | "map.newDiscovery"
@@ -782,6 +809,7 @@ export type TranslationKey =
   | "rewards.collecting"
   | "rewards.collectError"
   | "rewards.backToMascot"
+  | "rewards.backToMap"
   | "rewards.xpGained"
   | "rewards.itemFound"
   | "rewards.inventory"

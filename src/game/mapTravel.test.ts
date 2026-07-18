@@ -11,6 +11,7 @@ import {
   getEligibleRouteRewards,
   getCrossedRouteRewardIds,
   getMapFocusCoordinate,
+  getMapJourneyPhase,
   getPetMapPosition,
   getRouteRewardDiscoveries,
   getRouteRewardProgress,
@@ -20,6 +21,17 @@ import {
 } from "./mapTravel";
 
 describe("map travel helpers", () => {
+  it.each([
+    ["outbound", false, "traveling"],
+    ["returned", false, "returned"],
+    ["completed", false, "completed"],
+    ["returned", true, "completed"],
+    ["unknown", false, "traveling"],
+    [undefined, false, "traveling"],
+  ])("resolves map journey phase for %s", (status, isCollected, expected) => {
+    expect(getMapJourneyPhase(status, isCollected)).toBe(expected);
+  });
+
   it("interpolates coordinates between origin and destination", () => {
     expect(
       interpolateCoordinates(
