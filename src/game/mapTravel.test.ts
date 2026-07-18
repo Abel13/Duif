@@ -6,12 +6,15 @@ import {
   createDeliveryRouteGeoJson,
   createMapPlaceLabelsGeoJson,
   createRouteRewardsGeoJson,
+  createTravelProgressGeoJson,
   getDistanceFromPointToRouteKm,
   getEligibleRouteRewards,
+  getCrossedRouteRewardIds,
   getMapFocusCoordinate,
   getPetMapPosition,
   getRouteRewardDiscoveries,
   getRouteRewardProgress,
+  getRouteDiscoveryVisualState,
   interpolateCoordinates,
   type RouteRewardPoint,
 } from "./mapTravel";
@@ -46,7 +49,7 @@ describe("map travel helpers", () => {
   it("calculates pet position during outbound travel", () => {
     const position = getPetMapPosition(
       nuvemDelivery,
-      new Date("2026-07-08T15:00:00.000Z"),
+      new Date("2026-07-18T15:00:00.000Z"),
     );
 
     expect(position.leg).toBe("outbound");
@@ -59,7 +62,7 @@ describe("map travel helpers", () => {
   it("calculates pet position during return travel", () => {
     const position = getPetMapPosition(
       nuvemDelivery,
-      new Date("2026-07-08T21:30:00.000Z"),
+      new Date("2026-07-18T21:30:00.000Z"),
     );
 
     expect(position.leg).toBe("returning");
@@ -143,7 +146,7 @@ describe("map travel helpers", () => {
     };
     const rewards = createRouteRewardDiscoveries(
       delivery,
-      new Date("2026-07-08T13:00:00.000Z"),
+      new Date("2026-07-18T13:00:00.000Z"),
       [rewardPoint],
     );
 
@@ -161,7 +164,7 @@ describe("map travel helpers", () => {
     };
     const rewards = createRouteRewardDiscoveries(
       delivery,
-      new Date("2026-07-08T16:00:00.000Z"),
+      new Date("2026-07-18T16:00:00.000Z"),
       [rewardPoint],
     );
 
@@ -169,7 +172,7 @@ describe("map travel helpers", () => {
   });
 
   it("creates route and reward GeoJSON collections", () => {
-    const rewards = getRouteRewardDiscoveries(nuvemDelivery, new Date("2026-07-08T18:00:00.000Z"));
+    const rewards = getRouteRewardDiscoveries(nuvemDelivery, new Date("2026-07-18T18:00:00.000Z"));
     const routeGeoJson = createDeliveryRouteGeoJson(nuvemDelivery);
     const rewardGeoJson = createRouteRewardsGeoJson(rewards);
 
@@ -205,7 +208,7 @@ describe("map travel helpers", () => {
   it("resolves guided camera coordinates for every point target", () => {
     const rewards = getRouteRewardDiscoveries(
       nuvemDelivery,
-      new Date("2026-07-08T18:00:00.000Z"),
+      new Date("2026-07-18T18:00:00.000Z"),
     );
     const mascotPosition = { latitude: 10, longitude: -20 };
 
@@ -232,6 +235,80 @@ describe("map travel helpers", () => {
       nuvemDelivery.origin,
       [],
     )).toBeUndefined();
+  });
+
+  it.each([
+    ["preparing", 0, 0, 0],
+    ["outbound", 0.4, 1, 0],
+    ["delivered", 1, 1, 0],
+    ["returning", 0.35, 1, 1],
+    ["returned", 1, 1, 1],
+    ["completed", 1, 1, 1],
+  ] as const)(
+    "creates outbound and return progress for the %s state",
+    (leg, legProgress, outboundFeatures, returnFeatures) => {
+      const progress = createTravelProgressGeoJson(nuvemDelivery, {
+        coordinates: nuvemDelivery.origin,
+        leg,
+        legProgress,
+        outboundProgress: leg === "preparing" ? 0 : 1,
+      });
+
+      expect(progress.outbound.features).toHaveLength(outboundFeatures);
+      expect(progress.returning.features).toHaveLength(returnFeatures);
+    },
+  );
+
+  it("clamps progress geometry and falls back safely for invalid timestamps", () => {
+    const progress = createTravelProgressGeoJson(nuvemDelivery, {
+      coordinates: nuvemDelivery.destination,
+      leg: "outbound",
+      legProgress: 4,
+      outboundProgress: 4,
+    });
+    const invalidDelivery = {
+      ...nuvemDelivery,
+      outboundArrivalAt: "invalid",
+      outboundStartAt: "invalid",
+    };
+
+    expect(progress.outbound.features[0]?.geometry.coordinates[1]?.[0])
+      .toBeCloseTo(nuvemDelivery.destination.longitude, 6);
+    expect(progress.outbound.features[0]?.geometry.coordinates[1]?.[1])
+      .toBeCloseTo(nuvemDelivery.destination.latitude, 6);
+    expect(getPetMapPosition(invalidDelivery, new Date("2026-07-18T15:00:00.000Z"))).toMatchObject({
+      coordinates: invalidDelivery.origin,
+      leg: "preparing",
+      legProgress: 0,
+    });
+  });
+
+  it("detects rewards exactly when progress crosses their thresholds", () => {
+    const rewards = [
+      { ...getEligibleRouteRewards(nuvemDelivery)[0]!, id: "first", routeProgress: 0.25 },
+      { ...getEligibleRouteRewards(nuvemDelivery)[0]!, id: "second", routeProgress: 0.5 },
+    ];
+
+    expect(getCrossedRouteRewardIds(rewards, 0.1, 0.25)).toEqual(["first"]);
+    expect(getCrossedRouteRewardIds(rewards, 0.25, 0.5)).toEqual(["second"]);
+    expect(getCrossedRouteRewardIds(rewards, 0.1, 0.6)).toEqual(["first", "second"]);
+  });
+
+  it("does not repeat known rewards or react to invalid and regressive progress", () => {
+    const reward = { ...getEligibleRouteRewards(nuvemDelivery)[0]!, routeProgress: 0.4 };
+
+    expect(getCrossedRouteRewardIds([reward], 0.2, 0.8, new Set([reward.id]))).toEqual([]);
+    expect(getCrossedRouteRewardIds([reward], 0.8, 0.2)).toEqual([]);
+    expect(getCrossedRouteRewardIds([reward], Number.NaN, 0.8)).toEqual([]);
+    expect(getCrossedRouteRewardIds([reward], 0.4, 0.4)).toEqual([]);
+  });
+
+  it("maps future, new, and carried discovery states", () => {
+    const reward = getEligibleRouteRewards(nuvemDelivery)[0]!;
+
+    expect(getRouteDiscoveryVisualState(reward, new Set())).toBe("future");
+    expect(getRouteDiscoveryVisualState(reward, new Set([reward.id]))).toBe("new");
+    expect(getRouteDiscoveryVisualState({ ...reward, discovered: true }, new Set())).toBe("carried");
   });
 });
 

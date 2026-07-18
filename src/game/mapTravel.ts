@@ -13,6 +13,9 @@ export type MapFocusTarget =
   | { kind: "reward"; rewardId: string };
 
 export type MapSelection = { kind: "reward"; rewardId: string } | null;
+export type MapMotionPreference = "full" | "reduced";
+export type RouteDiscoveryVisualState = "future" | "new" | "carried";
+export type RouteDiscoveryEventOrigin = "visible" | "resume";
 
 export type TravelLeg = "preparing" | "outbound" | "delivered" | "returning" | "returned" | "completed";
 
@@ -75,6 +78,11 @@ type LineStringFeatureCollection = {
       coordinates: [number, number][];
     };
   }>;
+};
+
+export type TravelProgressGeoJson = {
+  outbound: LineStringFeatureCollection;
+  returning: LineStringFeatureCollection;
 };
 
 type PointFeatureCollection = {
@@ -357,6 +365,41 @@ export function getRouteRewardProgress(
   return getProjectedRouteMetrics(origin, destination, rewardPoint.coordinates).progress;
 }
 
+export function getCrossedRouteRewardIds(
+  rewards: RouteRewardDiscovery[],
+  previousProgress: number,
+  currentProgress: number,
+  knownIds: ReadonlySet<string> = new Set(),
+): string[] {
+  if (
+    !Number.isFinite(previousProgress) ||
+    !Number.isFinite(currentProgress) ||
+    currentProgress <= previousProgress
+  ) {
+    return [];
+  }
+
+  const safePreviousProgress = clampProgress(previousProgress);
+  const safeCurrentProgress = clampProgress(currentProgress);
+
+  return rewards
+    .filter((reward) =>
+      !knownIds.has(reward.id) &&
+      reward.routeProgress > safePreviousProgress &&
+      reward.routeProgress <= safeCurrentProgress,
+    )
+    .sort((first, second) => first.routeProgress - second.routeProgress)
+    .map((reward) => reward.id);
+}
+
+export function getRouteDiscoveryVisualState(
+  reward: RouteRewardDiscovery,
+  newDiscoveryIds: ReadonlySet<string>,
+): RouteDiscoveryVisualState {
+  if (newDiscoveryIds.has(reward.id)) return "new";
+  return reward.discovered ? "carried" : "future";
+}
+
 export function getDistanceFromPointToRouteKm(
   origin: MapCoordinate,
   destination: MapCoordinate,
@@ -383,6 +426,35 @@ export function createDeliveryRouteGeoJson(delivery: Delivery): LineStringFeatur
         },
       },
     ],
+  };
+}
+
+export function createTravelProgressGeoJson(
+  delivery: Delivery,
+  position: PetMapPosition,
+): TravelProgressGeoJson {
+  const outboundEnd = position.leg === "preparing"
+    ? undefined
+    : position.leg === "outbound"
+      ? interpolateCoordinates(delivery.origin, delivery.destination, position.legProgress)
+      : delivery.destination;
+  const returnEnd = position.leg === "returning"
+    ? interpolateCoordinates(delivery.destination, delivery.origin, position.legProgress)
+    : position.leg === "returned" || position.leg === "completed"
+      ? delivery.origin
+      : undefined;
+
+  return {
+    outbound: createProgressFeatureCollection(
+      `${delivery.id}-outbound-progress`,
+      delivery.origin,
+      outboundEnd,
+    ),
+    returning: createProgressFeatureCollection(
+      `${delivery.id}-return-progress`,
+      delivery.destination,
+      returnEnd,
+    ),
   };
 }
 
@@ -488,6 +560,26 @@ function getProjectedRouteMetrics(
   return {
     distanceKm: getProjectedDistanceKm(projectedPoint, closestPoint),
     progress,
+  };
+}
+
+function createProgressFeatureCollection(
+  id: string,
+  start: MapCoordinate,
+  end?: MapCoordinate,
+): LineStringFeatureCollection {
+  return {
+    type: "FeatureCollection",
+    features: end
+      ? [{
+          type: "Feature",
+          properties: { id },
+          geometry: {
+            type: "LineString",
+            coordinates: [toLngLat(start), toLngLat(end)],
+          },
+        }]
+      : [],
   };
 }
 

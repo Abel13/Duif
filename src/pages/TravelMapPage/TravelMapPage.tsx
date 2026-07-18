@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 
 import { AppBottomNav } from "../../components/layout";
@@ -10,6 +10,7 @@ import {
   getDeliveryStatus,
   getMascotById,
   getNearbyPostalTrafficPets,
+  getRouteDiscoveryVisualState,
   getPetMapPosition,
   getRouteRewardDiscoveries,
   getTravelProgress,
@@ -17,11 +18,14 @@ import {
   type Delivery,
   type DeliveryStatus,
   type MapFocusTarget,
+  type MapMotionPreference,
   type MapPlaceLabel,
   type MapSelection,
   type Mascot,
   type PostalTrafficPetSnapshot,
   type RouteRewardDiscovery,
+  type RouteDiscoveryEventOrigin,
+  type RouteDiscoveryVisualState,
   type TravelLeg,
 } from "../../game";
 import { useMascotCatalog } from "../../game/useMascotCatalog";
@@ -30,18 +34,39 @@ import styles from "./TravelMapPage.module.css";
 
 const defaultMascotId = "mascot-nuvem";
 const liveTickMs = 30 * 1000;
+const discoveryHighlightMs = 4 * 1000;
 
 export function TravelMapPage() {
   const { t } = useTranslation();
   const { isLoading, mascots } = useMascotCatalog();
   const [now, setNow] = useState(() => new Date());
   const [focusTarget, setFocusTarget] = useState<MapFocusTarget>({ kind: "overview" });
+  const [followMascot, setFollowMascot] = useState(false);
   const [selection, setSelection] = useState<MapSelection>(null);
+  const [runtimeDiscoveryIds, setRuntimeDiscoveryIds] = useState<Set<string>>(() => new Set());
+  const [newDiscoveryIds, setNewDiscoveryIds] = useState<Set<string>>(() => new Set());
+  const [discoveryToast, setDiscoveryToast] = useState<string[] | null>(null);
+  const highlightTimersRef = useRef<Map<string, number>>(new Map());
+  const toastTimerRef = useRef<number>();
+  const motionPreference = useMotionPreference();
   const mascot = useMemo(() => selectMapMascot(mascots), [mascots]);
   const delivery = mascot?.currentDelivery ?? nuvemDelivery;
   const displayMascot = mascot ?? getMascotById(defaultMascotId);
   const petPosition = useMemo(() => getPetMapPosition(delivery, now), [delivery, now]);
-  const rewards = useMemo(() => getRouteRewardDiscoveries(delivery, now), [delivery, now]);
+  const baseRewards = useMemo(() => getRouteRewardDiscoveries(delivery, now), [delivery, now]);
+  const rewards = useMemo(
+    () => baseRewards.map((reward) => runtimeDiscoveryIds.has(reward.id)
+      ? { ...reward, discovered: true }
+      : reward),
+    [baseRewards, runtimeDiscoveryIds],
+  );
+  const rewardStates = useMemo<Record<string, RouteDiscoveryVisualState>>(
+    () => Object.fromEntries(rewards.map((reward) => [
+      reward.id,
+      getRouteDiscoveryVisualState(reward, newDiscoveryIds),
+    ])),
+    [newDiscoveryIds, rewards],
+  );
   const postalTraffic = useMemo(() => getNearbyPostalTrafficPets(delivery, now), [delivery, now]);
   const localizedPostalTraffic = useMemo(
     () =>
@@ -76,15 +101,63 @@ export function TravelMapPage() {
       setNow(new Date());
     }, liveTickMs);
 
-    return () => window.clearInterval(intervalId);
+    const refreshWhenVisible = () => {
+      if (document.visibilityState === "visible") setNow(new Date());
+    };
+    document.addEventListener("visibilitychange", refreshWhenVisible);
+
+    return () => {
+      window.clearInterval(intervalId);
+      document.removeEventListener("visibilitychange", refreshWhenVisible);
+    };
   }, []);
 
+  useEffect(() => () => {
+    highlightTimersRef.current.forEach((timer) => window.clearTimeout(timer));
+    if (toastTimerRef.current) window.clearTimeout(toastTimerRef.current);
+  }, []);
+
+  useEffect(() => {
+    highlightTimersRef.current.forEach((timer) => window.clearTimeout(timer));
+    highlightTimersRef.current.clear();
+    if (toastTimerRef.current) window.clearTimeout(toastTimerRef.current);
+    setRuntimeDiscoveryIds(new Set());
+    setNewDiscoveryIds(new Set());
+    setDiscoveryToast(null);
+  }, [delivery.id]);
+
+  function handleRewardDiscoveries(rewardIds: string[], _origin: RouteDiscoveryEventOrigin) {
+    if (rewardIds.length === 0) return;
+    setRuntimeDiscoveryIds((current) => new Set([...current, ...rewardIds]));
+    setNewDiscoveryIds((current) => new Set([...current, ...rewardIds]));
+    setDiscoveryToast(rewardIds);
+
+    rewardIds.forEach((rewardId) => {
+      const existingTimer = highlightTimersRef.current.get(rewardId);
+      if (existingTimer) window.clearTimeout(existingTimer);
+      const timer = window.setTimeout(() => {
+        setNewDiscoveryIds((current) => {
+          const next = new Set(current);
+          next.delete(rewardId);
+          return next;
+        });
+        highlightTimersRef.current.delete(rewardId);
+      }, discoveryHighlightMs);
+      highlightTimersRef.current.set(rewardId, timer);
+    });
+
+    if (toastTimerRef.current) window.clearTimeout(toastTimerRef.current);
+    toastTimerRef.current = window.setTimeout(() => setDiscoveryToast(null), discoveryHighlightMs);
+  }
+
   function selectReward(rewardId: string) {
+    setFollowMascot(false);
     setSelection({ kind: "reward", rewardId });
     setFocusTarget({ kind: "reward", rewardId });
   }
 
   function closeRewardDetails() {
+    setFollowMascot(false);
     setSelection(null);
     setFocusTarget({ kind: "mascot" });
   }
@@ -98,19 +171,38 @@ export function TravelMapPage() {
             destinationLabel={t(delivery.destination.labelKey)}
             fallbackLabel={t("map.unavailable")}
             focusTarget={focusTarget}
+            followMascot={followMascot}
+            motionPreference={motionPreference}
+            onFollowChange={setFollowMascot}
+            onRewardDiscoveries={handleRewardDiscoveries}
             onRewardSelect={selectReward}
             originLabel={t(delivery.origin.labelKey)}
             petLabel={displayMascot?.name ?? t("common.unavailable")}
+            petPortraitAssetPath={displayMascot?.appearance.portraitAssetPath}
             placeLabels={placeLabels}
             petPosition={petPosition.coordinates}
             postalTraffic={localizedPostalTraffic}
             rewardLabels={rewardLabels}
+            rewardStates={rewardStates}
             rewards={rewards}
             selection={selection}
           />
         </div>
 
-        <MapCameraControls onFocus={setFocusTarget} />
+        {discoveryToast ? (
+          <div className={styles.discoveryToast} role="status">
+            <strong>{discoveryToast.length === 1 ? t("map.discoveryToastSingle") : t("map.discoveryToastMultiple")}</strong>
+            <span>{discoveryToast.length === 1
+              ? t(rewards.find((reward) => reward.id === discoveryToast[0])?.titleKey ?? "map.discovered")
+              : `${discoveryToast.length} ${t("map.discoveries")}`}</span>
+          </div>
+        ) : null}
+
+        <MapCameraControls
+          followMascot={followMascot}
+          onFollowChange={setFollowMascot}
+          onFocus={setFocusTarget}
+        />
 
         <aside className={styles.overlayPanel}>
           {selectedReward ? (
@@ -119,7 +211,7 @@ export function TravelMapPage() {
                 {t("map.backToTrip")}
               </button>
               <div className={styles.drawerContent}>
-                <RewardDetails reward={selectedReward} />
+                <RewardDetails reward={selectedReward} visualState={rewardStates[selectedReward.id]} />
               </div>
             </section>
           ) : (
@@ -142,6 +234,7 @@ export function TravelMapPage() {
                   discoveredCount={discoveredCount}
                   onSelect={selectReward}
                   rewards={rewards}
+                  rewardStates={rewardStates}
                   selectedRewardId={selection?.kind === "reward" ? selection.rewardId : undefined}
                 />
               </div>
@@ -170,13 +263,14 @@ export function TravelMapPage() {
                   <button className={styles.panelBackButton} onClick={closeRewardDetails} type="button">
                     {t("map.backToTrip")}
                   </button>
-                  <RewardDetails reward={selectedReward} />
+                  <RewardDetails reward={selectedReward} visualState={rewardStates[selectedReward.id]} />
                 </>
               ) : (
                 <DiscoveryContent
                   discoveredCount={discoveredCount}
                   onSelect={selectReward}
                   rewards={rewards}
+                  rewardStates={rewardStates}
                   selectedRewardId={selection?.kind === "reward" ? selection.rewardId : undefined}
                 />
               )}
@@ -266,11 +360,13 @@ function DiscoveryContent({
   discoveredCount,
   onSelect,
   rewards,
+  rewardStates,
   selectedRewardId,
 }: {
   discoveredCount: number;
   onSelect: (rewardId: string) => void;
   rewards: RouteRewardDiscovery[];
+  rewardStates: Record<string, RouteDiscoveryVisualState>;
   selectedRewardId?: string;
 }) {
   const { t } = useTranslation();
@@ -288,6 +384,7 @@ function DiscoveryContent({
           <RewardDiscoveryCard
             onSelect={onSelect}
             reward={reward}
+            visualState={rewardStates[reward.id]}
             selected={selectedRewardId === reward.id}
             key={reward.id}
           />
@@ -300,10 +397,12 @@ function DiscoveryContent({
 function RewardDiscoveryCard({
   onSelect,
   reward,
+  visualState,
   selected,
 }: {
   onSelect: (rewardId: string) => void;
   reward: RouteRewardDiscovery;
+  visualState: RouteDiscoveryVisualState;
   selected: boolean;
 }) {
   const { t } = useTranslation();
@@ -315,19 +414,19 @@ function RewardDiscoveryCard({
       onClick={() => onSelect(reward.id)}
       type="button"
     >
-      <span className={`${styles.rewardListVisual} ${reward.discovered ? styles.discoveredVisual : styles.futureVisual}`} aria-hidden="true" />
+      <span className={`${styles.rewardListVisual} ${getDiscoveryVisualClass(visualState)}`} aria-hidden="true" />
       <span className={styles.rewardListContent}>
         <strong>{reward.discovered ? t(reward.titleKey) : t("map.futureReward")}</strong>
         <span>{reward.discovered ? t(reward.descriptionKey) : t("map.futureRewardHint")}</span>
         <small>{reward.discovered
-          ? `${t(`map.rewardKinds.${reward.kind}`)} / ${t("map.discovered")}`
+          ? `${t(`map.rewardKinds.${reward.kind}`)} / ${t(getDiscoveryStateKey(visualState))}`
           : `${t("map.approximateRegion")}: ${reward.regionLabel}`}</small>
       </span>
     </button>
   );
 }
 
-function RewardDetails({ reward }: { reward: RouteRewardDiscovery }) {
+function RewardDetails({ reward, visualState }: { reward: RouteRewardDiscovery; visualState: RouteDiscoveryVisualState }) {
   const { t } = useTranslation();
 
   return (
@@ -339,10 +438,10 @@ function RewardDetails({ reward }: { reward: RouteRewardDiscovery }) {
           src={reward.thumbnailAssetPath}
         />
       ) : (
-        <div className={`${styles.rewardDetailVisual} ${reward.discovered ? styles.discoveredVisual : styles.futureVisual}`} aria-hidden="true" />
+        <div className={`${styles.rewardDetailVisual} ${getDiscoveryVisualClass(visualState)}`} aria-hidden="true" />
       )}
       <div>
-        <p className={styles.detailState}>{reward.discovered ? t("map.discovered") : t("map.futureRewardState")}</p>
+        <p className={styles.detailState}>{t(getDiscoveryStateKey(visualState))}</p>
         <h2>{reward.discovered ? t(reward.titleKey) : t("map.futureReward")}</h2>
       </div>
       <p>{reward.discovered ? t(reward.descriptionKey) : t("map.futureRewardHint")}</p>
@@ -359,9 +458,34 @@ function RewardDetails({ reward }: { reward: RouteRewardDiscovery }) {
   );
 }
 
-function MapCameraControls({ onFocus }: { onFocus: (target: MapFocusTarget) => void }) {
+function getDiscoveryVisualClass(state: RouteDiscoveryVisualState) {
+  if (state === "new") return styles.newDiscoveryVisual;
+  if (state === "carried") return styles.carriedVisual;
+  return styles.futureVisual;
+}
+
+function getDiscoveryStateKey(state: RouteDiscoveryVisualState): TranslationKey {
+  if (state === "new") return "map.newDiscovery";
+  if (state === "carried") return "map.carriedDiscovery";
+  return "map.futureRewardState";
+}
+
+function MapCameraControls({
+  followMascot,
+  onFollowChange,
+  onFocus,
+}: {
+  followMascot: boolean;
+  onFollowChange: (follow: boolean) => void;
+  onFocus: (target: MapFocusTarget) => void;
+}) {
   const { t } = useTranslation();
-  const controls: Array<{ asset: string; label: string; target: MapFocusTarget }> = [
+  const controls: Array<{
+    asset: string;
+    isFollowControl?: boolean;
+    label: string;
+    target: MapFocusTarget;
+  }> = [
     {
       asset: assetPaths.mapControls.icon("overview.webp"),
       label: t("map.overview"),
@@ -369,7 +493,8 @@ function MapCameraControls({ onFocus }: { onFocus: (target: MapFocusTarget) => v
     },
     {
       asset: assetPaths.mapControls.icon("mascot.webp"),
-      label: t("map.focusMascot"),
+      isFollowControl: true,
+      label: followMascot ? t("map.stopFollowing") : t("map.followMascot"),
       target: { kind: "mascot" },
     },
     {
@@ -389,8 +514,19 @@ function MapCameraControls({ onFocus }: { onFocus: (target: MapFocusTarget) => v
       {controls.map((control) => (
         <button
           aria-label={control.label}
+          aria-pressed={control.isFollowControl ? followMascot : undefined}
           key={control.target.kind}
-          onClick={() => onFocus(control.target)}
+          onClick={() => {
+            if (control.isFollowControl) {
+              const nextFollowState = !followMascot;
+              onFollowChange(nextFollowState);
+              if (nextFollowState) onFocus(control.target);
+              return;
+            }
+
+            onFollowChange(false);
+            onFocus(control.target);
+          }}
           title={control.label}
           type="button"
         >
@@ -402,6 +538,21 @@ function MapCameraControls({ onFocus }: { onFocus: (target: MapFocusTarget) => v
       ))}
     </nav>
   );
+}
+
+function useMotionPreference(): MapMotionPreference {
+  const [preference, setPreference] = useState<MapMotionPreference>(() =>
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "reduced" : "full",
+  );
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const updatePreference = () => setPreference(mediaQuery.matches ? "reduced" : "full");
+    mediaQuery.addEventListener("change", updatePreference);
+    return () => mediaQuery.removeEventListener("change", updatePreference);
+  }, []);
+
+  return preference;
 }
 
 function SummaryRow({ label, value }: { label: string; value: string }) {

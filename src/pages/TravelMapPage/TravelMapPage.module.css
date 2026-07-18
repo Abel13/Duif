@@ -17,6 +17,37 @@
   min-width: 0;
 }
 
+.discoveryToast {
+  position: absolute;
+  z-index: 7;
+  top: max(var(--space-3), env(safe-area-inset-top));
+  left: 50%;
+  display: grid;
+  gap: var(--space-1);
+  width: min(22rem, calc(100vw - 9rem));
+  padding: 0.7rem 1rem;
+  border: 2px solid var(--color-postal-red);
+  border-radius: 0.35rem 0.65rem 0.3rem 0.5rem;
+  color: var(--color-ink);
+  background: var(--color-postal-label);
+  box-shadow: 0.2rem 0.28rem 0 rgba(46, 42, 36, 0.2);
+  text-align: center;
+  pointer-events: none;
+  transform: translateX(-50%) rotate(-0.5deg);
+}
+
+.discoveryToast strong {
+  color: var(--color-postal-red);
+  font-size: 0.76rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.discoveryToast span {
+  font-weight: 900;
+  overflow-wrap: anywhere;
+}
+
 .cameraControls {
   position: absolute;
   z-index: 4;
@@ -48,6 +79,14 @@
 
 .cameraControls button:hover {
   background: var(--color-postal-label);
+}
+
+.cameraControls button[aria-pressed="true"] {
+  border-color: var(--color-postal-red);
+  background: var(--color-rare-gold);
+  box-shadow:
+    0 0 0 0.2rem rgba(164, 74, 63, 0.22),
+    0.12rem 0.16rem 0 rgba(46, 42, 36, 0.17);
 }
 
 .cameraControlIcon {
@@ -322,6 +361,17 @@
   border-style: dashed;
   background: var(--color-paper-dark);
   opacity: 0.76;
+}
+
+.carriedVisual {
+  border-color: var(--color-postal-blue);
+  background: var(--color-rare-gold);
+}
+
+.newDiscoveryVisual {
+  border-color: var(--color-postal-red);
+  background: var(--color-rare-gold);
+  box-shadow: 0 0 0 0.25rem rgba(164, 74, 63, 0.2);
 }
 
 .futureVisual::after {

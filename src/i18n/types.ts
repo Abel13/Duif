@@ -166,12 +166,18 @@ export type TranslationDictionary = {
     discoveries: string;
     mockedRewards: string;
     discovered: string;
+    newDiscovery: string;
+    carriedDiscovery: string;
+    discoveryToastSingle: string;
+    discoveryToastMultiple: string;
     onTheRoute: string;
     backToMascot: string;
     unavailable: string;
     cameraControls: string;
     overview: string;
     focusMascot: string;
+    followMascot: string;
+    stopFollowing: string;
     focusOrigin: string;
     focusDestination: string;
     backToTrip: string;
@@ -643,12 +649,18 @@ export type TranslationKey =
   | "map.discoveries"
   | "map.mockedRewards"
   | "map.discovered"
+  | "map.newDiscovery"
+  | "map.carriedDiscovery"
+  | "map.discoveryToastSingle"
+  | "map.discoveryToastMultiple"
   | "map.onTheRoute"
   | "map.backToMascot"
   | "map.unavailable"
   | "map.cameraControls"
   | "map.overview"
   | "map.focusMascot"
+  | "map.followMascot"
+  | "map.stopFollowing"
   | "map.focusOrigin"
   | "map.focusDestination"
   | "map.backToTrip"

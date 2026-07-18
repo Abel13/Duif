@@ -1,18 +1,27 @@
 import { useEffect, useRef, useState } from "react";
-import maplibregl, { type GeoJSONSource, type LngLatBoundsLike } from "maplibre-gl";
+import maplibregl, {
+  type GeoJSONSource,
+  type LngLatBoundsLike,
+} from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 import type {
   MapCoordinate,
   MapFocusTarget,
+  MapMotionPreference,
   MapSelection,
+  RouteDiscoveryEventOrigin,
+  RouteDiscoveryVisualState,
   RouteRewardDiscovery,
 } from "../../game/mapTravel";
 import type { PostalTrafficPetSnapshot } from "../../game/postalTraffic";
 import {
   createDeliveryRouteGeoJson,
   createMapPlaceLabelsGeoJson,
+  createTravelProgressGeoJson,
+  getCrossedRouteRewardIds,
   getMapFocusCoordinate,
+  getPetMapPosition,
   toLngLat,
   type MapPlaceLabel,
 } from "../../game/mapTravel";
@@ -20,6 +29,8 @@ import type { Delivery } from "../../game/types";
 import styles from "./TravelMap.module.css";
 
 const routeSourceId = "duif-route";
+const outboundProgressSourceId = "duif-outbound-progress";
+const returnProgressSourceId = "duif-return-progress";
 const placeLabelsSourceId = "duif-place-labels";
 
 const postalMapStyle = {
@@ -62,14 +73,23 @@ export type TravelMapProps = {
   destinationLabel: string;
   fallbackLabel: string;
   focusTarget: MapFocusTarget;
+  followMascot: boolean;
+  motionPreference: MapMotionPreference;
   originLabel: string;
   petLabel: string;
+  petPortraitAssetPath?: string;
   petPosition: MapCoordinate;
   placeLabels: MapPlaceLabel[];
   postalTraffic: PostalTrafficPetSnapshot[];
   rewardLabels: Record<string, string>;
+  rewardStates: Record<string, RouteDiscoveryVisualState>;
   rewards: RouteRewardDiscovery[];
   selection: MapSelection;
+  onFollowChange: (follow: boolean) => void;
+  onRewardDiscoveries: (
+    rewardIds: string[],
+    origin: RouteDiscoveryEventOrigin,
+  ) => void;
   onRewardSelect: (rewardId: string) => void;
 };
 
@@ -78,14 +98,20 @@ export function TravelMap({
   destinationLabel,
   fallbackLabel,
   focusTarget,
+  followMascot,
+  motionPreference,
   originLabel,
   petLabel,
+  petPortraitAssetPath,
   petPosition,
   placeLabels,
   postalTraffic,
   rewardLabels,
+  rewardStates,
   rewards,
   selection,
+  onFollowChange,
+  onRewardDiscoveries,
   onRewardSelect,
 }: TravelMapProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -95,11 +121,50 @@ export function TravelMap({
   const trafficMarkerRefs = useRef<Map<string, maplibregl.Marker>>(new Map());
   const isLoadedRef = useRef(false);
   const focusTargetRef = useRef(focusTarget);
+  const followMascotRef = useRef(followMascot);
+  const onFollowChangeRef = useRef(onFollowChange);
   const selectionRef = useRef(selection);
+  const rewardsRef = useRef(rewards);
+  const onRewardDiscoveriesRef = useRef(onRewardDiscoveries);
+  const discoveryRef = useRef(createDiscoveryTracker(delivery, rewards));
   const [hasMapError, setHasMapError] = useState(false);
 
   focusTargetRef.current = focusTarget;
+  followMascotRef.current = followMascot;
+  onFollowChangeRef.current = onFollowChange;
   selectionRef.current = selection;
+  rewardsRef.current = rewards;
+  onRewardDiscoveriesRef.current = onRewardDiscoveries;
+
+  useEffect(() => {
+    discoveryRef.current = createDiscoveryTracker(delivery, rewards);
+  }, [delivery.id]);
+
+  function detectDiscoveries(
+    position: ReturnType<typeof getPetMapPosition>,
+    origin: RouteDiscoveryEventOrigin,
+  ) {
+    const tracker = discoveryRef.current;
+    const crossedIds = getCrossedRouteRewardIds(
+      rewardsRef.current,
+      tracker.lastProgress,
+      position.outboundProgress,
+      tracker.knownIds,
+    );
+    tracker.lastProgress = Math.max(
+      tracker.lastProgress,
+      position.outboundProgress,
+    );
+    crossedIds.forEach((id) => tracker.knownIds.add(id));
+
+    if (
+      crossedIds.length > 0 &&
+      position.leg !== "returned" &&
+      position.leg !== "completed"
+    ) {
+      onRewardDiscoveriesRef.current(crossedIds, origin);
+    }
+  }
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) {
@@ -124,12 +189,24 @@ export function TravelMap({
     }
 
     mapRef.current = map;
-    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
-    map.addControl(new maplibregl.AttributionControl({ compact: true }), "bottom-right");
+    map.addControl(
+      new maplibregl.NavigationControl({ showCompass: false }),
+      "top-right",
+    );
+    map.addControl(
+      new maplibregl.AttributionControl({ compact: true }),
+      "bottom-right",
+    );
 
     const petElement = document.createElement("div");
     petElement.className = styles.petMarker;
     petElement.setAttribute("aria-label", petLabel);
+    syncPetPortrait(petElement, petPortraitAssetPath);
+    updatePetDirection(
+      petElement,
+      getPetMapPosition(delivery, new Date()).leg,
+      delivery,
+    );
 
     petMarkerRef.current = new maplibregl.Marker({ element: petElement })
       .setLngLat(toLngLat(petPosition))
@@ -137,17 +214,33 @@ export function TravelMap({
 
     map.on("load", () => {
       isLoadedRef.current = true;
-      addMapLayers(map, delivery, placeLabels);
+      addMapLayers(
+        map,
+        delivery,
+        placeLabels,
+        getPetMapPosition(delivery, new Date()),
+      );
       syncRewardMarkers(
         map,
         rewardMarkerRefs.current,
         rewards,
         rewardLabels,
+        rewardStates,
         selectionRef.current,
         onRewardSelect,
       );
       syncPostalTrafficMarkers(map, trafficMarkerRefs.current, postalTraffic);
       focusMap(map, focusTargetRef.current, delivery, petPosition, rewards);
+    });
+
+    const stopFollowing = () => {
+      if (followMascotRef.current) {
+        onFollowChangeRef.current(false);
+      }
+    };
+    map.on("dragstart", stopFollowing);
+    map.on("zoomstart", (event) => {
+      if (event.originalEvent) stopFollowing();
     });
 
     return () => {
@@ -168,22 +261,124 @@ export function TravelMap({
       return;
     }
 
-    const routeSource = map.getSource(routeSourceId) as GeoJSONSource | undefined;
-    const placeLabelsSource = map.getSource(placeLabelsSourceId) as GeoJSONSource | undefined;
+    const routeSource = map.getSource(routeSourceId) as
+      | GeoJSONSource
+      | undefined;
+    const placeLabelsSource = map.getSource(placeLabelsSourceId) as
+      | GeoJSONSource
+      | undefined;
 
     routeSource?.setData(createDeliveryRouteGeoJson(delivery));
     placeLabelsSource?.setData(createMapPlaceLabelsGeoJson(placeLabels));
     petMarkerRef.current?.setLngLat(toLngLat(petPosition));
+    const petElement = petMarkerRef.current?.getElement();
+    if (petElement) {
+      petElement.setAttribute("aria-label", petLabel);
+      syncPetPortrait(petElement, petPortraitAssetPath);
+    }
+    updateMapProgress(map, delivery, getPetMapPosition(delivery, new Date()));
+    if (document.visibilityState === "visible") {
+      detectDiscoveries(getPetMapPosition(delivery, new Date()), "visible");
+    }
+    updatePetDirection(
+      petMarkerRef.current?.getElement(),
+      getPetMapPosition(delivery, new Date()).leg,
+      delivery,
+    );
+    if (followMascotRef.current && motionPreference === "reduced") {
+      map.setCenter(toLngLat(petPosition));
+    }
     syncRewardMarkers(
       map,
       rewardMarkerRefs.current,
       rewards,
       rewardLabels,
+      rewardStates,
       selection,
       onRewardSelect,
     );
     syncPostalTrafficMarkers(map, trafficMarkerRefs.current, postalTraffic);
-  }, [delivery, onRewardSelect, petPosition, placeLabels, postalTraffic, rewardLabels, rewards, selection]);
+  }, [
+    delivery,
+    motionPreference,
+    onRewardSelect,
+    petLabel,
+    petPortraitAssetPath,
+    petPosition,
+    placeLabels,
+    postalTraffic,
+    rewardLabels,
+    rewardStates,
+    rewards,
+    selection,
+  ]);
+
+  useEffect(() => {
+    if (motionPreference === "reduced") {
+      return undefined;
+    }
+
+    let animationFrame = 0;
+    let resumedFromHidden = false;
+
+    const updateFrame = () => {
+      const map = mapRef.current;
+
+      if (document.visibilityState !== "visible") {
+        return;
+      }
+
+      if (map && isLoadedRef.current) {
+        const position = getPetMapPosition(delivery, new Date());
+        detectDiscoveries(position, resumedFromHidden ? "resume" : "visible");
+        resumedFromHidden = false;
+        petMarkerRef.current?.setLngLat(toLngLat(position.coordinates));
+        updatePetDirection(
+          petMarkerRef.current?.getElement(),
+          position.leg,
+          delivery,
+        );
+        updateMapProgress(map, delivery, position);
+
+        if (followMascotRef.current) {
+          map.setCenter(toLngLat(position.coordinates));
+        }
+      }
+
+      animationFrame = window.requestAnimationFrame(updateFrame);
+    };
+
+    const handleVisibilityChange = () => {
+      window.cancelAnimationFrame(animationFrame);
+      if (document.visibilityState === "visible") {
+        updateFrame();
+      } else {
+        resumedFromHidden = true;
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    handleVisibilityChange();
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.cancelAnimationFrame(animationFrame);
+    };
+  }, [delivery, motionPreference]);
+
+  useEffect(() => {
+    if (motionPreference !== "reduced") return undefined;
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        detectDiscoveries(getPetMapPosition(delivery, new Date()), "resume");
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () =>
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+  }, [delivery, motionPreference]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -193,18 +388,35 @@ export function TravelMap({
     }
 
     focusMap(map, focusTarget, delivery, petPosition, rewards);
-  }, [delivery, focusTarget, petPosition, rewards]);
+  }, [delivery.id, focusTarget]);
 
   return (
     <div className={styles.mapFrame}>
       <div className={styles.map} ref={containerRef} />
-      {hasMapError ? <div className={styles.mapFallback}>{fallbackLabel}</div> : null}
+      {hasMapError ? (
+        <div className={styles.mapFallback}>{fallbackLabel}</div>
+      ) : null}
       <div className={styles.labels} aria-hidden="true">
         <span>{originLabel}</span>
         <span>{destinationLabel}</span>
       </div>
     </div>
   );
+}
+
+function createDiscoveryTracker(
+  delivery: Delivery,
+  rewards: RouteRewardDiscovery[],
+) {
+  const position = getPetMapPosition(delivery, new Date());
+  return {
+    knownIds: new Set(
+      rewards
+        .filter((reward) => reward.routeProgress <= position.outboundProgress)
+        .map((reward) => reward.id),
+    ),
+    lastProgress: position.outboundProgress,
+  };
 }
 
 function syncPostalTrafficMarkers(
@@ -232,7 +444,9 @@ function syncPostalTrafficMarkers(
     const markerElement = document.createElement("div");
     markerElement.className = [
       styles.trafficMarker,
-      pet.visibility === "friend" ? styles.friendTrafficMarker : styles.anonymousTrafficMarker,
+      pet.visibility === "friend"
+        ? styles.friendTrafficMarker
+        : styles.anonymousTrafficMarker,
     ].join(" ");
     markerElement.setAttribute("aria-label", pet.label);
     markerElement.title = pet.label;
@@ -255,6 +469,7 @@ function syncRewardMarkers(
   markers: Map<string, maplibregl.Marker>,
   rewards: RouteRewardDiscovery[],
   rewardLabels: Record<string, string>,
+  rewardStates: Record<string, RouteDiscoveryVisualState>,
   selection: MapSelection,
   onSelect: (rewardId: string) => void,
 ) {
@@ -268,19 +483,32 @@ function syncRewardMarkers(
   });
 
   rewards.forEach((reward) => {
-    const selected = selection?.kind === "reward" && selection.rewardId === reward.id;
+    const selected =
+      selection?.kind === "reward" && selection.rewardId === reward.id;
     const existingMarker = markers.get(reward.id);
 
     if (existingMarker) {
       existingMarker.setLngLat(toLngLat(reward.coordinates));
-      updateRewardMarker(existingMarker.getElement(), reward, rewardLabels[reward.id], selected);
+      updateRewardMarker(
+        existingMarker.getElement(),
+        reward,
+        rewardLabels[reward.id],
+        rewardStates[reward.id],
+        selected,
+      );
       return;
     }
 
     const markerElement = document.createElement("button");
     markerElement.type = "button";
     markerElement.addEventListener("click", () => onSelect(reward.id));
-    updateRewardMarker(markerElement, reward, rewardLabels[reward.id], selected);
+    updateRewardMarker(
+      markerElement,
+      reward,
+      rewardLabels[reward.id],
+      rewardStates[reward.id],
+      selected,
+    );
 
     markers.set(
       reward.id,
@@ -295,13 +523,20 @@ function updateRewardMarker(
   element: HTMLElement,
   reward: RouteRewardDiscovery,
   label: string | undefined,
+  visualState: RouteDiscoveryVisualState,
   selected: boolean,
 ) {
   element.className = [
     styles.rewardMarker,
-    reward.discovered ? styles.discoveredRewardMarker : styles.futureRewardMarker,
+    visualState === "new"
+      ? styles.newRewardMarker
+      : visualState === "carried"
+        ? styles.carriedRewardMarker
+        : styles.futureRewardMarker,
     selected ? styles.selectedRewardMarker : undefined,
-  ].filter(Boolean).join(" ");
+  ]
+    .filter(Boolean)
+    .join(" ");
   element.setAttribute("aria-label", label ?? reward.regionLabel);
   element.setAttribute("aria-pressed", String(selected));
   element.title = label ?? reward.regionLabel;
@@ -316,6 +551,7 @@ function addMapLayers(
   map: maplibregl.Map,
   delivery: Delivery,
   placeLabels: MapPlaceLabel[],
+  petPosition: ReturnType<typeof getPetMapPosition>,
 ) {
   if (!map.getSource(routeSourceId)) {
     map.addSource(routeSourceId, {
@@ -327,6 +563,22 @@ function addMapLayers(
   if (!map.getSource(placeLabelsSourceId)) {
     map.addSource(placeLabelsSourceId, {
       data: createMapPlaceLabelsGeoJson(placeLabels),
+      type: "geojson",
+    });
+  }
+
+  const progress = createTravelProgressGeoJson(delivery, petPosition);
+
+  if (!map.getSource(outboundProgressSourceId)) {
+    map.addSource(outboundProgressSourceId, {
+      data: progress.outbound,
+      type: "geojson",
+    });
+  }
+
+  if (!map.getSource(returnProgressSourceId)) {
+    map.addSource(returnProgressSourceId, {
+      data: progress.returning,
       type: "geojson",
     });
   }
@@ -359,6 +611,32 @@ function addMapLayers(
     });
   }
 
+  if (!map.getLayer("duif-outbound-progress")) {
+    map.addLayer({
+      id: "duif-outbound-progress",
+      paint: {
+        "line-color": "#c49a4a",
+        "line-opacity": 0.94,
+        "line-width": 6,
+      },
+      source: outboundProgressSourceId,
+      type: "line",
+    });
+  }
+
+  if (!map.getLayer("duif-return-progress")) {
+    map.addLayer({
+      id: "duif-return-progress",
+      paint: {
+        "line-color": "#6f91a8",
+        "line-opacity": 0.98,
+        "line-width": 6,
+      },
+      source: returnProgressSourceId,
+      type: "line",
+    });
+  }
+
   if (!map.getLayer("duif-place-labels")) {
     map.addLayer({
       id: "duif-place-labels",
@@ -384,7 +662,11 @@ function addMapLayers(
         ],
         "text-size": [
           "case",
-          ["any", ["==", ["get", "kind"], "origin"], ["==", ["get", "kind"], "destination"]],
+          [
+            "any",
+            ["==", ["get", "kind"], "origin"],
+            ["==", ["get", "kind"], "destination"],
+          ],
           14,
           12,
         ],
@@ -401,6 +683,74 @@ function addMapLayers(
   }
 }
 
+function updateMapProgress(
+  map: maplibregl.Map,
+  delivery: Delivery,
+  position: ReturnType<typeof getPetMapPosition>,
+) {
+  const progress = createTravelProgressGeoJson(delivery, position);
+  const outboundSource = map.getSource(outboundProgressSourceId) as
+    | GeoJSONSource
+    | undefined;
+  const returnSource = map.getSource(returnProgressSourceId) as
+    | GeoJSONSource
+    | undefined;
+  outboundSource?.setData(progress.outbound);
+  returnSource?.setData(progress.returning);
+}
+
+function updatePetDirection(
+  element: HTMLElement | undefined,
+  leg: ReturnType<typeof getPetMapPosition>["leg"],
+  delivery: Delivery,
+) {
+  if (!element) return;
+  element.dataset.direction =
+    leg === "outbound"
+      ? "outbound"
+      : leg === "returning"
+        ? "returning"
+        : "stationary";
+  const longitudeDelta =
+    delivery.destination.longitude - delivery.origin.longitude;
+  const latitudeDelta =
+    delivery.destination.latitude - delivery.origin.latitude;
+  const outboundAngle =
+    Math.atan2(-latitudeDelta, longitudeDelta) * (180 / Math.PI);
+  const directionAngle =
+    leg === "returning" ? outboundAngle + 180 : outboundAngle;
+  element.style.setProperty("--pet-direction-angle", `${directionAngle}deg`);
+}
+
+function syncPetPortrait(element: HTMLElement, portraitAssetPath?: string) {
+  const currentImage = element.querySelector<HTMLImageElement>("img");
+
+  if (!portraitAssetPath) {
+    currentImage?.remove();
+    element.removeAttribute("data-has-portrait");
+    return;
+  }
+
+  if (currentImage?.getAttribute("src") === portraitAssetPath) {
+    return;
+  }
+
+  currentImage?.remove();
+  const image = document.createElement("img");
+  image.alt = "";
+  image.className = styles.petPortrait;
+  image.draggable = false;
+  image.src = portraitAssetPath;
+  image.addEventListener("load", () =>
+    element.setAttribute("data-has-portrait", "true"),
+  );
+  image.addEventListener("error", () => {
+    element.removeAttribute("data-has-portrait");
+    image.remove();
+  });
+  element.append(image);
+}
+
 function focusMap(
   map: maplibregl.Map,
   target: MapFocusTarget,
@@ -408,14 +758,21 @@ function focusMap(
   petPosition: MapCoordinate,
   rewards: RouteRewardDiscovery[],
 ) {
-  const duration = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 500;
+  const duration = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ? 0
+    : 500;
 
   if (target.kind === "overview") {
     fitMapToDelivery(map, delivery, duration);
     return;
   }
 
-  const coordinates = getMapFocusCoordinate(target, delivery, petPosition, rewards);
+  const coordinates = getMapFocusCoordinate(
+    target,
+    delivery,
+    petPosition,
+    rewards,
+  );
 
   if (!coordinates) {
     return;
@@ -428,7 +785,11 @@ function focusMap(
   });
 }
 
-function fitMapToDelivery(map: maplibregl.Map, delivery: Delivery, duration = 0) {
+function fitMapToDelivery(
+  map: maplibregl.Map,
+  delivery: Delivery,
+  duration = 0,
+) {
   const bounds: LngLatBoundsLike = [
     [
       Math.min(delivery.origin.longitude, delivery.destination.longitude) - 8,
