@@ -133,6 +133,31 @@ describe("map travel helpers", () => {
     expect(getEligibleRouteRewards(delivery, [rewardPoint])).toHaveLength(0);
   });
 
+  it("uses the immutable discovery-radius snapshot", () => {
+    const rewardPoint = createTestRewardPoint({
+      coordinates: { latitude: 0.45, longitude: 5 },
+      eligibilityRadiusKm: 40,
+    });
+    const delivery = {
+      ...nuvemDelivery,
+      origin: { ...nuvemDelivery.origin, latitude: 0, longitude: 0 },
+      destination: { ...nuvemDelivery.destination, latitude: 0, longitude: 10 },
+      travelModifiers: {
+        version: 1 as const,
+        preparationMinutes: 30,
+        outboundSpeedMultiplier: 1,
+        returnSpeedMultiplier: 1,
+        discoveryRadiusMultiplier: 1.3,
+        rarityWeightMultiplier: 1,
+        longRouteConsistency: 1,
+        isLongRoute: false,
+      },
+    };
+
+    expect(getEligibleRouteRewards(delivery, [rewardPoint])).toHaveLength(1);
+    expect(getEligibleRouteRewards({ ...delivery, travelModifiers: undefined }, [rewardPoint])).toHaveLength(0);
+  });
+
   it("calculates reward progress on the route", () => {
     const rewardPoint = createTestRewardPoint({
       coordinates: { latitude: 0, longitude: 7.5 },

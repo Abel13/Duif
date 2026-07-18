@@ -1,5 +1,5 @@
 import { getMascotById, starterMascots } from "../../game/mockData";
-import type { Delivery, Mascot } from "../../game/types";
+import type { Delivery, Mascot, MascotTravelModifiers } from "../../game/types";
 import type { TranslationKey } from "../../i18n";
 import { getSupabaseClient } from "./client";
 import {
@@ -52,7 +52,34 @@ export function mapDeliveryRowToDelivery(row: DeliveryRow, mascotPublicId: strin
     rewardSeed: row.reward_seed,
     senderId: row.sender_profile_id,
     status: row.status,
+    travelModifiers: mapTravelModifiers(row.travel_modifiers),
   };
+}
+
+function mapTravelModifiers(value: DeliveryRow["travel_modifiers"]): MascotTravelModifiers | undefined {
+  if (!value || Array.isArray(value) || typeof value !== "object") {
+    return undefined;
+  }
+
+  const candidate = value as Record<string, unknown>;
+  const numericKeys = [
+    "preparationMinutes",
+    "outboundSpeedMultiplier",
+    "returnSpeedMultiplier",
+    "discoveryRadiusMultiplier",
+    "rarityWeightMultiplier",
+    "longRouteConsistency",
+  ] as const;
+
+  if (
+    candidate.version !== 1 ||
+    typeof candidate.isLongRoute !== "boolean" ||
+    numericKeys.some((key) => typeof candidate[key] !== "number" || !Number.isFinite(candidate[key]))
+  ) {
+    return undefined;
+  }
+
+  return candidate as MascotTravelModifiers;
 }
 
 export function selectCurrentDelivery(deliveries: DeliveryRow[]) {

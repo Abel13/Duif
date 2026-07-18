@@ -37,12 +37,17 @@ describe("createMockDeliveryFromSelection", () => {
     );
 
     expect(result).toBeDefined();
-    expect(result?.delivery.status).toBe("outbound");
+    expect(result?.delivery.status).toBe("preparing");
     expect(result?.delivery.senderId).toBe("player-current");
     expect(result?.delivery.receiverId).toBe("friend-curitiba");
     expect(result?.delivery.mascotId).toBe("mascot-pipoca");
     expect(result?.delivery.distanceKm).toBeGreaterThan(300);
-    expect(result?.delivery.outboundStartAt).toBe("2026-07-08T12:00:00.000Z");
+    expect(result?.delivery.outboundStartAt).toBe("2026-07-08T12:30:00.000Z");
+    expect(result?.delivery.travelModifiers).toMatchObject({
+      version: 1,
+      discoveryRadiusMultiplier: 1.24,
+      outboundSpeedMultiplier: 0.98,
+    });
     expect(result?.delivery.rewardSeed).toBe(
       "mascot-pipoca-friend-curitiba-correspondence-postcard",
     );

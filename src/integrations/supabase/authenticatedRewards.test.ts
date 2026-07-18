@@ -71,6 +71,7 @@ const deliveryRow: DeliveryRow = {
   reward_seed: "nuvem-lisbon-welcome-letter",
   sender_profile_id: "00000000-0000-4000-8000-000000000001",
   status: "returning",
+  travel_modifiers: null,
   updated_at: "2026-07-09T20:00:00.000Z",
 };
 

@@ -235,31 +235,35 @@ mascot or making route content inaccessible to players who choose another compan
 
 Attribute direction:
 
-- Speed determines the base travel duration.
-- Stamina reduces long-route penalties and may improve return consistency.
-- Orientation moderately expands the effective route-discovery corridor.
-- Luck modifies deterministic rarity weights; it never guarantees every reward is rare.
+- Speed and stamina determine the base speed using the provisional formula
+  `28 + speed * 4 + stamina * 2` kilometers per hour.
+- A route becomes long at `500 km`. Long routes add `10%` to return duration before
+  mitigation.
+- Orientation expands the effective route-discovery corridor by `1%` per point.
+- Luck adds `2%` per point to a deterministic rarity-weight multiplier; it never guarantees
+  a rare reward.
 - Attribute and skill bonuses must use explicit caps so later progression cannot create
   unbounded speed, discovery, or rarity advantages.
 
 Starter mascot identities:
 
-- Nuvem is the safe long-route specialist. `Rota Segura` should mitigate part of the
-  long-route penalty and favor consistent delivery outcomes.
-- Trovão is the direct-flight specialist. `Voo Direto` should initially reduce return time
-  by approximately 10%, without moving outbound discovery thresholds.
-- Pipoca is the exploration specialist. `Achador Curioso` should initially expand the
-  route-discovery corridor by approximately 15% and may later improve deterministic rarity
-  weights within a capped range.
+- Nuvem is the safe long-route specialist. `Rota Segura` mitigates half of the long-route
+  penalty, while the current level of `Rota Longa` mitigates the remainder.
+- Trovão is the direct-flight specialist. `Voo Direto` increases effective return speed by
+  `10%`, without moving outbound discovery thresholds.
+- Pipoca is the exploration specialist. `Achador Curioso` adds `15` percentage points to
+  the route-discovery corridor.
 
 Skill direction:
 
-- `Rota Longa` mitigates distance penalties.
+- `Rota Longa` mitigates `25%` of the long-route penalty per level, capped at `50%`.
 - `Pouso Suave` favors safe completion or later duplicate-preservation rules.
-- `Despacho Rápido` reduces preparation time.
-- `Instinto de Vento Cruzado` improves orientation on eligible routes.
-- `Coisa Brilhante` improves capped rarity weights.
-- `Desvio Feliz` expands discovery reach in exchange for a small travel-time cost.
+- `Despacho Rápido` reduces the base `30` minute preparation by `5%` per level, capped at
+  `20%`.
+- `Instinto de Vento Cruzado` expands discovery reach by `2%` per level.
+- `Coisa Brilhante` adds `3%` of rarity weight per level.
+- `Desvio Feliz` expands discovery reach by `3%` per level and reduces effective travel
+  speed by `2%` per level.
 - Skill level scales an existing effect; it should not introduce hidden unrelated bonuses.
 
 Determinism and authority:
@@ -276,12 +280,16 @@ Determinism and authority:
 
 Initial implementation boundary:
 
-- Start only with Trovão's faster return, Pipoca's wider discovery corridor, and Nuvem's
-  long-route consistency.
-- Validate whether the three choices feel distinct before enabling rarity upgrades,
-  duplicate preservation, cargo effects, or complex equipment synergies.
-- Exact orientation coefficients, luck weights, long-route thresholds, caps, and per-skill
-  level curves remain balancing decisions.
+- Discovery-radius and rarity multipliers are capped at `1.30`; outbound speed is bounded
+  between `0.85` and `1.15`, and return speed between `0.75` and `1.25`.
+- The rarity multiplier is snapshotted now but only becomes authoritative input for reward
+  selection when persisted route discoveries are introduced.
+- `Pouso Suave`, duplicate preservation, cargo effects, and equipment synergies remain
+  deferred because no safe-completion or cargo mechanic consumes them yet.
+- These coefficients are provisional balancing values. Changing them affects only future
+  deliveries because every dispatched delivery stores a versioned immutable snapshot.
+- Legacy deliveries without a snapshot preserve their stored timestamps and use neutral
+  discovery and rarity multipliers.
 
 Possible level unlocks:
 

@@ -2,6 +2,7 @@ import {
   correspondenceOptions,
   currentPlayer,
   estimateMascotSpeedKmh,
+  deriveMascotTravelModifiers,
   estimateTravelDurationHours,
   haversineDistanceKm,
   mockFriends,
@@ -187,10 +188,19 @@ export function createLocalDeliveryPreview({
 
   const distanceKm = haversineDistanceKm(currentPlayer.homeBase, friendCoordinates);
   const speedKmh = estimateMascotSpeedKmh(mascot);
+  const modifiers = deriveMascotTravelModifiers(mascot, { distanceKm });
 
   return {
     distanceKm,
-    durationHours: estimateTravelDurationHours(distanceKm, speedKmh),
+    durationHours: estimateTravelDurationHours(
+      distanceKm,
+      speedKmh * modifiers.outboundSpeedMultiplier,
+    ),
+    modifiers,
+    returnDurationHours: estimateTravelDurationHours(
+      distanceKm,
+      speedKmh * modifiers.returnSpeedMultiplier,
+    ),
   };
 }
 

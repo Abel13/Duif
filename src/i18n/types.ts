@@ -131,6 +131,19 @@ export type TranslationDictionary = {
     sendAnother: string;
     backToMascot: string;
     estimatedDuration: string;
+    preparationTime: string;
+    outboundDuration: string;
+    returnDuration: string;
+    discoveryReach: string;
+    rarityPotential: string;
+    routeProfile: string;
+    shortRoute: string;
+    longRoutePenalty: string;
+    longRouteMitigated: string;
+    effectFastReturn: string;
+    effectDiscoveryReach: string;
+    effectSafeLongRoute: string;
+    effectSafeShortRoute: string;
     selectedFriend: string;
     selectedMascot: string;
     selectedCorrespondence: string;
@@ -647,6 +660,19 @@ export type TranslationKey =
   | "send.sendAnother"
   | "send.backToMascot"
   | "send.estimatedDuration"
+  | "send.preparationTime"
+  | "send.outboundDuration"
+  | "send.returnDuration"
+  | "send.discoveryReach"
+  | "send.rarityPotential"
+  | "send.routeProfile"
+  | "send.shortRoute"
+  | "send.longRoutePenalty"
+  | "send.longRouteMitigated"
+  | "send.effectFastReturn"
+  | "send.effectDiscoveryReach"
+  | "send.effectSafeLongRoute"
+  | "send.effectSafeShortRoute"
   | "send.selectedFriend"
   | "send.selectedMascot"
   | "send.selectedCorrespondence"

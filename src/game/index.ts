@@ -93,6 +93,13 @@ export {
   getTravelProgress,
   haversineDistanceKm,
 } from "./travel";
+export {
+  BASE_PREPARATION_MINUTES,
+  deriveMascotTravelModifiers,
+  getDeliveryTravelModifiers,
+  LONG_ROUTE_THRESHOLD_KM,
+  NEUTRAL_TRAVEL_MODIFIERS,
+} from "./travelModifiers";
 export type {
   Coordinates,
   CorrespondenceContent,
@@ -114,6 +121,7 @@ export type {
   MascotAppearance,
   MascotAttributeSet,
   MascotTrait,
+  MascotTravelModifiers,
   Player,
   PostcardContent,
   PostcardVariant,

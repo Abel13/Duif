@@ -13,6 +13,7 @@ import type { TranslationKey } from "../i18n";
 import { currentPlayer, starterMascots } from "./mockData";
 import { getFriendById } from "./friends";
 import { estimateTravelDurationHours, haversineDistanceKm } from "./travel";
+import { deriveMascotTravelModifiers } from "./travelModifiers";
 
 const RETURN_PAUSE_MINUTES = 30;
 const HOUR_MS = 60 * 60 * 1000;
@@ -105,11 +106,19 @@ export function createMockDeliveryFromSelection(
 
   const distanceKm = haversineDistanceKm(currentPlayer.homeBase, friendCoordinates);
   const animalSpeedKmh = estimateMascotSpeedKmh(mascot);
-  const outboundDurationHours = estimateTravelDurationHours(distanceKm, animalSpeedKmh);
-  const outboundStartAt = now;
-  const outboundArrivalAt = new Date(now.getTime() + outboundDurationHours * HOUR_MS);
+  const travelModifiers = deriveMascotTravelModifiers(mascot, { distanceKm });
+  const outboundDurationHours = estimateTravelDurationHours(
+    distanceKm,
+    animalSpeedKmh * travelModifiers.outboundSpeedMultiplier,
+  );
+  const returnDurationHours = estimateTravelDurationHours(
+    distanceKm,
+    animalSpeedKmh * travelModifiers.returnSpeedMultiplier,
+  );
+  const outboundStartAt = new Date(now.getTime() + travelModifiers.preparationMinutes * MINUTE_MS);
+  const outboundArrivalAt = new Date(outboundStartAt.getTime() + outboundDurationHours * HOUR_MS);
   const returnStartAt = new Date(outboundArrivalAt.getTime() + RETURN_PAUSE_MINUTES * MINUTE_MS);
-  const returnArrivalAt = new Date(returnStartAt.getTime() + outboundDurationHours * HOUR_MS);
+  const returnArrivalAt = new Date(returnStartAt.getTime() + returnDurationHours * HOUR_MS);
 
   const delivery: Delivery = {
     id: `delivery-${mascot.id}-${friend.id}-${correspondence.id}`,
@@ -124,8 +133,9 @@ export function createMockDeliveryFromSelection(
     outboundArrivalAt: outboundArrivalAt.toISOString(),
     returnStartAt: returnStartAt.toISOString(),
     returnArrivalAt: returnArrivalAt.toISOString(),
-    status: "outbound",
+    status: "preparing",
     rewardSeed: `${mascot.id}-${friend.id}-${correspondence.id}`,
+    travelModifiers,
   };
 
   return {

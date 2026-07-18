@@ -20,8 +20,6 @@
   z-index: 1;
   inset: 0;
   background:
-    url("/assets/textures/route-doodle-mark.webp") 9% 16% / min(18rem, 48vw)
-      auto no-repeat,
     linear-gradient(rgba(255, 248, 232, 0.2) 1px, transparent 1px),
     linear-gradient(90deg, rgba(46, 42, 36, 0.08) 1px, transparent 1px),
     radial-gradient(
@@ -30,7 +28,6 @@
       transparent 14rem
     );
   background-size:
-    min(18rem, 48vw) auto,
     4rem 4rem,
     4rem 4rem,
     auto;

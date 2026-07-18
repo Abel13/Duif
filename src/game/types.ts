@@ -69,6 +69,17 @@ export type DeliveryStatus =
   | "returned"
   | "completed";
 
+export type MascotTravelModifiers = {
+  version: 1;
+  preparationMinutes: number;
+  outboundSpeedMultiplier: number;
+  returnSpeedMultiplier: number;
+  discoveryRadiusMultiplier: number;
+  rarityWeightMultiplier: number;
+  longRouteConsistency: number;
+  isLongRoute: boolean;
+};
+
 export type Delivery = {
   id: string;
   senderId: string;
@@ -84,6 +95,7 @@ export type Delivery = {
   returnArrivalAt?: string;
   status: DeliveryStatus;
   rewardSeed: string;
+  travelModifiers?: MascotTravelModifiers;
 };
 
 export type RewardItem = {

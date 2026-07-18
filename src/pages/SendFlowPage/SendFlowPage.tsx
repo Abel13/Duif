@@ -9,6 +9,7 @@ import {
   createMockDeliveryFromSelection,
   createDefaultCorrespondenceContent,
   currentPlayer,
+  deriveMascotTravelModifiers,
   estimateMascotSpeedKmh,
   estimateTravelDurationHours,
   formatRemainingTime,
@@ -29,6 +30,7 @@ import {
   type Delivery,
   type FriendProfile,
   type Mascot,
+  type MascotTravelModifiers,
   type SendFlowSelection,
 } from "../../game";
 import { useSendFlowData } from "../../game/useSendFlowData";
@@ -105,10 +107,19 @@ export function SendFlowPage() {
 
     const distanceKm = haversineDistanceKm(currentPlayer.homeBase, selectedFriendCoordinates);
     const speedKmh = estimateMascotSpeedKmh(selectedMascot);
+    const modifiers = deriveMascotTravelModifiers(selectedMascot, { distanceKm });
 
     return {
       distanceKm,
-      durationHours: estimateTravelDurationHours(distanceKm, speedKmh),
+      modifiers,
+      outboundDurationHours: estimateTravelDurationHours(
+        distanceKm,
+        speedKmh * modifiers.outboundSpeedMultiplier,
+      ),
+      returnDurationHours: estimateTravelDurationHours(
+        distanceKm,
+        speedKmh * modifiers.returnSpeedMultiplier,
+      ),
     };
   }, [selectedFriend, selectedMascot]);
 
@@ -225,6 +236,15 @@ export function SendFlowPage() {
                   label={t(mascot.speciesKey)}
                   title={mascot.name}
                   meta={`${t("mascot.level")} ${mascot.level}`}
+                  description={getMascotRouteEffect(
+                    mascot,
+                    selectedFriend
+                      ? deriveMascotTravelModifiers(mascot, {
+                          distanceKm: getRouteDistance(selectedFriend),
+                        })
+                      : undefined,
+                    t,
+                  )}
                   selected={mascot.id === selection.mascotId}
                 />
                 <button
@@ -304,8 +324,43 @@ export function SendFlowPage() {
                   />
                   <SummaryRow
                     fallback={t("common.unavailable")}
-                    label={t("send.estimatedDuration")}
-                    value={estimate ? formatDurationHours(estimate.durationHours) : undefined}
+                    label={t("send.preparationTime")}
+                    value={estimate ? formatMinutes(estimate.modifiers.preparationMinutes) : undefined}
+                  />
+                  <SummaryRow
+                    fallback={t("common.unavailable")}
+                    label={t("send.outboundDuration")}
+                    value={estimate ? formatDurationHours(estimate.outboundDurationHours) : undefined}
+                  />
+                  <SummaryRow
+                    fallback={t("common.unavailable")}
+                    label={t("send.returnDuration")}
+                    value={estimate ? formatDurationHours(estimate.returnDurationHours) : undefined}
+                  />
+                  <SummaryRow
+                    fallback={t("common.unavailable")}
+                    label={t("send.discoveryReach")}
+                    value={estimate ? formatMultiplierBonus(estimate.modifiers.discoveryRadiusMultiplier) : undefined}
+                  />
+                  <SummaryRow
+                    fallback={t("common.unavailable")}
+                    label={t("send.rarityPotential")}
+                    value={estimate ? formatMultiplierBonus(estimate.modifiers.rarityWeightMultiplier) : undefined}
+                  />
+                  <SummaryRow
+                    fallback={t("common.unavailable")}
+                    label={t("send.routeProfile")}
+                    value={
+                      estimate
+                        ? t(
+                            estimate.modifiers.isLongRoute
+                              ? estimate.modifiers.longRouteConsistency === 1
+                                ? "send.longRouteMitigated"
+                                : "send.longRoutePenalty"
+                              : "send.shortRoute",
+                          )
+                        : undefined
+                    }
                   />
                 </dl>
                 <StampButton
@@ -581,6 +636,47 @@ function formatDurationHours(durationHours: number) {
   }
 
   return minutes > 0 ? `${hours}h ${minutes}m` : `${hours}h`;
+}
+
+function formatMinutes(minutes: number) {
+  return `${Math.round(minutes)}m`;
+}
+
+function formatMultiplierBonus(multiplier: number) {
+  return `+${Math.round((multiplier - 1) * 100)}%`;
+}
+
+function getRouteDistance(friend: FriendProfile) {
+  const coordinates = getFriendCoordinates(friend);
+  return coordinates ? haversineDistanceKm(currentPlayer.homeBase, coordinates) : 0;
+}
+
+function getMascotRouteEffect(
+  mascot: Mascot,
+  modifiers: MascotTravelModifiers | undefined,
+  t: ReturnType<typeof useTranslation>["t"],
+) {
+  if (!modifiers) {
+    return t(mascot.trait.descriptionKey);
+  }
+
+  const traitName = t(mascot.trait.nameKey);
+
+  if (mascot.trait.effect === "fastReturn") {
+    return `${traitName}: ${t("send.effectFastReturn")}`;
+  }
+
+  if (mascot.trait.effect === "rareFind") {
+    return `${traitName}: ${t("send.effectDiscoveryReach")} ${formatMultiplierBonus(modifiers.discoveryRadiusMultiplier)}`;
+  }
+
+  if (mascot.trait.effect !== "deliveryReward") {
+    return `${traitName}: ${t(mascot.trait.descriptionKey)}`;
+  }
+
+  return `${traitName}: ${t(
+    modifiers.isLongRoute ? "send.effectSafeLongRoute" : "send.effectSafeShortRoute",
+  )}`;
 }
 
 function getInitialMascotId(mascots: Mascot[], requestedMascotId: string | null) {

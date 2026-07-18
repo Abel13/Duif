@@ -87,6 +87,7 @@ export type Database = {
           reward_seed: string
           sender_profile_id: string
           status: Database["public"]["Enums"]["delivery_status"]
+          travel_modifiers: Json | null
           updated_at: string
         }
         Insert: {
@@ -111,6 +112,7 @@ export type Database = {
           reward_seed: string
           sender_profile_id: string
           status: Database["public"]["Enums"]["delivery_status"]
+          travel_modifiers?: Json | null
           updated_at?: string
         }
         Update: {
@@ -135,6 +137,7 @@ export type Database = {
           reward_seed?: string
           sender_profile_id?: string
           status?: Database["public"]["Enums"]["delivery_status"]
+          travel_modifiers?: Json | null
           updated_at?: string
         }
         Relationships: [
@@ -635,6 +638,7 @@ export type Database = {
           reward_seed: string
           sender_profile_id: string
           status: Database["public"]["Enums"]["delivery_status"]
+          travel_modifiers: Json | null
           updated_at: string
         }
         SetofOptions: {
@@ -816,4 +820,3 @@ export const Constants = {
     },
   },
 } as const
-

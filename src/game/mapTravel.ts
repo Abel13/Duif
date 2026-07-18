@@ -1,5 +1,6 @@
 import type { TranslationKey } from "../i18n";
 import { clampProgress, getDeliveryStatus } from "./travel";
+import { getDeliveryTravelModifiers } from "./travelModifiers";
 import type { Coordinates, Delivery, DeliveryStatus, RewardRarity } from "./types";
 
 export type MapCoordinate = Pick<Coordinates, "latitude" | "longitude">;
@@ -336,6 +337,10 @@ export function getEligibleRouteRewards(
   delivery: Delivery,
   rewardPoints: RouteRewardPoint[] = mockRouteRewardPoints,
 ): RouteRewardDiscovery[] {
+  const discoveryRadiusMultiplier = getDeliveryTravelModifiers(
+    delivery.travelModifiers,
+  ).discoveryRadiusMultiplier;
+
   return rewardPoints.flatMap((rewardPoint) => {
     const distanceFromRouteKm = getDistanceFromPointToRouteKm(
       delivery.origin,
@@ -343,7 +348,7 @@ export function getEligibleRouteRewards(
       rewardPoint.coordinates,
     );
 
-    if (distanceFromRouteKm > rewardPoint.eligibilityRadiusKm) {
+    if (distanceFromRouteKm > rewardPoint.eligibilityRadiusKm * discoveryRadiusMultiplier) {
       return [];
     }
 

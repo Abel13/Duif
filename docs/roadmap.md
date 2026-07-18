@@ -1362,11 +1362,14 @@ Includes:
 - Pipoca receiving an approximately 15% wider discovery corridor through `Achador Curioso`;
 - Nuvem mitigating a bounded portion of long-route penalties through `Rota Segura`;
 - visible explanations in the send flow so mascot choice is understandable before dispatch;
-- deterministic tests for mascot, route, cap, invalid-value, and snapshot behavior.
+- deterministic tests for mascot, route, cap, invalid-value, and snapshot behavior;
+- a minimal `travel_modifiers` delivery snapshot and authoritative creation trigger, brought
+  forward from Milestone 35 so authenticated and mock deliveries cannot diverge.
 
 Does not include:
 
-- backend persistence or schema changes, which remain in Milestone 35;
+- persisted route discoveries, reward materialization, or collection changes, which remain
+  in Milestone 35;
 - paid stat advantages, fuel, consumable energy, or premium-only routes;
 - final rarity tables, duplicate conversion, cargo weights, or economy rewards;
 - unrestricted stacking between traits, skills, and equipment;

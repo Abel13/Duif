@@ -27,6 +27,13 @@ import {
 } from "../../game/mapTravel";
 import type { Delivery } from "../../game/types";
 import styles from "./TravelMap.module.css";
+import {
+  getMapFocusZoom,
+  getNormalizedRouteBounds,
+  getRouteFitPadding,
+  MIN_REWARD_VISIBILITY_ZOOM,
+  shouldShowMapRewards,
+} from "./travelMapCamera";
 
 const routeSourceId = "duif-route";
 const outboundProgressSourceId = "duif-outbound-progress";
@@ -228,6 +235,7 @@ export function TravelMap({
         selectionRef.current,
         onRewardSelect,
       );
+      syncRewardMarkerVisibility(map, rewardMarkerRefs.current);
       syncPostalTrafficMarkers(map, trafficMarkerRefs.current, postalTraffic);
       focusMap(map, focusTargetRef.current, delivery, petPosition, rewards);
     });
@@ -240,6 +248,9 @@ export function TravelMap({
     map.on("dragstart", stopFollowing);
     map.on("zoomstart", (event) => {
       if (event.originalEvent) stopFollowing();
+    });
+    map.on("zoom", () => {
+      syncRewardMarkerVisibility(map, rewardMarkerRefs.current);
     });
 
     return () => {
@@ -296,6 +307,7 @@ export function TravelMap({
       selection,
       onRewardSelect,
     );
+    syncRewardMarkerVisibility(map, rewardMarkerRefs.current);
     syncPostalTrafficMarkers(map, trafficMarkerRefs.current, postalTraffic);
   }, [
     delivery,
@@ -339,7 +351,7 @@ export function TravelMap({
         );
         updateMapProgress(map, delivery, position);
 
-        if (followMascotRef.current) {
+        if (followMascotRef.current && !map.isEasing()) {
           map.setCenter(toLngLat(position.coordinates));
         }
       }
@@ -546,6 +558,20 @@ function removeMarkers(markers: Map<string, maplibregl.Marker>) {
   markers.clear();
 }
 
+function syncRewardMarkerVisibility(
+  map: maplibregl.Map,
+  markers: Map<string, maplibregl.Marker>,
+) {
+  const visible = shouldShowMapRewards(map.getZoom());
+
+  markers.forEach((marker) => {
+    const element = marker.getElement();
+    element.toggleAttribute("hidden", !visible);
+    element.setAttribute("aria-hidden", String(!visible));
+    element.tabIndex = visible ? 0 : -1;
+  });
+}
+
 function addMapLayers(
   map: maplibregl.Map,
   delivery: Delivery,
@@ -649,7 +675,18 @@ function addMapLayers(
           "top-right",
           "top",
         ],
-        "text-field": ["get", "label"],
+        "text-field": [
+          "step",
+          ["zoom"],
+          [
+            "case",
+            ["==", ["get", "kind"], "reward"],
+            "",
+            ["get", "label"],
+          ],
+          MIN_REWARD_VISIBILITY_ZOOM,
+          ["get", "label"],
+        ],
         "text-font": ["Open Sans Regular"],
         "text-offset": [
           "case",
@@ -780,7 +817,7 @@ function focusMap(
   map.easeTo({
     center: toLngLat(coordinates),
     duration,
-    zoom: Math.max(map.getZoom(), target.kind === "reward" ? 5.5 : 4.5),
+    zoom: getMapFocusZoom(map.getZoom(), target.kind),
   });
 }
 
@@ -789,24 +826,16 @@ function fitMapToDelivery(
   delivery: Delivery,
   duration = 0,
 ) {
-  const bounds: LngLatBoundsLike = [
-    [
-      Math.min(delivery.origin.longitude, delivery.destination.longitude) - 8,
-      Math.min(delivery.origin.latitude, delivery.destination.latitude) - 8,
-    ],
-    [
-      Math.max(delivery.origin.longitude, delivery.destination.longitude) + 8,
-      Math.max(delivery.origin.latitude, delivery.destination.latitude) + 8,
-    ],
-  ];
+  const bounds: LngLatBoundsLike = getNormalizedRouteBounds(
+    delivery.origin,
+    delivery.destination,
+  );
+  const container = map.getContainer();
+  const padding = getRouteFitPadding(container.clientWidth, container.clientHeight);
 
   map.fitBounds(bounds, {
     duration,
-    padding: {
-      bottom: 104,
-      left: 44,
-      right: 44,
-      top: 96,
-    },
+    maxZoom: 10.5,
+    padding,
   });
 }
