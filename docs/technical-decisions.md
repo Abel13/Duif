@@ -828,9 +828,13 @@ The following decisions are intentionally deferred:
 - real map provider;
 - final asset pipeline;
 - native app strategy;
-- monetization model.
+- final currency names, pricing, earning curves, purchase limits, and payment architecture.
 
 These should be decided only after the core loop and visual identity are validated.
+
+The monetization boundary itself is no longer deferred: premium value is limited to
+cosmetics and social expression, while the full gameplay loop remains free. See
+`docs/product-rules.md` for the authoritative shop and economy guardrails.
 
 ## First Implementation Sequence
 

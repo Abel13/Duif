@@ -1186,6 +1186,50 @@ Success criteria:
 - gift and fuel open questions are resolved or intentionally deferred;
 - roadmap can safely schedule the first shop prototype.
 
+Decision outcome:
+
+- free currency comes from play, while future premium currency is limited to cosmetics and
+  social expression;
+- normal deliveries never require fuel, and fuel applies only to optional boost equipment;
+- first-scope gifts contain only transferable stickers, postcards, or simple cosmetics;
+- duplicate behavior is defined by item category, while conversion quantities remain a
+  later balancing decision;
+- user-uploaded photo postcards remain outside the first commercial prototype;
+- detailed rules and paid-economy guardrails live in `docs/product-rules.md`.
+
+## Milestone 30: Read-Only Shop Prototype
+
+Goal:
+
+Validate the postal-shop visual experience and catalog organization without implementing an
+economy, purchases, or payment infrastructure.
+
+Includes:
+
+- mobile-first `/shop` route using the illustrated postal-notebook visual language;
+- read-only mock catalog for cosmetics, stickers, postcards, and decorations;
+- category filters and item detail or preview states;
+- fictional prices clearly presented as prototype data;
+- preview of eligible cosmetics or decorations without persisting changes;
+- `pt-BR` and `en-US` copy;
+- enable the existing Loja navigation tab for the mock route.
+
+Does not include:
+
+- currency balances or earning logic;
+- purchase, gifting, equip, consume, or inventory-write actions;
+- Supabase schema, catalog, ledger, RPC, or RLS changes;
+- payment provider, checkout, receipts, refunds, or regional pricing;
+- boosts, fuel, materials, functional equipment, loot boxes, or user-uploaded photos.
+
+Success criteria:
+
+- `/shop` communicates the intended catalog and postal-shop identity on mobile and desktop;
+- filters and previews work entirely from typed mock data;
+- no control suggests that a real purchase or premium balance exists;
+- current gameplay routes and mock/Supabase fallbacks remain unchanged;
+- tests and build pass.
+
 ## Suggested First Execution Order
 
 Use this order for the first development pass:

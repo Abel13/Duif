@@ -56,8 +56,13 @@ Boosts:
 
 - Speed boosts should come from items or equipment, not a global time multiplier.
 - Example: a jet backpack with a limited autonomy in kilometers.
-- Boosts may require fuel or recharge.
-- Boosts and fuel need deeper balancing before implementation.
+- Fuel and recharge apply only to optional boost equipment.
+- Normal deliveries never consume fuel and the send-travel-return-collect loop remains
+  available without a boost.
+- Boosts may shorten travel time, but they must not unlock routes, rewards, or social
+  content that free players cannot reach.
+- Fuel capacity, recharge rates, boost strength, and acquisition rates remain balancing
+  decisions for a later milestone.
 
 ## Real-Time Map Rules
 
@@ -123,10 +128,11 @@ Letters:
 Postcards:
 
 - Can be app-sold cards based on cities, events, routes, or collections.
-- Can use user-uploaded photos.
+- User-uploaded photo postcards are excluded from the first commercial shop prototype.
 - May include a short written message on the back. The current prototype uses 180
   characters.
-- Need moderation/privacy decisions before user-uploaded images go live.
+- A future photo-postcard release requires explicit sender consent, reporting, blocking,
+  content removal, and a moderation process before uploads can go live.
 
 Stickers:
 
@@ -137,10 +143,11 @@ Stickers:
 
 Gifts:
 
-- Not defined yet.
-- Candidate gift contents include inventory items, cosmetics, fuel, materials, equipment,
-  or surprise bundles.
-- Gift rules must be designed together with economy, abuse prevention, and shop policy.
+- The first gift scope is limited to transferable stickers, postcards, and simple cosmetics.
+- Gifts require an accepted friendship and an identified sender.
+- Gifts cannot contain currency, fuel, materials, functional equipment, account-bound
+  premium items, or randomized surprise bundles.
+- Paid loot boxes and paid randomized gifts are not allowed.
 - The current prototype persists only an optional note for small gifts.
 
 Reward impact:
@@ -302,16 +309,15 @@ Duplicate item policies:
 - Convert on duplicate: repeat drops convert into fragments, soft currency, or upgrade
   progress.
 
-Recommended defaults:
+Category defaults:
 
-- postcards, badges, and collection stamps: convert on duplicate or unique;
-- fuel and materials: stackable;
-- equipment with stats: duplicate allowed;
-- simple cosmetics: unique or convert on duplicate.
-
-Open design question:
-
-- Exact duplicate conversion outputs are not defined yet.
+- fuel and materials are stackable;
+- equipment with stats allows separate copies because instances may later have different
+  stats or upgrade state;
+- simple cosmetics are unique, and the shop must prevent purchasing a second owned copy;
+- duplicate postcards, badges, and collection stamps convert into collection progress;
+- duplicate conversion rates, quantities, and any overflow reward remain balancing
+  decisions for a later milestone.
 
 ## Reward Rules
 
@@ -350,29 +356,52 @@ Open design question:
 
 ## Shop and Monetization Rules
 
-The shop can include cosmetics, useful items, social content, boosts, fuel, and premium currency.
+The shop may eventually include cosmetics, social content, optional boosts, fuel, and two
+currencies. Their final player-facing names are intentionally undecided.
 
-Potential categories:
+Currency boundaries:
+
+- Free currency is earned from deliveries, route rewards, collection progress, and events.
+- Premium currency may eventually be purchased, but is restricted to visual expression
+  and social content.
+- Premium currency may buy cosmetics, stickers, postcards, and profile or equipment
+  decoration.
+- Premium currency cannot directly buy mascot or player XP, attributes, route rewards,
+  cargo capacity, required travel-time reductions, or exclusive gameplay access.
+- Premium currency cannot be converted into free currency or transferred between players.
+- Earning curves, prices, currency names, purchase limits, and regional pricing remain
+  deferred until balance and payment milestones.
+
+Initial catalog categories:
 
 - cosmetic equipment;
 - equipment cosmetics;
 - stickers;
 - postcards;
 - city/event cards;
-- gifts;
-- boosts;
-- fuel;
-- materials;
-- premium currency.
+- profile and equipment decorations.
 
-Guardrail:
+Later free-economy categories may include optional boosts, fuel, and materials after their
+balance rules exist. They are not part of the first commercial shop prototype.
 
-> Paid items can accelerate, customize, or expand expression, but the basic send-travel-return
-> loop should remain playable without purchases.
+Paid-economy guardrails:
 
-Open design question:
+- The complete send-travel-return-collect loop is free and never requires a purchase.
+- Paid items customize or expand expression; paid gameplay power is not allowed.
+- Do not sell XP, attributes, route discoveries, cargo capacity, exclusive functional
+  equipment, or access to friends and destinations.
+- Do not add paid loot boxes, randomized paid rewards, anonymous gifts, player trading, or
+  premium-to-free currency conversion.
+- Account-bound premium items cannot be gifted.
+- No purchase, balance, entitlement, or consumption behavior should be implied before a
+  backend-authoritative ledger and purchase-validation design exists.
 
-- Premium economy, pricing, purchase limits, and anti-pay-to-win boundaries are not defined yet.
+First prototype boundary:
+
+- The first shop prototype is a read-only mock catalog with category filters, fictional
+  prices, and visual previews.
+- It has no persisted balance, purchase action, inventory consumption, backend catalog,
+  payment provider, or user-uploaded photo support.
 
 ## Open Product Questions
 
@@ -382,10 +411,10 @@ The following topics still need explicit product decisions before deep implement
 - exact player XP formula;
 - level unlock cadence;
 - reward formulas and rarity tables;
-- gift contents and restrictions;
-- shop economy and premium currency rules;
-- fuel/recharge balancing;
+- final currency names, earning curves, prices, and purchase limits;
+- fuel capacity, recharge rates, boost strength, and acquisition rates;
 - cargo units and item weights;
-- duplicate conversion outputs;
-- moderation rules for user-written letters and user-uploaded postcard photos;
+- duplicate conversion rates, quantities, and overflow rewards;
+- moderation implementation and operations for user-written letters and future photo
+  postcards;
 - final map tile provider and map visual art direction.
