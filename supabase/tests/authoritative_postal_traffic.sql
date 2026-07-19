@@ -1,17 +1,23 @@
 begin;
 
-update public.profiles
-set auth_user_id = '10000000-0000-4000-8000-000000000001'::uuid
-where mock_key = 'player-current';
+\ir player_fixtures.sql
+
+insert into public.friendships (
+  id, requester_profile_id, addressee_profile_id, status, friendship_level, exchange_count
+) values (
+  '00000000-0000-4000-8000-000000009700',
+  '00000000-0000-4000-8000-000000000001',
+  '00000000-0000-4000-8000-000000000101', 'accepted', 1, 0
+);
 
 insert into public.deliveries (
-  id, mock_key, sender_profile_id, receiver_profile_id, mascot_id,
+  id, sender_profile_id, receiver_profile_id, mascot_id,
   correspondence_option_id, origin_latitude, origin_longitude, origin_label_key,
   destination_latitude, destination_longitude, destination_label_key, distance_km,
   animal_speed_kmh, outbound_start_at, outbound_arrival_at, return_start_at,
   return_arrival_at, status, reward_seed, travel_modifiers
 ) values (
-  '00000000-0000-4000-8000-000000009601', 'traffic-test-aurora',
+  '00000000-0000-4000-8000-000000009601',
   '00000000-0000-4000-8000-000000000101',
   '00000000-0000-4000-8000-000000000001',
   '00000000-0000-4000-8000-000000000204',
@@ -46,13 +52,13 @@ end;
 $$;
 
 insert into public.deliveries (
-  id, mock_key, sender_profile_id, receiver_profile_id, mascot_id,
+  id, sender_profile_id, receiver_profile_id, mascot_id,
   correspondence_option_id, origin_latitude, origin_longitude, origin_label_key,
   destination_latitude, destination_longitude, destination_label_key, distance_km,
   animal_speed_kmh, outbound_start_at, outbound_arrival_at, return_start_at,
   return_arrival_at, status, reward_seed, travel_modifiers
 ) values (
-  '00000000-0000-4000-8000-000000009602', 'traffic-test-antimeridian',
+  '00000000-0000-4000-8000-000000009602',
   '00000000-0000-4000-8000-000000000101',
   '00000000-0000-4000-8000-000000000001',
   '00000000-0000-4000-8000-000000000204',

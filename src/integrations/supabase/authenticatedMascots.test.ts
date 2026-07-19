@@ -36,7 +36,6 @@ const nuvemMascotRow: PlayerMascotRow = {
   ],
   id: "00000000-0000-4000-8000-000000000201",
   level: 3,
-  mock_key: "mascot-nuvem",
   name: "Nuvem",
   next_level_xp: 260,
   owner_profile_id: "00000000-0000-4000-8000-000000000001",
@@ -69,7 +68,6 @@ const nuvemDeliveryRow: DeliveryRow = {
   distance_km: 7946,
   id: "00000000-0000-4000-8000-000000000501",
   mascot_id: "00000000-0000-4000-8000-000000000201",
-  mock_key: "delivery-nuvem-lisbon",
   origin_label_key: "locations.saoPaulo",
   origin_latitude: -23.5505,
   origin_longitude: -46.6333,
@@ -94,7 +92,7 @@ describe("authenticated mascot mappers", () => {
     });
 
     expect(mascot).toMatchObject({
-      id: "mascot-nuvem",
+      id: nuvemMascotRow.id,
       name: "Nuvem",
       speciesKey: "species.carrierPigeon",
       level: 3,
@@ -109,7 +107,7 @@ describe("authenticated mascot mappers", () => {
     const delivery = mapDeliveryRowToDelivery(nuvemDeliveryRow, "mascot-nuvem");
 
     expect(delivery).toMatchObject({
-      id: "delivery-nuvem-lisbon",
+      id: nuvemDeliveryRow.id,
       mascotId: "mascot-nuvem",
       status: "returning",
       rewardSeed: "nuvem-lisbon-welcome-letter",
@@ -126,18 +124,18 @@ describe("authenticated mascot mappers", () => {
     const completedDelivery = {
       ...nuvemDeliveryRow,
       created_at: "2026-07-10T20:00:00.000Z",
-      mock_key: "delivery-completed",
+      id: "00000000-0000-4000-8000-000000000502",
       status: "completed" as const,
     };
     const activeDelivery = {
       ...nuvemDeliveryRow,
       created_at: "2026-07-09T20:00:00.000Z",
-      mock_key: "delivery-active",
+      id: "00000000-0000-4000-8000-000000000503",
       status: "returning" as const,
     };
 
-    expect(selectCurrentDelivery([completedDelivery, activeDelivery])?.mock_key).toBe(
-      "delivery-active",
+    expect(selectCurrentDelivery([completedDelivery, activeDelivery])?.id).toBe(
+      "00000000-0000-4000-8000-000000000503",
     );
   });
 
@@ -163,7 +161,7 @@ describe("authenticated mascot mappers", () => {
     });
 
     expect(mascots).toHaveLength(1);
-    expect(mascots[0]?.currentDelivery?.id).toBe("delivery-nuvem-lisbon");
+    expect(mascots[0]?.currentDelivery?.id).toBe(nuvemDeliveryRow.id);
   });
 
   it("returns an empty list when authenticated mascot rows are empty", () => {

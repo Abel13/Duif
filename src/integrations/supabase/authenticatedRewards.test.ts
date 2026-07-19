@@ -18,11 +18,12 @@ import { mapDeliveryRowToDelivery } from "./authenticatedMascots";
 import { mapInventoryItemRow, type InventoryItemRow } from "./inventoryMappers";
 
 const rewardItemRow: RewardItemRow = {
+  catalog_key: "reward-golden-compass-pin",
   description_key: "rewards.items.goldenCompassPin.description",
   id: "00000000-0000-4000-8000-000000000603",
-  mock_key: "reward-golden-compass-pin",
   name_key: "rewards.items.goldenCompassPin.name",
   rarity: "rare",
+  status: "active",
   thumbnail_asset_path: "/assets/items/thumbnails/golden-compass-pin.webp",
 };
 
@@ -31,7 +32,6 @@ const deliveryRewardRow: DeliveryRewardRow = {
   created_at: "2026-07-10T15:00:00.000Z",
   delivery_id: "00000000-0000-4000-8000-000000000501",
   id: "00000000-0000-4000-8000-000000000701",
-  mock_key: "reward-delivery-nuvem-lisbon",
   reward_item_id: "00000000-0000-4000-8000-000000000603",
   xp_gained: 40,
 };
@@ -43,7 +43,7 @@ const inventoryItemRow: InventoryItemRow = {
   description_key: "rewards.items.goldenCompassPin.description",
   equipped: false,
   id: "00000000-0000-4000-8000-000000000901",
-  mock_key: "inventory-reward-delivery-nuvem-lisbon",
+  delivery_reward_id: deliveryRewardRow.id,
   name_key: "rewards.items.goldenCompassPin.name",
   owner_profile_id: "00000000-0000-4000-8000-000000000001",
   rarity: "rare",
@@ -62,7 +62,6 @@ const deliveryRow: DeliveryRow = {
   distance_km: 7946,
   id: "00000000-0000-4000-8000-000000000501",
   mascot_id: "00000000-0000-4000-8000-000000000201",
-  mock_key: "delivery-nuvem-lisbon",
   origin_label_key: "locations.saoPaulo",
   origin_latitude: -23.5505,
   origin_longitude: -46.6333,
@@ -80,7 +79,7 @@ const deliveryRow: DeliveryRow = {
 };
 
 const routePointRow: RouteRewardPointRow = {
-  active: true,
+  catalog_key: "route-reward-londrina-postcard",
   created_at: "2026-07-18T20:00:00.000Z",
   description_key: "map.rewards.londrinaPostcard.description",
   eligibility_radius_km: 18,
@@ -89,11 +88,11 @@ const routePointRow: RouteRewardPointRow = {
   kind: "postcard",
   latitude: -23.3045,
   longitude: -51.1696,
-  mock_key: "route-reward-londrina-postcard",
   region_kind: "city",
-  region_label: "Londrina, PR, Brasil",
+  region_label_key: "locations.londrina",
   reward_item_id: "00000000-0000-4000-8000-000000000611",
   sort_order: 10,
+  status: "active",
   title_key: "map.rewards.londrinaPostcard.name",
 };
 
@@ -113,7 +112,7 @@ describe("authenticated reward mappers", () => {
   it("maps reward item rows to app reward items", () => {
     expect(mapRewardItemRowToRewardItem(rewardItemRow)).toEqual({
       descriptionKey: "rewards.items.goldenCompassPin.description",
-      id: "reward-golden-compass-pin",
+      id: rewardItemRow.id,
       nameKey: "rewards.items.goldenCompassPin.name",
       rarity: "rare",
       thumbnailAssetPath: "/assets/items/thumbnails/golden-compass-pin.webp",
@@ -127,9 +126,9 @@ describe("authenticated reward mappers", () => {
         rewardRow: deliveryRewardRow,
       }),
     ).toMatchObject({
-      id: "reward-delivery-nuvem-lisbon",
+      id: deliveryRewardRow.id,
       item: {
-        id: "reward-golden-compass-pin",
+        id: rewardItemRow.id,
       },
       xpGained: 40,
     });
@@ -138,7 +137,7 @@ describe("authenticated reward mappers", () => {
   it("maps collected inventory item rows", () => {
     expect(mapInventoryItemRow(inventoryItemRow)).toMatchObject({
       category: "keepsakes",
-      id: "inventory-reward-delivery-nuvem-lisbon",
+      id: inventoryItemRow.id,
       sourceKey: "inventory.sources.routeReward",
     });
   });
@@ -149,15 +148,15 @@ describe("authenticated reward mappers", () => {
       itemRow: {
         ...rewardItemRow,
         id: routePointRow.reward_item_id,
-        mock_key: "reward-londrina-postcard",
+        catalog_key: "reward-londrina-postcard",
         rarity: "common",
       },
       pointRow: routePointRow,
     })).toMatchObject({
       discovered: false,
-      id: "route-reward-londrina-postcard",
+      id: routeDiscoveryRow.id,
       kind: "postcard",
-      regionLabel: "Londrina, PR, Brasil",
+      regionLabel: "locations.londrina",
       routeProgress: 0,
     });
   });
@@ -211,7 +210,7 @@ describe("authenticated reward mappers", () => {
           {
             ...inventoryItemRow,
             id: "00000000-0000-4000-8000-000000000902",
-            mock_key: "inventory-route-discovery-londrina",
+            delivery_reward_id: null,
           },
         ],
       },
@@ -219,8 +218,8 @@ describe("authenticated reward mappers", () => {
     );
 
     expect(result?.delivery.status).toBe("completed");
-    expect(result?.inventoryItem.id).toBe("inventory-reward-delivery-nuvem-lisbon");
-    expect(result?.reward.item.id).toBe("reward-golden-compass-pin");
+    expect(result?.inventoryItem.id).toBe(inventoryItemRow.id);
+    expect(result?.reward.item.id).toBe(rewardItemRow.id);
     expect(result?.routeInventoryItems).toHaveLength(1);
   });
 

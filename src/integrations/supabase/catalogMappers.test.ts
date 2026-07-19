@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { nuvemDelivery, starterMascots } from "../../game/mockData";
 import type { MascotTemplateRow } from "./catalogMappers";
 import {
+  CatalogContractError,
   STARTER_MASCOT_IDS,
-  mapMascotTemplateRowToMascot,
+  mapMascotTemplateRowToArchetype,
   mapStarterMascotTemplateRows,
   selectStarterMascotTemplateRows,
 } from "./catalogMappers";
@@ -16,39 +16,31 @@ const baseRow: MascotTemplateRow = {
     portraitPlaceholderKey: "appearance.nuvemPortrait",
     primaryColor: "#f7f1e3",
   },
-  attributes: {
-    luck: 6,
-    orientation: 9,
-    speed: 7,
-    stamina: 8,
-  },
+  attributes: { luck: 6, orientation: 9, speed: 7, stamina: 8 },
   base_level: 3,
   base_xp: 180,
+  catalog_key: "mascot-nuvem",
   created_at: "2026-07-09T20:00:00.000Z",
-  equipment: [
-    {
-      descriptionKey: "equipment.canvasPostalBag.description",
-      equipped: true,
-      iconAssetPath: "/assets/equipment/icons/canvas-postal-bag.webp",
-      id: "equipment-nuvem-canvas-bag",
-      nameKey: "equipment.canvasPostalBag.name",
-      rarity: "common",
-      type: "bag",
-    },
-  ],
+  equipment: [{
+    descriptionKey: "equipment.canvasPostalBag.description",
+    equipped: true,
+    iconAssetPath: "/assets/equipment/icons/canvas-postal-bag.webp",
+    id: "equipment-nuvem-canvas-bag",
+    nameKey: "equipment.canvasPostalBag.name",
+    rarity: "common",
+    type: "bag",
+  }],
   id: "00000000-0000-4000-8000-000000000201",
-  mock_key: "mascot-nuvem",
-  name: "Nuvem",
   next_level_xp: 260,
-  skills: [
-    {
-      descriptionKey: "skills.longRoute.description",
-      id: "skill-nuvem-long-route",
-      level: 2,
-      nameKey: "skills.longRoute.name",
-    },
-  ],
+  skills: [{
+    descriptionKey: "skills.longRoute.description",
+    id: "skill-nuvem-long-route",
+    level: 2,
+    nameKey: "skills.longRoute.name",
+  }],
   species_key: "species.carrierPigeon",
+  status: "active",
+  suggested_name_key: "archetypes.suggestedNames.nuvem",
   trait: {
     descriptionKey: "traits.steadyRoute.description",
     effect: "deliveryReward",
@@ -58,66 +50,42 @@ const baseRow: MascotTemplateRow = {
 };
 
 describe("Supabase catalog mappers", () => {
-  it("maps a mascot template row to the current Mascot model", () => {
-    const mascot = mapMascotTemplateRowToMascot(baseRow);
+  it("maps an active template to an archetype without assigning a player name", () => {
+    const archetype = mapMascotTemplateRowToArchetype(baseRow);
 
-    expect(mascot).toMatchObject({
-      id: "mascot-nuvem",
-      name: "Nuvem",
-      level: 3,
-      xp: 180,
-      nextLevelXp: 260,
+    expect(archetype).toMatchObject({
+      id: baseRow.id,
+      catalogKey: "mascot-nuvem",
       speciesKey: "species.carrierPigeon",
-      attributes: {
-        speed: 7,
-        stamina: 8,
-        orientation: 9,
-        luck: 6,
-      },
+      suggestedNameKey: "archetypes.suggestedNames.nuvem",
+      baseLevel: 3,
+      baseXp: 180,
     });
-    expect(mascot.currentDelivery?.id).toBe(nuvemDelivery.id);
-    expect(mascot.equipment[0]?.id).toBe("equipment-nuvem-canvas-bag");
+    expect(archetype).not.toHaveProperty("name");
   });
 
-  it("falls back to safe mascot data when JSON fields are missing or invalid", () => {
-    const fallbackMascot = starterMascots[0];
-    const mascot = mapMascotTemplateRowToMascot(
-      {
-        ...baseRow,
-        appearance: null,
-        attributes: null,
-        equipment: null,
-        skills: null,
-        trait: null,
-      },
-      fallbackMascot,
-    );
-
-    expect(mascot.attributes).toEqual(fallbackMascot.attributes);
-    expect(mascot.appearance).toEqual(fallbackMascot.appearance);
-    expect(mascot.trait).toEqual(fallbackMascot.trait);
-    expect(mascot.equipment).toEqual(fallbackMascot.equipment);
-    expect(mascot.skills).toEqual(fallbackMascot.skills);
+  it("rejects invalid active catalog JSON instead of borrowing another archetype", () => {
+    expect(() => mapMascotTemplateRowToArchetype({ ...baseRow, trait: null }))
+      .toThrow(CatalogContractError);
   });
 
-  it("filters and sorts only starter mascot template rows", () => {
-    const rows = [
-      { ...baseRow, mock_key: "friend-mascot-aurora" },
-      { ...baseRow, mock_key: "mascot-pipoca", name: "Pipoca" },
-      { ...baseRow, mock_key: "mascot-nuvem", name: "Nuvem" },
-      { ...baseRow, mock_key: "mascot-trovao", name: "Trovão" },
+  it("filters archived rows and sorts the three starter archetypes", () => {
+    const rows: MascotTemplateRow[] = [
+      { ...baseRow, catalog_key: "friend-mascot-aurora" },
+      { ...baseRow, catalog_key: "mascot-pipoca" },
+      { ...baseRow, catalog_key: "mascot-nuvem" },
+      { ...baseRow, catalog_key: "mascot-trovao" },
+      { ...baseRow, catalog_key: "mascot-pipoca", status: "archived" },
     ];
 
-    expect(selectStarterMascotTemplateRows(rows).map((row) => row.mock_key)).toEqual([
+    expect(selectStarterMascotTemplateRows(rows).map((row) => row.catalog_key)).toEqual([
       ...STARTER_MASCOT_IDS,
     ]);
   });
 
-  it("returns all three starter mascots and fills missing rows from mocks", () => {
-    const mascots = mapStarterMascotTemplateRows([baseRow]);
-
-    expect(mascots.map((mascot) => mascot.id)).toEqual([...STARTER_MASCOT_IDS]);
-    expect(mascots[1]?.name).toBe("Trovão");
-    expect(mascots[2]?.name).toBe("Pipoca");
+  it("does not fill missing catalog rows from runtime mocks", () => {
+    const archetypes = mapStarterMascotTemplateRows([baseRow]);
+    expect(archetypes).toHaveLength(1);
+    expect(archetypes[0]?.catalogKey).toBe("mascot-nuvem");
   });
 });

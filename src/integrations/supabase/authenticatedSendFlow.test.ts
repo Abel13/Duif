@@ -22,7 +22,6 @@ const sanitizedFriendRow: SanitizedFriendProfileRow = {
   exchange_count: 18,
   favorite_note_key: "friends.lia.note",
   friendship_level: 4,
-  mock_key: "friend-lisbon",
   postal_base_city: "Lisboa",
   postal_base_country: "Portugal",
   postal_base_state: "Lisboa",
@@ -30,12 +29,12 @@ const sanitizedFriendRow: SanitizedFriendProfileRow = {
 };
 
 const correspondenceOptionRow: CorrespondenceOptionRow = {
-  active: true,
+  catalog_key: "correspondence-postcard",
   description_key: "correspondence.postcard.description",
   id: "00000000-0000-4000-8000-000000000402",
-  mock_key: "correspondence-postcard",
   name_key: "correspondence.postcard.name",
   sort_order: 2,
+  status: "active",
   type: "postcard",
 };
 
@@ -69,7 +68,7 @@ describe("authenticated send flow mappers", () => {
       exchangeCount: 18,
       favoriteNoteKey: "friends.lia.note",
       friendshipLevel: 4,
-      id: "friend-lisbon",
+      id: friendProfileId,
       name: "Lia",
       location: {
         city: "Lisboa",

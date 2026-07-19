@@ -11,7 +11,6 @@ const profile: AuthProfile = {
   home_latitude: -23.5505,
   home_longitude: -46.6333,
   id: "00000000-0000-4000-8000-000000000001",
-  mock_key: "player-current",
   postal_base_city: "Sao Paulo",
   postal_base_country: "Brasil",
   postal_base_neighborhood: "Centro Postal",

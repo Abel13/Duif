@@ -17,7 +17,7 @@ const inventoryItemRow: InventoryItemRow = {
   description_key: "rewards.items.goldenCompassPin.description",
   equipped: false,
   id: "00000000-0000-4000-8000-000000000901",
-  mock_key: "inventory-reward-delivery-nuvem-lisbon",
+  delivery_reward_id: "00000000-0000-4000-8000-000000000701",
   name_key: "rewards.items.goldenCompassPin.name",
   owner_profile_id: "00000000-0000-4000-8000-000000000001",
   rarity: "rare",
@@ -70,7 +70,7 @@ describe("authenticated inventory reads", () => {
     expect(items).toEqual([
       expect.objectContaining({
         category: "keepsakes",
-        id: "inventory-reward-delivery-nuvem-lisbon",
+        id: inventoryItemRow.id,
         sourceKey: "inventory.sources.routeReward",
       }),
     ]);
