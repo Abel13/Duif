@@ -53,7 +53,7 @@ export const enUS = {
     sendRecovery: "Send instructions",
     genericEmailSent: "If this address can be used, we will send instructions by email.",
     verificationTitle: "Check your inbox",
-    verificationDescription: "We sent a postal confirmation. Open the link to unlock onboarding.",
+    verificationDescription: "If this address can be used, you will receive a postal confirmation to unlock onboarding.",
     resendConfirmation: "Resend confirmation",
     resendIn: "Resend in",
     backToLogin: "Back to sign in",

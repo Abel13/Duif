@@ -11,6 +11,7 @@ import {
 
 import {
   resolveAuthJourneyState,
+  resolveSignUpResponse,
   sanitizeIntendedRoute,
   type AuthJourneyState,
   type AuthPublicResult,
@@ -52,6 +53,16 @@ async function fetchProfile(authUserId: string) {
 
 function authRedirect(path: string) {
   return typeof window === "undefined" ? undefined : `${window.location.origin}${path}`;
+}
+
+function reportAuthFailure(operation: string, error: unknown) {
+  const details = typeof error === "object" && error !== null
+    ? error as { code?: unknown; status?: unknown }
+    : {};
+  console.error(`[auth] ${operation} failed`, {
+    code: typeof details.code === "string" ? details.code : "unknown",
+    status: typeof details.status === "number" ? details.status : undefined,
+  });
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -127,34 +138,70 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signUp = useCallback(async (email: string, password: string, intendedRoute?: string | null): Promise<AuthPublicResult> => {
     const supabase = getSupabaseClient();
     if (!supabase) return { ok: false, code: "serviceUnavailable" };
-    await supabase.auth.signUp({
-      email: email.trim(),
-      password,
-      options: {
-        emailRedirectTo: authRedirect(`/auth/callback?next=${encodeURIComponent(sanitizeIntendedRoute(intendedRoute ?? null))}`),
-      },
-    });
-    setPendingVerificationEmail(email.trim());
-    window.sessionStorage.setItem(pendingEmailStorageKey, email.trim());
-    return { ok: true };
+    const normalizedEmail = email.trim();
+
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email: normalizedEmail,
+        password,
+        options: {
+          emailRedirectTo: authRedirect(`/auth/callback?next=${encodeURIComponent(sanitizeIntendedRoute(intendedRoute ?? null))}`),
+        },
+      });
+      const result = resolveSignUpResponse({ error, hasUser: Boolean(data.user) });
+
+      if (!result.ok) {
+        reportAuthFailure("signUp", error ?? { code: "missing_user" });
+        return result;
+      }
+
+      if (!data.session) {
+        setPendingVerificationEmail(normalizedEmail);
+        window.sessionStorage.setItem(pendingEmailStorageKey, normalizedEmail);
+      }
+      return result;
+    } catch (error) {
+      reportAuthFailure("signUp", error);
+      return { ok: false, code: "requestFailed" };
+    }
   }, []);
 
   const resendConfirmation = useCallback(async (email: string): Promise<AuthPublicResult> => {
     const supabase = getSupabaseClient();
     if (!supabase) return { ok: false, code: "serviceUnavailable" };
-    await supabase.auth.resend({
-      type: "signup",
-      email: email.trim(),
-      options: { emailRedirectTo: authRedirect("/auth/callback") },
-    });
-    return { ok: true };
+    try {
+      const { error } = await supabase.auth.resend({
+        type: "signup",
+        email: email.trim(),
+        options: { emailRedirectTo: authRedirect("/auth/callback") },
+      });
+      if (error) {
+        reportAuthFailure("resendConfirmation", error);
+        return { ok: false, code: "requestFailed" };
+      }
+      return { ok: true };
+    } catch (error) {
+      reportAuthFailure("resendConfirmation", error);
+      return { ok: false, code: "requestFailed" };
+    }
   }, []);
 
   const requestPasswordReset = useCallback(async (email: string): Promise<AuthPublicResult> => {
     const supabase = getSupabaseClient();
     if (!supabase) return { ok: false, code: "serviceUnavailable" };
-    await supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo: authRedirect("/auth/reset-password") });
-    return { ok: true };
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+        redirectTo: authRedirect("/auth/reset-password"),
+      });
+      if (error) {
+        reportAuthFailure("requestPasswordReset", error);
+        return { ok: false, code: "requestFailed" };
+      }
+      return { ok: true };
+    } catch (error) {
+      reportAuthFailure("requestPasswordReset", error);
+      return { ok: false, code: "requestFailed" };
+    }
   }, []);
 
   const exchangeAuthCode = useCallback(async (code: string, purpose: "confirmation" | "recovery" = "confirmation"): Promise<AuthPublicResult> => {

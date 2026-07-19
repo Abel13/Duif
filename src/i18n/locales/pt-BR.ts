@@ -54,7 +54,7 @@ export const ptBR = {
     sendRecovery: "Enviar instruções",
     genericEmailSent: "Se este endereço puder ser usado, enviaremos as instruções por email.",
     verificationTitle: "Confira sua caixa de entrada",
-    verificationDescription: "Enviamos uma confirmação postal. Abra o link para liberar o onboarding.",
+    verificationDescription: "Se este endereço puder ser usado, você receberá uma confirmação postal para liberar o onboarding.",
     resendConfirmation: "Reenviar confirmação",
     resendIn: "Reenviar em",
     backToLogin: "Voltar ao login",

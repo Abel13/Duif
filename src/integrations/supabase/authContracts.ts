@@ -13,7 +13,38 @@ export type AuthPublicResult = { ok: true } | { ok: false; code: AuthPublicError
 export type AuthPublicErrorCode =
   | "invalidCredentials"
   | "invalidOrExpiredLink"
+  | "requestFailed"
   | "serviceUnavailable";
+
+type AuthErrorLike = {
+  code?: unknown;
+};
+
+const privacyPreservingSignUpErrorCodes = new Set([
+  "email_exists",
+  "user_already_exists",
+  "user_already_registered",
+]);
+
+export function resolveSignUpResponse({
+  error,
+  hasUser,
+}: {
+  error: unknown;
+  hasUser: boolean;
+}): AuthPublicResult {
+  if (!error) {
+    return hasUser ? { ok: true } : { ok: false, code: "requestFailed" };
+  }
+
+  const code = typeof error === "object" && error !== null
+    ? (error as AuthErrorLike).code
+    : undefined;
+
+  return typeof code === "string" && privacyPreservingSignUpErrorCodes.has(code)
+    ? { ok: true }
+    : { ok: false, code: "requestFailed" };
+}
 
 export const passwordPolicy = {
   minimumLength: 8,

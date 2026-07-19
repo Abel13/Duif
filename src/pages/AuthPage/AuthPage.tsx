@@ -48,17 +48,18 @@ export function AuthPage() {
     setIsSubmitting(true);
     try {
       if (mode === "recover") {
-        await requestPasswordReset(email);
-        setMessage("sent");
-        setCooldown(60);
+        const result = await requestPasswordReset(email);
+        setMessage(result.ok ? "sent" : "error");
+        if (result.ok) setCooldown(60);
       } else if (mode === "signUp") {
-        await signUp(email, password, searchParams.get("next"));
+        const result = await signUp(email, password, searchParams.get("next"));
+        if (!result.ok) setMessage("error");
       } else {
         const result = await signIn(email, password);
         if (!result.ok) setMessage("error");
       }
     } catch {
-      setMessage(mode === "signIn" ? "error" : "sent");
+      setMessage("error");
     } finally {
       setIsSubmitting(false);
     }
@@ -67,8 +68,9 @@ export function AuthPage() {
   async function handleResend() {
     if (!pendingVerificationEmail || cooldown > 0) return;
     setIsSubmitting(true);
-    await resendConfirmation(pendingVerificationEmail).catch(() => undefined);
-    setCooldown(60);
+    const result = await resendConfirmation(pendingVerificationEmail).catch(() => ({ ok: false as const }));
+    setMessage(result.ok ? "sent" : "error");
+    if (result.ok) setCooldown(60);
     setIsSubmitting(false);
   }
 
@@ -96,6 +98,7 @@ export function AuthPage() {
                 <h2>{t("auth.verificationTitle")}</h2>
                 <p>{t("auth.verificationDescription")}</p>
                 <strong>{maskEmail(pendingVerificationEmail)}</strong>
+                {message && <p aria-live="polite" className={message === "error" ? styles.error : styles.success}>{message === "error" ? t("auth.errorMessage") : t("auth.genericEmailSent")}</p>}
                 <StampButton disabled={isSubmitting || cooldown > 0} onClick={handleResend}>
                   {cooldown > 0 ? `${t("auth.resendIn")} ${cooldown}s` : t("auth.resendConfirmation")}
                 </StampButton>
