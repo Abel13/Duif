@@ -1663,7 +1663,8 @@ Delivered:
 
 ## Milestone 41: Required Mobile PWA Installation Gate
 
-Status: Planned.
+Status: Implemented and validated locally; production activation requires
+`VITE_DUIF_REQUIRE_PWA_INSTALL=true` in the Vercel Production environment.
 
 Goal:
 
@@ -1690,6 +1691,18 @@ Success criteria:
 - mobile gameplay cannot continue outside an installed display mode;
 - unsupported browsers give a clear actionable alternative;
 - installed launches do not show the gate again.
+
+Delivered:
+
+- a blocking gate mounted before Supabase authentication and gameplay providers;
+- capability-based phone, tablet, iPad desktop-mode, standalone, embedded-browser, and install
+  prompt detection without blocking ordinary desktop or hybrid-notebook navigation;
+- direct installation when supported and localized manual instructions for iOS and other mobile
+  browsers, with no dismiss or later action;
+- PKCE callback and password-reset exceptions that finish safely in the browser and direct the
+  player back to the installed app;
+- one-time sanitized intended-route restoration with a 24-hour expiry;
+- production-only activation through an explicit Vite environment variable.
 
 ## Milestone 42: Resumable Onboarding Shell
 

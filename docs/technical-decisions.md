@@ -850,6 +850,22 @@ The following decisions are intentionally deferred:
 
 These should be decided only after the core loop and visual identity are validated.
 
+## Required Mobile Installation Boundary
+
+The primary phone and tablet experience requires DUIF to run in installed standalone mode. The
+gate is enabled explicitly with `VITE_DUIF_REQUIRE_PWA_INSTALL=true`, which should be configured
+only for the Vercel Production environment so local development and preview review remain usable.
+
+The gate mounts before authentication and gameplay data providers, does not offer a dismiss
+action, and relies on capability and display-mode checks rather than viewport width alone. Desktop
+and conventional-pointer hybrid devices remain available in the browser. Email confirmation and
+password recovery callbacks are the only mobile-browser exceptions because PKCE codes must be
+consumed at their registered redirect URL; after completion, those pages instruct the player to
+return to the installed app.
+
+Browsers do not permit silent installation. DUIF may require installation before continuing, but
+the final install or Add to Home Screen action always belongs to the player.
+
 The monetization boundary itself is no longer deferred: premium value is limited to
 cosmetics and social expression, while the full gameplay loop remains free. See
 `docs/product-rules.md` for the authoritative shop and economy guardrails.
