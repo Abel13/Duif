@@ -48,6 +48,12 @@ Keep asset names lowercase and hyphenated, such as `nuvem.webp` or `worn-route-s
 
 Keep large source files outside `public/` so they are not copied into the production build. Source-only app icons currently live under `assets-source/icons/`, while optimized runtime icons live under `public/assets/icons/`.
 
+The current PWA icon family is derived from `assets-source/icons/duif-icon-transparent.png`:
+
+- `icon-192.png` and `icon-512.png` preserve transparency for regular browser and PWA use;
+- `icon-maskable-512.png` uses the paper background and a safe inset for adaptive masks;
+- `apple-touch-icon.png` uses an opaque paper background for iOS.
+
 ## Recommended Sizes
 
 - Mascot portraits: `640x640` or smaller.
