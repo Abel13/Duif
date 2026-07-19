@@ -34,6 +34,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      player_data_reset_audit: {
+        Row: {
+          backup_identifier: string
+          deleted_counts: Json
+          environment: string
+          executed_at: string
+          id: number
+          operator_label: string
+          project_ref: string
+        }
+        Insert: {
+          backup_identifier: string
+          deleted_counts: Json
+          environment: string
+          executed_at?: string
+          id?: never
+          operator_label: string
+          project_ref: string
+        }
+        Update: {
+          backup_identifier?: string
+          deleted_counts?: Json
+          environment?: string
+          executed_at?: string
+          id?: never
+          operator_label?: string
+          project_ref?: string
+        }
+        Relationships: []
+      }
       correspondence_options: {
         Row: {
           active: boolean
@@ -710,31 +740,6 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      claim_current_profile: {
-        Args: never
-        Returns: {
-          auth_user_id: string | null
-          created_at: string
-          display_name: string
-          home_label_key: string
-          home_latitude: number
-          home_longitude: number
-          id: string
-          mock_key: string | null
-          postal_base_city: string
-          postal_base_country: string
-          postal_base_neighborhood: string
-          postal_base_state: string
-          postal_base_street: string
-          updated_at: string
-        }
-        SetofOptions: {
-          from: "*"
-          to: "profiles"
-          isOneToOne: true
-          isSetofReturn: false
-        }
-      }
       collect_delivery_reward: {
         Args: { delivery_public_id: string }
         Returns: Json

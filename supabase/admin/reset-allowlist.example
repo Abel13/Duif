@@ -1,0 +1,3 @@
+# Copy outside the repository and add exactly one authorized remote target:
+# project-ref|database-hostname
+your-project-ref|db.your-project-ref.supabase.co
