@@ -1627,7 +1627,7 @@ Delivered locally:
 
 ## Milestone 40: Official Asset Registry
 
-Status: Planned.
+Status: Implemented and validated locally; remote migration pending deployment.
 
 Goal:
 
@@ -1649,6 +1649,17 @@ Success criteria:
 - every runtime image used by onboarding is resolved through an active registry record;
 - invalid file types, dimensions, metadata, and missing translation keys are rejected;
 - assets can be versioned without breaking existing references.
+
+Delivered:
+
+- typed stable asset identities and immutable version records with public active-only reads;
+- packaged and future Storage source contracts, per-type metadata, budgets, translated alt text,
+  decorative semantics, and migration-only activation;
+- 39 registered gameplay/UI assets: 38 active and the unused route doodle archived;
+- a single cached public manifest and key-based resolution across catalogs, inventory, rewards,
+  postal traffic, map controls, navigation, currency, shop art, textures, and postal marks;
+- PWA icons, brand logo, and fonts intentionally remain boot-safe packaged resources outside the
+  runtime registry.
 
 ## Milestone 41: Required Mobile PWA Installation Gate
 

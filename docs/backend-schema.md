@@ -207,6 +207,14 @@ camera center. Its response contains deterministic quarter-degree route geometry
 labels; exact endpoints, addresses, city labels, and non-friend owner identity never leave the
 database. The browser interpolates these public snapshots between five-minute refreshes.
 
+## Official asset registry
+
+`official_assets` provides stable typed identities for gameplay and illustrated UI art.
+`official_asset_versions` stores immutable version metadata, active-only public reads, packaged
+paths today, and mutually exclusive Storage locations for the future administrative studio.
+Browser roles cannot mutate the registry, and activation remains migration-only until
+Milestone 46.
+
 ## Clean account foundation
 
 `supabase/seed.sql` contains only official catalog records. Player-owned state and Auth users are

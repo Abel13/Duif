@@ -106,12 +106,20 @@ Source files:
 - Do not preload large art until a route has proved it needs that asset immediately.
 - Keep map tiles/provider assets separate from DUIF-owned static art decisions.
 
-## Planned Official Registry And Administration
+## Official Registry And Administration
 
-Milestones 40 and 46 move runtime art into a typed registry backed by Supabase Storage. New files
-are uploaded to private staging, validated, and published as immutable versions; replacing art
-must never overwrite an active object in place. Activation atomically switches the official
-version and retains rollback history.
+Milestone 40 registers gameplay and illustrated UI art through stable typed keys and immutable
+versions. Current versions remain packaged under `public/assets/`; the schema already discriminates
+packaged and future Storage locations. Runtime screens load one active public manifest and never
+persist or construct free-form art paths.
+
+The registry contains 39 identities: 38 active versions and the unused `route-doodle-mark`
+archived. PWA icons, the brand logo, and fonts remain outside the runtime registry because they
+must work before Supabase, authentication, or onboarding has loaded.
+
+Until Milestone 46, registry changes and activation occur only through reviewed migrations. The
+administrative studio will later upload new files to private staging, validate them, and publish
+immutable Storage versions without overwriting an active object.
 
 The administrative studio may edit metadata only through the schema for that asset type. It must
 validate file signature, MIME type, dimensions, byte budget, required translation keys, usage
