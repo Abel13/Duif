@@ -58,6 +58,14 @@ describe("map travel helpers", () => {
     });
   });
 
+  it("interpolates across the antimeridian by the shortest path", () => {
+    expect(interpolateCoordinates(
+      { latitude: 0, longitude: 170 },
+      { latitude: 0, longitude: -170 },
+      0.5,
+    )).toEqual({ latitude: 0, longitude: -180 });
+  });
+
   it("calculates pet position during outbound travel", () => {
     const position = getPetMapPosition(
       nuvemDelivery,

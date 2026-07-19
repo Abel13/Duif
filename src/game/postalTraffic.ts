@@ -5,15 +5,32 @@ import { clampProgress, haversineDistanceKm } from "./travel";
 
 export const POSTAL_TRAFFIC_VISIBILITY_RADIUS_KM = 250;
 export const POSTAL_TRAFFIC_MAX_VISIBLE = 10;
+export const POSTAL_TRAFFIC_REFRESH_MS = 5 * 60 * 1000;
+export const POSTAL_TRAFFIC_VIEWPORT_MARGIN = 0.25;
 
 export type PostalTrafficVisibility = "friend" | "public";
 export type PostalTrafficRangeState = "visible" | "outOfRange";
+export type PostalTrafficVisualPhase = "entering" | "visible" | "leaving";
+
+export type PostalTrafficViewport = {
+  north: number;
+  east: number;
+  south: number;
+  west: number;
+};
+
+export type PostalTrafficQueryAnchor = {
+  center: MapCoordinate;
+  viewport: PostalTrafficViewport;
+};
 
 export type PostalTrafficRouteSnapshot = {
   origin: MapCoordinate;
   destination: MapCoordinate;
   originRegionKey: TranslationKey;
+  originRegionLabel?: string;
   destinationRegionKey: TranslationKey;
+  destinationRegionLabel?: string;
   outboundStartAt: string;
   outboundArrivalAt: string;
   returnStartAt?: string;
@@ -41,15 +58,19 @@ export type PostalTrafficPet =
 type PostalTrafficPetSnapshotBase = {
   coordinates: MapCoordinate;
   destinationRegionKey: TranslationKey;
+  destinationRegionLabel?: string;
   distanceFromMascotKm: number;
   id: string;
   label: string;
   leg: TravelLeg;
   mascotName: string;
   originRegionKey: TranslationKey;
+  originRegionLabel?: string;
   portraitAssetPath: string;
   progress: number;
   speciesKey: TranslationKey;
+  route: PostalTrafficRouteSnapshot;
+  visualPhase: PostalTrafficVisualPhase;
 };
 
 export type PostalTrafficPetSnapshot =
@@ -212,20 +233,64 @@ export function createPublicTrafficSnapshot(
   const base = {
     coordinates: position.coordinates,
     destinationRegionKey: pet.route.destinationRegionKey,
+    destinationRegionLabel: pet.route.destinationRegionLabel,
     distanceFromMascotKm: haversineDistanceKm(mascotCoordinates, position.coordinates),
     id: pet.id,
     label: getPostalTrafficLabel(pet),
     leg: position.leg,
     mascotName: pet.mascotName,
     originRegionKey: pet.route.originRegionKey,
+    originRegionLabel: pet.route.originRegionLabel,
     portraitAssetPath: pet.portraitAssetPath,
     progress: Math.round(position.progress * 100),
     speciesKey: pet.speciesKey,
+    route: pet.route,
+    visualPhase: "visible" as const,
   };
 
   return pet.visibility === "friend"
     ? { ...base, friendId: pet.friendId, friendName: pet.friendName, visibility: "friend" }
     : { ...base, visibility: "public" };
+}
+
+export function getPostalTrafficSnapshotPosition(
+  snapshot: PostalTrafficPetSnapshot,
+  now: Date = new Date(),
+) {
+  return getPostalTrafficPetPosition(snapshotToPet(snapshot), now);
+}
+
+function snapshotToPet(snapshot: PostalTrafficPetSnapshot): PostalTrafficPet {
+  const base = {
+    id: snapshot.id,
+    mascotName: snapshot.mascotName,
+    portraitAssetPath: snapshot.portraitAssetPath,
+    route: snapshot.route,
+    speciesKey: snapshot.speciesKey,
+  };
+  return snapshot.visibility === "friend"
+    ? { ...base, friendId: snapshot.friendId, friendName: snapshot.friendName, visibility: "friend" }
+    : { ...base, visibility: "public" };
+}
+
+export function expandPostalTrafficViewport(
+  viewport: PostalTrafficViewport,
+  margin = POSTAL_TRAFFIC_VIEWPORT_MARGIN,
+): PostalTrafficViewport {
+  const latitudeSpan = Math.max(0, viewport.north - viewport.south);
+  const longitudeSpan = viewport.east >= viewport.west
+    ? viewport.east - viewport.west
+    : viewport.east + 360 - viewport.west;
+  return {
+    north: Math.min(90, viewport.north + latitudeSpan * margin),
+    south: Math.max(-90, viewport.south - latitudeSpan * margin),
+    east: normalizeLongitude(viewport.east + longitudeSpan * margin),
+    west: normalizeLongitude(viewport.west - longitudeSpan * margin),
+  };
+}
+
+function normalizeLongitude(longitude: number) {
+  return ((longitude + 180) % 360 + 360) % 360 - 180;
 }
 
 export function resolvePostalTrafficSelection(

@@ -229,11 +229,18 @@ export function interpolateCoordinates(
   progress: number,
 ): MapCoordinate {
   const safeProgress = clampProgress(progress);
+  const longitudeDelta = normalizeLongitude(
+    destination.longitude - origin.longitude,
+  );
 
   return {
     latitude: origin.latitude + (destination.latitude - origin.latitude) * safeProgress,
-    longitude: origin.longitude + (destination.longitude - origin.longitude) * safeProgress,
+    longitude: normalizeLongitude(origin.longitude + longitudeDelta * safeProgress),
   };
+}
+
+function normalizeLongitude(longitude: number) {
+  return ((longitude + 180) % 360 + 360) % 360 - 180;
 }
 
 export function getPetMapPosition(delivery: Delivery, now: Date = new Date()): PetMapPosition {

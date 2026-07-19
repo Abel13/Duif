@@ -44,8 +44,9 @@ Rules:
   the mascot until collection.
 - Collection completes and archives the delivery. It leaves the mascot's current-delivery slot
   but remains available to delivery-history consumers.
-- After collection, the map becomes an idle nest view: the traveling mascot, route, destination,
-  discoveries, traffic, and return summary disappear. Only the nest camera remains available;
+- After collection, the map becomes an idle nest view: the player's traveling mascot, route,
+  destination, discoveries, and return summary disappear. Regional postal traffic remains visible
+  around the camera; only the nest camera remains available for the player's journey;
   route overview, mascot, and destination camera actions are disabled.
 - The frontend may animate progress in real time from timestamps, route, and speed.
 - The backend remains the authority for route, timestamps, effective speed, and granted
@@ -109,10 +110,12 @@ Nearby pets:
   integer trip progress, and state/province plus country at each route end may be shown.
 - Player identity remains private for non-friends. Friends may show the known owner's name and
   link to an already accessible friend profile; public non-friend mascots expose neither.
-- Visibility is derived locally within 250 km of the active mascot and limited to the 10 closest
-  results. These are prototype values, not a production discovery entitlement.
-- The client should not receive exact private addresses or precise personal location data
-  for other players.
+- Visibility is selected authoritatively from the camera viewport plus a 25% margin and limited
+  to the 10 closest results. The viewport is sampled on entry and every five minutes, not on
+  every pan or zoom.
+- The backend may use complete private coordinates for eligibility and ordering. The client only
+  receives deterministic regionalized route endpoints and positions calculated on that same
+  public geometry, never exact private addresses or residential endpoints.
 - The backend should decide which pets are eligible to appear based on privacy, friendship,
   visibility rules, viewport/route proximity, and current active deliveries.
 - The frontend can animate visible pets from route snapshots, timestamps, and speed instead

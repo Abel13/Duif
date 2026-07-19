@@ -336,7 +336,13 @@
     0 0 0 0.2rem rgba(255, 248, 232, 0.72),
     0.12rem 0.16rem 0 rgba(46, 42, 36, 0.18);
   cursor: pointer;
-  transition: box-shadow 160ms ease, transform 160ms ease;
+  opacity: 1;
+  transition: box-shadow 160ms ease, transform 160ms ease, opacity 400ms ease;
+}
+
+.enteringTrafficMarker,
+.leavingTrafficMarker {
+  opacity: 0;
 }
 
 .trafficMarker img {

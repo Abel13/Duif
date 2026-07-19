@@ -280,13 +280,13 @@ export const enUS = {
   postalTraffic: {
     title: "Postal traffic",
     nearbyPets: "Nearby mascots",
-    empty: "No mascots are passing within 250 km right now.",
+    empty: "No mascots are passing through the queried region right now.",
     progress: "Progress",
     travelState: "Travel state",
     owner: "Owner",
     openFriendProfile: "Open friend profile",
     privateOwner: "This mascot's owner details are private.",
-    outOfRange: "This mascot left range. Showing the last known position.",
+    outOfRange: "This mascot left the queried region. Showing its last known record.",
     visibility: {
       friend: "Friend",
       public: "Public mascot",

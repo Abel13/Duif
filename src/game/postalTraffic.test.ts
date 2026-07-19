@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   createPostalTrafficGeoJson,
   createPublicTrafficSnapshot,
+  expandPostalTrafficViewport,
   getNearbyPostalTrafficPets,
   getPostalTrafficPetPosition,
   resolvePostalTrafficSelection,
@@ -104,11 +105,12 @@ describe("postal traffic helpers", () => {
   });
 
   it("does not expose owner fields in public mascot snapshots", () => {
-    const snapshot = createPublicTrafficSnapshot(petAt("bento", 0.2), mascotCoordinates, referenceTime);
+    const pet = petAt("bento", 0.2);
+    const snapshot = createPublicTrafficSnapshot(pet, mascotCoordinates, referenceTime);
     expect(snapshot.visibility).toBe("public");
     expect("friendId" in snapshot).toBe(false);
     expect("friendName" in snapshot).toBe(false);
-    expect("route" in snapshot).toBe(false);
+    expect(snapshot.route).toEqual(pet.route);
   });
 
   it("keeps friend identity in friend snapshots for the profile CTA", () => {
@@ -145,5 +147,14 @@ describe("postal traffic helpers", () => {
       visibility: "public",
     });
     expect(geoJson.features[0]?.geometry.coordinates).toEqual([0.2, 0]);
+  });
+
+  it("expands normal and antimeridian viewports by 25%", () => {
+    expect(expandPostalTrafficViewport({ north: 10, east: 20, south: 0, west: 0 })).toEqual({
+      north: 12.5, east: 25, south: -2.5, west: -5,
+    });
+    expect(expandPostalTrafficViewport({ north: 10, east: -170, south: 0, west: 170 })).toMatchObject({
+      east: -165, west: 165,
+    });
   });
 });

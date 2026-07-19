@@ -15,8 +15,8 @@ import type {
   RouteRewardDiscovery,
 } from "../../game/mapTravel";
 import {
-  getPostalTrafficPetPosition,
-  type PostalTrafficPet,
+  getPostalTrafficSnapshotPosition,
+  type PostalTrafficQueryAnchor,
   type PostalTrafficPetSnapshot,
 } from "../../game/postalTraffic";
 import {
@@ -44,6 +44,7 @@ const routeSourceId = "duif-route";
 const outboundProgressSourceId = "duif-outbound-progress";
 const returnProgressSourceId = "duif-return-progress";
 const placeLabelsSourceId = "duif-place-labels";
+const postalTrafficRoutesSourceId = "duif-postal-traffic-routes";
 
 const postalMapStyle = {
   version: 8,
@@ -93,7 +94,6 @@ export type TravelMapProps = {
   petPosition: MapCoordinate;
   placeLabels: MapPlaceLabel[];
   postalTraffic: PostalTrafficPetSnapshot[];
-  postalTrafficPets: PostalTrafficPet[];
   rewardLabels: Record<string, string>;
   rewardStates: Record<string, RouteDiscoveryVisualState>;
   rewards: RouteRewardDiscovery[];
@@ -105,6 +105,7 @@ export type TravelMapProps = {
   ) => void;
   onRewardSelect: (rewardId: string) => void;
   onTrafficSelect: (trafficId: string) => void;
+  onViewportChange: (anchor: PostalTrafficQueryAnchor) => void;
 };
 
 export function TravelMap({
@@ -121,7 +122,6 @@ export function TravelMap({
   petPosition,
   placeLabels,
   postalTraffic,
-  postalTrafficPets,
   rewardLabels,
   rewardStates,
   rewards,
@@ -130,6 +130,7 @@ export function TravelMap({
   onRewardDiscoveries,
   onRewardSelect,
   onTrafficSelect,
+  onViewportChange,
 }: TravelMapProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
@@ -143,7 +144,8 @@ export function TravelMap({
   const onFollowChangeRef = useRef(onFollowChange);
   const selectionRef = useRef(selection);
   const rewardsRef = useRef(rewards);
-  const postalTrafficPetsRef = useRef(postalTrafficPets);
+  const postalTrafficRef = useRef(postalTraffic);
+  const onViewportChangeRef = useRef(onViewportChange);
   const onTrafficSelectRef = useRef(onTrafficSelect);
   const onRewardDiscoveriesRef = useRef(onRewardDiscoveries);
   const discoveryRef = useRef(createDiscoveryTracker(delivery, rewards));
@@ -154,7 +156,8 @@ export function TravelMap({
   onFollowChangeRef.current = onFollowChange;
   selectionRef.current = selection;
   rewardsRef.current = rewards;
-  postalTrafficPetsRef.current = postalTrafficPets;
+  postalTrafficRef.current = postalTraffic;
+  onViewportChangeRef.current = onViewportChange;
   onTrafficSelectRef.current = onTrafficSelect;
   onRewardDiscoveriesRef.current = onRewardDiscoveries;
 
@@ -271,8 +274,10 @@ export function TravelMap({
         selectionRef.current,
         (trafficId) => onTrafficSelectRef.current(trafficId),
       );
-      syncCompletedDeliveryMap(map, deliveryCompleted, rewardMarkerRefs.current, trafficMarkerRefs.current);
+      syncPostalTrafficRoutes(map, postalTraffic, selectionRef.current);
+      syncCompletedDeliveryMap(map, deliveryCompleted, rewardMarkerRefs.current);
       focusMap(map, focusTargetRef.current, delivery, petPosition, rewards, postalTraffic);
+      if (!map.isMoving()) emitViewport(map, onViewportChangeRef.current);
     });
 
     const stopFollowing = () => {
@@ -287,6 +292,7 @@ export function TravelMap({
     map.on("zoom", () => {
       syncRewardMarkerVisibility(map, rewardMarkerRefs.current);
     });
+    map.on("moveend", () => emitViewport(map, onViewportChangeRef.current));
 
     return () => {
       petMarkerRef.current?.remove();
@@ -363,7 +369,8 @@ export function TravelMap({
       selection,
       (trafficId) => onTrafficSelectRef.current(trafficId),
     );
-    syncCompletedDeliveryMap(map, deliveryCompleted, rewardMarkerRefs.current, trafficMarkerRefs.current);
+    syncPostalTrafficRoutes(map, postalTraffic, selection);
+    syncCompletedDeliveryMap(map, deliveryCompleted, rewardMarkerRefs.current);
   }, [
     delivery,
     deliveryCompleted,
@@ -376,7 +383,6 @@ export function TravelMap({
     destinationLabel,
     placeLabels,
     postalTraffic,
-    postalTrafficPets,
     rewardLabels,
     rewardStates,
     rewards,
@@ -410,10 +416,10 @@ export function TravelMap({
         );
         updateMapProgress(map, delivery, position);
 
-        postalTrafficPetsRef.current.forEach((trafficPet) => {
+        postalTrafficRef.current.forEach((trafficPet) => {
           trafficMarkerRefs.current
             .get(trafficPet.id)
-            ?.setLngLat(toLngLat(getPostalTrafficPetPosition(trafficPet, new Date()).coordinates));
+            ?.setLngLat(toLngLat(getPostalTrafficSnapshotPosition(trafficPet, new Date()).coordinates));
         });
 
         if (followMascotRef.current && !map.isEasing()) {
@@ -534,6 +540,49 @@ function syncPostalTrafficMarkers(
   });
 }
 
+function syncPostalTrafficRoutes(
+  map: maplibregl.Map,
+  traffic: PostalTrafficPetSnapshot[],
+  selection: MapSelection,
+) {
+  const source = map.getSource(postalTrafficRoutesSourceId) as GeoJSONSource | undefined;
+  source?.setData({
+    type: "FeatureCollection",
+    features: traffic.map((pet) => ({
+      type: "Feature",
+      properties: {
+        id: pet.id,
+        opacity: pet.visualPhase === "visible" ? 1 : 0,
+        selected: selection?.kind === "traffic" && selection.trafficId === pet.id,
+      },
+      geometry: {
+        type: "LineString",
+        coordinates: [
+          toLngLat(pet.route.origin),
+          toLngLat(pet.route.destination),
+        ],
+      },
+    })),
+  });
+}
+
+function emitViewport(
+  map: maplibregl.Map,
+  onChange: (anchor: PostalTrafficQueryAnchor) => void,
+) {
+  const center = map.getCenter();
+  const bounds = map.getBounds();
+  onChange({
+    center: { latitude: center.lat, longitude: center.lng },
+    viewport: {
+      north: bounds.getNorth(),
+      east: bounds.getEast(),
+      south: bounds.getSouth(),
+      west: bounds.getWest(),
+    },
+  });
+}
+
 function updateTrafficMarker(
   markerElement: HTMLElement,
   pet: PostalTrafficPetSnapshot,
@@ -543,9 +592,12 @@ function updateTrafficMarker(
     styles.trafficMarker,
     pet.visibility === "friend" ? styles.friendTrafficMarker : styles.publicTrafficMarker,
     selected ? styles.selectedTrafficMarker : "",
+    pet.visualPhase === "entering" ? styles.enteringTrafficMarker : "",
+    pet.visualPhase === "leaving" ? styles.leavingTrafficMarker : "",
   ].filter(Boolean).join(" ");
   markerElement.setAttribute("aria-label", pet.label);
   markerElement.setAttribute("aria-pressed", String(selected));
+  (markerElement as HTMLButtonElement).disabled = pet.visualPhase === "leaving";
   markerElement.title = pet.label;
 
   let portrait = markerElement.querySelector("img");
@@ -719,7 +771,6 @@ function syncCompletedDeliveryMap(
   map: maplibregl.Map,
   completed: boolean,
   rewardMarkers: Map<string, maplibregl.Marker>,
-  trafficMarkers: Map<string, maplibregl.Marker>,
 ) {
   const visibility = completed ? "none" : "visible";
   [
@@ -733,7 +784,6 @@ function syncCompletedDeliveryMap(
 
   if (!completed) return;
   removeMarkers(rewardMarkers);
-  removePostalTrafficMarkers(trafficMarkers);
 }
 
 function removeMarkers(markers: Map<string, maplibregl.Marker>) {
@@ -771,6 +821,13 @@ function addMapLayers(
   if (!map.getSource(placeLabelsSourceId)) {
     map.addSource(placeLabelsSourceId, {
       data: createMapPlaceLabelsGeoJson(placeLabels),
+      type: "geojson",
+    });
+  }
+
+  if (!map.getSource(postalTrafficRoutesSourceId)) {
+    map.addSource(postalTrafficRoutesSourceId, {
+      data: { type: "FeatureCollection", features: [] },
       type: "geojson",
     });
   }
@@ -899,6 +956,21 @@ function addMapLayers(
       source: placeLabelsSourceId,
       type: "symbol",
     });
+  }
+
+  if (!map.getLayer("duif-postal-traffic-routes")) {
+    map.addLayer({
+      id: "duif-postal-traffic-routes",
+      type: "line",
+      source: postalTrafficRoutesSourceId,
+      paint: {
+        "line-color": ["case", ["boolean", ["get", "selected"], false], "#6f91a8", "#7a8f68"],
+        "line-dasharray": [1.4, 1.8],
+        "line-opacity": ["*", ["number", ["get", "opacity"], 1], ["case", ["boolean", ["get", "selected"], false], 0.5, 0.22]],
+        "line-width": ["case", ["boolean", ["get", "selected"], false], 2.5, 1.25],
+        "line-opacity-transition": { duration: 400 },
+      },
+    }, "duif-route-shadow");
   }
 }
 

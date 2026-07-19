@@ -793,6 +793,38 @@ export type Database = {
           profile_id: string
         }[]
       }
+      get_nearby_postal_traffic: {
+        Args: {
+          center_latitude: number
+          center_longitude: number
+          viewport_east: number
+          viewport_north: number
+          viewport_south: number
+          viewport_west: number
+        }
+        Returns: {
+          current_latitude: number
+          current_longitude: number
+          destination_latitude: number
+          destination_longitude: number
+          destination_region: string
+          distance_km: number
+          friend_id: string | null
+          friend_name: string | null
+          mascot_name: string
+          origin_latitude: number
+          origin_longitude: number
+          origin_region: string
+          outbound_arrival_at: string
+          outbound_start_at: string
+          portrait_asset_path: string
+          return_arrival_at: string | null
+          return_start_at: string | null
+          species_key: string
+          traffic_id: string
+          visibility: string
+        }[]
+      }
     }
     Enums: {
       correspondence_type: "letter" | "postcard" | "sticker" | "smallGift"

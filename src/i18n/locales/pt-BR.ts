@@ -281,13 +281,13 @@ export const ptBR = {
   postalTraffic: {
     title: "Tráfego postal",
     nearbyPets: "Mascotes próximos",
-    empty: "Nenhum mascote passando a menos de 250 km agora.",
+    empty: "Nenhum mascote passando pela região consultada agora.",
     progress: "Progresso",
     travelState: "Estado da viagem",
     owner: "Dono",
     openFriendProfile: "Abrir perfil do amigo",
     privateOwner: "Os dados do dono deste mascote são privados.",
-    outOfRange: "Este mascote saiu do alcance. Exibindo a última posição conhecida.",
+    outOfRange: "Este mascote saiu da região consultada. Exibindo o último registro conhecido.",
     visibility: {
       friend: "Amigo",
       public: "Mascote público",

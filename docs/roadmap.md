@@ -1436,7 +1436,7 @@ Includes:
 
 - selection from both map markers and the nearby-traffic list;
 - synchronized selection, camera focus, and detail panel;
-- continuous local movement, a 250 km visibility radius, and the 10 closest results;
+- continuous local movement and the 10 closest results in the camera viewport plus a 25% margin;
 - public mascot identity with name, species, official portrait, integer progress, and regional
   route endpoints;
 - friend owner details and profile CTA only for established friendships;
@@ -1455,9 +1455,20 @@ Success criteria:
 
 - friend traffic links only to profiles the player may already visit;
 - public non-friend traffic cannot reveal its owner or precise route endpoints;
-- no UI snapshot contains residential or city endpoints, endpoint coordinates, or timestamps;
+- no UI snapshot contains residential or city endpoints or private endpoint coordinates;
 - selection works consistently from marker and list;
 - the panel does not introduce horizontal overflow on mobile.
+
+### Milestone 36A: Authoritative Regional Postal Traffic
+
+- query up to 10 nearby active deliveries from a security-definer RPC on entry and every five
+  minutes, using the latest camera center and viewport;
+- use complete coordinates only inside the backend and return deterministic regionalized route
+  geometry, public positions, interpolation timestamps, and regional labels;
+- render other routes as thin, desaturated, low-opacity lines, with a restrained selected state;
+- fade traffic in and out over 400 ms and freeze selected details when a result leaves the region;
+- keep regional traffic visible around the nest when no personal delivery is active;
+- retain local traffic fixtures only for explicit mock development and tests.
 
 These milestones will be reviewed and adjusted individually before implementation. The sequence
 keeps one active delivery, introduces mascot modifiers before backend discovery materialization,

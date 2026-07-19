@@ -10,12 +10,11 @@ import {
   getDeliveryStatus,
   getMascotById,
   getMapJourneyPhase,
-  getNearbyPostalTrafficPets,
+  getPostalTrafficSnapshotPosition,
   getRouteDiscoveryVisualState,
   getPetMapPosition,
   getRouteRewardDiscoveries,
   getTravelProgress,
-  mockPostalTrafficPets,
   resolvePostalTrafficSelection,
   nuvemDelivery,
   type Delivery,
@@ -34,8 +33,11 @@ import {
   type RouteDiscoveryVisualState,
   type TravelLeg,
 } from "../../game";
+import { usePostalTraffic } from "../../game/usePostalTraffic";
 import { useRewardCollectionData } from "../../game/useRewardCollectionData";
 import { useMascotCatalog } from "../../game/useMascotCatalog";
+import { useAuth } from "../../integrations/supabase/AuthProvider";
+import { isSupabaseCatalogEnabled } from "../../integrations/supabase/config";
 import { type TranslationKey, useTranslation } from "../../i18n";
 import styles from "./TravelMapPage.module.css";
 import { isMapCameraTargetDisabled } from "../../components/map/travelMapCamera";
@@ -47,6 +49,7 @@ const discoveryHighlightMs = 4 * 1000;
 
 export function TravelMapPage() {
   const { t } = useTranslation();
+  const { profile } = useAuth();
   const [searchParams] = useSearchParams();
   const { isLoading, mascots } = useMascotCatalog();
   const [now, setNow] = useState(() => new Date());
@@ -62,11 +65,21 @@ export function TravelMapPage() {
   const highlightTimersRef = useRef<Map<string, number>>(new Map());
   const toastTimerRef = useRef<number>();
   const motionPreference = useMotionPreference();
+  const {
+    isLoading: isTrafficLoading,
+    postalTraffic: trafficSnapshots,
+    updatePostalTrafficAnchor,
+  } = usePostalTraffic();
   const activeMascot = useMemo(() => selectMapMascot(mascots), [mascots]);
-  const activeDelivery = activeMascot?.currentDelivery ?? nuvemDelivery;
-  const requestedDeliveryId = searchParams.get("deliveryId") ?? activeDelivery.id;
+  const authenticatedSource = isSupabaseCatalogEnabled();
+  const activeDelivery = activeMascot?.currentDelivery;
+  const requestedDeliveryId = searchParams.get("deliveryId")
+    ?? activeDelivery?.id
+    ?? (authenticatedSource ? undefined : nuvemDelivery.id);
   const collectionState = useRewardCollectionData(requestedDeliveryId);
-  const delivery = collectionState.delivery ?? activeDelivery;
+  const delivery = collectionState.delivery
+    ?? activeDelivery
+    ?? (authenticatedSource ? createIdleNestDelivery(profile, activeMascot) : nuvemDelivery);
   const displayMascot = mascots.find((mascot) => mascot.id === delivery.mascotId)
     ?? getMascotById(delivery.mascotId)
     ?? activeMascot
@@ -94,13 +107,21 @@ export function TravelMapPage() {
     ])),
     [newDiscoveryIds, rewards],
   );
-  const trafficMascotPosition = useMemo(
-    () => getPetMapPosition(delivery, trafficNow).coordinates,
-    [delivery, trafficNow],
-  );
   const postalTraffic = useMemo(
-    () => getNearbyPostalTrafficPets(trafficMascotPosition, trafficNow),
-    [trafficMascotPosition, trafficNow],
+    () => trafficSnapshots.map((pet) => {
+      const position = getPostalTrafficSnapshotPosition(pet, trafficNow);
+      return {
+        ...pet,
+        coordinates: position.coordinates,
+        leg: position.leg,
+        progress: Math.round(position.progress * 100),
+      };
+    }),
+    [trafficSnapshots, trafficNow],
+  );
+  const visiblePostalTraffic = useMemo(
+    () => postalTraffic.filter((pet) => pet.visualPhase !== "leaving"),
+    [postalTraffic],
   );
   const placeLabels = useMemo(
     () => createMapPlaceLabels(delivery, rewards, t),
@@ -119,7 +140,7 @@ export function TravelMapPage() {
     ? rewards.find((reward) => reward.id === selection.rewardId)
     : undefined;
   const trafficSelection = resolvePostalTrafficSelection(
-    postalTraffic,
+    visiblePostalTraffic,
     selection?.kind === "traffic" ? selection.trafficId : undefined,
     selectedTrafficSnapshot,
   );
@@ -249,7 +270,7 @@ export function TravelMapPage() {
   }
 
   function selectTraffic(trafficId: string) {
-    const trafficPet = postalTraffic.find((pet) => pet.id === trafficId);
+    const trafficPet = visiblePostalTraffic.find((pet) => pet.id === trafficId);
     if (!trafficPet) return;
     setFollowMascot(false);
     setSelectedTrafficSnapshot(trafficPet);
@@ -270,7 +291,7 @@ export function TravelMapPage() {
 
   return (
     <main className={styles.page}>
-      <section className={styles.stage} aria-busy={isLoading || collectionState.isLoading}>
+      <section className={styles.stage} aria-busy={isLoading || collectionState.isLoading || isTrafficLoading}>
         <div className={styles.mapLayer}>
           <TravelMap
             delivery={delivery}
@@ -284,13 +305,13 @@ export function TravelMapPage() {
             onRewardDiscoveries={handleRewardDiscoveries}
             onRewardSelect={selectReward}
             onTrafficSelect={selectTraffic}
+            onViewportChange={updatePostalTrafficAnchor}
             originLabel={t(delivery.origin.labelKey)}
             petLabel={displayMascot?.name ?? t("common.unavailable")}
             petPortraitAssetPath={displayMascot?.appearance.portraitAssetPath}
             placeLabels={displayedPlaceLabels}
             petPosition={petPosition.coordinates}
-            postalTraffic={completedMap ? [] : postalTraffic}
-            postalTrafficPets={mockPostalTrafficPets}
+            postalTraffic={postalTraffic}
             rewardLabels={rewardLabels}
             rewardStates={rewardStates}
             rewards={completedMap ? [] : rewards}
@@ -387,7 +408,7 @@ export function TravelMapPage() {
                     />
                     <PostalTrafficContent
                       onSelect={selectTraffic}
-                      postalTraffic={postalTraffic}
+                      postalTraffic={visiblePostalTraffic}
                       selectedTrafficId={selection?.kind === "traffic" ? selection.trafficId : undefined}
                     />
                     <DiscoveryContent
@@ -425,7 +446,7 @@ export function TravelMapPage() {
                   ) : (
                     <PostalTrafficContent
                       onSelect={selectTraffic}
-                      postalTraffic={postalTraffic}
+                      postalTraffic={visiblePostalTraffic}
                       selectedTrafficId={selection?.kind === "traffic" ? selection.trafficId : undefined}
                     />
                   )}
@@ -628,8 +649,8 @@ function PostalTrafficDetails({
       <dl className={styles.summary}>
         <SummaryRow label={t("postalTraffic.travelState")} value={t(`postalTraffic.legs.${pet.leg}`)} />
         <SummaryRow label={t("postalTraffic.progress")} value={`${pet.progress}%`} />
-        <SummaryRow label={t("mascot.origin")} value={t(pet.originRegionKey)} />
-        <SummaryRow label={t("mascot.destination")} value={t(pet.destinationRegionKey)} />
+        <SummaryRow label={t("mascot.origin")} value={pet.originRegionLabel ?? t(pet.originRegionKey)} />
+        <SummaryRow label={t("mascot.destination")} value={pet.destinationRegionLabel ?? t(pet.destinationRegionKey)} />
         {pet.visibility === "friend" ? (
           <SummaryRow label={t("postalTraffic.owner")} value={pet.friendName} />
         ) : null}
@@ -906,6 +927,35 @@ function selectMapMascot(mascots: Mascot[]) {
     mascots.find((mascot) => mascot.currentDelivery) ??
     mascots.find((mascot) => mascot.id === defaultMascotId)
   );
+}
+
+function createIdleNestDelivery(
+  profile: { id: string; home_latitude: number; home_longitude: number; home_label_key: string } | null,
+  mascot: Mascot | undefined,
+): Delivery {
+  const origin = profile
+    ? {
+        latitude: profile.home_latitude,
+        longitude: profile.home_longitude,
+        labelKey: profile.home_label_key as TranslationKey,
+      }
+    : nuvemDelivery.origin;
+  return {
+    id: "idle-nest",
+    senderId: profile?.id ?? "player-current",
+    receiverId: profile?.id ?? "player-current",
+    mascotId: mascot?.id ?? defaultMascotId,
+    origin,
+    destination: origin,
+    distanceKm: 0,
+    animalSpeedKmh: 1,
+    outboundStartAt: "1970-01-01T00:00:00.000Z",
+    outboundArrivalAt: "1970-01-01T00:00:00.000Z",
+    returnStartAt: "1970-01-01T00:00:00.000Z",
+    returnArrivalAt: "1970-01-01T00:00:00.000Z",
+    status: "completed",
+    rewardSeed: "idle-nest",
+  };
 }
 
 function createMapPlaceLabels(

@@ -57,6 +57,8 @@ export {
   getNearbyPostalTrafficPets,
   getPostalTrafficLabel,
   getPostalTrafficPetPosition,
+  getPostalTrafficSnapshotPosition,
+  expandPostalTrafficViewport,
   mockPostalTrafficPets,
   POSTAL_TRAFFIC_MAX_VISIBLE,
   POSTAL_TRAFFIC_VISIBILITY_RADIUS_KM,
@@ -66,6 +68,10 @@ export {
   type PostalTrafficRangeState,
   type PostalTrafficRouteSnapshot,
   type PostalTrafficVisibility,
+  type PostalTrafficQueryAnchor,
+  type PostalTrafficViewport,
+  type PostalTrafficVisualPhase,
+  POSTAL_TRAFFIC_REFRESH_MS,
 } from "./postalTraffic";
 export { createMockRewardFromDelivery, initialMockInventory } from "./rewards";
 export {

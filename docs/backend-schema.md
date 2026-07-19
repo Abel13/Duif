@@ -203,6 +203,13 @@ screen now reads `inventory_items` for the current profile through the existing 
 policy. Caixa Postal, delivery history, equipment management, and inventory writes outside
 reward collection remain future milestones.
 
+Regional postal traffic uses the authenticated `get_nearby_postal_traffic` RPC. The function
+reads complete active-delivery coordinates behind RLS, expands the supplied viewport by 25%,
+excludes the caller and blocked relationships, and returns at most 10 results ordered from the
+camera center. Its response contains deterministic quarter-degree route geometry and regional
+labels; exact endpoints, addresses, city labels, and non-friend owner identity never leave the
+database. The browser interpolates these public snapshots between five-minute refreshes.
+
 ## Out Of Scope
 
 This milestone does not include:
@@ -211,7 +218,7 @@ This milestone does not include:
 - remote Supabase project linking;
 - Edge Functions;
 - Storage buckets for real assets;
-- Mapa;
+- additional map persistence beyond route discoveries and regional traffic;
 - Loja;
 - trading;
 - chat;
