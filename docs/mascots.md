@@ -1,8 +1,10 @@
 # Mascots
 
 The prototype defines three official starter archetypes. During the production onboarding, each
-new player chooses exactly one archetype and supplies the mascot's real display name. Nuvem,
-Trovão, and Pipoca remain suggested archetype identities, not mandatory player-mascot names.
+new player chooses exactly one archetype and supplies the mascot's real display name. Archetypes
+are presented by translated species. Nuvem/Cloud, Trovão/Thunder, and Pipoca/Popcorn are localized
+name suggestions only; a suggestion becomes the mascot's literal name solely after the player
+confirms it.
 
 ## Nuvem
 

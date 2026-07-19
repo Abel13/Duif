@@ -58,19 +58,17 @@ These match the current TypeScript game unions closely enough for future mapping
 
 ## Seed Data
 
-`supabase/seed.sql` mirrors the current prototype data:
+`supabase/seed.sql` contains only player-independent official catalogs: starter archetypes,
+correspondence options, reward items, and route discovery points. Player profiles, owned mascots,
+friendships, deliveries, collection progress, and Auth users are never seeded.
 
-- current player profile: Abel in Sao Paulo, with private street/neighborhood seed data;
-- friend profiles: Lia, Caio, and Mina, with private street/neighborhood seed data and
-  public city/state/country fields;
-- starter mascots: Nuvem, Trovao, and Pipoca;
-- friend mascot previews: Aurora, Brisa, Tico, Atlas, and Luma;
-- correspondence options: letter, postcard, sticker, and small gift;
-- Nuvem's Lisbon delivery with a seeded letter content row;
-- reward item definitions;
-- current inventory album items.
+Official records use stable UUIDs for relationships and `catalog_key` for internal catalog
+selection. Player-owned rows use UUIDs only. There is no `mock_key` compatibility contract.
 
-Seeds use fixed UUIDs and `mock_key` values so the frontend mocks can be mapped to database rows later without guessing.
+Official translated fields reference `official_translation_keys`. A catalog record may be
+incomplete while its status is `draft`, but the database rejects activation unless every direct
+and nested key is registered for both `pt-BR` and `en-US`. Public catalog reads return only
+`active` records.
 
 ## Data Shape Decisions
 
@@ -84,7 +82,9 @@ Some nested game data is stored as `jsonb` in this first pass:
 
 This keeps the schema close to the current prototype and avoids premature normalization. These fields can be split into dedicated tables later when customization, equipping, balance, or inventory rules become interactive.
 
-Translation keys and asset paths are stored as `text`. The database stores identifiers, not translated display copy.
+Translation keys and asset paths are stored as `text`. The database stores identifiers, not
+translated display copy. User-authored mascot names, correspondence, and postal-address text stay
+literal and are never translated automatically.
 
 ## Postal Base Privacy
 

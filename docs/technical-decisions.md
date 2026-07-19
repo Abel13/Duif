@@ -608,6 +608,11 @@ Translation rules:
 - translate accessibility labels, alt text, empty states, and status messages;
 - review both `pt-BR` and `en-US` when building UI.
 
+Official persisted content uses keys registered in `official_translation_keys`, never translated
+display strings. Catalog publishing follows `draft | active | archived`; activation is rejected
+when a referenced key is absent from either locale, including keys nested in archetype JSON.
+User-authored names and correspondence remain literal across locale changes.
+
 See `docs/internationalization.md` for the full i18n direction.
 
 ## Testing

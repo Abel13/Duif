@@ -1543,7 +1543,7 @@ Success criteria:
 
 ## Milestone 38: Internationalized Database Contracts
 
-Status: Planned.
+Status: Implemented locally; remote application blocked by the Milestone 37 reset gate.
 
 Goal:
 
@@ -1565,6 +1565,19 @@ Success criteria:
 - changing locale changes all official database-backed copy;
 - a missing translation key fails catalog validation;
 - player-chosen names remain exactly as entered after safe normalization.
+
+Delivered locally:
+
+- official translation-key registry shared by the two supported locales;
+- `draft | active | archived` lifecycle with authoritative activation validation, including
+  nested archetype JSON;
+- `catalog_key` contracts and UUID-only player/RPC identities;
+- species-only archetype identity plus localized Nuvem/Cloud, Trovão/Thunder, and
+  Pipoca/Popcorn name suggestions;
+- strict frontend catalog parsing and generated Supabase types without legacy `mock_key` fields.
+
+The migrations must not be applied remotely until the target project is identified, backed up,
+and reset through the Milestone 37 runbook.
 
 ## Milestone 39: Secure Registration And Login
 
