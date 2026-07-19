@@ -24,7 +24,7 @@ const rewardItemRow: RewardItemRow = {
   name_key: "rewards.items.goldenCompassPin.name",
   rarity: "rare",
   status: "active",
-  thumbnail_asset_path: "/assets/items/thumbnails/golden-compass-pin.webp",
+  thumbnail_asset_key: "reward.thumbnail.goldenCompassPin",
 };
 
 const deliveryRewardRow: DeliveryRewardRow = {
@@ -49,7 +49,7 @@ const inventoryItemRow: InventoryItemRow = {
   rarity: "rare",
   reward_item_id: "00000000-0000-4000-8000-000000000603",
   source_key: "inventory.sources.routeReward",
-  thumbnail_asset_path: "/assets/items/thumbnails/golden-compass-pin.webp",
+  thumbnail_asset_key: "reward.thumbnail.goldenCompassPin",
 };
 
 const deliveryRow: DeliveryRow = {
@@ -115,7 +115,7 @@ describe("authenticated reward mappers", () => {
       id: rewardItemRow.id,
       nameKey: "rewards.items.goldenCompassPin.name",
       rarity: "rare",
-      thumbnailAssetPath: "/assets/items/thumbnails/golden-compass-pin.webp",
+      thumbnailAssetKey: "reward.thumbnail.goldenCompassPin",
     });
   });
 

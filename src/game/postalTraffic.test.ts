@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { assetKeys } from "./assets";
 
 import {
   createPostalTrafficGeoJson,
@@ -20,7 +21,7 @@ const friendPet: PostalTrafficPet = {
   friendName: "Lia",
   id: "traffic-test",
   mascotName: "Aurora",
-  portraitAssetPath: "/assets/friends/mascots/aurora.webp",
+  portraitAssetKey: assetKeys.mascots.aurora,
   route: {
     origin: { latitude: 0, longitude: 0 },
     destination: { latitude: 0, longitude: 10 },
@@ -37,7 +38,7 @@ function petAt(id: string, longitude: number): PostalTrafficPet {
   return {
     id,
     mascotName: id,
-    portraitAssetPath: `/assets/${id}.webp`,
+    portraitAssetKey: assetKeys.mascots.bento,
     route: {
       origin: { latitude: 0, longitude },
       destination: { latitude: 0, longitude },

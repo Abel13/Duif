@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { assetKeys } from "../../game/assets";
 
 import { mapTrafficRow } from "./authenticatedPostalTraffic";
 
@@ -10,7 +11,7 @@ const row = {
   origin_latitude: -23.25, origin_longitude: -51, origin_region: "PR, Brasil",
   outbound_arrival_at: "2026-07-18T23:00:00.000Z",
   outbound_start_at: "2026-07-18T21:00:00.000Z",
-  portrait_asset_path: "/aurora.webp",
+  portrait_asset_key: assetKeys.mascots.aurora,
   return_arrival_at: "2026-07-19T02:00:00.000Z",
   return_start_at: "2026-07-19T00:00:00.000Z",
   species_key: "species.mailDuck", traffic_id: "traffic-1", visibility: "public",

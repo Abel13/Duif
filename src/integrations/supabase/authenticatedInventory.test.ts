@@ -23,7 +23,7 @@ const inventoryItemRow: InventoryItemRow = {
   rarity: "rare",
   reward_item_id: "00000000-0000-4000-8000-000000000603",
   source_key: "inventory.sources.routeReward",
-  thumbnail_asset_path: "/assets/items/thumbnails/golden-compass-pin.webp",
+  thumbnail_asset_key: "reward.thumbnail.goldenCompassPin",
 };
 
 function createInventoryQueryResult({

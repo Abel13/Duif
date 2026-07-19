@@ -12,7 +12,7 @@ import {
 const baseRow: MascotTemplateRow = {
   appearance: {
     accentColor: "#6f91a8",
-    portraitAssetPath: "/assets/mascots/portraits/nuvem.webp",
+    portraitAssetKey: "mascot.portrait.nuvem",
     portraitPlaceholderKey: "appearance.nuvemPortrait",
     primaryColor: "#f7f1e3",
   },
@@ -24,7 +24,7 @@ const baseRow: MascotTemplateRow = {
   equipment: [{
     descriptionKey: "equipment.canvasPostalBag.description",
     equipped: true,
-    iconAssetPath: "/assets/equipment/icons/canvas-postal-bag.webp",
+    iconAssetKey: "equipment.icon.canvasPostalBag",
     id: "equipment-nuvem-canvas-bag",
     nameKey: "equipment.canvasPostalBag.name",
     rarity: "common",

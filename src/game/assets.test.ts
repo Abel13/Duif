@@ -1,27 +1,37 @@
 import { describe, expect, it } from "vitest";
 
-import { assetPaths, hasAssetPath } from "./assets";
+import { assetKeys, parseOfficialAssetManifest, resolveOfficialAssetPath } from "./assets";
 
-describe("asset helpers", () => {
-  it("builds stable public asset paths", () => {
-    expect(assetPaths.mascots.portrait("nuvem.webp")).toBe(
-      "/assets/mascots/portraits/nuvem.webp",
-    );
-    expect(assetPaths.items.thumbnail("worn-route-stamp.webp")).toBe(
-      "/assets/items/thumbnails/worn-route-stamp.webp",
-    );
-    expect(assetPaths.mapControls.icon("overview.webp")).toBe(
-      "/assets/map/controls/overview.webp",
-    );
-    expect(assetPaths.mapPins.image("nest.webp")).toBe(
-      "/assets/map/pins/nest.webp",
-    );
+const row = {
+  version: 1,
+  source: "packaged",
+  status: "active",
+  packaged_path: "/assets/mascots/portraits/nuvem.webp",
+  mime_type: "image/webp",
+  width: 640,
+  height: 640,
+  byte_size: 60810,
+  alt_text_key: "appearance.nuvemPortrait",
+  is_decorative: false,
+  official_assets: { asset_key: assetKeys.mascots.nuvem, asset_type: "mascotPortrait" },
+};
+
+describe("official asset manifest", () => {
+  it("resolves an active packaged version by its stable key", () => {
+    const manifest = parseOfficialAssetManifest([row]);
+    expect(resolveOfficialAssetPath(manifest, assetKeys.mascots.nuvem))
+      .toBe("/assets/mascots/portraits/nuvem.webp");
+    expect(resolveOfficialAssetPath(manifest, assetKeys.mascots.trovao)).toBeUndefined();
   });
 
-  it("detects usable asset paths", () => {
-    expect(hasAssetPath("/assets/items/thumbnails/item.webp")).toBe(true);
-    expect(hasAssetPath("")).toBe(false);
-    expect(hasAssetPath("   ")).toBe(false);
-    expect(hasAssetPath(undefined)).toBe(false);
+  it("rejects duplicate, unknown, inactive, and free-form records", () => {
+    expect(() => parseOfficialAssetManifest([row, row])).toThrow(/Duplicate/);
+    expect(() => parseOfficialAssetManifest([{ ...row, status: "draft" }])).toThrow(/Invalid/);
+    expect(() => parseOfficialAssetManifest([{ ...row, packaged_path: "https://example.com/image.webp" }])).toThrow(/Invalid/);
+    expect(() => parseOfficialAssetManifest([{ ...row, official_assets: { ...row.official_assets, asset_key: "unknown.asset" } }])).toThrow(/Invalid/);
+  });
+
+  it("accepts an empty manifest without inventing fallback paths", () => {
+    expect(parseOfficialAssetManifest([]).size).toBe(0);
   });
 });
