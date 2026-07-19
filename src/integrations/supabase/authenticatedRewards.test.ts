@@ -183,7 +183,7 @@ describe("authenticated reward mappers", () => {
     });
   });
 
-  it("falls back to deterministic mock reward when no persisted reward exists", () => {
+  it("does not invent a reward when no persisted reward exists", () => {
     const delivery = mapDeliveryRowToDelivery(deliveryRow, "mascot-nuvem");
     const state = composeAuthenticatedRewardCollection({
       delivery,
@@ -191,7 +191,7 @@ describe("authenticated reward mappers", () => {
     });
 
     expect(state.isCollected).toBe(false);
-    expect(state.reward?.id).toBe("reward-delivery-nuvem-lisbon");
+    expect(state.reward).toBeUndefined();
   });
 
   it("maps valid collect RPC payloads", () => {
