@@ -6,7 +6,9 @@ DUIF is a PWA-style web game prototype.
 
 The game is a social idle game where players own messenger animals that deliver letters, cards, stickers, and collectible items across the world.
 
-Each player starts with 3 messenger animals. Each animal has its own speed, attributes, equipment, visual customization, level, and travel status.
+The completed prototype uses 3 messenger animals, but the approved onboarding phase changes new
+accounts to exactly one chosen starter archetype. The player always chooses that mascot's name.
+Each animal has its own speed, attributes, equipment, visual customization, level, and travel status.
 
 The implemented prototype now covers mascot profiles, sending, travel, discoveries, collection,
 inventory, friends, a read-only shop, and the interactive postal map.
@@ -32,9 +34,10 @@ Milestones 1 through 36A are complete. The project includes Supabase-backed auth
 with local mock fallbacks, a MapLibre travel map, deterministic persisted discoveries, atomic
 collection, inventory, multi-mascot route selection, and authoritative regional postal traffic.
 
-Milestone 37 has not been scoped. Do not infer or build it without an approved plan. Payments,
-real-time multiplayer, precise public locations, trading, chat, and unrestricted user uploads
-remain out of scope.
+Milestones 37 through 47 are planned as the account and onboarding phase. Start with Milestone 37
+and do not skip ahead: it removes prototype player data and runtime mocks before new account
+contracts are introduced. Payments, real-time multiplayer, precise public locations, trading,
+chat, and unrestricted user uploads remain out of scope.
 
 ## Tech Stack
 
@@ -284,6 +287,6 @@ Before finishing any task:
 
 ## Next Implementation Target
 
-No next feature is currently approved. Review `docs/roadmap.md`, define Milestone 37 with the
-user, and implement only that agreed slice. Preserve the completed send-travel-return-collect
-loop and the existing illustrated asset library while doing so.
+Milestone 37 is the next approved slice. Follow its reset safeguards exactly, especially for any
+remote environment, and preserve official catalogs while removing player-owned prototype state.
+Implement later milestones only after the preceding slice is reviewed.

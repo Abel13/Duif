@@ -144,6 +144,16 @@ Future helpers may include:
 
 Do not scatter formatting rules across UI components.
 
+## Database-Backed Official Content
+
+Official content registered by the application or administrative catalog must store typed
+translation keys instead of a single visible-language string. This includes catalog names,
+descriptions, species, sources, tutorial copy references, asset alt text, and system labels.
+
+User-authored values such as player names, mascot names, and correspondence remain literal and
+must not be translated automatically. Catalog validation must confirm required keys in `pt-BR`
+and `en-US` before a record or asset version becomes active.
+
 ## Fallback Behavior
 
 The app should gracefully handle missing translations.

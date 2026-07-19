@@ -221,5 +221,5 @@ snapshots, persisted route discoveries, atomic reward collection, inventory pers
 regionalized postal-traffic queries with RLS or security-definer boundaries where appropriate.
 
 This document remains the rationale for choosing Supabase; it no longer defines the next
-milestone. The next planning frontier is Milestone 37 in `docs/roadmap.md`, whose scope must be
-reviewed before implementation.
+milestone. Milestones 37 through 47 in `docs/roadmap.md` are the approved account and onboarding
+phase, beginning with the safeguarded removal of prototype player state locally and remotely.

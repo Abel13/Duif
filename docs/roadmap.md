@@ -13,11 +13,11 @@ now a central mechanic.
 Milestones 1 through 36A form the implemented baseline as of July 2026. Their sections remain
 below as an architectural and product record, not as pending work.
 
-The next planning frontier is Milestone 37. Its scope is intentionally undefined until the
-current send, travel, discovery, collection, multi-mascot map, postal-traffic, shop-preview,
-privacy, and economy-design slices are reviewed together. Mock fallbacks remain intentional
-for local development and unauthenticated demonstrations; they do not mean that the matching
-authenticated flows are still unimplemented.
+Milestones 37 through 47 are the approved account, onboarding, tutorial, PWA-installation, and
+catalog-administration phase. This phase replaces the prototype identity bridge with independent
+accounts, removes every runtime mock fallback, provisions one user-named mascot from an official
+archetype, and requires a short playable tutorial before the player's real nest is activated.
+Factories and fixtures remain allowed only inside automated tests.
 
 ## Roadmap Principles
 
@@ -1505,17 +1505,327 @@ then expanded the map from one active route to selectable active routes for all 
 mascots. It continues to exclude street navigation, global search, map economy, payment flow,
 live multiplayer, and new animation dependencies.
 
-## Milestone 37: Awaiting Definition
+## Milestone 37: Clean Account And Data Foundation
 
-Status: Not planned.
+Status: Planned.
 
-Milestone 37 must be agreed before implementation. Its plan should identify one primary product
-outcome, the smallest reviewable slice, required persistence or API changes, privacy and economy
-impact, mock/authenticated parity, localized copy, asset needs, and acceptance tests.
+Goal:
 
-Do not treat the long-term expansion list as authorization to implement a feature. In particular,
-payments, premium-currency writes, trading, chat, exact public locations, public uploads, and
-real-time server tracking remain deferred until explicitly planned.
+Remove prototype player state locally and remotely, preserve only official catalogs, and make
+Supabase the sole runtime data source.
+
+Includes:
+
+- an explicit, reviewable reset runbook for local and configured remote Supabase environments;
+- deletion of Auth users, player profiles, owned mascots, friendships, correspondence, deliveries,
+  discoveries, rewards, achievements, inventory, and other player-owned progress;
+- preservation of official archetypes, species, skills, item catalogs, tutorial definitions,
+  route-point catalogs, translations, and registered assets;
+- removal of Abel and every other seeded player/profile fixture from runtime seeds;
+- removal of runtime mock branches, mock session storage, and silent fallback behavior;
+- test-only factories kept outside production runtime imports;
+- a localized service-unavailable screen when Supabase is missing or unreachable;
+- environment allowlists, dry-run counts, an optional export, typed confirmation, and an audit
+  record before the remote reset can execute.
+
+Does not include:
+
+- deleting schema migrations or official catalog history;
+- silently resetting a remote environment from application startup or a normal migration;
+- retaining demonstration users in production tables.
+
+Success criteria:
+
+- local and approved remote environments contain no users or earned progress after the reset;
+- official catalogs remain intact and internally consistent;
+- the production bundle contains no runtime mock data path;
+- tests continue using isolated deterministic factories.
+
+## Milestone 38: Internationalized Database Contracts
+
+Status: Planned.
+
+Goal:
+
+Ensure every app-authored value stored for display is locale-independent before new accounts are
+created.
+
+Includes:
+
+- `name_key`, `description_key`, `species_key`, `source_key`, alt-text keys, and other translated
+  fields for official content;
+- validation that every official key exists in `pt-BR` and `en-US`;
+- English identifiers and enums for internal contracts;
+- literal storage for user-authored names and correspondence, which must never be auto-translated;
+- removal or migration of official display strings stored directly in catalog rows;
+- generated TypeScript types and SQL checks for the new contracts.
+
+Success criteria:
+
+- changing locale changes all official database-backed copy;
+- a missing translation key fails catalog validation;
+- player-chosen names remain exactly as entered after safe normalization.
+
+## Milestone 39: Secure Registration And Login
+
+Status: Planned.
+
+Goal:
+
+Replace `claim_current_profile` with independent accounts and a simple postal login experience.
+
+Includes:
+
+- email/password sign-up, sign-in, sign-out, session restoration, password confirmation, and
+  show/hide-password controls;
+- generic public responses for invalid credentials, duplicate email, and account lookup so the
+  UI never confirms whether an email is registered;
+- detailed errors restricted to safe server logs;
+- loading protection, duplicate-submit prevention, password policy, and intended-route recovery;
+- global states for anonymous, verification pending, onboarding required, tutorial active,
+  nest setup required, and ready;
+- route guards for private gameplay surfaces;
+- reusable localized paper-form, field, alert, progress, and action components;
+- removal of development credentials from production UI.
+
+Does not include:
+
+- Google, Apple, magic-link, or social login;
+- public username search;
+- profile provisioning before the onboarding RPC is ready.
+
+Success criteria:
+
+- no public response enables email enumeration;
+- session restoration does not flash private gameplay;
+- authenticated users resume the correct onboarding or game state.
+
+## Milestone 40: Official Asset Registry
+
+Status: Planned.
+
+Goal:
+
+Replace free-form runtime paths with typed, versioned, officially registered assets.
+
+Includes:
+
+- records for stable key, asset type, Storage object, MIME type, dimensions, byte size, version,
+  lifecycle state, translated alt-text key, author, timestamps, and typed metadata;
+- initial types for mascot portraits, equipment, rewards, collectibles, navigation, map controls,
+  map pins, currencies, shop art, textures, and postal marks;
+- per-type metadata validation so unrelated attributes cannot be mixed;
+- migration and registration of every current official asset;
+- active-asset reads for the game and CSS fallbacks for loading failures;
+- validation against the budgets and conventions in `docs/assets.md`.
+
+Success criteria:
+
+- every runtime image used by onboarding is resolved through an active registry record;
+- invalid file types, dimensions, metadata, and missing translation keys are rejected;
+- assets can be versioned without breaking existing references.
+
+## Milestone 41: Required Mobile PWA Installation Gate
+
+Status: Planned.
+
+Goal:
+
+Require the installed PWA presentation for the primary mobile game experience.
+
+Includes:
+
+- standalone-mode detection before authentication or onboarding;
+- a blocking, localized postal installation screen in mobile browsers;
+- direct `beforeinstallprompt` installation when supported, without a “later” bypass;
+- illustrated iPhone/iPad instructions for Share and Add to Home Screen;
+- detection of unsupported or embedded browsers with guidance to open Safari, Chrome, or another
+  install-capable browser;
+- preservation of the intended route and onboarding stage after installation;
+- normal browser access on desktop.
+
+Technical constraint:
+
+- browsers require a user gesture and cannot be forced to install silently; DUIF can require
+  installation before continuing on mobile, but cannot perform it on the user's behalf.
+
+Success criteria:
+
+- mobile gameplay cannot continue outside an installed display mode;
+- unsupported browsers give a clear actionable alternative;
+- installed launches do not show the gate again.
+
+## Milestone 42: Resumable Onboarding Shell
+
+Status: Planned.
+
+Goal:
+
+Explain the game in a few short postal steps and persist progress across app restarts.
+
+Includes:
+
+- welcome copy explaining correspondence, elapsed-time travel, route discoveries, return, and
+  collection;
+- player display-name entry;
+- a compact visible step indicator and back navigation where safe;
+- server-persisted onboarding stage and idempotent resume behavior;
+- mobile-first components that follow the illustrated paper, stamp, label, and notebook system;
+- accessible focus order, errors, keyboard behavior, and localized `pt-BR`/`en-US` copy.
+
+Success criteria:
+
+- closing the PWA never loses an accepted step;
+- explanations remain short and understandable without a separate manual;
+- the player cannot access normal gameplay before completing required stages.
+
+## Milestone 43: Initial Mascot Choice And Provisioning
+
+Status: Planned.
+
+Goal:
+
+Let each player select exactly one official archetype and give that mascot a personal name.
+
+Includes:
+
+- the three current Nuvem, Trovão, and Pipoca designs treated as archetypes rather than mandatory
+  player-mascot names;
+- translated archetype identity, species, trait, skills, and concise mechanical comparison;
+- a user-entered mascot name with normalization and safety validation;
+- confirmation of portrait, chosen name, species, and trait before provisioning;
+- one idempotent authoritative RPC that creates the profile draft and exactly one owned mascot;
+- uniqueness constraints preventing a second initial choice or duplicate provisioning;
+- official portrait resolution through the asset registry.
+
+Does not include:
+
+- receiving all three starter mascots;
+- purchasing, exchanging, or unlocking another mascot;
+- making the archetype label the player's chosen mascot name.
+
+Success criteria:
+
+- every new player owns exactly one initial mascot;
+- retrying after a network failure cannot create a second mascot;
+- the chosen name is visible consistently across map, profile, tutorial, and collection UI.
+
+## Milestone 44: Mandatory Tutorial Delivery
+
+Status: Planned.
+
+Goal:
+
+Teach the core loop through one real, persisted delivery before the player's own nest is created.
+
+Includes:
+
+- an authoritative tutorial delivery between a fictional nest and fictional destination;
+- a fixed total duration of approximately 16 minutes: 1 minute preparation, 7 minutes outbound,
+  1 minute at the destination, and 7 minutes returning;
+- at least one guaranteed persisted collectible on the outbound route;
+- guided camera, movement, automatic discovery, return, and collection explanations;
+- server timestamps so progress continues while the PWA is closed;
+- an idempotent tutorial reward that remains in inventory;
+- persisted tutorial state and strict route guards preventing skip, cancellation, normal sending,
+  or access to later onboarding stages;
+- exclusion of the tutorial delivery from ordinary social delivery history.
+
+Success criteria:
+
+- the full preparation-to-return cycle takes approximately 16 real minutes;
+- reopening the PWA resumes the correct position and instruction;
+- the collectible appears at its threshold and can only be collected after return;
+- no client action can mark the tutorial complete early.
+
+## Milestone 45: Real Nest Activation
+
+Status: Planned.
+
+Goal:
+
+Replace the fictional tutorial nest with the player's privacy-safe real regional nest.
+
+Includes:
+
+- nest setup only after tutorial collection;
+- a controlled region/city catalog with city, state, country, localized label keys, and safe
+  representative coordinates resolved by the backend;
+- no street, neighborhood, residential GPS, house number, or precise address input;
+- review and confirmation of the public regional identity;
+- `onboarding_completed_at` and a ready account state;
+- transition to `/map`, framed around the new nest;
+- release of normal send, friends, inventory, collection, and map routes.
+
+Success criteria:
+
+- the real nest cannot be configured before tutorial completion;
+- private residential information is never requested;
+- a completed player opens the map at the configured regional nest.
+
+## Milestone 46: Administrative Asset And Catalog Studio
+
+Status: Planned.
+
+Goal:
+
+Allow authorized maintainers to add, inspect, edit, version, and activate official assets and
+their type-safe catalog attributes.
+
+Includes:
+
+- an admin-only role, route, RPC boundary, and RLS policies;
+- listing, search, filters, preview, usage references, lifecycle status, and revision history;
+- upload to a private staging area in Supabase Storage;
+- server validation of file signature, MIME type, dimensions, byte budget, metadata, and required
+  translation keys;
+- metadata editing constrained by the asset's discriminated type;
+- immutable file versions: replacing an active file creates a new version rather than overwriting
+  the published object;
+- explicit activation after validation, atomic reference switching, archival, and rollback;
+- prevention of destructive deletion while an asset version is referenced;
+- editing of associated mascot, equipment, reward, item, navigation, map, and shop catalog rows.
+
+Success criteria:
+
+- untrusted users cannot read staging objects or mutate catalog records;
+- a failed upload never affects the active game;
+- every activation is attributable and reversible;
+- the game reads only validated active versions.
+
+## Milestone 47: Account Recovery And Production Readiness
+
+Status: Planned.
+
+Goal:
+
+Harden the completed account and onboarding flow for production use.
+
+Includes:
+
+- email confirmation and generic resend behavior;
+- password recovery and secure reset links;
+- PWA/deep-link restoration;
+- session refresh and expiration behavior;
+- Supabase rate limits and abuse controls;
+- RLS tests for anonymous, onboarding, ready, and admin identities;
+- concurrency and idempotency tests for signup, mascot provisioning, tutorial collection, and
+  nest completion;
+- interruption tests for every onboarding stage;
+- mobile installation-gate coverage;
+- audit proving no runtime mocks or prototype users remain;
+- operational documentation for local and remote resets, rollback, assets, and catalog changes.
+
+Does not include:
+
+- payments, premium-currency writes, trading, chat, exact public locations, public user uploads,
+  social login, or real-time server tracking.
+
+Success criteria:
+
+- the complete new-player journey is recoverable, localized, secure, and production-reviewable;
+- account lookup responses do not leak membership;
+- reset and asset operations have explicit safeguards and rollback paths.
 
 ## Historical First Execution Order
 

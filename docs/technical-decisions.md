@@ -12,7 +12,8 @@ travel logic foundations. References to “the first prototype” below are hist
 Milestones 1 through 36A are implemented. The application now combines React/Vite, CSS Modules,
 Supabase-backed authenticated flows, explicit mock fallbacks, MapLibre, PWA installation support,
 persisted discoveries, atomic collection, and authoritative regional postal traffic. `/map` is
-the opening gameplay route. Milestone 37 is not yet defined.
+the opening gameplay route. Milestones 37 through 47 define the approved account and onboarding
+phase; Milestone 37 begins by removing prototype player state and runtime mocks.
 
 ## Initial Technical Goal
 

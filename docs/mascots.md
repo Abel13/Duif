@@ -1,6 +1,8 @@
 # Mascots
 
-The initial version of DUIF starts with three messenger mascots.
+The prototype defines three official starter archetypes. During the production onboarding, each
+new player chooses exactly one archetype and supplies the mascot's real display name. Nuvem,
+Trovão, and Pipoca remain suggested archetype identities, not mandatory player-mascot names.
 
 ## Nuvem
 

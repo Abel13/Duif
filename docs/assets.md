@@ -100,6 +100,18 @@ Source files:
 - Do not preload large art until a route has proved it needs that asset immediately.
 - Keep map tiles/provider assets separate from DUIF-owned static art decisions.
 
+## Planned Official Registry And Administration
+
+Milestones 40 and 46 move runtime art into a typed registry backed by Supabase Storage. New files
+are uploaded to private staging, validated, and published as immutable versions; replacing art
+must never overwrite an active object in place. Activation atomically switches the official
+version and retains rollback history.
+
+The administrative studio may edit metadata only through the schema for that asset type. It must
+validate file signature, MIME type, dimensions, byte budget, required translation keys, usage
+references, and administrative authorization before activation. Runtime clients read active
+versions only and retain CSS fallbacks.
+
 ## Fallback Rules
 
 Real assets are optional in the prototype. Components should render CSS placeholders when:

@@ -9,7 +9,9 @@ The first version should focus on making the player care about their mascots and
 As of July 2026, the implemented prototype validates the complete send-travel-return-collect
 loop, authenticated persistence with mock fallbacks, multi-mascot map travel, deterministic
 route discoveries, inventory, friends, regional postal traffic, and a read-only shop preview.
-Milestone 37 is the next planning frontier and has not yet been scoped.
+Milestones 37 through 47 are planned to replace the prototype account bridge with secure
+registration, one user-named starter mascot, mandatory installed-mobile onboarding, a persisted
+16-minute tutorial route, privacy-safe nest activation, and an administrative asset studio.
 
 Detailed product rules for travel, slow social, privacy, map rewards, inventory, progression,
 and shop direction live in:
@@ -18,7 +20,8 @@ and shop direction live in:
 
 ## Core Concept
 
-Each player starts with three messenger animals.
+Each new player chooses exactly one of the three official starter archetypes and gives that mascot
+a personal name. Additional mascot acquisition is deferred to a later product decision.
 
 Each animal has its own:
 
