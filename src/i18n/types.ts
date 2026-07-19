@@ -40,6 +40,36 @@ export type TranslationDictionary = {
     signOut: string;
     email: string;
     password: string;
+    newPassword: string;
+    confirmPassword: string;
+    showPassword: string;
+    hidePassword: string;
+    show: string;
+    hide: string;
+    forgotPassword: string;
+    recoveryDescription: string;
+    sendRecovery: string;
+    genericEmailSent: string;
+    verificationTitle: string;
+    verificationDescription: string;
+    resendConfirmation: string;
+    resendIn: string;
+    backToLogin: string;
+    passwordRequirements: string;
+    passwordLength: string;
+    passwordLetter: string;
+    passwordNumber: string;
+    passwordMismatch: string;
+    callbackTitle: string;
+    confirmingEmail: string;
+    callbackDescription: string;
+    invalidLinkTitle: string;
+    invalidLinkDescription: string;
+    resetTitle: string;
+    resetDescription: string;
+    resetSuccess: string;
+    requestNewLink: string;
+    updatePassword: string;
     currentProfile: string;
     backToNest: string;
     submitting: string;
@@ -664,6 +694,36 @@ export type TranslationKey =
   | "auth.signOut"
   | "auth.email"
   | "auth.password"
+  | "auth.newPassword"
+  | "auth.confirmPassword"
+  | "auth.showPassword"
+  | "auth.hidePassword"
+  | "auth.show"
+  | "auth.hide"
+  | "auth.forgotPassword"
+  | "auth.recoveryDescription"
+  | "auth.sendRecovery"
+  | "auth.genericEmailSent"
+  | "auth.verificationTitle"
+  | "auth.verificationDescription"
+  | "auth.resendConfirmation"
+  | "auth.resendIn"
+  | "auth.backToLogin"
+  | "auth.passwordRequirements"
+  | "auth.passwordLength"
+  | "auth.passwordLetter"
+  | "auth.passwordNumber"
+  | "auth.passwordMismatch"
+  | "auth.callbackTitle"
+  | "auth.confirmingEmail"
+  | "auth.callbackDescription"
+  | "auth.invalidLinkTitle"
+  | "auth.invalidLinkDescription"
+  | "auth.resetTitle"
+  | "auth.resetDescription"
+  | "auth.resetSuccess"
+  | "auth.requestNewLink"
+  | "auth.updatePassword"
   | "auth.currentProfile"
   | "auth.backToNest"
   | "auth.submitting"

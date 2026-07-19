@@ -1,32 +1,48 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation, useSearchParams } from "react-router-dom";
 
 import { FoundationStatusPage } from "../pages/FoundationStatusPage/FoundationStatusPage";
 import { AuthPage } from "../pages/AuthPage/AuthPage";
+import { AuthCallbackPage } from "../pages/AuthCallbackPage/AuthCallbackPage";
+import { ResetPasswordPage } from "../pages/ResetPasswordPage/ResetPasswordPage";
+import { sanitizeIntendedRoute } from "../integrations/supabase/authContracts";
 import { useAuth } from "../integrations/supabase/AuthProvider";
 
 export function AppRoutes() {
   return (
     <Routes>
-      <Route path="/auth" element={<AuthPage />} />
+      <Route path="/auth" element={<PublicAuthRoute />} />
+      <Route path="/auth/callback" element={<AuthCallbackPage />} />
+      <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
       <Route path="*" element={<ProtectedFoundationRoute />} />
     </Routes>
   );
 }
 
-function ProtectedFoundationRoute() {
-  const { isConfigured, isLoading, isServiceAvailable, profile, session } = useAuth();
+function PublicAuthRoute() {
+  const { isLoading, session } = useAuth();
+  const [searchParams] = useSearchParams();
+  if (!isLoading && session) {
+    return <Navigate replace to={sanitizeIntendedRoute(searchParams.get("next"))} />;
+  }
+  return <AuthPage />;
+}
 
-  if (isLoading) {
+function ProtectedFoundationRoute() {
+  const { journeyState } = useAuth();
+  const location = useLocation();
+
+  if (journeyState === "loading") {
     return <FoundationStatusPage state="loading" />;
   }
 
-  if (!isConfigured || !isServiceAvailable) {
+  if (journeyState === "serviceUnavailable") {
     return <FoundationStatusPage state="unavailable" />;
   }
 
-  if (!session) {
-    return <Navigate replace to="/auth" />;
+  if (journeyState === "anonymous" || journeyState === "verificationPending") {
+    const intendedRoute = `${location.pathname}${location.search}${location.hash}`;
+    return <Navigate replace to={`/auth?next=${encodeURIComponent(intendedRoute)}`} />;
   }
 
-  return <FoundationStatusPage state={profile ? "onboardingPending" : "accountPending"} />;
+  return <FoundationStatusPage state="onboardingPending" />;
 }

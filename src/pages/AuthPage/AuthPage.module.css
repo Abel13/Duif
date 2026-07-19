@@ -65,6 +65,18 @@
   min-width: 0;
 }
 
+.verification { display: grid; justify-items: center; gap: var(--space-3); text-align: center; }
+.verification h2, .verification p { margin: 0; }
+.verification p { max-width: 30rem; color: rgba(46,42,36,.76); line-height: 1.55; }
+.mailMark { display: grid; width: 4rem; aspect-ratio: 1; place-items: center; border: .18rem double var(--color-postal-blue); border-radius: 50%; color: var(--color-postal-red); background: var(--color-postal-label); font-size: 1.7rem; font-weight: 900; transform: rotate(-4deg); }
+.textAction { min-height: 2.75rem; padding: .45rem .7rem; border: 0; color: var(--color-postal-brown); background: transparent; font: inherit; font-weight: 900; text-decoration: underline; text-underline-offset: .2rem; cursor: pointer; }
+.textAction:focus-visible { outline: 3px solid rgba(164,74,63,.55); outline-offset: 2px; }
+.success { margin: 0; padding: var(--space-3); border: 1px dashed var(--color-muted-green); color: var(--color-muted-green); background: rgba(122,143,104,.08); font-weight: 800; line-height: 1.45; }
+.requirements { display: grid; gap: .3rem; margin: -.35rem 0 0; padding-left: 1.25rem; color: rgba(46,42,36,.62); font-size: .78rem; }
+.requirements li::marker { color: var(--color-postal-red); }
+.requirements .met { color: var(--color-muted-green); }
+.requirements .met::marker { color: var(--color-muted-green); }
+
 .modeTabs {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

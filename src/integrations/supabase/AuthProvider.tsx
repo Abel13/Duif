@@ -9,40 +9,49 @@ import {
   useState,
 } from "react";
 
+import {
+  resolveAuthJourneyState,
+  sanitizeIntendedRoute,
+  type AuthJourneyState,
+  type AuthPublicResult,
+} from "./authContracts";
 import { getSupabaseClient } from "./client";
 import { getSupabaseConfig } from "./config";
 import type { AuthProfile } from "./profile";
+
+const pendingEmailStorageKey = "duif.auth.pendingVerificationEmail";
 
 type AuthContextValue = {
   isConfigured: boolean;
   isLoading: boolean;
   isServiceAvailable: boolean;
+  isPasswordRecovery: boolean;
+  journeyState: AuthJourneyState;
+  pendingVerificationEmail: string | null;
   profile: AuthProfile | null;
   session: Session | null;
-  signIn: (email: string, password: string) => Promise<void>;
+  completePasswordReset: (password: string) => Promise<AuthPublicResult>;
+  dismissVerification: () => void;
+  exchangeAuthCode: (code: string, purpose?: "confirmation" | "recovery") => Promise<AuthPublicResult>;
+  requestPasswordReset: (email: string) => Promise<AuthPublicResult>;
+  resendConfirmation: (email: string) => Promise<AuthPublicResult>;
+  signIn: (email: string, password: string) => Promise<AuthPublicResult>;
   signOut: () => Promise<void>;
+  signUp: (email: string, password: string, intendedRoute?: string | null) => Promise<AuthPublicResult>;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 async function fetchProfile(authUserId: string) {
   const supabase = getSupabaseClient();
-
-  if (!supabase) {
-    return null;
-  }
-
-  const { data, error } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("auth_user_id", authUserId)
-    .maybeSingle();
-
-  if (error) {
-    throw error;
-  }
-
+  if (!supabase) return null;
+  const { data, error } = await supabase.from("profiles").select("*").eq("auth_user_id", authUserId).maybeSingle();
+  if (error) throw error;
   return data;
+}
+
+function authRedirect(path: string) {
+  return typeof window === "undefined" ? undefined : `${window.location.origin}${path}`;
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -51,10 +60,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isServiceAvailable, setIsServiceAvailable] = useState(isConfigured);
   const [profile, setProfile] = useState<AuthProfile | null>(null);
   const [session, setSession] = useState<Session | null>(null);
+  const [isPasswordRecovery, setIsPasswordRecovery] = useState(false);
+  const [pendingVerificationEmail, setPendingVerificationEmail] = useState<string | null>(() =>
+    typeof window === "undefined" ? null : window.sessionStorage.getItem(pendingEmailStorageKey),
+  );
 
   useEffect(() => {
     const supabase = getSupabaseClient();
-
     if (!supabase) {
       setIsServiceAvailable(false);
       setIsLoading(false);
@@ -62,54 +74,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     let isMounted = true;
-
-    supabase.auth
-      .getSession()
-      .then(async ({ data, error }) => {
-        if (!isMounted) {
-          return;
-        }
-
-        if (error) {
-          setIsServiceAvailable(false);
-          return;
-        }
-
-        setIsServiceAvailable(true);
-
-        setSession(data.session);
-
-        if (data.session) {
-          try {
-            setProfile(await fetchProfile(data.session.user.id));
-          } catch {
-            setProfile(null);
-            setIsServiceAvailable(false);
-          }
-        }
-      })
-      .finally(() => {
-        if (isMounted) {
-          setIsLoading(false);
-        }
-      });
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+    async function applySession(nextSession: Session | null) {
+      if (!isMounted) return;
       setSession(nextSession);
-
       if (!nextSession) {
         setProfile(null);
         return;
       }
+      setPendingVerificationEmail(null);
+      window.sessionStorage.removeItem(pendingEmailStorageKey);
+      setProfile(await fetchProfile(nextSession.user.id));
+    }
 
-      fetchProfile(nextSession.user.id)
-        .then(setProfile)
-        .catch(() => {
-          setProfile(null);
-          setIsServiceAvailable(false);
-        });
+    supabase.auth.getSession()
+      .then(async ({ data, error }) => {
+        if (error) throw error;
+        setIsServiceAvailable(true);
+        await applySession(data.session);
+      })
+      .catch(() => {
+        if (isMounted) setIsServiceAvailable(false);
+      })
+      .finally(() => {
+        if (isMounted) setIsLoading(false);
+      });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, nextSession) => {
+      if (event === "PASSWORD_RECOVERY") setIsPasswordRecovery(true);
+      void applySession(nextSession).catch(() => {
+        if (isMounted) setIsServiceAvailable(false);
+      });
     });
 
     return () => {
@@ -118,59 +112,120 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, [isConfigured]);
 
-  const signIn = useCallback(async (email: string, password: string) => {
+  const signIn = useCallback(async (email: string, password: string): Promise<AuthPublicResult> => {
     const supabase = getSupabaseClient();
+    if (!supabase) return { ok: false, code: "serviceUnavailable" };
+    const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
+    return error ? { ok: false, code: "invalidCredentials" } : { ok: true };
+  }, []);
 
-    if (!supabase) {
-      throw new Error("Supabase is not configured.");
-    }
+  const dismissVerification = useCallback(() => {
+    setPendingVerificationEmail(null);
+    window.sessionStorage.removeItem(pendingEmailStorageKey);
+  }, []);
 
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+  const signUp = useCallback(async (email: string, password: string, intendedRoute?: string | null): Promise<AuthPublicResult> => {
+    const supabase = getSupabaseClient();
+    if (!supabase) return { ok: false, code: "serviceUnavailable" };
+    await supabase.auth.signUp({
+      email: email.trim(),
+      password,
+      options: {
+        emailRedirectTo: authRedirect(`/auth/callback?next=${encodeURIComponent(sanitizeIntendedRoute(intendedRoute ?? null))}`),
+      },
+    });
+    setPendingVerificationEmail(email.trim());
+    window.sessionStorage.setItem(pendingEmailStorageKey, email.trim());
+    return { ok: true };
+  }, []);
 
-    if (error) {
-      throw error;
-    }
+  const resendConfirmation = useCallback(async (email: string): Promise<AuthPublicResult> => {
+    const supabase = getSupabaseClient();
+    if (!supabase) return { ok: false, code: "serviceUnavailable" };
+    await supabase.auth.resend({
+      type: "signup",
+      email: email.trim(),
+      options: { emailRedirectTo: authRedirect("/auth/callback") },
+    });
+    return { ok: true };
+  }, []);
+
+  const requestPasswordReset = useCallback(async (email: string): Promise<AuthPublicResult> => {
+    const supabase = getSupabaseClient();
+    if (!supabase) return { ok: false, code: "serviceUnavailable" };
+    await supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo: authRedirect("/auth/reset-password") });
+    return { ok: true };
+  }, []);
+
+  const exchangeAuthCode = useCallback(async (code: string, purpose: "confirmation" | "recovery" = "confirmation"): Promise<AuthPublicResult> => {
+    const supabase = getSupabaseClient();
+    if (!supabase) return { ok: false, code: "serviceUnavailable" };
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    if (error) return { ok: false, code: "invalidOrExpiredLink" };
+    setIsPasswordRecovery(purpose === "recovery");
+    return { ok: true };
+  }, []);
+
+  const completePasswordReset = useCallback(async (password: string): Promise<AuthPublicResult> => {
+    const supabase = getSupabaseClient();
+    if (!supabase) return { ok: false, code: "serviceUnavailable" };
+    const { error } = await supabase.auth.updateUser({ password });
+    if (error) return { ok: false, code: "invalidOrExpiredLink" };
+    await supabase.auth.signOut({ scope: "global" });
+    setProfile(null);
+    setSession(null);
+    setIsPasswordRecovery(false);
+    return { ok: true };
   }, []);
 
   const signOut = useCallback(async () => {
     const supabase = getSupabaseClient();
-
-    if (!supabase) {
-      return;
+    if (supabase) {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
     }
-
-    const { error } = await supabase.auth.signOut();
-
-    if (error) {
-      throw error;
-    }
-
     setProfile(null);
     setSession(null);
+    setIsPasswordRecovery(false);
+    setPendingVerificationEmail(null);
+    window.sessionStorage.removeItem(pendingEmailStorageKey);
   }, []);
 
-  const contextValue = useMemo<AuthContextValue>(
-    () => ({
-      isConfigured,
-      isLoading,
-      isServiceAvailable,
-      profile,
-      session,
-      signIn,
-      signOut,
-    }),
-    [isConfigured, isLoading, isServiceAvailable, profile, session, signIn, signOut],
-  );
+  const journeyState = resolveAuthJourneyState({
+    hasPendingVerification: Boolean(pendingVerificationEmail),
+    hasProfile: Boolean(profile),
+    hasSession: Boolean(session),
+    isConfigured,
+    isLoading,
+    isServiceAvailable,
+  });
+
+  const contextValue = useMemo<AuthContextValue>(() => ({
+    completePasswordReset,
+    dismissVerification,
+    exchangeAuthCode,
+    isConfigured,
+    isLoading,
+    isPasswordRecovery,
+    isServiceAvailable,
+    journeyState,
+    pendingVerificationEmail,
+    profile,
+    requestPasswordReset,
+    resendConfirmation,
+    session,
+    signIn,
+    signOut,
+    signUp,
+  }), [completePasswordReset, dismissVerification, exchangeAuthCode, isConfigured, isLoading, isPasswordRecovery, isServiceAvailable,
+    journeyState, pendingVerificationEmail, profile, requestPasswordReset, resendConfirmation,
+    session, signIn, signOut, signUp]);
 
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
   const contextValue = useContext(AuthContext);
-
-  if (!contextValue) {
-    throw new Error("useAuth must be used inside AuthProvider.");
-  }
-
+  if (!contextValue) throw new Error("useAuth must be used inside AuthProvider.");
   return contextValue;
 }
