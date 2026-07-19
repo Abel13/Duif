@@ -1,5 +1,6 @@
 export const MIN_REWARD_VISIBILITY_ZOOM = 6;
 export const MASCOT_FOCUS_ZOOM = 13;
+export const TRAFFIC_FOCUS_ZOOM = 12;
 
 type RouteCoordinate = {
   latitude: number;
@@ -36,10 +37,14 @@ export function shouldShowMapRewards(zoom: number) {
 
 export function getMapFocusZoom(
   currentZoom: number,
-  targetKind: "mascot" | "origin" | "destination" | "reward",
+  targetKind: "mascot" | "origin" | "destination" | "reward" | "traffic",
 ) {
   if (targetKind === "mascot") {
     return MASCOT_FOCUS_ZOOM;
+  }
+
+  if (targetKind === "traffic") {
+    return TRAFFIC_FOCUS_ZOOM;
   }
 
   return Math.max(currentZoom, targetKind === "reward" ? 6.5 : 4.5);

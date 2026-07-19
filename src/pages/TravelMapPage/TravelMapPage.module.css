@@ -590,3 +590,89 @@
     transform: translateX(50%);
   }
 }
+.trafficListButton {
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.trafficListButton:focus-visible {
+  outline: 3px solid var(--color-postal-blue);
+  outline-offset: 0.2rem;
+}
+
+.trafficListPortrait {
+  width: 3.5rem;
+  height: 3.5rem;
+  overflow: hidden;
+  border: 2px solid var(--color-postal-brown);
+  border-radius: 999px;
+  background: var(--color-paper-dark);
+}
+
+.trafficListPortrait img,
+.trafficDetailPortrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.trafficPortraitFallback {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, var(--color-paper) 25%, var(--color-muted-green) 26% 42%, var(--color-paper-dark) 43%);
+}
+
+.trafficDetails {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.trafficIdentity {
+  display: grid;
+  grid-template-columns: 5rem 1fr;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.trafficIdentity h3,
+.trafficIdentity p {
+  margin: 0;
+}
+
+.trafficIdentity h3 {
+  font-size: 1.2rem;
+}
+
+.trafficVisibility {
+  color: var(--color-postal-brown);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.trafficDetailPortrait {
+  width: 5rem;
+  height: 5rem;
+  overflow: hidden;
+  border: 3px solid var(--color-postal-blue);
+  border-radius: 999px;
+  background: var(--color-paper-dark);
+  box-shadow: 0.12rem 0.16rem 0 rgba(46, 42, 36, 0.18);
+}
+
+.outOfRangeNotice,
+.privateOwnerNote {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border: 1px dashed var(--color-postal-brown);
+  background: rgba(232, 221, 199, 0.68);
+  color: var(--color-ink);
+  font-size: 0.86rem;
+}

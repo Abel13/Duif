@@ -14,7 +14,11 @@ import type {
   RouteDiscoveryVisualState,
   RouteRewardDiscovery,
 } from "../../game/mapTravel";
-import type { PostalTrafficPetSnapshot } from "../../game/postalTraffic";
+import {
+  getPostalTrafficPetPosition,
+  type PostalTrafficPet,
+  type PostalTrafficPetSnapshot,
+} from "../../game/postalTraffic";
 import {
   createDeliveryRouteGeoJson,
   createMapPlaceLabelsGeoJson,
@@ -88,6 +92,7 @@ export type TravelMapProps = {
   petPosition: MapCoordinate;
   placeLabels: MapPlaceLabel[];
   postalTraffic: PostalTrafficPetSnapshot[];
+  postalTrafficPets: PostalTrafficPet[];
   rewardLabels: Record<string, string>;
   rewardStates: Record<string, RouteDiscoveryVisualState>;
   rewards: RouteRewardDiscovery[];
@@ -98,6 +103,7 @@ export type TravelMapProps = {
     origin: RouteDiscoveryEventOrigin,
   ) => void;
   onRewardSelect: (rewardId: string) => void;
+  onTrafficSelect: (trafficId: string) => void;
 };
 
 export function TravelMap({
@@ -113,6 +119,7 @@ export function TravelMap({
   petPosition,
   placeLabels,
   postalTraffic,
+  postalTrafficPets,
   rewardLabels,
   rewardStates,
   rewards,
@@ -120,6 +127,7 @@ export function TravelMap({
   onFollowChange,
   onRewardDiscoveries,
   onRewardSelect,
+  onTrafficSelect,
 }: TravelMapProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
@@ -133,6 +141,8 @@ export function TravelMap({
   const onFollowChangeRef = useRef(onFollowChange);
   const selectionRef = useRef(selection);
   const rewardsRef = useRef(rewards);
+  const postalTrafficPetsRef = useRef(postalTrafficPets);
+  const onTrafficSelectRef = useRef(onTrafficSelect);
   const onRewardDiscoveriesRef = useRef(onRewardDiscoveries);
   const discoveryRef = useRef(createDiscoveryTracker(delivery, rewards));
   const [hasMapError, setHasMapError] = useState(false);
@@ -142,6 +152,8 @@ export function TravelMap({
   onFollowChangeRef.current = onFollowChange;
   selectionRef.current = selection;
   rewardsRef.current = rewards;
+  postalTrafficPetsRef.current = postalTrafficPets;
+  onTrafficSelectRef.current = onTrafficSelect;
   onRewardDiscoveriesRef.current = onRewardDiscoveries;
 
   useEffect(() => {
@@ -246,8 +258,14 @@ export function TravelMap({
         destinationLabel,
       );
       syncRewardMarkerVisibility(map, rewardMarkerRefs.current);
-      syncPostalTrafficMarkers(map, trafficMarkerRefs.current, postalTraffic);
-      focusMap(map, focusTargetRef.current, delivery, petPosition, rewards);
+      syncPostalTrafficMarkers(
+        map,
+        trafficMarkerRefs.current,
+        postalTraffic,
+        selectionRef.current,
+        (trafficId) => onTrafficSelectRef.current(trafficId),
+      );
+      focusMap(map, focusTargetRef.current, delivery, petPosition, rewards, postalTraffic);
     });
 
     const stopFollowing = () => {
@@ -326,7 +344,13 @@ export function TravelMap({
       onRewardSelect,
     );
     syncRewardMarkerVisibility(map, rewardMarkerRefs.current);
-    syncPostalTrafficMarkers(map, trafficMarkerRefs.current, postalTraffic);
+    syncPostalTrafficMarkers(
+      map,
+      trafficMarkerRefs.current,
+      postalTraffic,
+      selection,
+      (trafficId) => onTrafficSelectRef.current(trafficId),
+    );
   }, [
     delivery,
     motionPreference,
@@ -338,6 +362,7 @@ export function TravelMap({
     destinationLabel,
     placeLabels,
     postalTraffic,
+    postalTrafficPets,
     rewardLabels,
     rewardStates,
     rewards,
@@ -370,6 +395,12 @@ export function TravelMap({
           delivery,
         );
         updateMapProgress(map, delivery, position);
+
+        postalTrafficPetsRef.current.forEach((trafficPet) => {
+          trafficMarkerRefs.current
+            .get(trafficPet.id)
+            ?.setLngLat(toLngLat(getPostalTrafficPetPosition(trafficPet, new Date()).coordinates));
+        });
 
         if (followMascotRef.current && !map.isEasing()) {
           map.setCenter(toLngLat(position.coordinates));
@@ -418,7 +449,7 @@ export function TravelMap({
       return;
     }
 
-    focusMap(map, focusTarget, delivery, petPosition, rewards);
+    focusMap(map, focusTarget, delivery, petPosition, rewards, postalTraffic);
   }, [delivery.id, focusTarget]);
 
   return (
@@ -454,6 +485,8 @@ function syncPostalTrafficMarkers(
   map: maplibregl.Map,
   markers: Map<string, maplibregl.Marker>,
   traffic: PostalTrafficPetSnapshot[],
+  selection: MapSelection,
+  onSelect: (trafficId: string) => void,
 ) {
   const activeIds = new Set(traffic.map((pet) => pet.id));
 
@@ -466,21 +499,18 @@ function syncPostalTrafficMarkers(
 
   traffic.forEach((pet) => {
     const existingMarker = markers.get(pet.id);
+    const selected = selection?.kind === "traffic" && selection.trafficId === pet.id;
 
     if (existingMarker) {
       existingMarker.setLngLat(toLngLat(pet.coordinates));
+      updateTrafficMarker(existingMarker.getElement(), pet, selected);
       return;
     }
 
-    const markerElement = document.createElement("div");
-    markerElement.className = [
-      styles.trafficMarker,
-      pet.visibility === "friend"
-        ? styles.friendTrafficMarker
-        : styles.anonymousTrafficMarker,
-    ].join(" ");
-    markerElement.setAttribute("aria-label", pet.label);
-    markerElement.title = pet.label;
+    const markerElement = document.createElement("button");
+    markerElement.type = "button";
+    markerElement.addEventListener("click", () => onSelect(pet.id));
+    updateTrafficMarker(markerElement, pet, selected);
 
     const marker = new maplibregl.Marker({ element: markerElement })
       .setLngLat(toLngLat(pet.coordinates))
@@ -488,6 +518,39 @@ function syncPostalTrafficMarkers(
 
     markers.set(pet.id, marker);
   });
+}
+
+function updateTrafficMarker(
+  markerElement: HTMLElement,
+  pet: PostalTrafficPetSnapshot,
+  selected: boolean,
+) {
+  markerElement.className = [
+    styles.trafficMarker,
+    pet.visibility === "friend" ? styles.friendTrafficMarker : styles.publicTrafficMarker,
+    selected ? styles.selectedTrafficMarker : "",
+  ].filter(Boolean).join(" ");
+  markerElement.setAttribute("aria-label", pet.label);
+  markerElement.setAttribute("aria-pressed", String(selected));
+  markerElement.title = pet.label;
+
+  let portrait = markerElement.querySelector("img");
+  if (markerElement.dataset.portraitError === pet.portraitAssetPath) return;
+  if (!portrait) {
+    portrait = document.createElement("img");
+    portrait.alt = "";
+    portrait.draggable = false;
+    portrait.setAttribute("aria-hidden", "true");
+    portrait.addEventListener("error", () => {
+      markerElement.dataset.portraitError = pet.portraitAssetPath;
+      portrait?.remove();
+    });
+    markerElement.append(portrait);
+  }
+  if (portrait.getAttribute("src") !== pet.portraitAssetPath) {
+    delete markerElement.dataset.portraitError;
+    portrait.setAttribute("src", pet.portraitAssetPath);
+  }
 }
 
 function removePostalTrafficMarkers(markers: Map<string, maplibregl.Marker>) {
@@ -870,6 +933,7 @@ function focusMap(
   delivery: Delivery,
   petPosition: MapCoordinate,
   rewards: RouteRewardDiscovery[],
+  traffic: PostalTrafficPetSnapshot[],
 ) {
   const duration = window.matchMedia("(prefers-reduced-motion: reduce)").matches
     ? 0
@@ -885,6 +949,7 @@ function focusMap(
     delivery,
     petPosition,
     rewards,
+    traffic,
   );
 
   if (!coordinates) {

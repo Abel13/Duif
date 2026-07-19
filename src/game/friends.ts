@@ -63,6 +63,18 @@ export const friendMascots: FriendMascotPreview[] = [
       portraitAssetPath: assetPaths.friends.mascot("luma.webp"),
     },
   },
+  {
+    id: "friend-mascot-maple",
+    name: "Maple",
+    speciesKey: "species.mailDuck",
+    level: 3,
+    appearance: {
+      primaryColor: "#fff8e8",
+      accentColor: "#a44a3f",
+      portraitPlaceholderKey: "appearance.friendMaplePortrait",
+      portraitAssetPath: assetPaths.friends.mascot("maple.webp"),
+    },
+  },
 ];
 
 export const mockFriends: FriendProfile[] = [
@@ -140,7 +152,7 @@ export const mockFriends: FriendProfile[] = [
     favoriteNoteKey: "friends.mina.note",
     friendshipLevel: 5,
     exchangeCount: 24,
-    mascotIds: ["friend-mascot-atlas", "friend-mascot-luma"],
+    mascotIds: ["friend-mascot-atlas", "friend-mascot-luma", "friend-mascot-maple"],
     receivedCorrespondence: [
       {
         id: "correspondence-mina-gift",

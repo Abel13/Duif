@@ -15,6 +15,8 @@ import {
   getPetMapPosition,
   getRouteRewardDiscoveries,
   getTravelProgress,
+  mockPostalTrafficPets,
+  resolvePostalTrafficSelection,
   nuvemDelivery,
   type Delivery,
   type DeliveryStatus,
@@ -26,6 +28,7 @@ import {
   type MapSelection,
   type Mascot,
   type PostalTrafficPetSnapshot,
+  type PostalTrafficRangeState,
   type RouteRewardDiscovery,
   type RouteDiscoveryEventOrigin,
   type RouteDiscoveryVisualState,
@@ -38,6 +41,7 @@ import styles from "./TravelMapPage.module.css";
 
 const defaultMascotId = "mascot-nuvem";
 const liveTickMs = 30 * 1000;
+const trafficTickMs = 1000;
 const discoveryHighlightMs = 4 * 1000;
 
 export function TravelMapPage() {
@@ -45,6 +49,7 @@ export function TravelMapPage() {
   const [searchParams] = useSearchParams();
   const { isLoading, mascots } = useMascotCatalog();
   const [now, setNow] = useState(() => new Date());
+  const [trafficNow, setTrafficNow] = useState(() => new Date());
   const [focusTarget, setFocusTarget] = useState<MapFocusTarget>({ kind: "overview" });
   const [followMascot, setFollowMascot] = useState(false);
   const [selection, setSelection] = useState<MapSelection>(null);
@@ -52,6 +57,7 @@ export function TravelMapPage() {
   const [newDiscoveryIds, setNewDiscoveryIds] = useState<Set<string>>(() => new Set());
   const [discoveryToast, setDiscoveryToast] = useState<string[] | null>(null);
   const [returnSummaryOpen, setReturnSummaryOpen] = useState(false);
+  const [selectedTrafficSnapshot, setSelectedTrafficSnapshot] = useState<PostalTrafficPetSnapshot>();
   const highlightTimersRef = useRef<Map<string, number>>(new Map());
   const toastTimerRef = useRef<number>();
   const motionPreference = useMotionPreference();
@@ -87,14 +93,13 @@ export function TravelMapPage() {
     ])),
     [newDiscoveryIds, rewards],
   );
-  const postalTraffic = useMemo(() => getNearbyPostalTrafficPets(delivery, now), [delivery, now]);
-  const localizedPostalTraffic = useMemo(
-    () =>
-      postalTraffic.map((pet) => ({
-        ...pet,
-        label: getPostalTrafficDisplayLabel(pet, t),
-      })),
-    [postalTraffic, t],
+  const trafficMascotPosition = useMemo(
+    () => getPetMapPosition(delivery, trafficNow).coordinates,
+    [delivery, trafficNow],
+  );
+  const postalTraffic = useMemo(
+    () => getNearbyPostalTrafficPets(trafficMascotPosition, trafficNow),
+    [trafficMascotPosition, trafficNow],
   );
   const placeLabels = useMemo(
     () => createMapPlaceLabels(delivery, rewards, t),
@@ -108,6 +113,13 @@ export function TravelMapPage() {
   const selectedReward = selection?.kind === "reward"
     ? rewards.find((reward) => reward.id === selection.rewardId)
     : undefined;
+  const trafficSelection = resolvePostalTrafficSelection(
+    postalTraffic,
+    selection?.kind === "traffic" ? selection.trafficId : undefined,
+    selectedTrafficSnapshot,
+  );
+  const selectedTraffic = trafficSelection.pet;
+  const selectedTrafficRange: PostalTrafficRangeState = trafficSelection.rangeState ?? "visible";
   const rewardLabels = useMemo(
     () => Object.fromEntries(rewards.map((reward) => [
       reward.id,
@@ -134,6 +146,27 @@ export function TravelMapPage() {
     };
   }, []);
 
+  useEffect(() => {
+    const updateTrafficClock = () => {
+      if (document.visibilityState === "visible") setTrafficNow(new Date());
+    };
+    const intervalId = window.setInterval(
+      updateTrafficClock,
+      motionPreference === "reduced" ? liveTickMs : trafficTickMs,
+    );
+    document.addEventListener("visibilitychange", updateTrafficClock);
+    return () => {
+      window.clearInterval(intervalId);
+      document.removeEventListener("visibilitychange", updateTrafficClock);
+    };
+  }, [motionPreference]);
+
+  useEffect(() => {
+    if (trafficSelection.rangeState === "visible" && trafficSelection.pet) {
+      setSelectedTrafficSnapshot(trafficSelection.pet);
+    }
+  }, [trafficSelection.pet, trafficSelection.rangeState]);
+
   useEffect(() => () => {
     highlightTimersRef.current.forEach((timer) => window.clearTimeout(timer));
     if (toastTimerRef.current) window.clearTimeout(toastTimerRef.current);
@@ -152,6 +185,7 @@ export function TravelMapPage() {
     if (journeyPhase === "traveling") return;
     setFollowMascot(false);
     setSelection(null);
+    setSelectedTrafficSnapshot(undefined);
 
     const mobileQuery = window.matchMedia("(max-width: 819px)");
     const openOnceOnMobile = () => {
@@ -198,14 +232,29 @@ export function TravelMapPage() {
 
   function selectReward(rewardId: string) {
     setFollowMascot(false);
+    setSelectedTrafficSnapshot(undefined);
     setSelection({ kind: "reward", rewardId });
     setFocusTarget({ kind: "reward", rewardId });
+  }
+
+  function selectTraffic(trafficId: string) {
+    const trafficPet = postalTraffic.find((pet) => pet.id === trafficId);
+    if (!trafficPet) return;
+    setFollowMascot(false);
+    setSelectedTrafficSnapshot(trafficPet);
+    setSelection({ kind: "traffic", trafficId });
+    setFocusTarget({ kind: "traffic", trafficId });
   }
 
   function closeRewardDetails() {
     setFollowMascot(false);
     setSelection(null);
     setFocusTarget({ kind: "mascot" });
+  }
+
+  function closeTrafficDetails() {
+    setSelection(null);
+    setSelectedTrafficSnapshot(undefined);
   }
 
   return (
@@ -222,12 +271,14 @@ export function TravelMapPage() {
             onFollowChange={setFollowMascot}
             onRewardDiscoveries={handleRewardDiscoveries}
             onRewardSelect={selectReward}
+            onTrafficSelect={selectTraffic}
             originLabel={t(delivery.origin.labelKey)}
             petLabel={displayMascot?.name ?? t("common.unavailable")}
             petPortraitAssetPath={displayMascot?.appearance.portraitAssetPath}
             placeLabels={placeLabels}
             petPosition={petPosition.coordinates}
-            postalTraffic={localizedPostalTraffic}
+            postalTraffic={postalTraffic}
+            postalTrafficPets={mockPostalTrafficPets}
             rewardLabels={rewardLabels}
             rewardStates={rewardStates}
             rewards={rewards}
@@ -289,13 +340,21 @@ export function TravelMapPage() {
             </>
           ) : (
             <>
-              {selectedReward ? (
+              {selectedReward || selectedTraffic ? (
                 <section className={`${styles.mobileDrawer} ${styles.mobileRewardDetails}`}>
-                  <button className={styles.drawerBackButton} onClick={closeRewardDetails} type="button">
+                  <button
+                    className={styles.drawerBackButton}
+                    onClick={selectedReward ? closeRewardDetails : closeTrafficDetails}
+                    type="button"
+                  >
                     {t("map.backToTrip")}
                   </button>
                   <div className={styles.drawerContent}>
-                    <RewardDetails reward={selectedReward} visualState={rewardStates[selectedReward.id]} />
+                    {selectedReward ? (
+                      <RewardDetails reward={selectedReward} visualState={rewardStates[selectedReward.id]} />
+                    ) : selectedTraffic ? (
+                      <PostalTrafficDetails pet={selectedTraffic} rangeState={selectedTrafficRange} />
+                    ) : null}
                   </div>
                 </section>
               ) : (
@@ -313,7 +372,11 @@ export function TravelMapPage() {
                       progressPercent={progressPercent}
                       status={status}
                     />
-                    <PostalTrafficContent postalTraffic={localizedPostalTraffic} />
+                    <PostalTrafficContent
+                      onSelect={selectTraffic}
+                      postalTraffic={postalTraffic}
+                      selectedTrafficId={selection?.kind === "traffic" ? selection.trafficId : undefined}
+                    />
                     <DiscoveryContent
                       discoveredCount={discoveredCount}
                       sourceLabel={t(delivery.routeDiscoveryVersion ? "map.persistedRewards" : "map.mockedRewards")}
@@ -339,7 +402,20 @@ export function TravelMapPage() {
                 </SketchPanel>
 
                 <SketchPanel title={t("postalTraffic.title")} variant="note">
-                  <PostalTrafficContent postalTraffic={localizedPostalTraffic} />
+                  {selectedTraffic ? (
+                    <>
+                      <button className={styles.panelBackButton} onClick={closeTrafficDetails} type="button">
+                        {t("map.backToTrip")}
+                      </button>
+                      <PostalTrafficDetails pet={selectedTraffic} rangeState={selectedTrafficRange} />
+                    </>
+                  ) : (
+                    <PostalTrafficContent
+                      onSelect={selectTraffic}
+                      postalTraffic={postalTraffic}
+                      selectedTrafficId={selection?.kind === "traffic" ? selection.trafficId : undefined}
+                    />
+                  )}
                 </SketchPanel>
 
                 <SketchPanel title={selectedReward ? t("map.rewardDetails") : t("map.discoveries")} variant="map">
@@ -460,9 +536,13 @@ function CargoSummary({
 }
 
 function PostalTrafficContent({
+  onSelect,
   postalTraffic,
+  selectedTrafficId,
 }: {
+  onSelect: (trafficId: string) => void;
   postalTraffic: PostalTrafficPetSnapshot[];
+  selectedTrafficId?: string;
 }) {
   const { t } = useTranslation();
 
@@ -475,21 +555,81 @@ function PostalTrafficContent({
       {postalTraffic.length > 0 ? (
         <div className={styles.discoveryList}>
           {postalTraffic.map((pet) => (
-            <ItemCard
-              description={t(pet.speciesKey)}
+            <button
+              aria-pressed={selectedTrafficId === pet.id}
+              className={styles.trafficListButton}
               key={pet.id}
-              meta={`${t(`postalTraffic.visibility.${pet.visibility}`)} / ${Math.round(
-                pet.distanceFromRouteKm,
-              )} km`}
-              selected={pet.visibility === "friend"}
-              title={pet.label}
-            />
+              onClick={() => onSelect(pet.id)}
+              type="button"
+            >
+              <ItemCard
+                description={t(pet.speciesKey)}
+                meta={`${pet.progress}% · ${Math.round(pet.distanceFromMascotKm)} km`}
+                selected={selectedTrafficId === pet.id}
+                title={pet.mascotName}
+              >
+                <AssetImage
+                  alt={pet.mascotName}
+                  className={styles.trafficListPortrait}
+                  src={pet.portraitAssetPath}
+                >
+                  <span className={styles.trafficPortraitFallback} aria-hidden="true" />
+                </AssetImage>
+              </ItemCard>
+            </button>
           ))}
         </div>
       ) : (
         <p className={styles.emptyNote}>{t("postalTraffic.empty")}</p>
       )}
     </>
+  );
+}
+
+function PostalTrafficDetails({
+  pet,
+  rangeState,
+}: {
+  pet: PostalTrafficPetSnapshot;
+  rangeState: PostalTrafficRangeState;
+}) {
+  const { t } = useTranslation();
+
+  return (
+    <div className={styles.trafficDetails}>
+      <div className={styles.trafficIdentity}>
+        <AssetImage alt={pet.mascotName} className={styles.trafficDetailPortrait} src={pet.portraitAssetPath}>
+          <span className={styles.trafficPortraitFallback} aria-hidden="true" />
+        </AssetImage>
+        <div>
+          <span className={styles.trafficVisibility}>{t(`postalTraffic.visibility.${pet.visibility}`)}</span>
+          <h3>{pet.mascotName}</h3>
+          <p>{t(pet.speciesKey)}</p>
+        </div>
+      </div>
+
+      {rangeState === "outOfRange" ? (
+        <p className={styles.outOfRangeNotice} role="status">{t("postalTraffic.outOfRange")}</p>
+      ) : null}
+
+      <dl className={styles.summary}>
+        <SummaryRow label={t("postalTraffic.travelState")} value={t(`postalTraffic.legs.${pet.leg}`)} />
+        <SummaryRow label={t("postalTraffic.progress")} value={`${pet.progress}%`} />
+        <SummaryRow label={t("mascot.origin")} value={t(pet.originRegionKey)} />
+        <SummaryRow label={t("mascot.destination")} value={t(pet.destinationRegionKey)} />
+        {pet.visibility === "friend" ? (
+          <SummaryRow label={t("postalTraffic.owner")} value={pet.friendName} />
+        ) : null}
+      </dl>
+
+      {pet.visibility === "friend" ? (
+        <Link className={styles.routeLink} to={`/friends/${pet.friendId}`}>
+          {t("postalTraffic.openFriendProfile")}
+        </Link>
+      ) : (
+        <p className={styles.privateOwnerNote}>{t("postalTraffic.privateOwner")}</p>
+      )}
+    </div>
   );
 }
 
@@ -771,15 +911,4 @@ function createMapPlaceLabels(
       label: reward.discovered ? t(reward.titleKey) : t("map.futureReward"),
     })),
   ];
-}
-
-function getPostalTrafficDisplayLabel(
-  pet: PostalTrafficPetSnapshot,
-  t: (key: TranslationKey) => string,
-) {
-  if (pet.visibility === "anonymous") {
-    return t("postalTraffic.anonymousPet");
-  }
-
-  return pet.label;
 }

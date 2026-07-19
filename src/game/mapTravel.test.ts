@@ -261,6 +261,13 @@ describe("map travel helpers", () => {
       mascotPosition,
       rewards,
     )).toEqual(rewards[0]!.coordinates);
+    expect(getMapFocusCoordinate(
+      { kind: "traffic", trafficId: "traffic-bento" },
+      nuvemDelivery,
+      mascotPosition,
+      rewards,
+      [{ id: "traffic-bento", coordinates: { latitude: -23.4, longitude: -51.4 } }],
+    )).toEqual({ latitude: -23.4, longitude: -51.4 });
     expect(getMapFocusCoordinate({ kind: "overview" }, nuvemDelivery, mascotPosition, rewards))
       .toBeUndefined();
   });
@@ -270,6 +277,16 @@ describe("map travel helpers", () => {
       { kind: "reward", rewardId: "missing-reward" },
       nuvemDelivery,
       nuvemDelivery.origin,
+      [],
+    )).toBeUndefined();
+  });
+
+  it("ignores an unknown traffic camera target", () => {
+    expect(getMapFocusCoordinate(
+      { kind: "traffic", trafficId: "missing-traffic" },
+      nuvemDelivery,
+      nuvemDelivery.origin,
+      [],
       [],
     )).toBeUndefined();
   });

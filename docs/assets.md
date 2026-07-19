@@ -34,6 +34,7 @@ Use stable public paths under `public/assets/`:
 
 - `icons/` for app icons and small brand assets.
 - `mascots/portraits/` for current player mascot portraits.
+- `mascots/public/` for app-defined public mascot portraits without owner identity.
 - `friends/mascots/` for friend mascot portraits.
 - `items/thumbnails/` for inventory, reward, and collectible thumbnails.
 - `equipment/icons/` for equipment icons.
@@ -208,6 +209,17 @@ The guided map now also includes two watercolor route pins:
 Both are transparent `256x256` WebP assets under `15KB`, anchored to their real route
 coordinates. They remain non-interactive map decoration with localized accessible labels and
 a CSS fallback if an image fails to load.
+
+Milestone 36 adds three public postal-traffic portraits:
+
+- `public/assets/friends/mascots/maple.webp`;
+- `public/assets/mascots/public/bento.webp`;
+- `public/assets/mascots/public/oliva.webp`.
+
+The AI-generated watercolor-and-ink portraits are `256x256` WebP files of about `8KB` each.
+They use an integrated paper background, remain safe inside circular map crops, and retain the
+same CSS fallback used by the traffic list and detail panel. Aurora continues using her existing
+official portrait.
 
 Success criteria:
 

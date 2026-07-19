@@ -15,7 +15,10 @@ export function clampProgress(progress: number) {
   return Math.min(1, Math.max(0, progress));
 }
 
-export function haversineDistanceKm(origin: Coordinates, destination: Coordinates) {
+export function haversineDistanceKm(
+  origin: Pick<Coordinates, "latitude" | "longitude">,
+  destination: Pick<Coordinates, "latitude" | "longitude">,
+) {
   if (origin.latitude === destination.latitude && origin.longitude === destination.longitude) {
     return 0;
   }

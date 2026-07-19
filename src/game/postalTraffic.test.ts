@@ -1,126 +1,149 @@
 import { describe, expect, it } from "vitest";
 
-import { nuvemDelivery } from "./mockData";
 import {
   createPostalTrafficGeoJson,
+  createPublicTrafficSnapshot,
   getNearbyPostalTrafficPets,
-  getPostalTrafficLabel,
   getPostalTrafficPetPosition,
+  resolvePostalTrafficSelection,
   type PostalTrafficPet,
 } from "./postalTraffic";
 
-const testPet: PostalTrafficPet = {
+const referenceTime = new Date("2026-07-18T11:00:00.000Z");
+const mascotCoordinates = { latitude: 0, longitude: 0 };
+
+const friendPet: PostalTrafficPet = {
+  friendId: "friend-lisbon",
   friendName: "Lia",
   id: "traffic-test",
   mascotName: "Aurora",
+  portraitAssetPath: "/assets/friends/mascots/aurora.webp",
   route: {
     origin: { latitude: 0, longitude: 0 },
     destination: { latitude: 0, longitude: 10 },
-    outboundStartAt: "2026-07-11T10:00:00.000Z",
-    outboundArrivalAt: "2026-07-11T12:00:00.000Z",
+    originRegionKey: "postalTraffic.regions.paranaBrazil",
+    destinationRegionKey: "postalTraffic.regions.paranaBrazil",
+    outboundStartAt: "2026-07-18T10:00:00.000Z",
+    outboundArrivalAt: "2026-07-18T12:00:00.000Z",
   },
-  speciesKey: "species.carrierPigeon",
+  speciesKey: "species.mailDuck",
   visibility: "friend",
 };
 
+function petAt(id: string, longitude: number): PostalTrafficPet {
+  return {
+    id,
+    mascotName: id,
+    portraitAssetPath: `/assets/${id}.webp`,
+    route: {
+      origin: { latitude: 0, longitude },
+      destination: { latitude: 0, longitude },
+      originRegionKey: "postalTraffic.regions.paranaBrazil",
+      destinationRegionKey: "postalTraffic.regions.paranaBrazil",
+      outboundStartAt: "2026-07-19T10:00:00.000Z",
+      outboundArrivalAt: "2026-07-19T12:00:00.000Z",
+    },
+    speciesKey: "species.messengerFalcon",
+    visibility: "public",
+  };
+}
+
 describe("postal traffic helpers", () => {
-  it("interpolates a traffic pet position from route timestamps", () => {
-    const position = getPostalTrafficPetPosition(
-      testPet,
-      new Date("2026-07-11T11:00:00.000Z"),
-    );
-
-    expect(position.progress).toBe(0.5);
-    expect(position.coordinates).toEqual({ latitude: 0, longitude: 5 });
-  });
-
-  it("uses identified labels for friend pets", () => {
-    expect(getPostalTrafficLabel(testPet)).toBe("Aurora / Lia");
-  });
-
-  it("uses an anonymous label key for non-friend pets", () => {
-    expect(
-      getPostalTrafficLabel({
-        ...testPet,
-        friendName: undefined,
-        mascotName: undefined,
-        visibility: "anonymous",
-      }),
-    ).toBe("postalTraffic.anonymousPet");
-  });
-
-  it("filters nearby traffic pets by distance from the active route", () => {
-    const nearbyPet: PostalTrafficPet = {
-      ...testPet,
+  it("interpolates outbound and returning positions with integer public progress", () => {
+    const outbound = getPostalTrafficPetPosition(friendPet, referenceTime);
+    const returningPet: PostalTrafficPet = {
+      ...friendPet,
       route: {
-        ...testPet.route,
-        origin: { latitude: -23.3045, longitude: -51.1696 },
-        destination: { latitude: -23.4205, longitude: -51.9333 },
+        ...friendPet.route,
+        returnStartAt: "2026-07-18T13:00:00.000Z",
+        returnArrivalAt: "2026-07-18T15:00:00.000Z",
       },
     };
-    const farPet: PostalTrafficPet = {
-      ...testPet,
-      id: "traffic-far-test",
-      route: {
-        ...testPet.route,
-        origin: { latitude: 35.6762, longitude: 139.6503 },
-        destination: { latitude: -33.8688, longitude: 151.2093 },
-      },
-      visibility: "anonymous",
+    const returning = getPostalTrafficPetPosition(
+      returningPet,
+      new Date("2026-07-18T14:00:00.000Z"),
+    );
+
+    expect(outbound).toMatchObject({ leg: "outbound", progress: 0.5 });
+    expect(outbound.coordinates).toEqual({ latitude: 0, longitude: 5 });
+    expect(returning).toMatchObject({ leg: "returning", progress: 0.5 });
+    expect(returning.coordinates).toEqual({ latitude: 0, longitude: 5 });
+    expect(createPublicTrafficSnapshot(friendPet, mascotCoordinates, referenceTime).progress).toBe(50);
+  });
+
+  it("sanitizes invalid timestamps to a preparing position", () => {
+    const pet = {
+      ...friendPet,
+      route: { ...friendPet.route, outboundStartAt: "invalid" },
     };
-
-    const traffic = getNearbyPostalTrafficPets(
-      nuvemDelivery,
-      new Date("2026-07-11T11:00:00.000Z"),
-      [nearbyPet, farPet],
-      900,
-    );
-
-    expect(traffic).toHaveLength(1);
-    expect(traffic[0]?.id).toBe("traffic-test");
+    expect(getPostalTrafficPetPosition(pet, referenceTime)).toEqual({
+      coordinates: pet.route.origin,
+      leg: "preparing",
+      progress: 0,
+    });
   });
 
-  it("returns an empty state when no traffic pets are nearby", () => {
-    expect(
-      getNearbyPostalTrafficPets(
-        nuvemDelivery,
-        new Date("2026-07-11T11:00:00.000Z"),
-        [
-          {
-            ...testPet,
-            route: {
-              ...testPet.route,
-              origin: { latitude: 35.6762, longitude: 139.6503 },
-              destination: { latitude: -33.8688, longitude: 151.2093 },
-            },
-          },
-        ],
-        100,
-      ),
-    ).toHaveLength(0);
+  it("includes the exact range boundary and excludes immediately outside it", () => {
+    const pet = petAt("boundary", 2);
+    const distance = createPublicTrafficSnapshot(pet, mascotCoordinates, referenceTime)
+      .distanceFromMascotKm;
+
+    expect(getNearbyPostalTrafficPets(mascotCoordinates, referenceTime, [pet], distance)).toHaveLength(1);
+    expect(getNearbyPostalTrafficPets(mascotCoordinates, referenceTime, [pet], distance - 0.01)).toHaveLength(0);
   });
 
-  it("creates GeoJSON for postal traffic markers", () => {
-    const traffic = getNearbyPostalTrafficPets(
-      nuvemDelivery,
-      new Date("2026-07-11T11:00:00.000Z"),
-      [
-        {
-          ...testPet,
-          route: {
-            ...testPet.route,
-            origin: { latitude: -23.3045, longitude: -51.1696 },
-            destination: { latitude: -23.4205, longitude: -51.9333 },
-          },
-        },
-      ],
-      900,
+  it("sorts by current distance, breaks ties by id, and limits twelve entries to ten", () => {
+    const pets = Array.from({ length: 12 }, (_, index) =>
+      petAt(`traffic-${String.fromCharCode(108 - index)}`, index < 2 ? 0.1 : 0.1 + index * 0.01),
     );
+    const traffic = getNearbyPostalTrafficPets(mascotCoordinates, referenceTime, pets, 250, 10);
+
+    expect(traffic).toHaveLength(10);
+    expect(traffic.slice(0, 2).map((pet) => pet.id)).toEqual(["traffic-k", "traffic-l"]);
+    expect(traffic[9]!.distanceFromMascotKm).toBeLessThanOrEqual(traffic[10]?.distanceFromMascotKm ?? Infinity);
+  });
+
+  it("does not expose owner fields in public mascot snapshots", () => {
+    const snapshot = createPublicTrafficSnapshot(petAt("bento", 0.2), mascotCoordinates, referenceTime);
+    expect(snapshot.visibility).toBe("public");
+    expect("friendId" in snapshot).toBe(false);
+    expect("friendName" in snapshot).toBe(false);
+    expect("route" in snapshot).toBe(false);
+  });
+
+  it("keeps friend identity in friend snapshots for the profile CTA", () => {
+    expect(createPublicTrafficSnapshot(friendPet, mascotCoordinates, referenceTime)).toMatchObject({
+      friendId: "friend-lisbon",
+      friendName: "Lia",
+      mascotName: "Aurora",
+      visibility: "friend",
+    });
+  });
+
+  it("freezes an out-of-range selection and resumes it when visible again", () => {
+    const previous = createPublicTrafficSnapshot(petAt("bento", 0.2), mascotCoordinates, referenceTime);
+    expect(resolvePostalTrafficSelection([], "bento", previous)).toEqual({
+      pet: previous,
+      rangeState: "outOfRange",
+    });
+
+    const visible = { ...previous, progress: 51 };
+    expect(resolvePostalTrafficSelection([visible], "bento", previous)).toEqual({
+      pet: visible,
+      rangeState: "visible",
+    });
+  });
+
+  it("creates public GeoJSON without route endpoints", () => {
+    const traffic = getNearbyPostalTrafficPets(mascotCoordinates, referenceTime, [petAt("bento", 0.2)]);
     const geoJson = createPostalTrafficGeoJson(traffic);
 
     expect(geoJson.features).toHaveLength(1);
-    expect(geoJson.features[0]?.properties.visibility).toBe("friend");
-    expect(geoJson.features[0]?.geometry.coordinates[0]).toBeCloseTo(-51.55145, 4);
-    expect(geoJson.features[0]?.geometry.coordinates[1]).toBeCloseTo(-23.3625, 4);
+    expect(geoJson.features[0]?.properties).toEqual({
+      id: "bento",
+      label: "bento",
+      visibility: "public",
+    });
+    expect(geoJson.features[0]?.geometry.coordinates).toEqual([0.2, 0]);
   });
 });

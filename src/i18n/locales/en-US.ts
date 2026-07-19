@@ -279,12 +279,30 @@ export const enUS = {
   },
   postalTraffic: {
     title: "Postal traffic",
-    nearbyPets: "Nearby pets",
-    anonymousPet: "Traveling pet",
-    empty: "No pets passing nearby right now.",
+    nearbyPets: "Nearby mascots",
+    empty: "No mascots are passing within 250 km right now.",
+    progress: "Progress",
+    travelState: "Travel state",
+    owner: "Owner",
+    openFriendProfile: "Open friend profile",
+    privateOwner: "This mascot's owner details are private.",
+    outOfRange: "This mascot left range. Showing the last known position.",
     visibility: {
       friend: "Friend",
-      anonymous: "Anonymous",
+      public: "Public mascot",
+    },
+    legs: {
+      preparing: "Preparing",
+      outbound: "Outbound",
+      delivered: "At destination",
+      returning: "Returning",
+      returned: "Returned",
+      completed: "Completed",
+    },
+    regions: {
+      paranaBrazil: "Paraná, Brazil",
+      tokyoJapan: "Tokyo, Japan",
+      newSouthWalesAustralia: "New South Wales, Australia",
     },
   },
   species: {
@@ -586,5 +604,6 @@ export const enUS = {
     friendTicoPortrait: "Temporary portrait of Tico",
     friendAtlasPortrait: "Temporary portrait of Atlas",
     friendLumaPortrait: "Temporary portrait of Luma",
+    friendMaplePortrait: "Portrait of Maple",
   },
 } satisfies TranslationDictionary;

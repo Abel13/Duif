@@ -416,16 +416,16 @@ Preferred technical shape:
 - client requests only pets relevant to the current viewport, route, or proximity window;
 - backend returns sanitized route snapshots, never private street/neighborhood data;
 - client interpolates visible pet positions locally from timestamps and route progress;
-- friends and explicit visibility settings can unlock richer labels, but public nearby pets
-  should stay anonymous or minimally identified.
+- mascot identity may be public, while friend relationships alone unlock the owner's name and
+  profile CTA; public non-friend snapshots omit every owner field.
 
 This keeps the first version closer to "postal traffic" than to an MMO simulation, while
 leaving room for a richer live map if the experience proves strong.
 
-Milestone 27.5 prototypes this locally with mocked route snapshots. Friend pets can be
-identified by friend and mascot name; non-friend pets stay anonymous. The frontend
-interpolates marker positions from timestamps and never exposes street, neighborhood, or
-private postal-base coordinates in the map UI.
+Milestone 36 expands the local prototype with official mascot portraits, regional route labels,
+integer progress, a 250 km radius, and a 10-result limit. The frontend interpolates marker
+positions from timestamps; public UI snapshots omit owner data, raw route snapshots, endpoint
+coordinates, streets, neighborhoods, and private postal-base coordinates.
 
 Open decisions:
 

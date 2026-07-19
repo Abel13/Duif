@@ -52,12 +52,17 @@ export {
 } from "./mapTravel";
 export {
   createPostalTrafficGeoJson,
+  createPublicTrafficSnapshot,
   getNearbyPostalTrafficPets,
   getPostalTrafficLabel,
   getPostalTrafficPetPosition,
   mockPostalTrafficPets,
+  POSTAL_TRAFFIC_MAX_VISIBLE,
+  POSTAL_TRAFFIC_VISIBILITY_RADIUS_KM,
+  resolvePostalTrafficSelection,
   type PostalTrafficPet,
   type PostalTrafficPetSnapshot,
+  type PostalTrafficRangeState,
   type PostalTrafficRouteSnapshot,
   type PostalTrafficVisibility,
 } from "./postalTraffic";

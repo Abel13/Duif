@@ -10,9 +10,13 @@ export type MapFocusTarget =
   | { kind: "mascot" }
   | { kind: "origin" }
   | { kind: "destination" }
-  | { kind: "reward"; rewardId: string };
+  | { kind: "reward"; rewardId: string }
+  | { kind: "traffic"; trafficId: string };
 
-export type MapSelection = { kind: "reward"; rewardId: string } | null;
+export type MapSelection =
+  | { kind: "reward"; rewardId: string }
+  | { kind: "traffic"; trafficId: string }
+  | null;
 export type MapMotionPreference = "full" | "reduced";
 export type RouteDiscoveryVisualState = "future" | "new" | "carried";
 export type RouteDiscoveryEventOrigin = "visible" | "resume";
@@ -523,6 +527,7 @@ export function getMapFocusCoordinate(
   delivery: Delivery,
   mascotPosition: MapCoordinate,
   rewards: RouteRewardDiscovery[],
+  traffic: Array<{ coordinates: MapCoordinate; id: string }> = [],
 ): MapCoordinate | undefined {
   switch (target.kind) {
     case "mascot":
@@ -533,6 +538,8 @@ export function getMapFocusCoordinate(
       return delivery.destination;
     case "reward":
       return rewards.find((reward) => reward.id === target.rewardId)?.coordinates;
+    case "traffic":
+      return traffic.find((pet) => pet.id === target.trafficId)?.coordinates;
     case "overview":
       return undefined;
   }

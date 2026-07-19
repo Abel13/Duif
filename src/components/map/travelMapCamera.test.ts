@@ -41,5 +41,7 @@ describe("travel map camera helpers", () => {
     expect(getMapFocusZoom(2, "mascot")).toBe(13);
     expect(getMapFocusZoom(12, "mascot")).toBe(13);
     expect(getMapFocusZoom(5, "reward")).toBe(6.5);
+    expect(getMapFocusZoom(4, "traffic")).toBe(12);
+    expect(getMapFocusZoom(14, "traffic")).toBe(12);
   });
 });

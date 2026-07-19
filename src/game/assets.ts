@@ -3,6 +3,7 @@ const PUBLIC_ASSET_ROOT = "/assets";
 export const assetPaths = {
   mascots: {
     portrait: (fileName: string) => `${PUBLIC_ASSET_ROOT}/mascots/portraits/${fileName}`,
+    publicPortrait: (fileName: string) => `${PUBLIC_ASSET_ROOT}/mascots/public/${fileName}`,
   },
   friends: {
     mascot: (fileName: string) => `${PUBLIC_ASSET_ROOT}/friends/mascots/${fileName}`,

@@ -98,14 +98,20 @@ Nearby pets:
 - This may become part of the default map experience if it makes the world feel alive
   without creating noisy real-time social pressure.
 - Nearby pets should be treated as postal traffic, not as a real-time chat or MMO layer.
-- The first prototype uses mixed safe visibility: friends can show friend and mascot names,
-  while non-friends appear as anonymous traveling pets.
+- Mascot identity is public in the interactive prototype: name, species, official portrait,
+  integer trip progress, and state/province plus country at each route end may be shown.
+- Player identity remains private for non-friends. Friends may show the known owner's name and
+  link to an already accessible friend profile; public non-friend mascots expose neither.
+- Visibility is derived locally within 250 km of the active mascot and limited to the 10 closest
+  results. These are prototype values, not a production discovery entitlement.
 - The client should not receive exact private addresses or precise personal location data
   for other players.
 - The backend should decide which pets are eligible to appear based on privacy, friendship,
   visibility rules, viewport/route proximity, and current active deliveries.
 - The frontend can animate visible pets from route snapshots, timestamps, and speed instead
   of receiving live position updates every second.
+- Leaving the visible range removes the mascot from the map and list. An already open detail
+  panel may retain only the last public snapshot and must label it as out of range.
 
 Technical direction:
 

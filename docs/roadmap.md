@@ -1068,7 +1068,7 @@ part of the map experience.
 Includes:
 
 - define "postal traffic" as nearby active deliveries, not chat or full real-time multiplayer;
-- decide what information is visible for friends, non-friends, and anonymous public pets;
+- decide what information is visible for friends and public non-friend mascots;
 - prototype a few nearby pet route snapshots on `/map`;
 - animate nearby pets client-side from route endpoints, timestamps, and speed;
 - document backend query shape for viewport/route proximity;
@@ -1434,8 +1434,12 @@ Includes:
 
 - selection from both map markers and the nearby-traffic list;
 - synchronized selection, camera focus, and detail panel;
-- friend details with mascot, species, approximate progress, and profile CTA;
-- anonymous details limited to species and a generic travel state;
+- continuous local movement, a 250 km visibility radius, and the 10 closest results;
+- public mascot identity with name, species, official portrait, integer progress, and regional
+  route endpoints;
+- friend owner details and profile CTA only for established friendships;
+- private owners for public non-friend mascots;
+- a frozen, explicitly out-of-range snapshot when a selected mascot leaves visibility;
 - mobile and keyboard interaction coverage.
 
 Does not include:
@@ -1448,7 +1452,8 @@ Does not include:
 Success criteria:
 
 - friend traffic links only to profiles the player may already visit;
-- anonymous traffic cannot reveal identity or precise route endpoints;
+- public non-friend traffic cannot reveal its owner or precise route endpoints;
+- no UI snapshot contains residential or city endpoints, endpoint coordinates, or timestamps;
 - selection works consistently from marker and list;
 - the panel does not introduce horizontal overflow on mobile.
 

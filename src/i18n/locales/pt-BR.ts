@@ -280,12 +280,30 @@ export const ptBR = {
   },
   postalTraffic: {
     title: "Tráfego postal",
-    nearbyPets: "Pets próximos",
-    anonymousPet: "Pet viajante",
-    empty: "Nenhum pet passando por perto agora.",
+    nearbyPets: "Mascotes próximos",
+    empty: "Nenhum mascote passando a menos de 250 km agora.",
+    progress: "Progresso",
+    travelState: "Estado da viagem",
+    owner: "Dono",
+    openFriendProfile: "Abrir perfil do amigo",
+    privateOwner: "Os dados do dono deste mascote são privados.",
+    outOfRange: "Este mascote saiu do alcance. Exibindo a última posição conhecida.",
     visibility: {
       friend: "Amigo",
-      anonymous: "Anônimo",
+      public: "Mascote público",
+    },
+    legs: {
+      preparing: "Preparando",
+      outbound: "Indo",
+      delivered: "No destino",
+      returning: "Retornando",
+      returned: "Retornou",
+      completed: "Concluída",
+    },
+    regions: {
+      paranaBrazil: "Paraná, Brasil",
+      tokyoJapan: "Tóquio, Japão",
+      newSouthWalesAustralia: "Nova Gales do Sul, Austrália",
     },
   },
   species: {
@@ -587,5 +605,6 @@ export const ptBR = {
     friendTicoPortrait: "Retrato temporário de Tico",
     friendAtlasPortrait: "Retrato temporário de Atlas",
     friendLumaPortrait: "Retrato temporário de Luma",
+    friendMaplePortrait: "Retrato de Maple",
   },
 } satisfies TranslationDictionary;

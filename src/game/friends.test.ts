@@ -15,8 +15,8 @@ describe("friend helpers", () => {
   it("returns friend mascot previews", () => {
     const mascots = getFriendMascots("friend-toronto");
 
-    expect(mascots).toHaveLength(2);
-    expect(mascots.map((mascot) => mascot.name)).toEqual(["Atlas", "Luma"]);
+    expect(mascots).toHaveLength(3);
+    expect(mascots.map((mascot) => mascot.name)).toEqual(["Atlas", "Luma", "Maple"]);
   });
 
   it("returns received correspondence previews", () => {

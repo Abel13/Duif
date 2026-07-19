@@ -273,11 +273,29 @@ export type TranslationDictionary = {
   postalTraffic: {
     title: string;
     nearbyPets: string;
-    anonymousPet: string;
     empty: string;
+    progress: string;
+    travelState: string;
+    owner: string;
+    openFriendProfile: string;
+    privateOwner: string;
+    outOfRange: string;
     visibility: {
       friend: string;
-      anonymous: string;
+      public: string;
+    };
+    legs: {
+      preparing: string;
+      outbound: string;
+      delivered: string;
+      returning: string;
+      returned: string;
+      completed: string;
+    };
+    regions: {
+      paranaBrazil: string;
+      tokyoJapan: string;
+      newSouthWalesAustralia: string;
     };
   };
   species: {
@@ -555,6 +573,7 @@ export type TranslationDictionary = {
     friendTicoPortrait: string;
     friendAtlasPortrait: string;
     friendLumaPortrait: string;
+    friendMaplePortrait: string;
   };
 };
 
@@ -782,10 +801,24 @@ export type TranslationKey =
   | "map.rewards.maringaEvent.description"
   | "postalTraffic.title"
   | "postalTraffic.nearbyPets"
-  | "postalTraffic.anonymousPet"
   | "postalTraffic.empty"
+  | "postalTraffic.progress"
+  | "postalTraffic.travelState"
+  | "postalTraffic.owner"
+  | "postalTraffic.openFriendProfile"
+  | "postalTraffic.privateOwner"
+  | "postalTraffic.outOfRange"
   | "postalTraffic.visibility.friend"
-  | "postalTraffic.visibility.anonymous"
+  | "postalTraffic.visibility.public"
+  | "postalTraffic.legs.preparing"
+  | "postalTraffic.legs.outbound"
+  | "postalTraffic.legs.delivered"
+  | "postalTraffic.legs.returning"
+  | "postalTraffic.legs.returned"
+  | "postalTraffic.legs.completed"
+  | "postalTraffic.regions.paranaBrazil"
+  | "postalTraffic.regions.tokyoJapan"
+  | "postalTraffic.regions.newSouthWalesAustralia"
   | "species.carrierPigeon"
   | "species.messengerFalcon"
   | "species.mailDuck"
@@ -967,4 +1000,5 @@ export type TranslationKey =
   | "appearance.friendBrisaPortrait"
   | "appearance.friendTicoPortrait"
   | "appearance.friendAtlasPortrait"
-  | "appearance.friendLumaPortrait";
+  | "appearance.friendLumaPortrait"
+  | "appearance.friendMaplePortrait";
