@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { starterMascots } from "../../game/mockData";
+import { nuvemDelivery, starterMascots } from "../../game/mockData";
 import type { MascotTemplateRow } from "./catalogMappers";
 import {
   STARTER_MASCOT_IDS,
@@ -75,7 +75,7 @@ describe("Supabase catalog mappers", () => {
         luck: 6,
       },
     });
-    expect(mascot.currentDelivery?.id).toBe("delivery-nuvem-maringa");
+    expect(mascot.currentDelivery?.id).toBe(nuvemDelivery.id);
     expect(mascot.equipment[0]?.id).toBe("equipment-nuvem-canvas-bag");
   });
 

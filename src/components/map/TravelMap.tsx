@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import maplibregl, {
   type GeoJSONSource,
   type LngLatBoundsLike,
@@ -21,6 +21,7 @@ import {
 } from "../../game/postalTraffic";
 import {
   createDeliveryRouteGeoJson,
+  createInterpolatedRouteCoordinates,
   createMapPlaceLabelsGeoJson,
   createTravelProgressGeoJson,
   getCrossedRouteRewardIds,
@@ -83,12 +84,15 @@ const postalMapStyle = {
 export type TravelMapProps = {
   delivery: Delivery;
   deliveryCompleted: boolean;
+  centerControl?: ReactNode;
   destinationLabel: string;
+  destinationTitle: string;
   fallbackLabel: string;
   focusTarget: MapFocusTarget;
   followMascot: boolean;
   motionPreference: MapMotionPreference;
   originLabel: string;
+  originTitle: string;
   petLabel: string;
   petPortraitAssetPath?: string;
   petPosition: MapCoordinate;
@@ -104,19 +108,23 @@ export type TravelMapProps = {
     origin: RouteDiscoveryEventOrigin,
   ) => void;
   onRewardSelect: (rewardId: string) => void;
+  onPetSelect: () => void;
   onTrafficSelect: (trafficId: string) => void;
   onViewportChange: (anchor: PostalTrafficQueryAnchor) => void;
 };
 
 export function TravelMap({
+  centerControl,
   delivery,
   deliveryCompleted,
   destinationLabel,
+  destinationTitle,
   fallbackLabel,
   focusTarget,
   followMascot,
   motionPreference,
   originLabel,
+  originTitle,
   petLabel,
   petPortraitAssetPath,
   petPosition,
@@ -129,6 +137,7 @@ export function TravelMap({
   onFollowChange,
   onRewardDiscoveries,
   onRewardSelect,
+  onPetSelect,
   onTrafficSelect,
   onViewportChange,
 }: TravelMapProps) {
@@ -148,6 +157,7 @@ export function TravelMap({
   const onViewportChangeRef = useRef(onViewportChange);
   const onTrafficSelectRef = useRef(onTrafficSelect);
   const onRewardDiscoveriesRef = useRef(onRewardDiscoveries);
+  const onPetSelectRef = useRef(onPetSelect);
   const discoveryRef = useRef(createDiscoveryTracker(delivery, rewards));
   const [hasMapError, setHasMapError] = useState(false);
 
@@ -160,6 +170,7 @@ export function TravelMap({
   onViewportChangeRef.current = onViewportChange;
   onTrafficSelectRef.current = onTrafficSelect;
   onRewardDiscoveriesRef.current = onRewardDiscoveries;
+  onPetSelectRef.current = onPetSelect;
 
   useEffect(() => {
     discoveryRef.current = createDiscoveryTracker(delivery, rewards);
@@ -229,16 +240,14 @@ export function TravelMap({
     );
 
     if (!deliveryCompleted) {
-      const petElement = document.createElement("div");
-      petElement.className = styles.petMarker;
-      petElement.style.zIndex = "3";
-      petElement.setAttribute("aria-label", petLabel);
-      syncPetPortrait(petElement, petPortraitAssetPath);
-      updatePetDirection(petElement, getPetMapPosition(delivery, new Date()).leg, delivery);
-
-      petMarkerRef.current = new maplibregl.Marker({ element: petElement })
-        .setLngLat(toLngLat(petPosition))
-        .addTo(map);
+      petMarkerRef.current = createPetMarker(
+        map,
+        delivery,
+        petLabel,
+        petPortraitAssetPath,
+        petPosition,
+        () => onPetSelectRef.current(),
+      );
     }
 
     map.on("load", () => {
@@ -322,6 +331,16 @@ export function TravelMap({
 
     routeSource?.setData(createDeliveryRouteGeoJson(delivery));
     placeLabelsSource?.setData(createMapPlaceLabelsGeoJson(placeLabels));
+    if (!deliveryCompleted && !petMarkerRef.current) {
+      petMarkerRef.current = createPetMarker(
+        map,
+        delivery,
+        petLabel,
+        petPortraitAssetPath,
+        petPosition,
+        () => onPetSelectRef.current(),
+      );
+    }
     petMarkerRef.current?.setLngLat(toLngLat(petPosition));
     syncRouteEndpointMarkers(
       map,
@@ -478,9 +497,18 @@ export function TravelMap({
       {hasMapError ? (
         <div className={styles.mapFallback}>{fallbackLabel}</div>
       ) : null}
-      <div className={styles.labels} aria-hidden="true">
-        <span>{originLabel}</span>
-        {!deliveryCompleted ? <span>{destinationLabel}</span> : null}
+      <div className={styles.labels}>
+        <span>
+          <small>{originTitle}</small>
+          <strong>{originLabel}</strong>
+        </span>
+        {centerControl ? <div className={styles.centerControl}>{centerControl}</div> : null}
+        {!deliveryCompleted ? (
+          <span>
+            <small>{destinationTitle}</small>
+            <strong>{destinationLabel}</strong>
+          </span>
+        ) : null}
       </div>
     </div>
   );
@@ -546,21 +574,25 @@ function syncPostalTrafficRoutes(
   selection: MapSelection,
 ) {
   const source = map.getSource(postalTrafficRoutesSourceId) as GeoJSONSource | undefined;
+  const selectedTrafficId = selection?.kind === "traffic" ? selection.trafficId : undefined;
+  const visibleRoutes = selectedTrafficId
+    ? traffic.filter((pet) => pet.id === selectedTrafficId)
+    : traffic;
   source?.setData({
     type: "FeatureCollection",
-    features: traffic.map((pet) => ({
+    features: visibleRoutes.map((pet) => ({
       type: "Feature",
       properties: {
         id: pet.id,
         opacity: pet.visualPhase === "visible" ? 1 : 0,
-        selected: selection?.kind === "traffic" && selection.trafficId === pet.id,
+        selected: selectedTrafficId === pet.id,
       },
       geometry: {
         type: "LineString",
-        coordinates: [
-          toLngLat(pet.route.origin),
-          toLngLat(pet.route.destination),
-        ],
+        coordinates: createInterpolatedRouteCoordinates(
+          pet.route.origin,
+          pet.route.destination,
+        ).map(toLngLat),
       },
     })),
   });
@@ -814,6 +846,7 @@ function addMapLayers(
   if (!map.getSource(routeSourceId)) {
     map.addSource(routeSourceId, {
       data: createDeliveryRouteGeoJson(delivery),
+      tolerance: 0,
       type: "geojson",
     });
   }
@@ -828,6 +861,7 @@ function addMapLayers(
   if (!map.getSource(postalTrafficRoutesSourceId)) {
     map.addSource(postalTrafficRoutesSourceId, {
       data: { type: "FeatureCollection", features: [] },
+      tolerance: 0,
       type: "geojson",
     });
   }
@@ -837,6 +871,7 @@ function addMapLayers(
   if (!map.getSource(outboundProgressSourceId)) {
     map.addSource(outboundProgressSourceId, {
       data: progress.outbound,
+      tolerance: 0,
       type: "geojson",
     });
   }
@@ -844,6 +879,7 @@ function addMapLayers(
   if (!map.getSource(returnProgressSourceId)) {
     map.addSource(returnProgressSourceId, {
       data: progress.returning,
+      tolerance: 0,
       type: "geojson",
     });
   }
@@ -1040,6 +1076,27 @@ function syncPetPortrait(element: HTMLElement, portraitAssetPath?: string) {
     image.remove();
   });
   element.append(image);
+}
+
+function createPetMarker(
+  map: maplibregl.Map,
+  delivery: Delivery,
+  label: string,
+  portraitAssetPath: string | undefined,
+  position: MapCoordinate,
+  onSelect: () => void,
+) {
+  const element = document.createElement("button");
+  element.type = "button";
+  element.className = styles.petMarker;
+  element.style.zIndex = "3";
+  element.setAttribute("aria-label", label);
+  element.addEventListener("click", onSelect);
+  syncPetPortrait(element, portraitAssetPath);
+  updatePetDirection(element, getPetMapPosition(delivery, new Date()).leg, delivery);
+  return new maplibregl.Marker({ element })
+    .setLngLat(toLngLat(position))
+    .addTo(map);
 }
 
 function focusMap(

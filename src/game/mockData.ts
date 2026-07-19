@@ -15,24 +15,66 @@ export const currentPlayer: Player = {
 };
 
 export const nuvemDelivery: Delivery = {
-  id: "delivery-nuvem-maringa",
+  id: "delivery-nuvem-belo-horizonte",
   senderId: currentPlayer.id,
   receiverId: "friend-lisbon",
   mascotId: "mascot-nuvem",
   origin: playerHomeBase,
   destination: {
-    latitude: -23.4205,
-    longitude: -51.9333,
-    labelKey: "locations.maringa",
+    latitude: -19.9167,
+    longitude: -43.9345,
+    labelKey: "locations.beloHorizonte",
   },
-  distanceKm: 79,
+  distanceKm: 756,
   animalSpeedKmh: 62,
-  outboundStartAt: "2026-07-18T12:00:00.000Z",
-  outboundArrivalAt: "2026-07-18T18:00:00.000Z",
-  returnStartAt: "2026-07-18T18:30:00.000Z",
-  returnArrivalAt: "2026-07-19T00:30:00.000Z",
-  status: "returning",
-  rewardSeed: "nuvem-maringa-welcome-letter",
+  outboundStartAt: "2026-07-19T00:30:00.000Z",
+  outboundArrivalAt: "2026-07-19T04:30:00.000Z",
+  returnStartAt: "2026-07-19T05:00:00.000Z",
+  returnArrivalAt: "2026-07-19T09:00:00.000Z",
+  status: "outbound",
+  rewardSeed: "nuvem-belo-horizonte-letter",
+};
+
+export const trovaoDelivery: Delivery = {
+  id: "delivery-trovao-rio-branco",
+  senderId: currentPlayer.id,
+  receiverId: "friend-acre",
+  mascotId: "mascot-trovao",
+  origin: playerHomeBase,
+  destination: {
+    latitude: -9.9754,
+    longitude: -67.8249,
+    labelKey: "locations.rioBranco",
+  },
+  distanceKm: 2490,
+  animalSpeedKmh: 78,
+  outboundStartAt: "2026-07-19T00:15:00.000Z",
+  outboundArrivalAt: "2026-07-19T08:15:00.000Z",
+  returnStartAt: "2026-07-19T08:45:00.000Z",
+  returnArrivalAt: "2026-07-19T16:45:00.000Z",
+  status: "outbound",
+  rewardSeed: "trovao-rio-branco-express-letter",
+};
+
+export const pipocaDelivery: Delivery = {
+  id: "delivery-pipoca-salvador",
+  senderId: currentPlayer.id,
+  receiverId: "friend-bahia",
+  mascotId: "mascot-pipoca",
+  origin: playerHomeBase,
+  destination: {
+    latitude: -12.9714,
+    longitude: -38.5014,
+    labelKey: "locations.salvador",
+  },
+  distanceKm: 1608,
+  animalSpeedKmh: 52,
+  outboundStartAt: "2026-07-19T00:45:00.000Z",
+  outboundArrivalAt: "2026-07-19T06:45:00.000Z",
+  returnStartAt: "2026-07-19T07:15:00.000Z",
+  returnArrivalAt: "2026-07-19T13:15:00.000Z",
+  status: "outbound",
+  rewardSeed: "pipoca-salvador-postcard",
 };
 
 export const starterMascots: Mascot[] = [
@@ -165,6 +207,7 @@ export const starterMascots: Mascot[] = [
       portraitPlaceholderKey: "appearance.trovaoPortrait",
       portraitAssetPath: assetPaths.mascots.portrait("trovao.webp"),
     },
+    currentDelivery: trovaoDelivery,
   },
   {
     id: "mascot-pipoca",
@@ -225,6 +268,7 @@ export const starterMascots: Mascot[] = [
       portraitPlaceholderKey: "appearance.pipocaPortrait",
       portraitAssetPath: assetPaths.mascots.portrait("pipoca.webp"),
     },
+    currentDelivery: pipocaDelivery,
   },
 ];
 

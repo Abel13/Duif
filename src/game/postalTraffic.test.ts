@@ -6,6 +6,7 @@ import {
   expandPostalTrafficViewport,
   getNearbyPostalTrafficPets,
   getPostalTrafficPetPosition,
+  mockPostalTrafficPets,
   resolvePostalTrafficSelection,
   type PostalTrafficPet,
 } from "./postalTraffic";
@@ -50,6 +51,19 @@ function petAt(id: string, longitude: number): PostalTrafficPet {
 }
 
 describe("postal traffic helpers", () => {
+  it("keeps every mock traffic route inside Brazil", () => {
+    mockPostalTrafficPets.forEach((pet) => {
+      expect(pet.route.originRegionKey).toMatch(/Brazil$/);
+      expect(pet.route.destinationRegionKey).toMatch(/Brazil$/);
+      [pet.route.origin, pet.route.destination].forEach((point) => {
+        expect(point.latitude).toBeGreaterThanOrEqual(-34);
+        expect(point.latitude).toBeLessThanOrEqual(6);
+        expect(point.longitude).toBeGreaterThanOrEqual(-74);
+        expect(point.longitude).toBeLessThanOrEqual(-34);
+      });
+    });
+  });
+
   it("interpolates outbound and returning positions with integer public progress", () => {
     const outbound = getPostalTrafficPetPosition(friendPet, referenceTime);
     const returningPet: PostalTrafficPet = {

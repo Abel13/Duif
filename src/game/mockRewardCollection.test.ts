@@ -4,6 +4,7 @@ import { nuvemDelivery, starterMascots } from "./mockData";
 import { archiveCollectedMockDeliveries, collectMockRewardOnce, getMockDeliveryHistory, readMockRewardCollection, type StorageLike } from "./mockRewardCollection";
 import { createMockRewardFromDelivery } from "./rewards";
 import { getRouteRewardDiscoveries } from "./mapTravel";
+import type { Delivery } from "./types";
 
 describe("mock reward collection", () => {
   it("collects a delivery only once across repeated reads", () => {
@@ -20,17 +21,26 @@ describe("mock reward collection", () => {
 
   it("collects the complete route cargo idempotently with category mapping", () => {
     const storage = createMemoryStorage();
-    const reward = createMockRewardFromDelivery(nuvemDelivery)!;
-    const routeDiscoveries = getRouteRewardDiscoveries(nuvemDelivery);
+    const cargoDelivery: Delivery = {
+      ...nuvemDelivery,
+      id: "delivery-route-cargo-test",
+      destination: {
+        latitude: -23.4205,
+        longitude: -51.9333,
+        labelKey: "locations.maringa",
+      },
+    };
+    const reward = createMockRewardFromDelivery(cargoDelivery)!;
+    const routeDiscoveries = getRouteRewardDiscoveries(cargoDelivery);
 
     const first = collectMockRewardOnce({
-      delivery: nuvemDelivery,
+      delivery: cargoDelivery,
       reward,
       routeDiscoveries,
       storage,
     });
     const second = collectMockRewardOnce({
-      delivery: nuvemDelivery,
+      delivery: cargoDelivery,
       reward,
       routeDiscoveries,
       storage,
@@ -57,7 +67,7 @@ describe("mock reward collection", () => {
 
     expect(mascots.find((mascot) => mascot.id === nuvemDelivery.mascotId)?.currentDelivery)
       .toBeUndefined();
-    expect(mascots.filter((mascot) => mascot.currentDelivery)).toHaveLength(0);
+    expect(mascots.filter((mascot) => mascot.currentDelivery)).toHaveLength(2);
     expect(getMockDeliveryHistory([nuvemDelivery], {
       collectedDeliveryIds: [nuvemDelivery.id],
       inventory: [],

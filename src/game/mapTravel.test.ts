@@ -69,27 +69,27 @@ describe("map travel helpers", () => {
   it("calculates pet position during outbound travel", () => {
     const position = getPetMapPosition(
       nuvemDelivery,
-      new Date("2026-07-18T15:00:00.000Z"),
+      new Date("2026-07-19T02:30:00.000Z"),
     );
 
     expect(position.leg).toBe("outbound");
     expect(position.legProgress).toBe(0.5);
     expect(position.outboundProgress).toBe(0.5);
-    expect(position.coordinates.latitude).toBeCloseTo(-23.36, 2);
-    expect(position.coordinates.longitude).toBeCloseTo(-51.55, 2);
+    expect(position.coordinates.latitude).toBeCloseTo(-21.61, 2);
+    expect(position.coordinates.longitude).toBeCloseTo(-47.55, 2);
   });
 
   it("calculates pet position during return travel", () => {
     const position = getPetMapPosition(
       nuvemDelivery,
-      new Date("2026-07-18T21:30:00.000Z"),
+      new Date("2026-07-19T07:00:00.000Z"),
     );
 
     expect(position.leg).toBe("returning");
     expect(position.legProgress).toBe(0.5);
     expect(position.outboundProgress).toBe(1);
-    expect(position.coordinates.latitude).toBeCloseTo(-23.36, 2);
-    expect(position.coordinates.longitude).toBeCloseTo(-51.55, 2);
+    expect(position.coordinates.latitude).toBeCloseTo(-21.61, 2);
+    expect(position.coordinates.longitude).toBeCloseTo(-47.55, 2);
   });
 
   it("calculates distance from a point to the route", () => {
@@ -209,7 +209,7 @@ describe("map travel helpers", () => {
     };
     const rewards = createRouteRewardDiscoveries(
       delivery,
-      new Date("2026-07-18T16:00:00.000Z"),
+      new Date("2026-07-19T04:00:00.000Z"),
       [rewardPoint],
     );
 
@@ -217,15 +217,16 @@ describe("map travel helpers", () => {
   });
 
   it("creates route and reward GeoJSON collections", () => {
-    const rewards = getRouteRewardDiscoveries(nuvemDelivery, new Date("2026-07-18T18:00:00.000Z"));
+    const rewards = getRouteRewardDiscoveries(nuvemDelivery, new Date("2026-07-19T04:30:00.000Z"));
     const routeGeoJson = createDeliveryRouteGeoJson(nuvemDelivery);
     const rewardGeoJson = createRouteRewardsGeoJson(rewards);
 
-    expect(routeGeoJson.features[0]?.geometry.coordinates).toEqual([
-      [-51.1696, -23.3045],
-      [-51.9333, -23.4205],
-    ]);
-    expect(rewardGeoJson.features.length).toBeGreaterThan(3);
+    const routeCoordinates = routeGeoJson.features[0]?.geometry.coordinates ?? [];
+    expect(routeCoordinates.length).toBeGreaterThan(2);
+    expect(routeCoordinates[0]).toEqual([-51.1696, -23.3045]);
+    expect(routeCoordinates[routeCoordinates.length - 1]?.[0]).toBeCloseTo(nuvemDelivery.destination.longitude, 6);
+    expect(routeCoordinates[routeCoordinates.length - 1]?.[1]).toBeCloseTo(nuvemDelivery.destination.latitude, 6);
+    expect(rewardGeoJson.features.length).toBeGreaterThan(0);
     expect(rewardGeoJson.features[0]?.properties.discovered).toBe(true);
   });
 
@@ -247,7 +248,10 @@ describe("map travel helpers", () => {
 
     expect(labelGeoJson.features).toHaveLength(2);
     expect(labelGeoJson.features[0]?.properties.label).toBe("Londrina");
-    expect(labelGeoJson.features[1]?.geometry.coordinates).toEqual([-51.9333, -23.4205]);
+    expect(labelGeoJson.features[1]?.geometry.coordinates).toEqual([
+      nuvemDelivery.destination.longitude,
+      nuvemDelivery.destination.latitude,
+    ]);
   });
 
   it("resolves guided camera coordinates for every point target", () => {
@@ -334,9 +338,10 @@ describe("map travel helpers", () => {
       outboundStartAt: "invalid",
     };
 
-    expect(progress.outbound.features[0]?.geometry.coordinates[1]?.[0])
+    const progressCoordinates = progress.outbound.features[0]?.geometry.coordinates ?? [];
+    expect(progressCoordinates[progressCoordinates.length - 1]?.[0])
       .toBeCloseTo(nuvemDelivery.destination.longitude, 6);
-    expect(progress.outbound.features[0]?.geometry.coordinates[1]?.[1])
+    expect(progressCoordinates[progressCoordinates.length - 1]?.[1])
       .toBeCloseTo(nuvemDelivery.destination.latitude, 6);
     expect(getPetMapPosition(invalidDelivery, new Date("2026-07-18T15:00:00.000Z"))).toMatchObject({
       coordinates: invalidDelivery.origin,

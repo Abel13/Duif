@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect, useRef } from "react";
+import { useMemo, useState, useEffect, useRef, type MouseEvent } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 
 import { AppBottomNav } from "../../components/layout";
@@ -18,8 +18,8 @@ import {
   resolvePostalTrafficSelection,
   nuvemDelivery,
   type Delivery,
-  type DeliveryStatus,
   type DeliveryReward,
+  type DeliveryStatus,
   type MapFocusTarget,
   type MapMotionPreference,
   type MapJourneyPhase,
@@ -50,7 +50,7 @@ const discoveryHighlightMs = 4 * 1000;
 export function TravelMapPage() {
   const { t } = useTranslation();
   const { profile } = useAuth();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { isLoading, mascots } = useMascotCatalog();
   const [now, setNow] = useState(() => new Date());
   const [trafficNow, setTrafficNow] = useState(() => new Date());
@@ -62,6 +62,9 @@ export function TravelMapPage() {
   const [discoveryToast, setDiscoveryToast] = useState<string[] | null>(null);
   const [returnSummaryOpen, setReturnSummaryOpen] = useState(false);
   const [selectedTrafficSnapshot, setSelectedTrafficSnapshot] = useState<PostalTrafficPetSnapshot>();
+  const [selectedMascotId, setSelectedMascotId] = useState(defaultMascotId);
+  const [tripStatusOpen, setTripStatusOpen] = useState(false);
+  const tripStatusTriggerRef = useRef<HTMLElement | null>(null);
   const highlightTimersRef = useRef<Map<string, number>>(new Map());
   const toastTimerRef = useRef<number>();
   const motionPreference = useMotionPreference();
@@ -70,16 +73,34 @@ export function TravelMapPage() {
     postalTraffic: trafficSnapshots,
     updatePostalTrafficAnchor,
   } = usePostalTraffic();
-  const activeMascot = useMemo(() => selectMapMascot(mascots), [mascots]);
+  const activeMascot = useMemo(
+    () => mascots.find((mascot) => mascot.id === selectedMascotId) ?? selectMapMascot(mascots),
+    [mascots, selectedMascotId],
+  );
   const authenticatedSource = isSupabaseCatalogEnabled();
-  const activeDelivery = activeMascot?.currentDelivery;
+  const activeDeliveryCandidate = activeMascot?.currentDelivery;
+  const activeDelivery = activeDeliveryCandidate
+    && getDeliveryStatus(activeDeliveryCandidate, now) !== "returned"
+    && getDeliveryStatus(activeDeliveryCandidate, now) !== "completed"
+    ? activeDeliveryCandidate
+    : undefined;
+  const finishedDeliveries = useMemo(
+    () => mascots
+      .map((mascot) => ({ mascot, delivery: mascot.currentDelivery }))
+      .filter(({ delivery: candidate }) => candidate && getDeliveryStatus(candidate, now) === "returned")
+      .map(({ mascot, delivery: candidate }) => ({ mascot, delivery: candidate! })),
+    [mascots, now],
+  );
   const requestedDeliveryId = searchParams.get("deliveryId")
     ?? activeDelivery?.id
-    ?? (authenticatedSource ? undefined : nuvemDelivery.id);
+    ?? (!authenticatedSource && !activeMascot ? nuvemDelivery.id : undefined);
   const collectionState = useRewardCollectionData(requestedDeliveryId);
-  const delivery = collectionState.delivery
+  const collectionDelivery = collectionState.delivery?.id === requestedDeliveryId
+    ? collectionState.delivery
+    : undefined;
+  const delivery = collectionDelivery
     ?? activeDelivery
-    ?? (authenticatedSource ? createIdleNestDelivery(profile, activeMascot) : nuvemDelivery);
+    ?? createIdleNestDelivery(profile, activeMascot);
   const displayMascot = mascots.find((mascot) => mascot.id === delivery.mascotId)
     ?? getMascotById(delivery.mascotId)
     ?? activeMascot
@@ -132,10 +153,10 @@ export function TravelMapPage() {
   const isCollected = collectionState.delivery?.id === delivery.id && collectionState.isCollected;
   const journeyPhase = getMapJourneyPhase(status, isCollected);
   const completedMap = journeyPhase === "completed";
+  const progressPercent = Math.round(getTravelProgress(delivery, now) * 100);
   const displayedPlaceLabels = completedMap
     ? placeLabels.filter((label) => label.kind === "origin")
     : placeLabels;
-  const progressPercent = Math.round(getTravelProgress(delivery, now) * 100);
   const selectedReward = selection?.kind === "reward"
     ? rewards.find((reward) => reward.id === selection.rewardId)
     : undefined;
@@ -186,6 +207,25 @@ export function TravelMapPage() {
       document.removeEventListener("visibilitychange", updateTrafficClock);
     };
   }, [motionPreference]);
+
+  useEffect(() => {
+    if (mascots.some((mascot) => mascot.id === selectedMascotId)) return;
+    const fallbackMascot = selectMapMascot(mascots);
+    if (fallbackMascot) setSelectedMascotId(fallbackMascot.id);
+  }, [mascots, selectedMascotId]);
+
+  useEffect(() => {
+    const selectedMascot = mascots.find((mascot) => mascot.id === selectedMascotId);
+    if (!selectedMascot?.currentDelivery || getDeliveryStatus(selectedMascot.currentDelivery, now) !== "returned") {
+      return;
+    }
+    const travelingMascot = mascots.find((mascot) => mascot.currentDelivery
+      && !["returned", "completed"].includes(getDeliveryStatus(mascot.currentDelivery, now)));
+    if (travelingMascot) {
+      setSelectedMascotId(travelingMascot.id);
+      setFocusTarget({ kind: "overview" });
+    }
+  }, [mascots, now, selectedMascotId]);
 
   useEffect(() => {
     if (trafficSelection.rangeState === "visible" && trafficSelection.pet) {
@@ -289,24 +329,59 @@ export function TravelMapPage() {
     setSelectedTrafficSnapshot(undefined);
   }
 
+  function selectOwnMascot(mascotId: string) {
+    const mascot = mascots.find((candidate) => candidate.id === mascotId);
+    if (!mascot) return;
+    const nextSearchParams = new URLSearchParams(searchParams);
+    nextSearchParams.delete("deliveryId");
+    setSearchParams(nextSearchParams, { replace: true });
+    setSelectedMascotId(mascotId);
+    setFollowMascot(true);
+    setSelection(null);
+    setSelectedTrafficSnapshot(undefined);
+    setFocusTarget({ kind: "mascot" });
+  }
+
+  function openTripStatus(trigger?: HTMLElement) {
+    tripStatusTriggerRef.current = trigger
+      ?? (document.activeElement instanceof HTMLElement ? document.activeElement : null);
+    setTripStatusOpen(true);
+  }
+
+  function closeTripStatus() {
+    setTripStatusOpen(false);
+    window.requestAnimationFrame(() => tripStatusTriggerRef.current?.focus());
+  }
+
   return (
     <main className={styles.page}>
       <section className={styles.stage} aria-busy={isLoading || collectionState.isLoading || isTrafficLoading}>
         <div className={styles.mapLayer}>
           <TravelMap
+            centerControl={
+              <MascotMapSelector
+                mascots={mascots}
+                onInspect={openTripStatus}
+                onSelect={selectOwnMascot}
+                selectedMascotId={displayMascot?.id}
+              />
+            }
             delivery={delivery}
             deliveryCompleted={journeyPhase === "completed"}
             destinationLabel={t(delivery.destination.labelKey)}
+            destinationTitle={t("mascot.destination")}
             fallbackLabel={t("map.unavailable")}
             focusTarget={focusTarget}
             followMascot={followMascot}
             motionPreference={motionPreference}
             onFollowChange={setFollowMascot}
+            onPetSelect={() => openTripStatus()}
             onRewardDiscoveries={handleRewardDiscoveries}
             onRewardSelect={selectReward}
             onTrafficSelect={selectTraffic}
             onViewportChange={updatePostalTrafficAnchor}
             originLabel={t(delivery.origin.labelKey)}
+            originTitle={t("mascot.origin")}
             petLabel={displayMascot?.name ?? t("common.unavailable")}
             petPortraitAssetPath={displayMascot?.appearance.portraitAssetPath}
             placeLabels={displayedPlaceLabels}
@@ -325,6 +400,27 @@ export function TravelMapPage() {
             <span>{discoveryToast.length === 1
               ? t(rewards.find((reward) => reward.id === discoveryToast[0])?.titleKey ?? "map.discovered")
               : `${discoveryToast.length} ${t("map.discoveries")}`}</span>
+          </div>
+        ) : null}
+
+        {finishedDeliveries.length > 0 ? (
+          <div className={styles.finishedDeliveryAlert} role="status">
+            <AssetImage
+              alt=""
+              className={styles.finishedDeliveryMark}
+              src={finishedDeliveries[0]!.mascot.appearance.portraitAssetPath}
+            >
+              <span className={styles.finishedDeliveryMarkFallback} aria-hidden="true" />
+            </AssetImage>
+            <div>
+              <strong>{t("map.deliveryFinished")}</strong>
+              <span>{finishedDeliveries.length === 1
+                ? finishedDeliveries[0]!.mascot.name
+                : `${finishedDeliveries.length} ${t("map.finishedDeliveries")}`}</span>
+            </div>
+            <Link to={`/rewards/${finishedDeliveries[0]!.delivery.id}`}>
+              {t("map.collectFinishedDelivery")}
+            </Link>
           </div>
         ) : null}
 
@@ -398,14 +494,6 @@ export function TravelMapPage() {
                     <strong>{discoveredCount}/{rewards.length}</strong>
                   </summary>
                   <div className={styles.drawerContent}>
-                    <TripStatusContent
-                      delivery={delivery}
-                      displayMascot={displayMascot}
-                      now={now}
-                      petLeg={petPosition.leg}
-                      progressPercent={progressPercent}
-                      status={status}
-                    />
                     <PostalTrafficContent
                       onSelect={selectTraffic}
                       postalTraffic={visiblePostalTraffic}
@@ -424,17 +512,6 @@ export function TravelMapPage() {
               )}
 
               <div className={styles.desktopCards}>
-                <SketchPanel title={t("map.tripStatus")} variant="note">
-                  <TripStatusContent
-                    delivery={delivery}
-                    displayMascot={displayMascot}
-                    now={now}
-                    petLeg={petPosition.leg}
-                    progressPercent={progressPercent}
-                    status={status}
-                  />
-                </SketchPanel>
-
                 <SketchPanel title={t("postalTraffic.title")} variant="note">
                   {selectedTraffic ? (
                     <>
@@ -475,6 +552,18 @@ export function TravelMapPage() {
             </>
           ) : null}
         </aside>
+
+        {tripStatusOpen && journeyPhase !== "completed" ? (
+          <TripStatusDialog
+            delivery={delivery}
+            displayMascot={displayMascot}
+            now={now}
+            onClosed={closeTripStatus}
+            petLeg={petPosition.leg}
+            progressPercent={progressPercent}
+            status={status}
+          />
+        ) : null}
 
         <div className={styles.bottomNav}>
           <AppBottomNav />
@@ -630,47 +719,157 @@ function PostalTrafficDetails({
   const { t } = useTranslation();
 
   return (
-    <div className={styles.trafficDetails}>
-      <div className={styles.trafficIdentity}>
-        <AssetImage alt={pet.mascotName} className={styles.trafficDetailPortrait} src={pet.portraitAssetPath}>
+    <article className={styles.trafficDetails}>
+      <div className={styles.trafficCompactIdentity}>
+        <AssetImage
+          alt={pet.mascotName}
+          className={styles.trafficCompactPortrait}
+          src={pet.portraitAssetPath}
+        >
           <span className={styles.trafficPortraitFallback} aria-hidden="true" />
         </AssetImage>
         <div>
-          <span className={styles.trafficVisibility}>{t(`postalTraffic.visibility.${pet.visibility}`)}</span>
           <h3>{pet.mascotName}</h3>
           <p>{t(pet.speciesKey)}</p>
         </div>
+        {pet.visibility === "friend" ? (
+          <span className={styles.trafficFriendName}>{pet.friendName}</span>
+        ) : null}
       </div>
 
       {rangeState === "outOfRange" ? (
         <p className={styles.outOfRangeNotice} role="status">{t("postalTraffic.outOfRange")}</p>
       ) : null}
 
-      <dl className={styles.summary}>
-        <SummaryRow label={t("postalTraffic.travelState")} value={t(`postalTraffic.legs.${pet.leg}`)} />
-        <SummaryRow label={t("postalTraffic.progress")} value={`${pet.progress}%`} />
+      <dl className={styles.trafficRouteSummary}>
         <SummaryRow label={t("mascot.origin")} value={pet.originRegionLabel ?? t(pet.originRegionKey)} />
         <SummaryRow label={t("mascot.destination")} value={pet.destinationRegionLabel ?? t(pet.destinationRegionKey)} />
-        {pet.visibility === "friend" ? (
-          <SummaryRow label={t("postalTraffic.owner")} value={pet.friendName} />
-        ) : null}
       </dl>
 
       {pet.visibility === "friend" ? (
         <Link className={styles.routeLink} to={`/friends/${pet.friendId}`}>
           {t("postalTraffic.openFriendProfile")}
         </Link>
-      ) : (
-        <p className={styles.privateOwnerNote}>{t("postalTraffic.privateOwner")}</p>
-      )}
+      ) : null}
+    </article>
+  );
+}
+
+function MascotMapSelector({
+  mascots,
+  onInspect,
+  onSelect,
+  selectedMascotId,
+}: {
+  mascots: Mascot[];
+  onInspect: (trigger: HTMLElement) => void;
+  onSelect: (mascotId: string) => void;
+  selectedMascotId?: string;
+}) {
+  const { t } = useTranslation();
+  const [rotationDirection, setRotationDirection] = useState<"next" | "previous" | null>(null);
+  const rotationTimerRef = useRef<number>();
+  const inspectTimerRef = useRef<number>();
+  const availableMascots = mascots.filter((mascot) => {
+    if (!mascot.currentDelivery) return false;
+    return !["returned", "completed"].includes(
+      getDeliveryStatus(mascot.currentDelivery),
+    );
+  });
+  const selectedIndex = Math.max(
+    0,
+    availableMascots.findIndex((mascot) => mascot.id === selectedMascotId),
+  );
+  if (availableMascots.length === 0) return null;
+
+  useEffect(() => () => {
+    if (rotationTimerRef.current) window.clearTimeout(rotationTimerRef.current);
+    if (inspectTimerRef.current) window.clearTimeout(inspectTimerRef.current);
+  }, []);
+
+  function beginRotation(direction: "next" | "previous") {
+    if (rotationTimerRef.current) window.clearTimeout(rotationTimerRef.current);
+    setRotationDirection(direction);
+    rotationTimerRef.current = window.setTimeout(() => {
+      setRotationDirection(null);
+      rotationTimerRef.current = undefined;
+    }, 360);
+  }
+
+  function selectOffset(offset: number) {
+    if (availableMascots.length < 2) return;
+    beginRotation(offset > 0 ? "next" : "previous");
+    const nextIndex = (selectedIndex + offset + availableMascots.length) % availableMascots.length;
+    onSelect(availableMascots[nextIndex]!.id);
+  }
+
+  return (
+    <div className={styles.mascotSelector}>
+      <div className={styles.mascotCarousel} aria-label={t("map.selectMascot")}>
+        <button
+          aria-label={t("map.previousMascot")}
+          className={`${styles.mascotCarouselArrow} ${styles.previousMascotArrow}`}
+          disabled={availableMascots.length < 2}
+          onClick={() => selectOffset(-1)}
+          type="button"
+        >
+          <span aria-hidden="true" />
+        </button>
+        <div className={styles.mascotCarouselTrack} data-rotation={rotationDirection ?? undefined}>
+          {availableMascots.map((mascot) => {
+            const relativeIndex = (availableMascots.indexOf(mascot) - selectedIndex + availableMascots.length) % availableMascots.length;
+            const position = relativeIndex === 0 ? "current" : relativeIndex === 1 ? "next" : "previous";
+            return (
+          <button
+            aria-current={position === "current" ? "true" : undefined}
+            aria-label={mascot.name}
+            className={styles.mascotSelectorButton}
+            data-position={position}
+            key={mascot.id}
+            onClick={(event) => {
+              if (position !== "current") {
+                beginRotation(position);
+                onSelect(mascot.id);
+                if (inspectTimerRef.current) window.clearTimeout(inspectTimerRef.current);
+                const trigger = event.currentTarget;
+                inspectTimerRef.current = window.setTimeout(() => onInspect(trigger), 320);
+                return;
+              }
+              onInspect(event.currentTarget);
+            }}
+            type="button"
+          >
+            <AssetImage
+              alt=""
+              className={styles.mascotSelectorPortrait}
+              src={mascot.appearance.portraitAssetPath}
+            >
+              <span className={styles.trafficPortraitFallback} aria-hidden="true" />
+            </AssetImage>
+            <span>{mascot.name}</span>
+          </button>
+            );
+          })}
+        </div>
+        <button
+          aria-label={t("map.nextMascot")}
+          className={`${styles.mascotCarouselArrow} ${styles.nextMascotArrow}`}
+          disabled={availableMascots.length < 2}
+          onClick={() => selectOffset(1)}
+          type="button"
+        >
+          <span aria-hidden="true" />
+        </button>
+      </div>
     </div>
   );
 }
 
-function TripStatusContent({
+function TripStatusDialog({
   delivery,
   displayMascot,
   now,
+  onClosed,
   petLeg,
   progressPercent,
   status,
@@ -678,28 +877,43 @@ function TripStatusContent({
   delivery: Delivery;
   displayMascot: Mascot | undefined;
   now: Date;
+  onClosed: () => void;
   petLeg: TravelLeg;
   progressPercent: number;
   status: DeliveryStatus;
 }) {
   const { t } = useTranslation();
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  useEffect(() => dialogRef.current?.showModal(), []);
+
+  function handleBackdropClick(event: MouseEvent<HTMLDialogElement>) {
+    if (event.target === event.currentTarget) dialogRef.current?.close();
+  }
 
   return (
-    <>
-      <dl className={styles.summary}>
-        <SummaryRow
-          label={t("send.selectedMascot")}
-          value={displayMascot?.name ?? t("common.unavailable")}
-        />
-        <SummaryRow label={t("mascot.status")} value={t(`delivery.status.${status}`)} />
-        <SummaryRow label={t("delivery.progress")} value={`${progressPercent}%`} />
-        <SummaryRow label={t("delivery.remainingTime")} value={formatRemainingTime(delivery, now)} />
-        <SummaryRow label={t("map.currentLeg")} value={t(`map.legs.${petLeg}`)} />
-      </dl>
-      <Link className={styles.routeLink} to={`/mascots/${delivery.mascotId}`}>
-        {t("map.backToMascot")}
-      </Link>
-    </>
+    <dialog
+      aria-labelledby="trip-status-dialog-title"
+      className={styles.tripStatusDialog}
+      onClick={handleBackdropClick}
+      onClose={onClosed}
+      ref={dialogRef}
+    >
+      <div className={styles.tripStatusDialogPaper}>
+        <h2 id="trip-status-dialog-title">{displayMascot?.name ?? t("map.tripStatus")}</h2>
+        <dl className={styles.summary}>
+          <SummaryRow label={t("mascot.status")} value={t(`delivery.status.${status}`)} />
+          <SummaryRow label={t("delivery.progress")} value={`${progressPercent}%`} />
+          <SummaryRow label={t("delivery.remainingTime")} value={formatRemainingTime(delivery, now)} />
+          <SummaryRow label={t("map.currentLeg")} value={t(`map.legs.${petLeg}`)} />
+        </dl>
+        <Link className={styles.routeLink} to={`/mascots/${delivery.mascotId}`}>
+          {t("map.backToMascot")}
+        </Link>
+        <button className={styles.tripStatusClose} onClick={() => dialogRef.current?.close()} type="button">
+          {t("map.closeTripStatus")}
+        </button>
+      </div>
+    </dialog>
   );
 }
 

@@ -239,6 +239,19 @@ export function interpolateCoordinates(
   };
 }
 
+export function createInterpolatedRouteCoordinates(
+  origin: MapCoordinate,
+  destination: MapCoordinate,
+  progress = 1,
+  segmentCount = 64,
+): MapCoordinate[] {
+  const safeProgress = clampProgress(progress);
+  const steps = Math.max(1, Math.ceil(Math.max(1, segmentCount) * safeProgress));
+  return Array.from({ length: steps + 1 }, (_, index) =>
+    interpolateCoordinates(origin, destination, safeProgress * (index / steps)),
+  );
+}
+
 function normalizeLongitude(longitude: number) {
   return ((longitude + 180) % 360 + 360) % 360 - 180;
 }
@@ -443,10 +456,10 @@ export function createDeliveryRouteGeoJson(delivery: Delivery): LineStringFeatur
         },
         geometry: {
           type: "LineString",
-          coordinates: [
-            toLngLat(delivery.origin),
-            toLngLat(delivery.destination),
-          ],
+          coordinates: createInterpolatedRouteCoordinates(
+            delivery.origin,
+            delivery.destination,
+          ).map(toLngLat),
         },
       },
     ],
@@ -457,27 +470,29 @@ export function createTravelProgressGeoJson(
   delivery: Delivery,
   position: PetMapPosition,
 ): TravelProgressGeoJson {
-  const outboundEnd = position.leg === "preparing"
+  const outboundProgress = position.leg === "preparing"
     ? undefined
     : position.leg === "outbound"
-      ? interpolateCoordinates(delivery.origin, delivery.destination, position.legProgress)
-      : delivery.destination;
-  const returnEnd = position.leg === "returning"
-    ? interpolateCoordinates(delivery.destination, delivery.origin, position.legProgress)
+      ? position.legProgress
+      : 1;
+  const returnProgress = position.leg === "returning"
+    ? position.legProgress
     : position.leg === "returned" || position.leg === "completed"
-      ? delivery.origin
+      ? 1
       : undefined;
 
   return {
     outbound: createProgressFeatureCollection(
       `${delivery.id}-outbound-progress`,
-      delivery.origin,
-      outboundEnd,
+      outboundProgress === undefined
+        ? undefined
+        : createInterpolatedRouteCoordinates(delivery.origin, delivery.destination, outboundProgress),
     ),
     returning: createProgressFeatureCollection(
       `${delivery.id}-return-progress`,
-      delivery.destination,
-      returnEnd,
+      returnProgress === undefined
+        ? undefined
+        : createInterpolatedRouteCoordinates(delivery.destination, delivery.origin, returnProgress),
     ),
   };
 }
@@ -592,18 +607,17 @@ function getProjectedRouteMetrics(
 
 function createProgressFeatureCollection(
   id: string,
-  start: MapCoordinate,
-  end?: MapCoordinate,
+  coordinates?: MapCoordinate[],
 ): LineStringFeatureCollection {
   return {
     type: "FeatureCollection",
-    features: end
+    features: coordinates
       ? [{
           type: "Feature",
           properties: { id },
           geometry: {
             type: "LineString",
-            coordinates: [toLngLat(start), toLngLat(end)],
+            coordinates: coordinates.map(toLngLat),
           },
         }]
       : [],

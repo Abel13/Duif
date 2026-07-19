@@ -48,6 +48,98 @@
   overflow-wrap: anywhere;
 }
 
+.finishedDeliveryAlert {
+  position: absolute;
+  z-index: 8;
+  top: max(var(--space-3), env(safe-area-inset-top));
+  left: 50%;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: var(--space-2);
+  align-items: center;
+  width: min(24rem, calc(100vw - 9rem));
+  min-height: 3rem;
+  padding: 0.5rem 0.65rem;
+  border: 2px solid var(--color-muted-green);
+  border-radius: 0.35rem 0.65rem 0.3rem 0.5rem;
+  color: var(--color-ink);
+  background: var(--color-postal-label);
+  box-shadow: 0.16rem 0.22rem 0 rgba(46, 42, 36, 0.2);
+  transform: translateX(-50%);
+}
+
+.finishedDeliveryAlert div {
+  display: grid;
+  min-width: 0;
+}
+
+.finishedDeliveryAlert strong {
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.finishedDeliveryAlert div span {
+  overflow: hidden;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.finishedDeliveryAlert a {
+  min-height: 2rem;
+  padding: 0.42rem 0.55rem;
+  border: 1px dashed rgba(46, 42, 36, 0.48);
+  border-radius: 0.25rem;
+  color: var(--color-ink);
+  background: var(--color-paper-dark);
+  font-size: 0.65rem;
+  font-weight: 900;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.finishedDeliveryMark {
+  position: relative;
+  width: 1.7rem;
+  height: 1.7rem;
+  overflow: hidden;
+  border: 2px solid var(--color-muted-green);
+  border-radius: 50%;
+  background: rgba(122, 143, 104, 0.16);
+}
+
+.finishedDeliveryMark img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.finishedDeliveryMarkFallback {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--color-paper-dark);
+}
+
+.finishedDeliveryMark::after {
+  content: "";
+  position: absolute;
+  top: 0.35rem;
+  left: 0.42rem;
+  width: 0.65rem;
+  height: 0.35rem;
+  border-bottom: 3px solid var(--color-muted-green);
+  border-left: 3px solid var(--color-muted-green);
+  filter: drop-shadow(0 0 1px var(--color-paper));
+  transform: rotate(-45deg);
+}
+
+.stage:has(.finishedDeliveryAlert) .discoveryToast {
+  top: calc(max(var(--space-3), env(safe-area-inset-top)) + 4rem);
+}
+
 .cameraControls {
   position: absolute;
   z-index: 4;
@@ -202,6 +294,243 @@
   max-height: min(58dvh, 30rem);
   padding: 0 var(--space-3) var(--space-3);
   overflow: auto;
+}
+
+.mascotSelector {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.mascotCarousel {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 9rem) 2rem;
+  gap: var(--space-2);
+  align-items: center;
+  justify-content: center;
+}
+
+.mascotCarouselTrack {
+  position: relative;
+  min-width: 0;
+  height: 4.6rem;
+}
+
+.mascotSelectorButton {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  gap: 0.12rem;
+  place-items: center;
+  min-width: 0;
+  padding: 0.18rem;
+  border: 0;
+  color: var(--color-ink);
+  background: transparent;
+  font: inherit;
+  font-size: 0.64rem;
+  font-weight: 900;
+  opacity: 0.48;
+  transform: translate(-50%, -50%) scale(0.78);
+  transition: opacity 240ms ease, transform 280ms ease, filter 240ms ease;
+  cursor: pointer;
+}
+
+.mascotSelectorButton[data-position="previous"] {
+  transform: translate(calc(-50% - 2.75rem), -50%) scale(0.72);
+}
+
+.mascotSelectorButton[data-position="current"] {
+  z-index: 1;
+  font-size: 0.72rem;
+  opacity: 1;
+  filter: none;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.mascotSelectorButton[data-position="next"] {
+  transform: translate(calc(-50% + 2.75rem), -50%) scale(0.72);
+}
+
+.mascotCarouselTrack[data-rotation="next"]
+  .mascotSelectorButton[data-position="next"] {
+  animation: mascot-wrap-next 360ms ease-in-out;
+}
+
+.mascotCarouselTrack[data-rotation="previous"]
+  .mascotSelectorButton[data-position="previous"] {
+  animation: mascot-wrap-previous 360ms ease-in-out;
+}
+
+@keyframes mascot-wrap-next {
+  0% {
+    opacity: 0.48;
+    transform: translate(calc(-50% - 2.75rem), -50%) scale(0.72);
+  }
+  50% {
+    opacity: 0.12;
+    transform: translate(-50%, calc(-50% - 1.2rem)) scale(0.48);
+  }
+  100% {
+    opacity: 0.48;
+    transform: translate(calc(-50% + 2.75rem), -50%) scale(0.72);
+  }
+}
+
+@keyframes mascot-wrap-previous {
+  0% {
+    opacity: 0.48;
+    transform: translate(calc(-50% + 2.75rem), -50%) scale(0.72);
+  }
+  50% {
+    opacity: 0.12;
+    transform: translate(-50%, calc(-50% - 1.2rem)) scale(0.48);
+  }
+  100% {
+    opacity: 0.48;
+    transform: translate(calc(-50% - 2.75rem), -50%) scale(0.72);
+  }
+}
+
+.mascotSelectorButton:focus-visible,
+.mascotCarouselArrow:focus-visible {
+  outline: 3px solid var(--color-ink);
+  outline-offset: 2px;
+}
+
+.mascotSelectorPortrait {
+  width: 2.35rem;
+  height: 2.35rem;
+  overflow: hidden;
+  border: 2px solid rgba(46, 42, 36, 0.58);
+  border-radius: 999px;
+  background: var(--color-paper-dark);
+  box-shadow: 0.08rem 0.12rem 0 rgba(46, 42, 36, 0.16);
+  transition: border-color 240ms ease, box-shadow 240ms ease;
+}
+
+.mascotSelectorButton[data-position="current"] .mascotSelectorPortrait {
+  width: 3.25rem;
+  height: 3.25rem;
+  border-color: var(--color-postal-red);
+  box-shadow:
+    0 0 0 0.18rem rgba(255, 248, 232, 0.82),
+    0.12rem 0.16rem 0 rgba(46, 42, 36, 0.2);
+}
+
+.mascotSelectorPortrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mascotCarouselArrow {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 2px solid rgba(46, 42, 36, 0.5);
+  border-radius: 0.3rem 0.48rem 0.26rem 0.4rem;
+  background: var(--color-postal-label);
+  box-shadow: 0.1rem 0.14rem 0 rgba(46, 42, 36, 0.17);
+  cursor: pointer;
+  transition: transform 180ms ease, background 180ms ease, box-shadow 180ms ease;
+}
+
+.mascotCarouselArrow:hover {
+  background: var(--color-paper-dark);
+  transform: translateY(-1px);
+}
+
+.mascotCarouselArrow:active {
+  box-shadow: 0.04rem 0.06rem 0 rgba(46, 42, 36, 0.17);
+  transform: translateY(1px);
+}
+
+.mascotCarouselArrow:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.mascotCarouselArrow span {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-top: 3px solid var(--color-ink);
+  border-right: 3px solid var(--color-ink);
+}
+
+.previousMascotArrow span {
+  transform: rotate(-135deg) translate(-0.05rem, -0.05rem);
+}
+
+.nextMascotArrow span {
+  transform: rotate(45deg) translate(-0.05rem, -0.05rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mascotSelectorButton,
+  .mascotCarouselArrow {
+    transition: none;
+  }
+
+  .mascotCarouselTrack[data-rotation]
+    .mascotSelectorButton {
+    animation: none;
+  }
+}
+
+.tripStatusDialog {
+  width: min(24rem, calc(100vw - 1.5rem));
+  max-height: calc(100dvh - 1.5rem);
+  padding: 0;
+  overflow: auto;
+  border: 2px solid rgba(46, 42, 36, 0.68);
+  border-radius: 0.75rem 0.35rem 0.85rem 0.28rem;
+  color: var(--color-ink);
+  background: var(--color-paper);
+  box-shadow: var(--shadow-paper-lifted);
+}
+
+.tripStatusDialog::backdrop {
+  background: rgba(46, 42, 36, 0.58);
+}
+
+.tripStatusDialogPaper {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background:
+    linear-gradient(rgba(46, 42, 36, 0.04) 1px, transparent 1px),
+    var(--color-paper);
+  background-size: 100% 1.25rem;
+}
+
+.tripStatusDialogPaper h2 {
+  margin: 0;
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.tripStatusClose {
+  min-height: 2.5rem;
+  padding: 0.55rem 0.8rem;
+  border: 2px solid var(--color-postal-brown);
+  border-radius: 0.3rem 0.55rem 0.25rem 0.45rem;
+  color: var(--color-ink);
+  background: var(--color-paper-dark);
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.tripStatusClose:focus-visible {
+  outline: 3px solid var(--color-ink);
+  outline-offset: 2px;
 }
 
 .mobileRewardDetails {
@@ -638,7 +967,84 @@
 
 .trafficDetails {
   display: grid;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 1px dashed rgba(139, 94, 60, 0.58);
+  border-radius: 0.45rem;
+  background: rgba(247, 241, 227, 0.72);
+}
+
+.trafficCompactIdentity {
+  display: grid;
+  grid-template-columns: 3.25rem minmax(0, 1fr) auto;
+  align-items: center;
   gap: var(--space-3);
+}
+
+.trafficCompactPortrait {
+  width: 3.25rem;
+  height: 3.25rem;
+  overflow: hidden;
+  border: 2px solid var(--color-postal-blue);
+  border-radius: 999px;
+  background: var(--color-paper-dark);
+  box-shadow: 0.1rem 0.12rem 0 rgba(46, 42, 36, 0.14);
+}
+
+.trafficCompactPortrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.trafficCompactIdentity h3,
+.trafficCompactIdentity p {
+  margin: 0;
+}
+
+.trafficCompactIdentity h3 {
+  font-size: 1.05rem;
+}
+
+.trafficCompactIdentity p,
+.trafficFriendName {
+  color: rgba(46, 42, 36, 0.72);
+  font-size: 0.78rem;
+}
+
+.trafficFriendName {
+  max-width: 45%;
+  text-align: right;
+}
+
+.trafficRouteSummary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2);
+  margin: 0;
+}
+
+.trafficRouteSummary div {
+  min-width: 0;
+  padding-top: var(--space-2);
+  border-top: 1px solid rgba(139, 94, 60, 0.22);
+}
+
+.trafficRouteSummary dt {
+  color: rgba(46, 42, 36, 0.58);
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.trafficRouteSummary dd {
+  margin: 0.15rem 0 0;
+  overflow: hidden;
+  color: rgba(46, 42, 36, 0.78);
+  font-size: 0.78rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .trafficIdentity {

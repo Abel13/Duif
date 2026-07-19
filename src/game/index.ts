@@ -20,6 +20,7 @@ export { getMockDeliveryHistory } from "./mockRewardCollection";
 export {
   createMapPlaceLabelsGeoJson,
   createDeliveryRouteGeoJson,
+  createInterpolatedRouteCoordinates,
   createTravelProgressGeoJson,
   createRouteRewardDiscoveries,
   createRouteRewardsGeoJson,

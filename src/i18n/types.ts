@@ -186,10 +186,17 @@ export type TranslationDictionary = {
     title: string;
     subtitle: string;
     tripStatus: string;
+    closeTripStatus: string;
+    selectMascot: string;
+    previousMascot: string;
+    nextMascot: string;
     currentLeg: string;
     discoveries: string;
     cargoFound: string;
     tripCompleted: string;
+    deliveryFinished: string;
+    finishedDeliveries: string;
+    collectFinishedDelivery: string;
     cargoFoundDescription: string;
     completedDescription: string;
     routeCargo: string;
@@ -294,8 +301,14 @@ export type TranslationDictionary = {
     };
     regions: {
       paranaBrazil: string;
-      tokyoJapan: string;
-      newSouthWalesAustralia: string;
+      rioGrandeDoSulBrazil: string;
+      santaCatarinaBrazil: string;
+      goiasBrazil: string;
+      distritoFederalBrazil: string;
+      minasGeraisBrazil: string;
+      espiritoSantoBrazil: string;
+      bahiaBrazil: string;
+      pernambucoBrazil: string;
     };
   };
   species: {
@@ -497,6 +510,9 @@ export type TranslationDictionary = {
   locations: {
     londrina: string;
     maringa: string;
+    beloHorizonte: string;
+    salvador: string;
+    rioBranco: string;
     saoPaulo: string;
     lisbon: string;
     curitiba: string;
@@ -734,10 +750,17 @@ export type TranslationKey =
   | "map.title"
   | "map.subtitle"
   | "map.tripStatus"
+  | "map.closeTripStatus"
+  | "map.selectMascot"
+  | "map.previousMascot"
+  | "map.nextMascot"
   | "map.currentLeg"
   | "map.discoveries"
   | "map.cargoFound"
   | "map.tripCompleted"
+  | "map.deliveryFinished"
+  | "map.finishedDeliveries"
+  | "map.collectFinishedDelivery"
   | "map.cargoFoundDescription"
   | "map.completedDescription"
   | "map.routeCargo"
@@ -817,8 +840,14 @@ export type TranslationKey =
   | "postalTraffic.legs.returned"
   | "postalTraffic.legs.completed"
   | "postalTraffic.regions.paranaBrazil"
-  | "postalTraffic.regions.tokyoJapan"
-  | "postalTraffic.regions.newSouthWalesAustralia"
+  | "postalTraffic.regions.rioGrandeDoSulBrazil"
+  | "postalTraffic.regions.santaCatarinaBrazil"
+  | "postalTraffic.regions.goiasBrazil"
+  | "postalTraffic.regions.distritoFederalBrazil"
+  | "postalTraffic.regions.minasGeraisBrazil"
+  | "postalTraffic.regions.espiritoSantoBrazil"
+  | "postalTraffic.regions.bahiaBrazil"
+  | "postalTraffic.regions.pernambucoBrazil"
   | "species.carrierPigeon"
   | "species.messengerFalcon"
   | "species.mailDuck"
@@ -957,6 +986,9 @@ export type TranslationKey =
   | "locations.lisbon"
   | "locations.londrina"
   | "locations.maringa"
+  | "locations.beloHorizonte"
+  | "locations.salvador"
+  | "locations.rioBranco"
   | "locations.curitiba"
   | "locations.toronto"
   | "friends.eyebrow"
