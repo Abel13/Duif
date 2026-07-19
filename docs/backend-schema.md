@@ -116,8 +116,8 @@ RLS is enabled on player-owned or relationship-sensitive tables:
 - `inventory_items`.
 
 The first policies are read-focused and tied to `profiles.auth_user_id = auth.uid()`.
-Seeded rows start without an auth user, then the local auth foundation can claim the
-current player profile through the `claim_current_profile` RPC.
+The clean foundation contains no seeded profiles. Profiles will be provisioned independently by
+the onboarding RPC introduced in a later milestone.
 
 Static definition tables are not RLS-gated in this first pass:
 
@@ -130,33 +130,24 @@ tables stay protected until DUIF adds auth or a server-side read boundary.
 
 ## Auth Foundation
 
-DUIF uses Supabase Auth with email/password for local development. The `/auth` route
-creates or signs in a local user, then calls `claim_current_profile`.
-
-`claim_current_profile` is a `security definer` RPC that:
-
-- requires `auth.uid()`;
-- attaches `profiles.mock_key = 'player-current'` to the current auth user if the profile is unclaimed;
-- returns the profile when it already belongs to the current auth user;
-- rejects attempts to claim a profile already linked to another user.
-
-This is a prototype bridge for RLS, not final onboarding. It does not create public
-profiles, password reset, OAuth providers, or production auth polish.
+DUIF uses Supabase Auth with email/password. During Milestone 37, `/auth` permits sign-in only;
+provisional sign-up is disabled so it cannot create orphan users before onboarding exists. The
+legacy `claim_current_profile` RPC was removed. A valid session without a profile receives a
+localized account-setup state.
 
 ## Frontend Read Layer
 
-The app can optionally read public catalog data from Supabase by copying `.env.example`
-to `.env.local` and setting:
+Supabase is the only runtime data source. Copy `.env.example` to `.env.local` and set:
 
 ```sh
 VITE_SUPABASE_URL=http://127.0.0.1:56321
 VITE_SUPABASE_ANON_KEY=<local anon key from supabase status>
-VITE_DUIF_DATA_SOURCE=supabase
 ```
 
-By default `VITE_DUIF_DATA_SOURCE=mock`, so the app keeps using local mocks. If the
-Supabase URL/key are missing, the local server is stopped, or catalog rows are not
-available, the UI falls back to mocks.
+If configuration is missing or the service cannot be reached, the UI shows a localized
+service-unavailable state. It never falls back to player, delivery, inventory, social, or catalog
+fixtures. Until the new account onboarding is available, protected routes require a session and
+show an account-setup state rather than inventing a profile.
 
 The current read layer intentionally reads only:
 
@@ -210,12 +201,19 @@ camera center. Its response contains deterministic quarter-degree route geometry
 labels; exact endpoints, addresses, city labels, and non-friend owner identity never leave the
 database. The browser interpolates these public snapshots between five-minute refreshes.
 
+## Clean account foundation
+
+`supabase/seed.sql` contains only official catalog records. Player-owned state and Auth users are
+removed using the explicit runbook in `docs/player-data-reset.md`; the operation is not a migration
+or deploy hook. Remote execution requires an exact allowlist, reviewed counts, a mandatory backup,
+a typed token, and an append-only audit row.
+
 ## Out Of Scope
 
 This milestone does not include:
 
 - production auth;
-- remote Supabase project linking;
+- automatic remote project selection or destructive reset during deploy;
 - Edge Functions;
 - Storage buckets for real assets;
 - additional map persistence beyond route discoveries and regional traffic;

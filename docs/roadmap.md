@@ -1507,7 +1507,7 @@ live multiplayer, and new animation dependencies.
 
 ## Milestone 37: Clean Account And Data Foundation
 
-Status: Planned.
+Status: In progress — implementation and local reset complete; remote target awaiting explicit identification.
 
 Goal:
 

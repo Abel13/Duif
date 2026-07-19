@@ -30,13 +30,13 @@ Do not build the full product yet. Build only the current requested feature.
 
 ## Current Baseline
 
-Milestones 1 through 36A are complete. The project includes Supabase-backed authenticated flows
-with local mock fallbacks, a MapLibre travel map, deterministic persisted discoveries, atomic
+Milestones 1 through 36A are complete. The project includes Supabase-backed authenticated flows,
+a MapLibre travel map, deterministic persisted discoveries, atomic
 collection, inventory, multi-mascot route selection, and authoritative regional postal traffic.
 
-Milestones 37 through 47 are planned as the account and onboarding phase. Start with Milestone 37
-and do not skip ahead: it removes prototype player data and runtime mocks before new account
-contracts are introduced. Payments, real-time multiplayer, precise public locations, trading,
+Milestone 37 is in progress: the local database and production bundle are clean, while the remote
+reset awaits an explicitly identified allowlisted project. Milestones 38 through 47 continue the
+account and onboarding phase. Payments, real-time multiplayer, precise public locations, trading,
 chat, and unrestricted user uploads remain out of scope.
 
 ## Tech Stack
