@@ -410,14 +410,18 @@ insert into public.deliveries (
   'locations.lisbon',
   7946,
   62,
-  '2026-07-08T12:00:00.000Z',
-  '2026-07-08T18:00:00.000Z',
-  '2026-07-08T18:30:00.000Z',
-  '2026-07-09T00:30:00.000Z',
-  'returning',
+  now() - interval '1 hour',
+  now() + interval '5 hours',
+  now() + interval '5 hours 30 minutes',
+  now() + interval '11 hours 30 minutes',
+  'outbound',
   'nuvem-lisbon-welcome-letter'
 )
 on conflict (mock_key) do update set
+  outbound_start_at = excluded.outbound_start_at,
+  outbound_arrival_at = excluded.outbound_arrival_at,
+  return_start_at = excluded.return_start_at,
+  return_arrival_at = excluded.return_arrival_at,
   status = excluded.status,
   reward_seed = excluded.reward_seed,
   updated_at = now();

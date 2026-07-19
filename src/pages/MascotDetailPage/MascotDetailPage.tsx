@@ -9,6 +9,7 @@ import { MascotStatsPanel } from "../../components/mascot/MascotStatsPanel";
 import { MascotTraitCard } from "../../components/mascot/MascotTraitCard";
 import { MascotTravelCard } from "../../components/mascot/MascotTravelCard";
 import { useMascotCatalog } from "../../game/useMascotCatalog";
+import { getDeliveryStatus } from "../../game";
 import { useTranslation } from "../../i18n";
 import { SketchPanel, StampButton } from "../../components/ui";
 import styles from "./MascotDetailPage.module.css";
@@ -46,7 +47,7 @@ export function MascotDetailPage() {
                   {t("mascot.level")} {mascot.level}
                 </span>
                 {mascot.currentDelivery && (
-                  <span>{t(`delivery.status.${mascot.currentDelivery.status}`)}</span>
+                  <span>{t(`delivery.status.${getDeliveryStatus(mascot.currentDelivery)}`)}</span>
                 )}
               </div>
               <MascotPortrait mascot={mascot} />

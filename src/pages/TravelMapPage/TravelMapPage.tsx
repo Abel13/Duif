@@ -74,10 +74,12 @@ export function TravelMapPage() {
     postalTraffic: trafficSnapshots,
     updatePostalTrafficAnchor,
   } = usePostalTraffic();
-  const activeMascot = useMemo(
-    () => mascots.find((mascot) => mascot.id === selectedMascotId) ?? selectMapMascot(mascots),
-    [mascots, selectedMascotId],
-  );
+  const activeMascot = useMemo(() => {
+    const selectedMascot = mascots.find((mascot) => mascot.id === selectedMascotId);
+    return selectedMascot && hasActiveMapDelivery(selectedMascot, now)
+      ? selectedMascot
+      : selectMapMascot(mascots, now);
+  }, [mascots, now, selectedMascotId]);
   const authenticatedSource = isSupabaseCatalogEnabled();
   const activeDeliveryCandidate = activeMascot?.currentDelivery;
   const activeDelivery = activeDeliveryCandidate
@@ -213,17 +215,14 @@ export function TravelMapPage() {
 
   useEffect(() => {
     if (mascots.some((mascot) => mascot.id === selectedMascotId)) return;
-    const fallbackMascot = selectMapMascot(mascots);
+    const fallbackMascot = selectMapMascot(mascots, now);
     if (fallbackMascot) setSelectedMascotId(fallbackMascot.id);
-  }, [mascots, selectedMascotId]);
+  }, [mascots, now, selectedMascotId]);
 
   useEffect(() => {
     const selectedMascot = mascots.find((mascot) => mascot.id === selectedMascotId);
-    if (!selectedMascot?.currentDelivery || getDeliveryStatus(selectedMascot.currentDelivery, now) !== "returned") {
-      return;
-    }
-    const travelingMascot = mascots.find((mascot) => mascot.currentDelivery
-      && !["returned", "completed"].includes(getDeliveryStatus(mascot.currentDelivery, now)));
+    if (selectedMascot && hasActiveMapDelivery(selectedMascot, now)) return;
+    const travelingMascot = selectMapMascot(mascots, now);
     if (travelingMascot) {
       setSelectedMascotId(travelingMascot.id);
       setFocusTarget({ kind: "overview" });
@@ -1180,9 +1179,16 @@ function SummaryRow({ label, value }: { label: string; value: string }) {
   );
 }
 
-function selectMapMascot(mascots: Mascot[]) {
+function hasActiveMapDelivery(mascot: Mascot, now: Date) {
+  if (!mascot.currentDelivery) return false;
+  return !["returned", "completed"].includes(
+    getDeliveryStatus(mascot.currentDelivery, now),
+  );
+}
+
+function selectMapMascot(mascots: Mascot[], now: Date) {
   return (
-    mascots.find((mascot) => mascot.currentDelivery) ??
+    mascots.find((mascot) => hasActiveMapDelivery(mascot, now)) ??
     mascots.find((mascot) => mascot.id === defaultMascotId)
   );
 }
