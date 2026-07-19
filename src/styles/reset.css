@@ -11,10 +11,13 @@
 html {
   min-height: 100%;
   text-size-adjust: 100%;
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
   min-height: 100%;
+  overscroll-behavior: none;
 }
 
 body,
@@ -38,12 +41,44 @@ button {
   cursor: pointer;
 }
 
+button,
+a,
+label,
+[role="button"] {
+  touch-action: manipulation;
+}
+
+input,
+textarea,
+select,
+[contenteditable="true"] {
+  user-select: text;
+  -webkit-touch-callout: default;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  body {
+    -webkit-touch-callout: none;
+    user-select: none;
+  }
+
+  input,
+  textarea,
+  select,
+  [contenteditable="true"] {
+    user-select: text;
+    -webkit-touch-callout: default;
+  }
+}
+
 img,
 picture,
 svg,
 canvas {
   display: block;
   max-width: 100%;
+  -webkit-user-drag: none;
+  user-select: none;
 }
 
 a {
