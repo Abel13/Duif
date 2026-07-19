@@ -89,6 +89,29 @@ export function sanitizeIntendedRoute(candidate: string | null) {
   }
 }
 
+export type PkceCallback = {
+  code: string;
+  next: string;
+};
+
+export function parsePkceCallbackUrl(candidate: string): PkceCallback | null {
+  try {
+    const url = new URL(candidate);
+    const fragment = new URLSearchParams(url.hash.replace(/^#/, ""));
+    if (fragment.has("access_token") || fragment.has("refresh_token")) return null;
+
+    const code = url.searchParams.get("code")?.trim();
+    if (!code) return null;
+
+    return {
+      code,
+      next: sanitizeIntendedRoute(url.searchParams.get("next")),
+    };
+  } catch {
+    return null;
+  }
+}
+
 export function maskEmail(email: string) {
   const [localPart, domain] = email.split("@");
   if (!localPart || !domain) return "••••";

@@ -1,10 +1,10 @@
-import { FormEvent, useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { FormEvent, useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 
 import { AuthField } from "../../components/auth";
 import { PageShell } from "../../components/layout";
 import { SketchPanel, StampButton } from "../../components/ui";
-import { meetsPasswordPolicy } from "../../integrations/supabase/authContracts";
+import { meetsPasswordPolicy, parsePkceCallbackUrl } from "../../integrations/supabase/authContracts";
 import { useAuth } from "../../integrations/supabase/AuthProvider";
 import { useTranslation } from "../../i18n";
 import styles from "../AuthPage/AuthPage.module.css";
@@ -12,7 +12,6 @@ import styles from "../AuthPage/AuthPage.module.css";
 export function ResetPasswordPage() {
   const { t } = useTranslation();
   const { completePasswordReset, exchangeAuthCode, isPasswordRecovery } = useAuth();
-  const [searchParams] = useSearchParams();
   const [password, setPassword] = useState("");
   const [confirmation, setConfirmation] = useState("");
   const [isLinkValid, setIsLinkValid] = useState(isPasswordRecovery);
@@ -20,6 +19,7 @@ export function ResetPasswordPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const hasProcessedCallback = useRef(false);
 
   useEffect(() => {
     if (isPasswordRecovery) {
@@ -29,17 +29,20 @@ export function ResetPasswordPage() {
   }, [isPasswordRecovery]);
 
   useEffect(() => {
-    const code = searchParams.get("code");
-    if (!code) {
+    if (isPasswordRecovery || hasProcessedCallback.current) return;
+    hasProcessedCallback.current = true;
+
+    const callback = parsePkceCallbackUrl(window.location.href);
+    window.history.replaceState({}, "", "/auth/reset-password");
+    if (!callback) {
       setIsLoadingLink(false);
       return;
     }
-    exchangeAuthCode(code, "recovery").then((result) => {
-      window.history.replaceState({}, "", "/auth/reset-password");
+    exchangeAuthCode(callback.code, "recovery").then((result) => {
       setIsLinkValid(result.ok);
       setIsLoadingLink(false);
     });
-  }, [exchangeAuthCode, searchParams]);
+  }, [exchangeAuthCode, isPasswordRecovery]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

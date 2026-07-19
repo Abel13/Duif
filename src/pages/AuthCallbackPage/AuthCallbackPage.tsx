@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 import { PageShell } from "../../components/layout";
 import { SketchPanel } from "../../components/ui";
-import { sanitizeIntendedRoute } from "../../integrations/supabase/authContracts";
+import { parsePkceCallbackUrl } from "../../integrations/supabase/authContracts";
 import { useAuth } from "../../integrations/supabase/AuthProvider";
 import { useTranslation } from "../../i18n";
 import styles from "../AuthPage/AuthPage.module.css";
@@ -11,22 +11,25 @@ import styles from "../AuthPage/AuthPage.module.css";
 export function AuthCallbackPage() {
   const { t } = useTranslation();
   const { exchangeAuthCode } = useAuth();
-  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [hasError, setHasError] = useState(false);
+  const hasProcessedCallback = useRef(false);
 
   useEffect(() => {
-    const code = searchParams.get("code");
-    if (!code) {
+    if (hasProcessedCallback.current) return;
+    hasProcessedCallback.current = true;
+
+    const callback = parsePkceCallbackUrl(window.location.href);
+    window.history.replaceState({}, "", "/auth/callback");
+    if (!callback) {
       setHasError(true);
       return;
     }
-    exchangeAuthCode(code).then((result) => {
-      window.history.replaceState({}, "", "/auth/callback");
+    exchangeAuthCode(callback.code).then((result) => {
       if (!result.ok) setHasError(true);
-      else navigate(sanitizeIntendedRoute(searchParams.get("next")), { replace: true });
+      else navigate(callback.next, { replace: true });
     });
-  }, [exchangeAuthCode, navigate, searchParams]);
+  }, [exchangeAuthCode, navigate]);
 
   return <PageShell><div className={styles.page}><div className={styles.shell}>
     <SketchPanel eyebrow={t("auth.eyebrow")} title={t("auth.callbackTitle")} variant="note">
