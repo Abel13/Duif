@@ -195,12 +195,12 @@ For now, those needs are speculative.
 
 Mitigation:
 
-- keep the next milestone as backend foundation only;
+- keep backend increments scoped to an approved gameplay milestone;
 - model only the current loop;
 - keep static definitions seeded or local until balance is clearer;
-- avoid production auth polish and remote deployment in the first backend step.
+- preserve local fallbacks where they remain useful for development.
 
-## Out Of Scope For The First Backend
+## Out Of Scope For The Backend Foundation
 
 - Real map screen or map tile provider.
 - Shop, payments, currency, or paid cosmetics.
@@ -213,19 +213,13 @@ Mitigation:
 - Offline gameplay persistence.
 - Native app work.
 
-## Recommended Next Milestone
+## Current Backend State
 
-Milestone 17 should be:
+The recommended Supabase foundation became Milestone 17 and is complete. Later milestones added
+authentication-aware catalogs, authoritative delivery creation, immutable travel-modifier
+snapshots, persisted route discoveries, atomic reward collection, inventory persistence, and
+regionalized postal-traffic queries with RLS or security-definer boundaries where appropriate.
 
-Supabase Foundation And Data Model
-
-The milestone should add local Supabase setup, a minimal schema, seed data, generated TypeScript database types, and documentation. It should not wire the full UI to the backend yet unless the foundation is already stable.
-
-Success criteria for Milestone 17:
-
-- local Supabase can start;
-- migrations apply cleanly;
-- seed data represents the current prototype loop;
-- database types can be generated;
-- RLS strategy is documented, even if policies start minimal;
-- existing mock UI continues to build and test.
+This document remains the rationale for choosing Supabase; it no longer defines the next
+milestone. The next planning frontier is Milestone 37 in `docs/roadmap.md`, whose scope must be
+reviewed before implementation.

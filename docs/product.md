@@ -6,6 +6,11 @@ Players own animals that carry letters, cards, stickers, and collectible objects
 
 The first version should focus on making the player care about their mascots and enjoy the act of sending something to another player.
 
+As of July 2026, the implemented prototype validates the complete send-travel-return-collect
+loop, authenticated persistence with mock fallbacks, multi-mascot map travel, deterministic
+route discoveries, inventory, friends, regional postal traffic, and a read-only shop preview.
+Milestone 37 is the next planning frontier and has not yet been scoped.
+
 Detailed product rules for travel, slow social, privacy, map rewards, inventory, progression,
 and shop direction live in:
 
@@ -239,8 +244,8 @@ Possible statuses:
 
 The server should not need to update the animal’s position every second.
 
-The map is a core mechanic. It should eventually show the pet moving, straight-line route,
-outbound/return state, cities or regions crossed, and rewards discovered along the path.
+The map is a core mechanic. It shows selectable player mascots moving along their routes,
+outbound/return state, regional discoveries, return cargo, and privacy-safe postal traffic.
 
 ## Location and Privacy
 
@@ -404,16 +409,15 @@ The game should feel welcoming without relying on excessive humor or exaggerated
 
 ## Technical Direction
 
-The first prototype should use:
+The current prototype uses:
 
 - React;
 - TypeScript;
 - Vite;
 - CSS Modules;
 - initial internationalization for `pt-BR` and `en-US`;
-- mock data;
-- no backend;
-- no authentication;
+- Supabase-backed authenticated flows with explicit local mock fallbacks;
+- MapLibre for the interactive travel map;
 - no real payment system.
 
 Travel logic should live outside UI components.
@@ -448,9 +452,9 @@ Prefer:
 - timestamp-based travel calculation;
 - transform and opacity for animations.
 
-## First Prototype Screen
+## Historical First Prototype Screen
 
-The first screen to build is the mascot detail screen.
+The first screen built was the mascot detail screen.
 
 It should include:
 
@@ -470,7 +474,7 @@ It should include:
 
 The goal of this screen is to establish the visual style and make the mascot feel valuable.
 
-## Success Criteria for the First Prototype
+## Historical Success Criteria for the First Prototype
 
 The first prototype is successful if:
 

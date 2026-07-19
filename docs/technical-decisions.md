@@ -4,7 +4,15 @@ This document describes the initial technical direction for DUIF.
 
 The goal is to build a lightweight, maintainable PWA-style prototype for a social idle game about messenger animals.
 
-The first implementation should focus on the mascot detail screen, mock game data, visual style, and travel logic foundations.
+The first implementation focused on the mascot detail screen, mock game data, visual style, and
+travel logic foundations. References to “the first prototype” below are historical constraints.
+
+## Current Technical Baseline
+
+Milestones 1 through 36A are implemented. The application now combines React/Vite, CSS Modules,
+Supabase-backed authenticated flows, explicit mock fallbacks, MapLibre, PWA installation support,
+persisted discoveries, atomic collection, and authoritative regional postal traffic. `/map` is
+the opening gameplay route. Milestone 37 is not yet defined.
 
 ## Initial Technical Goal
 
@@ -55,12 +63,13 @@ Reasons:
 - easy to add screens incrementally;
 - avoids framework lock-in at this stage.
 
-Initial routes can include:
+The initial routes included:
 
 /
 /mascots/:mascotId
 
-For the first prototype, it is acceptable for / to redirect to the first mascot detail screen.
+The current `/` route opens the map experience. Mascot detail remains available through its
+dedicated route.
 
 ## Styling
 
@@ -239,9 +248,9 @@ The first authenticated gameplay read is the mascot detail screen. It may read
 `player_mascots` and `deliveries` for the claimed profile.
 
 The first authenticated gameplay write is the send flow. It creates deliveries through
-a validating `security definer` RPC instead of direct broad insert policies. Inventory,
-rewards, collection, history, realtime, and notifications remain separate future
-milestones.
+a validating `security definer` RPC instead of direct broad insert policies. Later completed
+milestones added rewards, collection, history, inventory, route discoveries, and regional
+postal traffic. Realtime server push and notifications remain deferred.
 
 Reward collection is now the second authenticated gameplay write. It uses a dedicated
 `collect_delivery_reward` RPC instead of direct client writes, because collection touches
@@ -259,22 +268,25 @@ Use a custom Node backend later if the game needs:
 - custom social graph logic;
 - high control over game services.
 
-## Authentication
+## Authentication History
 
-Do not implement authentication in the first visual prototype.
+Authentication was intentionally excluded from the first visual prototype. Supabase Auth is now
+implemented for authenticated gameplay while local mock mode remains available.
 
-When needed later, evaluate:
+The original options evaluated were:
 
 - Supabase Auth;
 - passwordless email;
 - OAuth providers;
 - username-based friend discovery.
 
-The first prototype should simulate a current user with mock data.
+Mock mode continues to simulate a current user for local demonstrations.
 
-## Persistence
+## Persistence History
 
-Do not add persistence in the first prototype.
+Persistence was intentionally excluded from the first visual prototype. The current baseline
+persists approved core-loop entities in Supabase and uses session-scoped mock persistence only
+where fallback flows require idempotent navigation.
 
 No localStorage is required unless needed for small UI preferences.
 
@@ -389,20 +401,18 @@ Validation goals:
 - show origin and destination;
 - draw a straight-line route;
 - show the pet at computed progress;
-- show mocked route reward points;
+- show route reward points, using local fixtures only as a development fallback;
 - show city/region labels relevant to the route through DUIF-owned map layers;
 - test whether MapLibre can be styled toward DUIF's illustrated postal direction.
 
-Route reward prototype:
+Route reward architecture:
 
-Milestone 27 keeps route rewards as pure TypeScript client logic. A small mocked catalog
-defines reward points by city, state, country, or event with coordinates, rarity, reward
-type, and an eligibility radius in kilometers. The client checks whether the straight route
-passes close enough to each point, calculates the point's progress along the route, and
-marks it discovered once the outbound pet progress reaches that point.
-
-This is a product-design prototype only. The future backend should remain authoritative for
-reward eligibility, grant creation, anti-cheat, event availability, and inventory writes.
+Milestone 27 initially validated route rewards with pure TypeScript and local fixtures.
+Milestone 35 replaced that production path with an authoritative seeded point catalog and
+per-delivery discoveries materialized by the backend. The client still calculates temporal
+visibility from persisted route progress, while reward eligibility, grants, collection, and
+inventory writes remain authoritative. Local fixtures are retained only for mock development
+and legacy deliveries without a discovery version.
 
 Nearby-pet direction:
 
@@ -422,10 +432,12 @@ Preferred technical shape:
 This keeps the first version closer to "postal traffic" than to an MMO simulation, while
 leaving room for a richer live map if the experience proves strong.
 
-Milestone 36 expands the local prototype with official mascot portraits, regional route labels,
-integer progress, a 250 km radius, and a 10-result limit. The frontend interpolates marker
-positions from timestamps; public UI snapshots omit owner data, raw route snapshots, endpoint
-coordinates, streets, neighborhoods, and private postal-base coordinates.
+Milestones 36 and 36A add official mascot portraits and authoritative regional postal traffic.
+The backend queries active deliveries against the expanded camera viewport, limits results to
+the 10 closest, resolves friendship visibility, and returns deterministic regionalized route
+geometry. The frontend interpolates positions locally between five-minute refreshes. Public
+non-friend snapshots omit owner data, streets, neighborhoods, private postal bases, and exact
+delivery endpoints.
 
 Open decisions:
 

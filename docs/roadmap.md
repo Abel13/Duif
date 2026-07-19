@@ -8,6 +8,17 @@ The goal is to avoid building the full game too early. Start with the emotional 
 core, validate the send-travel-return loop, then validate the real map because map travel is
 now a central mechanic.
 
+## Current Roadmap State
+
+Milestones 1 through 36A form the implemented baseline as of July 2026. Their sections remain
+below as an architectural and product record, not as pending work.
+
+The next planning frontier is Milestone 37. Its scope is intentionally undefined until the
+current send, travel, discovery, collection, multi-mascot map, postal-traffic, shop-preview,
+privacy, and economy-design slices are reviewed together. Mock fallbacks remain intentional
+for local development and unauthenticated demonstrations; they do not mean that the matching
+authenticated flows are still unimplemented.
+
 ## Roadmap Principles
 
 Build in this order:
@@ -1155,6 +1166,8 @@ Success criteria:
 
 ## Milestone 29: Shop And Economy Design Pass
 
+Status: Completed.
+
 Goal:
 
 Define the first safe economy rules before implementing a shop with cosmetics, useful
@@ -1199,6 +1212,8 @@ Decision outcome:
 
 ## Milestone 30: Read-Only Shop Prototype
 
+Status: Completed.
+
 Goal:
 
 Validate the postal-shop visual experience and catalog organization without implementing an
@@ -1232,9 +1247,12 @@ Success criteria:
 
 ## Milestone 31: Guided Map Navigation And Selection
 
+Status: Completed and subsequently expanded with active-mascot switching.
+
 Goal:
 
-Turn the passive map into an accessible route-inspection experience for one active delivery.
+Turn the passive map into an accessible route-inspection experience, initially for one active
+delivery and later expanded to switch among the player's active mascot routes.
 
 Includes:
 
@@ -1243,13 +1261,12 @@ Includes:
 - mobile bottom sheet and desktop side panel for selected details;
 - public frontend contracts for map focus and selection;
 - camera commands and selection callbacks in `TravelMap`;
+- a compact rotating selector for the player's mascots that currently have active routes;
 - preserved pan and zoom while details are open.
 
 Does not include:
 
 - global map search;
-- multiple active-delivery selection;
-- mascot switching on the map;
 - persistence or new backend contracts.
 
 Success criteria:
@@ -1260,6 +1277,8 @@ Success criteria:
 - overview, origin, destination, mascot, and reward focus behave consistently on mobile and desktop.
 
 ## Milestone 32: Continuous Postal Movement
+
+Status: Completed and subsequently applied to each selectable personal route.
 
 Goal:
 
@@ -1280,7 +1299,7 @@ Does not include:
 - a new animation dependency;
 - particle effects or intense celebrations;
 - server-authoritative live positioning;
-- multiple simultaneous active routes.
+- server-pushed real-time tracking or WebSocket movement.
 
 Success criteria:
 
@@ -1290,6 +1309,8 @@ Success criteria:
 - reduced-motion users receive a stable, understandable state.
 
 ## Milestone 33: Route Discoveries And Celebrations
+
+Status: Completed.
 
 Goal:
 
@@ -1318,6 +1339,8 @@ Success criteria:
 - no reward can be collected before the mascot returns.
 
 ## Milestone 34: Return Summary And Collection Handoff
+
+Status: Completed.
 
 Goal:
 
@@ -1348,6 +1371,8 @@ Success criteria:
 - repeat visits cannot duplicate the primary reward.
 
 ## Milestone 34A: Mascot Travel Modifiers
+
+Status: Completed.
 
 Goal:
 
@@ -1387,6 +1412,8 @@ Success criteria:
 - tests, build, and mock send-travel-return flow continue to pass.
 
 ## Milestone 35: Persisted Route Discoveries
+
+Status: Completed.
 
 Goal:
 
@@ -1428,6 +1455,8 @@ Success criteria:
 
 ## Milestone 36: Interactive Postal Traffic
 
+Status: Completed and refined by Milestone 36A.
+
 Goal:
 
 Make nearby postal traffic inspectable while maintaining strict location privacy.
@@ -1437,11 +1466,10 @@ Includes:
 - selection from both map markers and the nearby-traffic list;
 - synchronized selection, camera focus, and detail panel;
 - continuous local movement and the 10 closest results in the camera viewport plus a 25% margin;
-- public mascot identity with name, species, official portrait, integer progress, and regional
-  route endpoints;
+- public mascot identity with name, species, official portrait, and regional route endpoints;
 - friend owner details and profile CTA only for established friendships;
 - private owners for public non-friend mascots;
-- a frozen, explicitly out-of-range snapshot when a selected mascot leaves visibility;
+- a compact selected card with route emphasis and a friend-profile CTA only when allowed;
 - mobile and keyboard interaction coverage.
 
 Does not include:
@@ -1461,6 +1489,8 @@ Success criteria:
 
 ### Milestone 36A: Authoritative Regional Postal Traffic
 
+Status: Completed.
+
 - query up to 10 nearby active deliveries from a security-definer RPC on entry and every five
   minutes, using the latest camera center and viewport;
 - use complete coordinates only inside the backend and return deterministic regionalized route
@@ -1470,12 +1500,27 @@ Success criteria:
 - keep regional traffic visible around the nest when no personal delivery is active;
 - retain local traffic fixtures only for explicit mock development and tests.
 
-These milestones will be reviewed and adjusted individually before implementation. The sequence
-keeps one active delivery, introduces mascot modifiers before backend discovery materialization,
-excludes street navigation and global search, and introduces no map economy, payment flow, live
-multiplayer, or animation dependency.
+This completed sequence introduced mascot modifiers before backend discovery materialization,
+then expanded the map from one active route to selectable active routes for all three player
+mascots. It continues to exclude street navigation, global search, map economy, payment flow,
+live multiplayer, and new animation dependencies.
 
-## Suggested First Execution Order
+## Milestone 37: Awaiting Definition
+
+Status: Not planned.
+
+Milestone 37 must be agreed before implementation. Its plan should identify one primary product
+outcome, the smallest reviewable slice, required persistence or API changes, privacy and economy
+impact, mock/authenticated parity, localized copy, asset needs, and acceptance tests.
+
+Do not treat the long-term expansion list as authorization to implement a feature. In particular,
+payments, premium-currency writes, trading, chat, exact public locations, public uploads, and
+real-time server tracking remain deferred until explicitly planned.
+
+## Historical First Execution Order
+
+The following order records how the initial prototype was bootstrapped. It is complete and must
+not be interpreted as the current next-step list.
 
 Use this order for the first development pass:
 
@@ -1488,7 +1533,7 @@ Use this order for the first development pass:
 7. Mini Route Preview
 8. Responsive Polish
 
-Stop after step 8 and review the prototype before continuing.
+The prototype was reviewed after step 8 before the later milestones proceeded.
 
 ## First Review Questions
 

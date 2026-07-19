@@ -8,7 +8,8 @@ The game is a social idle game where players own messenger animals that deliver 
 
 Each player starts with 3 messenger animals. Each animal has its own speed, attributes, equipment, visual customization, level, and travel status.
 
-The initial prototype focuses on the mascot detail screen and the game's visual identity.
+The implemented prototype now covers mascot profiles, sending, travel, discoveries, collection,
+inventory, friends, a read-only shop, and the interactive postal map.
 
 ## Product Vision
 
@@ -25,17 +26,15 @@ Players should be able to:
 
 Do not build the full product yet. Build only the current requested feature.
 
-## Current Milestone
+## Current Baseline
 
-Build the first polished prototype screen:
+Milestones 1 through 36A are complete. The project includes Supabase-backed authenticated flows
+with local mock fallbacks, a MapLibre travel map, deterministic persisted discoveries, atomic
+collection, inventory, multi-mascot route selection, and authoritative regional postal traffic.
 
-- Mascot detail page.
-- Mock data only.
-- No backend.
-- No authentication.
-- No payments.
-- No real-time multiplayer.
-- No full map system yet.
+Milestone 37 has not been scoped. Do not infer or build it without an approved plan. Payments,
+real-time multiplayer, precise public locations, trading, chat, and unrestricted user uploads
+remain out of scope.
 
 ## Tech Stack
 
@@ -244,7 +243,9 @@ Use labels such as:
 
 ## Game Data Rules
 
-Use mock data only.
+Preserve both authenticated Supabase flows and explicit local mock fallbacks. New authoritative
+gameplay mutations belong in the backend with appropriate authorization; mocks should exercise
+the same public domain contracts where practical.
 
 Initial mascots:
 
@@ -266,7 +267,8 @@ Animals should have:
 - skills
 - currentDelivery
 
-Do not add persistence yet.
+Do not add new persistence, schema, RPCs, or economic writes unless the current approved
+milestone explicitly requires them.
 
 ## Code Quality
 
@@ -280,22 +282,8 @@ Before finishing any task:
 - Keep naming consistent.
 - Explain what changed briefly.
 
-## First Implementation Target
+## Next Implementation Target
 
-The first target is a visually polished mascot detail page using mock data.
-
-The page should include:
-
-- Left mascot selector.
-- Main mascot portrait area.
-- Mascot name and species.
-- Level and XP panel.
-- Attributes panel.
-- Special trait card.
-- Equipment grid.
-- Current delivery card.
-- Visual customization preview.
-- Skills panel.
-- Bottom navigation as paper tabs.
-
-Use placeholder visual blocks until real art assets are available.
+No next feature is currently approved. Review `docs/roadmap.md`, define Milestone 37 with the
+user, and implement only that agreed slice. Preserve the completed send-travel-return-collect
+loop and the existing illustrated asset library while doing so.

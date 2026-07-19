@@ -92,19 +92,20 @@ Route rewards:
 - Rewards can be distributed by city, state, country, route segment, or event area.
 - If a pet crosses an eligible region, the delivery can collect badges, postcards, stamps,
   souvenirs, materials, or seasonal items.
-- The current prototype represents these regions as small mocked reward points with an
-  eligibility radius in kilometers around the straight route.
+- Seeded reward points represent eligible regions with a corridor radius in kilometers around
+  the route. New authenticated deliveries persist their deterministic discoveries; local
+  fixtures remain only for mock mode and legacy deliveries.
 - Discovery during the trip is based on outbound route progress: a reward can appear as
   discovered once the pet has passed that point on the outbound leg.
 - The player may see discoveries during the journey.
 - The final reward collection remains tied to the pet returning home.
-- The backend should be authoritative for which map rewards are granted.
+- The backend is authoritative for which map rewards are materialized and granted.
 
 Nearby pets:
 
-- The map should explore showing other pets passing near the player's active pet.
-- This may become part of the default map experience if it makes the world feel alive
-  without creating noisy real-time social pressure.
+- The map shows sanitized postal traffic near the currently queried camera region.
+- Postal traffic is part of the default map experience while remaining visually secondary to
+  the player's selected route.
 - Nearby pets should be treated as postal traffic, not as a real-time chat or MMO layer.
 - Mascot identity is public in the interactive prototype: name, species, official portrait,
   integer trip progress, and state/province plus country at each route end may be shown.
@@ -116,8 +117,10 @@ Nearby pets:
 - The backend may use complete private coordinates for eligibility and ordering. The client only
   receives deterministic regionalized route endpoints and positions calculated on that same
   public geometry, never exact private addresses or residential endpoints.
-- The backend should decide which pets are eligible to appear based on privacy, friendship,
-  visibility rules, viewport/route proximity, and current active deliveries.
+- The backend decides which pets are eligible to appear based on privacy, friendship,
+  visibility rules, viewport proximity, and current active deliveries.
+- Returned or completed traffic disappears from the map. A delivery without a valid scheduled
+  return must not remain indefinitely at its destination.
 - The frontend can animate visible pets from route snapshots, timestamps, and speed instead
   of receiving live position updates every second.
 - Leaving the visible range removes the mascot from the map and list. An already open detail
