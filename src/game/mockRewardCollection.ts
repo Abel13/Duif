@@ -1,5 +1,5 @@
 import type { RouteRewardDiscovery } from "./mapTravel";
-import type { Delivery, DeliveryReward, InventoryItem } from "./types";
+import type { Delivery, DeliveryReward, InventoryItem, Mascot } from "./types";
 
 const storageKey = "duif.mock-reward-collection.v1";
 
@@ -27,6 +27,28 @@ export function readMockRewardCollection(
   } catch {
     return { ...emptySnapshot, inventory: [] };
   }
+}
+
+export function archiveCollectedMockDeliveries(
+  mascots: Mascot[],
+  snapshot: MockRewardCollectionSnapshot = readMockRewardCollection(),
+): Mascot[] {
+  const completedIds = new Set(snapshot.collectedDeliveryIds);
+  return mascots.map((mascot) =>
+    mascot.currentDelivery && completedIds.has(mascot.currentDelivery.id)
+      ? { ...mascot, currentDelivery: undefined }
+      : mascot,
+  );
+}
+
+export function getMockDeliveryHistory(
+  deliveries: Delivery[],
+  snapshot: MockRewardCollectionSnapshot = readMockRewardCollection(),
+): Delivery[] {
+  const completedIds = new Set(snapshot.collectedDeliveryIds);
+  return deliveries
+    .filter((delivery) => completedIds.has(delivery.id))
+    .map((delivery) => ({ ...delivery, status: "completed" }));
 }
 
 export function collectMockRewardOnce({

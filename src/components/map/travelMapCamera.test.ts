@@ -4,6 +4,7 @@ import {
   getMapFocusZoom,
   getNormalizedRouteBounds,
   getRouteFitPadding,
+  isMapCameraTargetDisabled,
   MIN_REWARD_VISIBILITY_ZOOM,
   shouldShowMapRewards,
 } from "./travelMapCamera";
@@ -43,5 +44,13 @@ describe("travel map camera helpers", () => {
     expect(getMapFocusZoom(5, "reward")).toBe(6.5);
     expect(getMapFocusZoom(4, "traffic")).toBe(12);
     expect(getMapFocusZoom(14, "traffic")).toBe(12);
+  });
+
+  it("keeps only the nest camera available after collection", () => {
+    expect(isMapCameraTargetDisabled("overview", true)).toBe(true);
+    expect(isMapCameraTargetDisabled("mascot", true)).toBe(true);
+    expect(isMapCameraTargetDisabled("destination", true)).toBe(true);
+    expect(isMapCameraTargetDisabled("origin", true)).toBe(false);
+    expect(isMapCameraTargetDisabled("destination", false)).toBe(false);
   });
 });

@@ -81,6 +81,7 @@ const postalMapStyle = {
 
 export type TravelMapProps = {
   delivery: Delivery;
+  deliveryCompleted: boolean;
   destinationLabel: string;
   fallbackLabel: string;
   focusTarget: MapFocusTarget;
@@ -108,6 +109,7 @@ export type TravelMapProps = {
 
 export function TravelMap({
   delivery,
+  deliveryCompleted,
   destinationLabel,
   fallbackLabel,
   focusTarget,
@@ -223,20 +225,18 @@ export function TravelMap({
       "bottom-right",
     );
 
-    const petElement = document.createElement("div");
-    petElement.className = styles.petMarker;
-    petElement.style.zIndex = "3";
-    petElement.setAttribute("aria-label", petLabel);
-    syncPetPortrait(petElement, petPortraitAssetPath);
-    updatePetDirection(
-      petElement,
-      getPetMapPosition(delivery, new Date()).leg,
-      delivery,
-    );
+    if (!deliveryCompleted) {
+      const petElement = document.createElement("div");
+      petElement.className = styles.petMarker;
+      petElement.style.zIndex = "3";
+      petElement.setAttribute("aria-label", petLabel);
+      syncPetPortrait(petElement, petPortraitAssetPath);
+      updatePetDirection(petElement, getPetMapPosition(delivery, new Date()).leg, delivery);
 
-    petMarkerRef.current = new maplibregl.Marker({ element: petElement })
-      .setLngLat(toLngLat(petPosition))
-      .addTo(map);
+      petMarkerRef.current = new maplibregl.Marker({ element: petElement })
+        .setLngLat(toLngLat(petPosition))
+        .addTo(map);
+    }
 
     map.on("load", () => {
       isLoadedRef.current = true;
@@ -261,6 +261,7 @@ export function TravelMap({
         delivery,
         originLabel,
         destinationLabel,
+        !deliveryCompleted,
       );
       syncRewardMarkerVisibility(map, rewardMarkerRefs.current);
       syncPostalTrafficMarkers(
@@ -270,6 +271,7 @@ export function TravelMap({
         selectionRef.current,
         (trafficId) => onTrafficSelectRef.current(trafficId),
       );
+      syncCompletedDeliveryMap(map, deliveryCompleted, rewardMarkerRefs.current, trafficMarkerRefs.current);
       focusMap(map, focusTargetRef.current, delivery, petPosition, rewards, postalTraffic);
     });
 
@@ -321,7 +323,12 @@ export function TravelMap({
       delivery,
       originLabel,
       destinationLabel,
+      !deliveryCompleted,
     );
+    if (deliveryCompleted) {
+      petMarkerRef.current?.remove();
+      petMarkerRef.current = null;
+    }
     const petElement = petMarkerRef.current?.getElement();
     if (petElement) {
       petElement.setAttribute("aria-label", petLabel);
@@ -356,8 +363,10 @@ export function TravelMap({
       selection,
       (trafficId) => onTrafficSelectRef.current(trafficId),
     );
+    syncCompletedDeliveryMap(map, deliveryCompleted, rewardMarkerRefs.current, trafficMarkerRefs.current);
   }, [
     delivery,
+    deliveryCompleted,
     motionPreference,
     onRewardSelect,
     petLabel,
@@ -465,7 +474,7 @@ export function TravelMap({
       ) : null}
       <div className={styles.labels} aria-hidden="true">
         <span>{originLabel}</span>
-        <span>{destinationLabel}</span>
+        {!deliveryCompleted ? <span>{destinationLabel}</span> : null}
       </div>
     </div>
   );
@@ -647,6 +656,7 @@ function syncRouteEndpointMarkers(
   delivery: Delivery,
   originLabel: string,
   destinationLabel: string,
+  includeDestination = true,
 ) {
   const endpoints = [
     {
@@ -655,13 +665,20 @@ function syncRouteEndpointMarkers(
       imagePath: assetPaths.mapPins.image("nest.webp"),
       label: originLabel,
     },
-    {
+    ...(includeDestination ? [{
       coordinates: delivery.destination,
       id: "destination",
       imagePath: assetPaths.mapPins.image("destination.webp"),
       label: destinationLabel,
-    },
+    }] : []),
   ];
+  const activeIds = new Set(endpoints.map((endpoint) => endpoint.id));
+  markers.forEach((marker, id) => {
+    if (!activeIds.has(id)) {
+      marker.remove();
+      markers.delete(id);
+    }
+  });
 
   endpoints.forEach((endpoint) => {
     const existingMarker = markers.get(endpoint.id);
@@ -696,6 +713,27 @@ function syncRouteEndpointMarkers(
         .addTo(map),
     );
   });
+}
+
+function syncCompletedDeliveryMap(
+  map: maplibregl.Map,
+  completed: boolean,
+  rewardMarkers: Map<string, maplibregl.Marker>,
+  trafficMarkers: Map<string, maplibregl.Marker>,
+) {
+  const visibility = completed ? "none" : "visible";
+  [
+    "duif-route-shadow",
+    "duif-route-line",
+    "duif-outbound-progress",
+    "duif-return-progress",
+  ].forEach((layerId) => {
+    if (map.getLayer(layerId)) map.setLayoutProperty(layerId, "visibility", visibility);
+  });
+
+  if (!completed) return;
+  removeMarkers(rewardMarkers);
+  removePostalTrafficMarkers(trafficMarkers);
 }
 
 function removeMarkers(markers: Map<string, maplibregl.Marker>) {

@@ -5,6 +5,7 @@ import { fetchAuthenticatedMascots } from "../integrations/supabase/authenticate
 import { fetchStarterMascotCatalog } from "../integrations/supabase/catalog";
 import { isSupabaseCatalogEnabled } from "../integrations/supabase/config";
 import { starterMascots } from "./mockData";
+import { archiveCollectedMockDeliveries } from "./mockRewardCollection";
 import type { Mascot } from "./types";
 
 type MascotCatalogState = {
@@ -21,7 +22,7 @@ export function useMascotCatalog(): MascotCatalogState {
 
   useEffect(() => {
     if (!isSupabaseCatalogEnabled()) {
-      setState({ isLoading: false, mascots: starterMascots });
+      setState({ isLoading: false, mascots: archiveCollectedMockDeliveries(starterMascots) });
       return;
     }
 
@@ -49,7 +50,7 @@ export function useMascotCatalog(): MascotCatalogState {
       })
       .catch(() => {
         if (isMounted) {
-          setState({ isLoading: false, mascots: starterMascots });
+          setState({ isLoading: false, mascots: archiveCollectedMockDeliveries(starterMascots) });
         }
       });
 

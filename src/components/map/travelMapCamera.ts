@@ -49,3 +49,10 @@ export function getMapFocusZoom(
 
   return Math.max(currentZoom, targetKind === "reward" ? 6.5 : 4.5);
 }
+
+export function isMapCameraTargetDisabled(
+  targetKind: "overview" | "mascot" | "origin" | "destination",
+  deliveryCompleted: boolean,
+) {
+  return deliveryCompleted && targetKind !== "origin";
+}

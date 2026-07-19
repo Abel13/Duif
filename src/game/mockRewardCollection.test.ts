@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import { nuvemDelivery } from "./mockData";
-import { collectMockRewardOnce, readMockRewardCollection, type StorageLike } from "./mockRewardCollection";
+import { nuvemDelivery, starterMascots } from "./mockData";
+import { archiveCollectedMockDeliveries, collectMockRewardOnce, getMockDeliveryHistory, readMockRewardCollection, type StorageLike } from "./mockRewardCollection";
 import { createMockRewardFromDelivery } from "./rewards";
 import { getRouteRewardDiscoveries } from "./mapTravel";
 
@@ -47,6 +47,21 @@ describe("mock reward collection", () => {
   it("falls back safely for malformed session data", () => {
     const storage = createMemoryStorage("not-json");
     expect(readMockRewardCollection(storage)).toEqual({ collectedDeliveryIds: [], inventory: [] });
+  });
+
+  it("archives collected mock deliveries outside the mascot current slot", () => {
+    const mascots = archiveCollectedMockDeliveries(starterMascots, {
+      collectedDeliveryIds: [nuvemDelivery.id],
+      inventory: [],
+    });
+
+    expect(mascots.find((mascot) => mascot.id === nuvemDelivery.mascotId)?.currentDelivery)
+      .toBeUndefined();
+    expect(mascots.filter((mascot) => mascot.currentDelivery)).toHaveLength(0);
+    expect(getMockDeliveryHistory([nuvemDelivery], {
+      collectedDeliveryIds: [nuvemDelivery.id],
+      inventory: [],
+    })).toEqual([{ ...nuvemDelivery, status: "completed" }]);
   });
 });
 

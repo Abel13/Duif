@@ -38,6 +38,7 @@ import { useRewardCollectionData } from "../../game/useRewardCollectionData";
 import { useMascotCatalog } from "../../game/useMascotCatalog";
 import { type TranslationKey, useTranslation } from "../../i18n";
 import styles from "./TravelMapPage.module.css";
+import { isMapCameraTargetDisabled } from "../../components/map/travelMapCamera";
 
 const defaultMascotId = "mascot-nuvem";
 const liveTickMs = 30 * 1000;
@@ -109,6 +110,10 @@ export function TravelMapPage() {
   const status = getDeliveryStatus(delivery, now);
   const isCollected = collectionState.delivery?.id === delivery.id && collectionState.isCollected;
   const journeyPhase = getMapJourneyPhase(status, isCollected);
+  const completedMap = journeyPhase === "completed";
+  const displayedPlaceLabels = completedMap
+    ? placeLabels.filter((label) => label.kind === "origin")
+    : placeLabels;
   const progressPercent = Math.round(getTravelProgress(delivery, now) * 100);
   const selectedReward = selection?.kind === "reward"
     ? rewards.find((reward) => reward.id === selection.rewardId)
@@ -187,6 +192,12 @@ export function TravelMapPage() {
     setSelection(null);
     setSelectedTrafficSnapshot(undefined);
 
+    if (journeyPhase === "completed") {
+      setReturnSummaryOpen(false);
+      setFocusTarget({ kind: "origin" });
+      return;
+    }
+
     const mobileQuery = window.matchMedia("(max-width: 819px)");
     const openOnceOnMobile = () => {
       if (!mobileQuery.matches) return;
@@ -263,6 +274,7 @@ export function TravelMapPage() {
         <div className={styles.mapLayer}>
           <TravelMap
             delivery={delivery}
+            deliveryCompleted={journeyPhase === "completed"}
             destinationLabel={t(delivery.destination.labelKey)}
             fallbackLabel={t("map.unavailable")}
             focusTarget={focusTarget}
@@ -275,13 +287,13 @@ export function TravelMapPage() {
             originLabel={t(delivery.origin.labelKey)}
             petLabel={displayMascot?.name ?? t("common.unavailable")}
             petPortraitAssetPath={displayMascot?.appearance.portraitAssetPath}
-            placeLabels={placeLabels}
+            placeLabels={displayedPlaceLabels}
             petPosition={petPosition.coordinates}
-            postalTraffic={postalTraffic}
+            postalTraffic={completedMap ? [] : postalTraffic}
             postalTrafficPets={mockPostalTrafficPets}
             rewardLabels={rewardLabels}
             rewardStates={rewardStates}
-            rewards={rewards}
+            rewards={completedMap ? [] : rewards}
             selection={selection}
           />
         </div>
@@ -296,13 +308,14 @@ export function TravelMapPage() {
         ) : null}
 
         <MapCameraControls
+          deliveryCompleted={journeyPhase === "completed"}
           followMascot={followMascot}
           onFollowChange={setFollowMascot}
           onFocus={setFocusTarget}
         />
 
         <aside className={styles.overlayPanel}>
-          {journeyPhase !== "traveling" ? (
+          {journeyPhase === "returned" ? (
             <>
               <details
                 className={styles.mobileDrawer}
@@ -310,14 +323,14 @@ export function TravelMapPage() {
                 open={returnSummaryOpen}
               >
                 <summary>
-                  <span>{journeyPhase === "completed" ? t("map.tripCompleted") : t("map.cargoFound")}</span>
+                  <span>{t("map.cargoFound")}</span>
                   <strong>{discoveredCount}</strong>
                 </summary>
                 <div className={styles.drawerContent}>
                   <CargoSummary
                     delivery={delivery}
                     canCollect={collectionState.canCollect}
-                    journeyPhase={journeyPhase}
+                    journeyPhase="returned"
                     primaryReward={collectionState.reward}
                     rewards={rewards.filter((reward) => reward.discovered)}
                   />
@@ -325,20 +338,20 @@ export function TravelMapPage() {
               </details>
               <div className={styles.desktopCards}>
                 <SketchPanel
-                  title={journeyPhase === "completed" ? t("map.tripCompleted") : t("map.cargoFound")}
+                  title={t("map.cargoFound")}
                   variant="map"
                 >
                   <CargoSummary
                     delivery={delivery}
                     canCollect={collectionState.canCollect}
-                    journeyPhase={journeyPhase}
+                    journeyPhase="returned"
                     primaryReward={collectionState.reward}
                     rewards={rewards.filter((reward) => reward.discovered)}
                   />
                 </SketchPanel>
               </div>
             </>
-          ) : (
+          ) : journeyPhase === "traveling" ? (
             <>
               {selectedReward || selectedTraffic ? (
                 <section className={`${styles.mobileDrawer} ${styles.mobileRewardDetails}`}>
@@ -439,7 +452,7 @@ export function TravelMapPage() {
                 </SketchPanel>
               </div>
             </>
-          )}
+          ) : null}
         </aside>
 
         <div className={styles.bottomNav}>
@@ -786,10 +799,12 @@ function getDiscoveryStateKey(state: RouteDiscoveryVisualState): TranslationKey 
 }
 
 function MapCameraControls({
+  deliveryCompleted,
   followMascot,
   onFollowChange,
   onFocus,
 }: {
+  deliveryCompleted: boolean;
   followMascot: boolean;
   onFollowChange: (follow: boolean) => void;
   onFocus: (target: MapFocusTarget) => void;
@@ -826,10 +841,16 @@ function MapCameraControls({
 
   return (
     <nav className={styles.cameraControls} aria-label={t("map.cameraControls")}>
-      {controls.map((control) => (
+      {controls.map((control) => {
+        const disabled = isMapCameraTargetDisabled(
+          control.target.kind as "overview" | "mascot" | "origin" | "destination",
+          deliveryCompleted,
+        );
+        return (
         <button
           aria-label={control.label}
           aria-pressed={control.isFollowControl ? followMascot : undefined}
+          disabled={disabled}
           key={control.target.kind}
           onClick={() => {
             if (control.isFollowControl) {
@@ -850,7 +871,8 @@ function MapCameraControls({
           </AssetImage>
           <span className={styles.visuallyHidden}>{control.label}</span>
         </button>
-      ))}
+        );
+      })}
     </nav>
   );
 }

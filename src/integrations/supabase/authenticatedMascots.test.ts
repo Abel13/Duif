@@ -6,6 +6,7 @@ import {
   mapDeliveryRowToDelivery,
   mapPlayerMascotRowToMascot,
   selectCurrentDelivery,
+  selectDeliveryHistory,
 } from "./authenticatedMascots";
 
 const nuvemMascotRow: PlayerMascotRow = {
@@ -138,6 +139,15 @@ describe("authenticated mascot mappers", () => {
     expect(selectCurrentDelivery([completedDelivery, activeDelivery])?.mock_key).toBe(
       "delivery-active",
     );
+  });
+
+  it("keeps completed deliveries out of the current slot for history", () => {
+    expect(selectCurrentDelivery([
+      { ...nuvemDeliveryRow, status: "completed" },
+    ])).toBeUndefined();
+    expect(selectDeliveryHistory([
+      { ...nuvemDeliveryRow, status: "completed" },
+    ])).toHaveLength(1);
   });
 
   it("composes authenticated mascots with their current delivery", () => {

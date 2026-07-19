@@ -1327,8 +1327,9 @@ Includes:
 
 - cargo summary after the mascot returns;
 - CTA to `/rewards/:deliveryId` using the existing collection experience;
-- completed-trip state after collection;
-- link from the completed state to the Collection;
+- archival into delivery history after collection;
+- idle nest map after collection, without mascot, route, destination, or return summary;
+- disabled route-overview, mascot, and destination camera controls in the idle state;
 - current mock fallback and authenticated behavior.
 
 Does not include:
@@ -1341,7 +1342,8 @@ Does not include:
 Success criteria:
 
 - discoveries happen outbound, remain carried during travel, and enter inventory only after return;
-- returned, collectable, and completed states are visually distinct;
+- the returned summary remains visible until collection and disappears afterward;
+- completed deliveries leave the current slot and remain queryable as history;
 - the handoff reuses the current authoritative collection route;
 - repeat visits cannot duplicate the primary reward.
 

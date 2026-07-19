@@ -16,6 +16,7 @@ export {
   mockInventoryItems,
 } from "./inventory";
 export { currentPlayer, getDeliveryById, getMascotById, nuvemDelivery, starterMascots } from "./mockData";
+export { getMockDeliveryHistory } from "./mockRewardCollection";
 export {
   createMapPlaceLabelsGeoJson,
   createDeliveryRouteGeoJson,

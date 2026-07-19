@@ -40,6 +40,13 @@ Rules:
 - A pet always returns to its origin after delivering.
 - Rewards are only finalized into the player's inventory after the pet returns and the
   player collects them.
+- A returned delivery remains current, keeps its cargo summary visible, and continues locking
+  the mascot until collection.
+- Collection completes and archives the delivery. It leaves the mascot's current-delivery slot
+  but remains available to delivery-history consumers.
+- After collection, the map becomes an idle nest view: the traveling mascot, route, destination,
+  discoveries, traffic, and return summary disappear. Only the nest camera remains available;
+  route overview, mascot, and destination camera actions are disabled.
 - The frontend may animate progress in real time from timestamps, route, and speed.
 - The backend remains the authority for route, timestamps, effective speed, and granted
   rewards.

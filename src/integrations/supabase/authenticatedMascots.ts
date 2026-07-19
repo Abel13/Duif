@@ -85,12 +85,19 @@ function mapTravelModifiers(value: DeliveryRow["travel_modifiers"]): MascotTrave
 
 export function selectCurrentDelivery(deliveries: DeliveryRow[]) {
   const activeDeliveries = deliveries.filter((delivery) => delivery.status !== "completed");
-  const candidates = activeDeliveries.length > 0 ? activeDeliveries : deliveries;
-
-  return [...candidates].sort(
+  return [...activeDeliveries].sort(
     (firstDelivery, secondDelivery) =>
       new Date(secondDelivery.created_at).getTime() - new Date(firstDelivery.created_at).getTime(),
   )[0];
+}
+
+export function selectDeliveryHistory(deliveries: DeliveryRow[]) {
+  return deliveries
+    .filter((delivery) => delivery.status === "completed")
+    .sort(
+      (firstDelivery, secondDelivery) =>
+        new Date(secondDelivery.updated_at).getTime() - new Date(firstDelivery.updated_at).getTime(),
+    );
 }
 
 export function mapPlayerMascotRowToMascot({
