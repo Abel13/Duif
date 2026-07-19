@@ -10,10 +10,16 @@ export type TranslationDictionary = {
     installDescription: string;
     iosDescription: string;
     browserDescription: string;
+    unsupportedDescription: string;
+    openInstalledDescription: string;
+    iosStepShare: string;
+    iosStepAdd: string;
+    iosStepOpen: string;
+    browserStepMenu: string;
+    browserStepInstall: string;
+    browserStepOpen: string;
+    requiredNote: string;
     install: string;
-    later: string;
-    understood: string;
-    close: string;
   };
   common: {
     loading: string;
@@ -63,6 +69,9 @@ export type TranslationDictionary = {
     callbackTitle: string;
     confirmingEmail: string;
     callbackDescription: string;
+    confirmedTitle: string;
+    confirmedDescription: string;
+    returnToInstalledApp: string;
     invalidLinkTitle: string;
     invalidLinkDescription: string;
     resetTitle: string;
@@ -670,10 +679,16 @@ export type TranslationKey =
   | "pwaInstall.installDescription"
   | "pwaInstall.iosDescription"
   | "pwaInstall.browserDescription"
+  | "pwaInstall.unsupportedDescription"
+  | "pwaInstall.openInstalledDescription"
+  | "pwaInstall.iosStepShare"
+  | "pwaInstall.iosStepAdd"
+  | "pwaInstall.iosStepOpen"
+  | "pwaInstall.browserStepMenu"
+  | "pwaInstall.browserStepInstall"
+  | "pwaInstall.browserStepOpen"
+  | "pwaInstall.requiredNote"
   | "pwaInstall.install"
-  | "pwaInstall.later"
-  | "pwaInstall.understood"
-  | "pwaInstall.close"
   | "common.loading"
   | "common.unavailable"
   | "notFound.eyebrow"
@@ -717,6 +732,9 @@ export type TranslationKey =
   | "auth.callbackTitle"
   | "auth.confirmingEmail"
   | "auth.callbackDescription"
+  | "auth.confirmedTitle"
+  | "auth.confirmedDescription"
+  | "auth.returnToInstalledApp"
   | "auth.invalidLinkTitle"
   | "auth.invalidLinkDescription"
   | "auth.resetTitle"

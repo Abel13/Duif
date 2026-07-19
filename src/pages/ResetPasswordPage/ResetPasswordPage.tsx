@@ -2,7 +2,7 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { AuthField } from "../../components/auth";
-import { PageShell } from "../../components/layout";
+import { PageShell, shouldReturnToInstalledApp } from "../../components/layout";
 import { SketchPanel, StampButton } from "../../components/ui";
 import { meetsPasswordPolicy, parsePkceCallbackUrl } from "../../integrations/supabase/authContracts";
 import { useAuth } from "../../integrations/supabase/AuthProvider";
@@ -61,7 +61,9 @@ export function ResetPasswordPage() {
   return <PageShell><div className={styles.page}><div className={styles.shell}>
     <SketchPanel eyebrow={t("auth.eyebrow")} title={t("auth.resetTitle")} variant="note">
       {isLoadingLink ? <div className={styles.statusBlock} role="status">{t("auth.loadingSession")}</div>
-        : isComplete ? <div className={styles.form}><p className={styles.success}>{t("auth.resetSuccess")}</p><Link className={styles.backLink} to="/auth">{t("auth.backToLogin")}</Link></div>
+        : isComplete ? <div className={styles.form}><p className={styles.success}>{t("auth.resetSuccess")}</p>{shouldReturnToInstalledApp()
+          ? <p className={styles.description}>{t("auth.returnToInstalledApp")}</p>
+          : <Link className={styles.backLink} to="/auth">{t("auth.backToLogin")}</Link>}</div>
         : !isLinkValid ? <div className={styles.form}><div className={styles.statusBlock} role="alert"><strong>{t("auth.invalidLinkTitle")}</strong><span>{t("auth.invalidLinkDescription")}</span></div><Link className={styles.backLink} to="/auth">{t("auth.requestNewLink")}</Link></div>
         : <form className={styles.form} onSubmit={handleSubmit}>
           <p className={styles.description}>{t("auth.resetDescription")}</p>
