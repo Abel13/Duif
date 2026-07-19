@@ -196,11 +196,14 @@ export function TravelMap({
     try {
       map = new maplibregl.Map({
         attributionControl: false,
+        bearing: 0,
         center: toLngLat(petPosition),
         container: containerRef.current,
         cooperativeGestures: false,
+        dragRotate: false,
         pitchWithRotate: false,
         style: postalMapStyle,
+        touchPitch: false,
         zoom: 2,
       });
     } catch {
@@ -209,6 +212,8 @@ export function TravelMap({
     }
 
     mapRef.current = map;
+    map.touchZoomRotate.disableRotation();
+    map.keyboard.disableRotation();
     map.addControl(
       new maplibregl.NavigationControl({ showCompass: false }),
       "top-right",
