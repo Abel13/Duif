@@ -1,4 +1,5 @@
 import type { TranslationKey } from "../i18n";
+import type { OfficialAssetKey } from "./assets";
 import { clampProgress, getDeliveryStatus } from "./travel";
 import { getDeliveryTravelModifiers } from "./travelModifiers";
 import type { Coordinates, Delivery, DeliveryStatus, RewardRarity } from "./types";
@@ -44,7 +45,7 @@ export type RouteRewardPoint = {
   regionKind: RouteRewardRegionKind;
   regionLabel: string;
   titleKey: TranslationKey;
-  thumbnailAssetPath?: string;
+  thumbnailAssetKey?: OfficialAssetKey;
 };
 
 export type RouteRewardDiscovery = {
@@ -59,7 +60,7 @@ export type RouteRewardDiscovery = {
   regionLabel: string;
   routeProgress: number;
   titleKey: TranslationKey;
-  thumbnailAssetPath?: string;
+  thumbnailAssetKey?: OfficialAssetKey;
 };
 
 export type MapPlaceLabelKind = "origin" | "destination" | "reward";

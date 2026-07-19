@@ -1,4 +1,5 @@
 import type { TranslationKey } from "../../i18n";
+import { isOfficialAssetKey } from "../../game/assets";
 import {
   getPostalTrafficPetPosition,
   type PostalTrafficPet,
@@ -35,6 +36,7 @@ export async function fetchAuthenticatedPostalTraffic(
 }
 
 export function mapTrafficRow(row: TrafficRow, now = new Date()): PostalTrafficPetSnapshot {
+  if (!isOfficialAssetKey(row.portrait_asset_key)) throw new Error("Invalid postal traffic portrait asset key");
   const route = {
     origin: { latitude: row.origin_latitude, longitude: row.origin_longitude },
     destination: { latitude: row.destination_latitude, longitude: row.destination_longitude },
@@ -50,7 +52,7 @@ export function mapTrafficRow(row: TrafficRow, now = new Date()): PostalTrafficP
   const basePet = {
     id: row.traffic_id,
     mascotName: row.mascot_name,
-    portraitAssetPath: row.portrait_asset_path,
+    portraitAssetKey: row.portrait_asset_key,
     route,
     speciesKey: row.species_key as TranslationKey,
   };
@@ -69,7 +71,7 @@ export function mapTrafficRow(row: TrafficRow, now = new Date()): PostalTrafficP
     mascotName: pet.mascotName,
     originRegionKey: route.originRegionKey,
     originRegionLabel: route.originRegionLabel,
-    portraitAssetPath: pet.portraitAssetPath,
+    portraitAssetKey: pet.portraitAssetKey,
     progress: Math.round(position.progress * 100),
     route,
     speciesKey: pet.speciesKey,

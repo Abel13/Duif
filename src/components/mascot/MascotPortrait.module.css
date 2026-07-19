@@ -49,7 +49,7 @@
   right: clamp(0.75rem, 4vw, 1rem);
   width: clamp(4rem, 20vw, 5.4rem);
   height: clamp(1.8rem, 9vw, 2.5rem);
-  background: url("/assets/textures/postal-cancel-mark.webp") center / contain no-repeat;
+  background: var(--portrait-postal-mark, none) center / contain no-repeat;
   transform: rotate(7deg);
   opacity: 0.78;
 }

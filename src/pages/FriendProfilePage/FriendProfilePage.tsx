@@ -97,7 +97,7 @@ function FriendMascotCard({ mascot }: { mascot: FriendMascotPreview }) {
         alt={t(mascot.appearance.portraitPlaceholderKey)}
         className={styles.assetFrame}
         height={192}
-        src={mascot.appearance.portraitAssetPath}
+        assetKey={mascot.appearance.portraitAssetKey}
         style={
           {
             "--friend-primary": mascot.appearance.primaryColor,

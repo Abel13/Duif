@@ -1,6 +1,6 @@
 import type { FriendLocation, FriendMascotPreview, FriendProfile } from "./types";
 import type { TranslationKey } from "../i18n";
-import { assetPaths } from "./assets";
+import { assetKeys } from "./assets";
 
 export const friendMascots: FriendMascotPreview[] = [
   {
@@ -12,7 +12,7 @@ export const friendMascots: FriendMascotPreview[] = [
       primaryColor: "#fff8e8",
       accentColor: "#7a8f68",
       portraitPlaceholderKey: "appearance.friendAuroraPortrait",
-      portraitAssetPath: assetPaths.friends.mascot("aurora.webp"),
+      portraitAssetKey: assetKeys.mascots.aurora,
     },
   },
   {
@@ -24,7 +24,6 @@ export const friendMascots: FriendMascotPreview[] = [
       primaryColor: "#f7f1e3",
       accentColor: "#6f91a8",
       portraitPlaceholderKey: "appearance.friendBrisaPortrait",
-      portraitAssetPath: assetPaths.friends.mascot("brisa.webp"),
     },
   },
   {
@@ -36,7 +35,6 @@ export const friendMascots: FriendMascotPreview[] = [
       primaryColor: "#e8ddc7",
       accentColor: "#8b5e3c",
       portraitPlaceholderKey: "appearance.friendTicoPortrait",
-      portraitAssetPath: assetPaths.friends.mascot("tico.webp"),
     },
   },
   {
@@ -48,7 +46,6 @@ export const friendMascots: FriendMascotPreview[] = [
       primaryColor: "#8b5e3c",
       accentColor: "#a44a3f",
       portraitPlaceholderKey: "appearance.friendAtlasPortrait",
-      portraitAssetPath: assetPaths.friends.mascot("atlas.webp"),
     },
   },
   {
@@ -60,7 +57,6 @@ export const friendMascots: FriendMascotPreview[] = [
       primaryColor: "#fff8e8",
       accentColor: "#c49a4a",
       portraitPlaceholderKey: "appearance.friendLumaPortrait",
-      portraitAssetPath: assetPaths.friends.mascot("luma.webp"),
     },
   },
   {
@@ -72,7 +68,7 @@ export const friendMascots: FriendMascotPreview[] = [
       primaryColor: "#fff8e8",
       accentColor: "#a44a3f",
       portraitPlaceholderKey: "appearance.friendMaplePortrait",
-      portraitAssetPath: assetPaths.friends.mascot("maple.webp"),
+      portraitAssetKey: assetKeys.mascots.maple,
     },
   },
 ];

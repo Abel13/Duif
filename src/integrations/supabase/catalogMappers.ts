@@ -1,4 +1,5 @@
 import type { TranslationKey } from "../../i18n";
+import { isOfficialAssetKey } from "../../game/assets";
 import type {
   EquipmentItem, EquipmentRarity, EquipmentType, MascotAppearance, MascotArchetype,
   MascotAttributeSet, MascotTrait, Skill,
@@ -62,7 +63,7 @@ function mapEquipmentItem(value:unknown):EquipmentItem {
   return {id:requireString(item.id,"equipment id"),nameKey:requireTranslationKey(item.nameKey,"equipment name key"),
     descriptionKey:item.descriptionKey===undefined?undefined:requireTranslationKey(item.descriptionKey,"equipment description key"),
     type:type as EquipmentType,rarity:rarity as EquipmentRarity,equipped:typeof item.equipped==="boolean"?item.equipped:false,
-    iconAssetPath:typeof item.iconAssetPath==="string"?item.iconAssetPath:undefined};
+    iconAssetKey:isOfficialAssetKey(item.iconAssetKey)?item.iconAssetKey:undefined};
 }
 export function mapEquipment(value:Json, fallback?:EquipmentItem[]):EquipmentItem[]{
   if(!Array.isArray(value)) {if(fallback)return fallback; throw new CatalogContractError("Invalid equipment list");}
@@ -79,7 +80,7 @@ export function mapAppearance(value:Json,fallback?:MascotAppearance):MascotAppea
   const item=record(value,"appearance");
   return {primaryColor:requireString(item.primaryColor,"primary color"),accentColor:requireString(item.accentColor,"accent color"),
     portraitPlaceholderKey:requireTranslationKey(item.portraitPlaceholderKey,"portrait key"),
-    portraitAssetPath:typeof item.portraitAssetPath==="string"?item.portraitAssetPath:fallback?.portraitAssetPath};
+    portraitAssetKey:isOfficialAssetKey(item.portraitAssetKey)?item.portraitAssetKey:fallback?.portraitAssetKey};
 }
 export function selectStarterMascotTemplateRows(rows:MascotTemplateRow[]){
   const ids=new Set<string>(STARTER_MASCOT_IDS); return rows.filter(row=>row.status==="active"&&ids.has(row.catalog_key))

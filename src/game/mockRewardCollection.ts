@@ -84,7 +84,7 @@ export function collectMockRewardOnce({
     nameKey: discovery.titleKey,
     rarity: discovery.rarity,
     sourceKey: "inventory.sources.routeReward",
-    thumbnailAssetPath: discovery.thumbnailAssetPath,
+    thumbnailAssetKey: discovery.thumbnailAssetKey,
   }));
   const next = {
     collectedDeliveryIds: [...current.collectedDeliveryIds, delivery.id],

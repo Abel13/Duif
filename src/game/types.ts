@@ -1,4 +1,5 @@
 import type { TranslationKey } from "../i18n";
+import type { OfficialAssetKey } from "./assets";
 
 export type Coordinates = {
   latitude: number;
@@ -54,7 +55,7 @@ export type ShopCatalogItem = {
   price: number;
   nameKey: TranslationKey;
   descriptionKey: TranslationKey;
-  thumbnailAssetPath: string;
+  thumbnailAssetKey: OfficialAssetKey;
   previewKind: "mascot" | "item";
 };
 
@@ -65,7 +66,7 @@ export type EquipmentItem = {
   rarity: EquipmentRarity;
   equipped: boolean;
   descriptionKey?: TranslationKey;
-  iconAssetPath?: string;
+  iconAssetKey?: OfficialAssetKey;
 };
 
 export type Skill = {
@@ -120,7 +121,7 @@ export type RewardItem = {
   nameKey: TranslationKey;
   descriptionKey: TranslationKey;
   rarity: RewardRarity;
-  thumbnailAssetPath?: string;
+  thumbnailAssetKey?: OfficialAssetKey;
 };
 
 export type DeliveryReward = {
@@ -135,7 +136,7 @@ export type InventoryItem = RewardItem & {
   collectedAt: string;
   equipped: boolean;
   sourceKey?: TranslationKey;
-  thumbnailAssetPath?: string;
+  thumbnailAssetKey?: OfficialAssetKey;
 };
 
 export type FriendLocation = {
@@ -222,7 +223,7 @@ export type MascotAppearance = {
   primaryColor: string;
   accentColor: string;
   portraitPlaceholderKey: TranslationKey;
-  portraitAssetPath?: string;
+  portraitAssetKey?: OfficialAssetKey;
 };
 
 export type Mascot = {

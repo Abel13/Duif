@@ -1,28 +1,31 @@
 import { useEffect, useState, type ImgHTMLAttributes, type ReactNode } from "react";
 
-import { hasAssetPath } from "../../game";
+import type { OfficialAssetKey } from "../../game";
+import { useOfficialAssets } from "../../integrations/supabase/OfficialAssetProvider";
 import styles from "./AssetImage.module.css";
 
 export type AssetImageProps = Omit<ImgHTMLAttributes<HTMLImageElement>, "children" | "src"> & {
-  src?: string;
+  assetKey?: OfficialAssetKey;
   children: ReactNode;
 };
 
 export function AssetImage({
   alt,
+  assetKey,
   children,
   className,
   loading = "lazy",
-  src,
   ...imageProps
 }: AssetImageProps) {
+  const { resolve } = useOfficialAssets();
+  const src = resolve(assetKey);
   const [didFail, setDidFail] = useState(false);
-  const shouldRenderImage = hasAssetPath(src) && !didFail;
+  const shouldRenderImage = Boolean(src) && !didFail;
   const classNames = [styles.frame, className].filter(Boolean).join(" ");
 
   useEffect(() => {
     setDidFail(false);
-  }, [src]);
+  }, [assetKey, src]);
 
   return (
     <div className={classNames} data-has-image={shouldRenderImage || undefined}>

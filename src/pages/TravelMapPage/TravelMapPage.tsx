@@ -5,7 +5,7 @@ import { AppBottomNav } from "../../components/layout";
 import { TravelMap } from "../../components/map/TravelMap";
 import { AssetImage, ItemCard, SketchPanel } from "../../components/ui";
 import {
-  assetPaths,
+  assetKeys,
   formatRemainingTime,
   getDeliveryStatus,
   getMascotById,
@@ -17,6 +17,7 @@ import {
   getRouteRewardDiscoveries,
   getTravelProgress,
   resolvePostalTrafficSelection,
+  resolveActiveOfficialAssetPath,
   nuvemDelivery,
   type Delivery,
   type DeliveryReward,
@@ -385,7 +386,7 @@ export function TravelMapPage() {
             originLabel={t(delivery.origin.labelKey)}
             originTitle={t("mascot.origin")}
             petLabel={displayMascot?.name ?? t("common.unavailable")}
-            petPortraitAssetPath={displayMascot?.appearance.portraitAssetPath}
+            petPortraitAssetKey={displayMascot?.appearance.portraitAssetKey}
             placeLabels={displayedPlaceLabels}
             petPosition={petPosition.coordinates}
             postalTraffic={postalTraffic}
@@ -410,7 +411,7 @@ export function TravelMapPage() {
             <AssetImage
               alt=""
               className={styles.finishedDeliveryMark}
-              src={finishedDeliveries[0]!.mascot.appearance.portraitAssetPath}
+              assetKey={finishedDeliveries[0]!.mascot.appearance.portraitAssetKey}
             >
               <span className={styles.finishedDeliveryMarkFallback} aria-hidden="true" />
             </AssetImage>
@@ -610,7 +611,7 @@ function CargoSummary({
               meta={t("map.visualCargo")}
               title={t(reward.titleKey)}
             >
-              <AssetImage alt={t(reward.titleKey)} className={styles.cargoImage} src={reward.thumbnailAssetPath}>
+              <AssetImage alt={t(reward.titleKey)} assetKey={reward.thumbnailAssetKey} className={styles.cargoImage}>
                 <span className={styles.cargoFallback} aria-hidden="true" />
               </AssetImage>
             </ItemCard>
@@ -631,7 +632,7 @@ function CargoSummary({
             selected={journeyPhase === "completed"}
             title={t(primaryReward.item.nameKey)}
           >
-            <AssetImage alt={t(primaryReward.item.nameKey)} className={styles.cargoImage} src={primaryReward.item.thumbnailAssetPath}>
+            <AssetImage alt={t(primaryReward.item.nameKey)} assetKey={primaryReward.item.thumbnailAssetKey} className={styles.cargoImage}>
               <span className={styles.cargoFallback} aria-hidden="true" />
             </AssetImage>
           </ItemCard>
@@ -696,7 +697,7 @@ function PostalTrafficContent({
                 <AssetImage
                   alt={pet.mascotName}
                   className={styles.trafficListPortrait}
-                  src={pet.portraitAssetPath}
+                  assetKey={pet.portraitAssetKey}
                 >
                   <span className={styles.trafficPortraitFallback} aria-hidden="true" />
                 </AssetImage>
@@ -726,7 +727,7 @@ function PostalTrafficDetails({
         <AssetImage
           alt={pet.mascotName}
           className={styles.trafficCompactPortrait}
-          src={pet.portraitAssetPath}
+          assetKey={pet.portraitAssetKey}
         >
           <span className={styles.trafficPortraitFallback} aria-hidden="true" />
         </AssetImage>
@@ -844,7 +845,7 @@ function MascotMapSelector({
             <AssetImage
               alt=""
               className={styles.mascotSelectorPortrait}
-              src={mascot.appearance.portraitAssetPath}
+              assetKey={mascot.appearance.portraitAssetKey}
             >
               <span className={styles.trafficPortraitFallback} aria-hidden="true" />
             </AssetImage>
@@ -905,7 +906,7 @@ function TripStatusDialog({
           <AssetImage
             alt={displayMascot?.name ?? ""}
             className={styles.tripStatusPortrait}
-            src={displayMascot?.appearance.portraitAssetPath}
+            assetKey={displayMascot?.appearance.portraitAssetKey}
           >
             <span className={styles.tripStatusPortraitFallback} aria-hidden="true" />
           </AssetImage>
@@ -1037,11 +1038,11 @@ function RewardDetails({ reward, visualState }: { reward: RouteRewardDiscovery; 
 
   return (
     <article className={styles.rewardDetails}>
-      {reward.discovered && reward.thumbnailAssetPath ? (
+      {reward.discovered && reward.thumbnailAssetKey ? (
         <img
           alt={t(reward.titleKey)}
           className={styles.rewardDetailImage}
-          src={reward.thumbnailAssetPath}
+          src={resolveActiveOfficialAssetPath(reward.thumbnailAssetKey)}
         />
       ) : (
         <div className={`${styles.rewardDetailVisual} ${getDiscoveryVisualClass(visualState)}`} aria-hidden="true" />
@@ -1089,29 +1090,29 @@ function MapCameraControls({
 }) {
   const { t } = useTranslation();
   const controls: Array<{
-    asset: string;
+    asset: import("../../game").OfficialAssetKey;
     isFollowControl?: boolean;
     label: string;
     target: MapFocusTarget;
   }> = [
     {
-      asset: assetPaths.mapControls.icon("overview.webp"),
+      asset: assetKeys.mapControls.overview,
       label: t("map.overview"),
       target: { kind: "overview" },
     },
     {
-      asset: assetPaths.mapControls.icon("mascot.webp"),
+      asset: assetKeys.mapControls.mascot,
       isFollowControl: true,
       label: followMascot ? t("map.stopFollowing") : t("map.followMascot"),
       target: { kind: "mascot" },
     },
     {
-      asset: assetPaths.mapControls.icon("origin.webp"),
+      asset: assetKeys.mapControls.origin,
       label: t("map.focusOrigin"),
       target: { kind: "origin" },
     },
     {
-      asset: assetPaths.mapControls.icon("destination.webp"),
+      asset: assetKeys.mapControls.destination,
       label: t("map.focusDestination"),
       target: { kind: "destination" },
     },
@@ -1144,7 +1145,7 @@ function MapCameraControls({
           title={control.label}
           type="button"
         >
-          <AssetImage alt="" className={styles.cameraControlIcon} loading="eager" src={control.asset}>
+          <AssetImage alt="" assetKey={control.asset} className={styles.cameraControlIcon} loading="eager">
             <span className={styles.cameraControlFallback} aria-hidden="true" />
           </AssetImage>
           <span className={styles.visuallyHidden}>{control.label}</span>

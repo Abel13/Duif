@@ -5,6 +5,7 @@ import {
   type RewardItem,
   type RouteRewardDiscovery,
 } from "../../game";
+import { isOfficialAssetKey } from "../../game/assets";
 import { mapDeliveryRowToDelivery, type DeliveryRow } from "./authenticatedMascots";
 import { requireTranslationKey } from "./catalogMappers";
 import { getSupabaseClient } from "./client";
@@ -72,7 +73,7 @@ export function mapRewardItemRowToRewardItem(row: RewardItemRow): RewardItem {
     id: row.id,
     nameKey: requireTranslationKey(row.name_key, "reward name key"),
     rarity: row.rarity,
-    thumbnailAssetPath: row.thumbnail_asset_path ?? undefined,
+    thumbnailAssetKey: isOfficialAssetKey(row.thumbnail_asset_key) ? row.thumbnail_asset_key : undefined,
   };
 }
 
@@ -111,7 +112,7 @@ export function mapPersistedRouteDiscovery({
     regionKind: readRouteRegionKind(pointRow.region_kind),
     regionLabel: requireTranslationKey(pointRow.region_label_key, "route region key"),
     routeProgress: discoveryRow.route_progress,
-    thumbnailAssetPath: itemRow.thumbnail_asset_path ?? undefined,
+    thumbnailAssetKey: isOfficialAssetKey(itemRow.thumbnail_asset_key) ? itemRow.thumbnail_asset_key : undefined,
     titleKey: requireTranslationKey(pointRow.title_key, "route point title key"),
   };
 }

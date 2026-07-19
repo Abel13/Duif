@@ -25,7 +25,7 @@ export function MascotEquipmentGrid({ equipment }: MascotEquipmentGridProps) {
             alt={t(item.nameKey)}
             className={styles.assetFrame}
             height={160}
-            src={item.iconAssetPath}
+            assetKey={item.iconAssetKey}
             width={160}
           >
             <div className={styles.fallbackIcon} data-rarity={item.rarity}>

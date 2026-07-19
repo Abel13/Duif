@@ -117,7 +117,7 @@ function InventoryCard({ item }: { item: InventoryItem }) {
         alt={t(item.nameKey)}
         className={styles.assetFrame}
         height={192}
-        src={item.thumbnailAssetPath}
+        assetKey={item.thumbnailAssetKey}
         width={192}
       >
         <div className={styles.itemStamp} data-rarity={item.rarity}>

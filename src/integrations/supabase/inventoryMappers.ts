@@ -1,4 +1,5 @@
 import type { InventoryItem } from "../../game";
+import { isOfficialAssetKey } from "../../game/assets";
 import type { TranslationKey } from "../../i18n";
 import { requireTranslationKey } from "./catalogMappers";
 import type { Database } from "./database.types";
@@ -15,6 +16,6 @@ export function mapInventoryItemRow(row: InventoryItemRow): InventoryItem {
     nameKey: requireTranslationKey(row.name_key, "inventory name key"),
     rarity: row.rarity,
     sourceKey: row.source_key ? (row.source_key as TranslationKey) : undefined,
-    thumbnailAssetPath: row.thumbnail_asset_path ?? undefined,
+    thumbnailAssetKey: isOfficialAssetKey(row.thumbnail_asset_key) ? row.thumbnail_asset_key : undefined,
   };
 }

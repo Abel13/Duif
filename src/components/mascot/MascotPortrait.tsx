@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 
-import type { Mascot } from "../../game";
+import { assetKeys, type Mascot } from "../../game";
+import { useOfficialAssets } from "../../integrations/supabase/OfficialAssetProvider";
 import { useTranslation } from "../../i18n";
 import { AssetImage } from "../ui";
 import styles from "./MascotPortrait.module.css";
@@ -11,11 +12,14 @@ type MascotPortraitProps = {
 
 export function MascotPortrait({ mascot }: MascotPortraitProps) {
   const { t } = useTranslation();
+  const { resolve } = useOfficialAssets();
+  const postalMarkPath = resolve(assetKeys.postalMarks.postalCancel);
   const portraitStyle = {
     "--mascot-primary": mascot.appearance.primaryColor,
     "--mascot-accent": mascot.appearance.accentColor,
+    "--portrait-postal-mark": postalMarkPath ? `url(${postalMarkPath})` : "none",
   } as CSSProperties;
-  const hasPortraitAsset = Boolean(mascot.appearance.portraitAssetPath);
+  const hasPortraitAsset = Boolean(mascot.appearance.portraitAssetKey);
 
   return (
     <section className={styles.portrait} style={portraitStyle} aria-label={t("mascot.visualPreview")}>
@@ -26,7 +30,7 @@ export function MascotPortrait({ mascot }: MascotPortraitProps) {
           className={styles.assetFrame}
           height={320}
           loading="eager"
-          src={mascot.appearance.portraitAssetPath}
+          assetKey={mascot.appearance.portraitAssetKey}
           width={320}
         >
           <div className={styles.figure}>

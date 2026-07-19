@@ -38,6 +38,10 @@ export const OFFICIAL_TRANSLATION_KEYS = [
   "locations.londrina", "locations.cambe", "locations.rolandia",
   "locations.arapongas", "locations.apucarana", "locations.maringa",
   "inventory.sources.routeReward",
+  "shop.items.crimsonCourierScarf.name", "shop.items.meadowPostCap.name",
+  "shop.items.sunnyRouteSticker.name", "shop.items.blueEnvelopeSticker.name",
+  "shop.items.coastalTownPostcard.name", "shop.items.lanternFestivalPostcard.name",
+  "shop.items.brassNestPlaque.name", "shop.items.airmailProfileRibbon.name",
 ] as const satisfies readonly TranslationKey[];
 
 export type OfficialTranslationKey = (typeof OFFICIAL_TRANSLATION_KEYS)[number];

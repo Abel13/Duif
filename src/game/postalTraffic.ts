@@ -1,5 +1,5 @@
 import type { TranslationKey } from "../i18n";
-import { assetPaths } from "./assets";
+import { assetKeys, type OfficialAssetKey } from "./assets";
 import { interpolateCoordinates, type MapCoordinate, type TravelLeg } from "./mapTravel";
 import { clampProgress, haversineDistanceKm } from "./travel";
 
@@ -40,7 +40,7 @@ export type PostalTrafficRouteSnapshot = {
 type PostalTrafficPetBase = {
   id: string;
   mascotName: string;
-  portraitAssetPath: string;
+  portraitAssetKey: OfficialAssetKey;
   route: PostalTrafficRouteSnapshot;
   speciesKey: TranslationKey;
 };
@@ -66,7 +66,7 @@ type PostalTrafficPetSnapshotBase = {
   mascotName: string;
   originRegionKey: TranslationKey;
   originRegionLabel?: string;
-  portraitAssetPath: string;
+  portraitAssetKey: OfficialAssetKey;
   progress: number;
   speciesKey: TranslationKey;
   route: PostalTrafficRouteSnapshot;
@@ -105,7 +105,7 @@ export const mockPostalTrafficPets: PostalTrafficPet[] = [
     friendName: "Lia",
     id: "traffic-lia-aurora",
     mascotName: "Aurora",
-    portraitAssetPath: assetPaths.friends.mascot("aurora.webp"),
+    portraitAssetKey: assetKeys.mascots.aurora,
     route: {
       origin: { latitude: -30.0346, longitude: -51.2177 },
       destination: { latitude: -27.5949, longitude: -48.5482 },
@@ -122,7 +122,7 @@ export const mockPostalTrafficPets: PostalTrafficPet[] = [
   {
     id: "traffic-public-bento",
     mascotName: "Bento",
-    portraitAssetPath: assetPaths.mascots.publicPortrait("bento.webp"),
+    portraitAssetKey: assetKeys.mascots.bento,
     route: {
       origin: { latitude: -16.6869, longitude: -49.2648 },
       destination: { latitude: -15.7939, longitude: -47.8828 },
@@ -141,7 +141,7 @@ export const mockPostalTrafficPets: PostalTrafficPet[] = [
     friendName: "Mina",
     id: "traffic-mina-maple",
     mascotName: "Maple",
-    portraitAssetPath: assetPaths.friends.mascot("maple.webp"),
+    portraitAssetKey: assetKeys.mascots.maple,
     route: {
       origin: { latitude: -19.9167, longitude: -43.9345 },
       destination: { latitude: -19.539, longitude: -40.6306 },
@@ -158,7 +158,7 @@ export const mockPostalTrafficPets: PostalTrafficPet[] = [
   {
     id: "traffic-public-oliva",
     mascotName: "Oliva",
-    portraitAssetPath: assetPaths.mascots.publicPortrait("oliva.webp"),
+    portraitAssetKey: assetKeys.mascots.oliva,
     route: {
       origin: { latitude: -12.9714, longitude: -38.5014 },
       destination: { latitude: -8.0476, longitude: -34.877 },
@@ -247,7 +247,7 @@ export function createPublicTrafficSnapshot(
     mascotName: pet.mascotName,
     originRegionKey: pet.route.originRegionKey,
     originRegionLabel: pet.route.originRegionLabel,
-    portraitAssetPath: pet.portraitAssetPath,
+    portraitAssetKey: pet.portraitAssetKey,
     progress: Math.round(position.progress * 100),
     speciesKey: pet.speciesKey,
     route: pet.route,
@@ -285,7 +285,7 @@ function snapshotToPet(snapshot: PostalTrafficPetSnapshot): PostalTrafficPet {
   const base = {
     id: snapshot.id,
     mascotName: snapshot.mascotName,
-    portraitAssetPath: snapshot.portraitAssetPath,
+    portraitAssetKey: snapshot.portraitAssetKey,
     route: snapshot.route,
     speciesKey: snapshot.speciesKey,
   };

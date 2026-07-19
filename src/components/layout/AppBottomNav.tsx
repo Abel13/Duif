@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 
-import { assetPaths } from "../../game";
+import { assetKeys, type OfficialAssetKey } from "../../game";
 import { useTranslation } from "../../i18n";
 import { AssetImage, PaperTab } from "../ui";
 import styles from "./AppBottomNav.module.css";
@@ -17,31 +17,31 @@ export function AppBottomNav() {
   const items = [
     {
       active: isNestActive,
-      icon: assetPaths.navigation.icon("nest.webp"),
+      icon: assetKeys.navigation.nest,
       label: t("navigation.nest"),
       onClick: () => navigate("/mascots/mascot-nuvem"),
     },
     {
       active: isInventoryActive,
-      icon: assetPaths.navigation.icon("collection.webp"),
+      icon: assetKeys.navigation.collection,
       label: t("navigation.collection"),
       onClick: () => navigate("/inventory"),
     },
     {
       active: isMapActive,
-      icon: assetPaths.navigation.icon("map.webp"),
+      icon: assetKeys.navigation.map,
       label: t("navigation.map"),
       onClick: () => navigate("/map"),
     },
     {
       active: isFriendsActive,
-      icon: assetPaths.navigation.icon("friends.webp"),
+      icon: assetKeys.navigation.friends,
       label: t("navigation.friends"),
       onClick: () => navigate("/friends"),
     },
     {
       active: isShopActive,
-      icon: assetPaths.navigation.icon("shop.webp"),
+      icon: assetKeys.navigation.shop,
       label: t("navigation.shop"),
       onClick: () => navigate("/shop"),
     },
@@ -63,7 +63,7 @@ export function AppBottomNav() {
               className={styles.icon}
               draggable="false"
               loading="eager"
-              src={item.icon}
+              assetKey={item.icon as OfficialAssetKey}
             >
               <span className={styles.iconFallback} />
             </AssetImage>

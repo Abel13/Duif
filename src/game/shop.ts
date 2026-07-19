@@ -1,4 +1,4 @@
-import { assetPaths } from "./assets";
+import { assetKeys } from "./assets";
 import type { ShopCatalogItem, ShopCategory } from "./types";
 
 export const shopCategories: ShopCategory[] = [
@@ -17,7 +17,7 @@ export const mockShopCatalog: ShopCatalogItem[] = [
     price: 45,
     nameKey: "shop.items.crimsonCourierScarf.name",
     descriptionKey: "shop.items.crimsonCourierScarf.description",
-    thumbnailAssetPath: assetPaths.shop.thumbnail("crimson-courier-scarf.webp"),
+    thumbnailAssetKey: assetKeys.shop.crimsonCourierScarf,
     previewKind: "mascot",
   },
   {
@@ -27,7 +27,7 @@ export const mockShopCatalog: ShopCatalogItem[] = [
     price: 180,
     nameKey: "shop.items.meadowPostCap.name",
     descriptionKey: "shop.items.meadowPostCap.description",
-    thumbnailAssetPath: assetPaths.shop.thumbnail("meadow-post-cap.webp"),
+    thumbnailAssetKey: assetKeys.shop.meadowPostCap,
     previewKind: "mascot",
   },
   {
@@ -37,7 +37,7 @@ export const mockShopCatalog: ShopCatalogItem[] = [
     price: 35,
     nameKey: "shop.items.sunnyRouteSticker.name",
     descriptionKey: "shop.items.sunnyRouteSticker.description",
-    thumbnailAssetPath: assetPaths.shop.thumbnail("sunny-route-sticker.webp"),
+    thumbnailAssetKey: assetKeys.shop.sunnyRouteSticker,
     previewKind: "item",
   },
   {
@@ -47,7 +47,7 @@ export const mockShopCatalog: ShopCatalogItem[] = [
     price: 12,
     nameKey: "shop.items.blueEnvelopeSticker.name",
     descriptionKey: "shop.items.blueEnvelopeSticker.description",
-    thumbnailAssetPath: assetPaths.shop.thumbnail("blue-envelope-sticker.webp"),
+    thumbnailAssetKey: assetKeys.shop.blueEnvelopeSticker,
     previewKind: "item",
   },
   {
@@ -57,7 +57,7 @@ export const mockShopCatalog: ShopCatalogItem[] = [
     price: 60,
     nameKey: "shop.items.coastalTownPostcard.name",
     descriptionKey: "shop.items.coastalTownPostcard.description",
-    thumbnailAssetPath: assetPaths.shop.thumbnail("coastal-town-postcard.webp"),
+    thumbnailAssetKey: assetKeys.shop.coastalTownPostcard,
     previewKind: "item",
   },
   {
@@ -67,7 +67,7 @@ export const mockShopCatalog: ShopCatalogItem[] = [
     price: 20,
     nameKey: "shop.items.lanternFestivalPostcard.name",
     descriptionKey: "shop.items.lanternFestivalPostcard.description",
-    thumbnailAssetPath: assetPaths.shop.thumbnail("lantern-festival-postcard.webp"),
+    thumbnailAssetKey: assetKeys.shop.lanternFestivalPostcard,
     previewKind: "item",
   },
   {
@@ -77,7 +77,7 @@ export const mockShopCatalog: ShopCatalogItem[] = [
     price: 30,
     nameKey: "shop.items.brassNestPlaque.name",
     descriptionKey: "shop.items.brassNestPlaque.description",
-    thumbnailAssetPath: assetPaths.shop.thumbnail("brass-nest-plaque.webp"),
+    thumbnailAssetKey: assetKeys.shop.brassNestPlaque,
     previewKind: "mascot",
   },
   {
@@ -87,7 +87,7 @@ export const mockShopCatalog: ShopCatalogItem[] = [
     price: 90,
     nameKey: "shop.items.airmailProfileRibbon.name",
     descriptionKey: "shop.items.airmailProfileRibbon.description",
-    thumbnailAssetPath: assetPaths.shop.thumbnail("airmail-profile-ribbon.webp"),
+    thumbnailAssetKey: assetKeys.shop.airmailProfileRibbon,
     previewKind: "mascot",
   },
 ];

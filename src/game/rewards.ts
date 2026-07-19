@@ -1,5 +1,5 @@
 import type { Delivery, DeliveryReward, InventoryItem, RewardItem } from "./types";
-import { assetPaths } from "./assets";
+import { assetKeys } from "./assets";
 
 const rewardItems: RewardItem[] = [
   {
@@ -7,21 +7,21 @@ const rewardItems: RewardItem[] = [
     nameKey: "rewards.items.wornRouteStamp.name",
     descriptionKey: "rewards.items.wornRouteStamp.description",
     rarity: "common",
-    thumbnailAssetPath: assetPaths.items.thumbnail("worn-route-stamp.webp"),
+    thumbnailAssetKey: assetKeys.rewards.wornRouteStamp,
   },
   {
     id: "reward-blue-airmail-label",
     nameKey: "rewards.items.blueAirmailLabel.name",
     descriptionKey: "rewards.items.blueAirmailLabel.description",
     rarity: "uncommon",
-    thumbnailAssetPath: assetPaths.items.thumbnail("blue-airmail-label.webp"),
+    thumbnailAssetKey: assetKeys.rewards.blueAirmailLabel,
   },
   {
     id: "reward-golden-compass-pin",
     nameKey: "rewards.items.goldenCompassPin.name",
     descriptionKey: "rewards.items.goldenCompassPin.description",
     rarity: "rare",
-    thumbnailAssetPath: assetPaths.items.thumbnail("golden-compass-pin.webp"),
+    thumbnailAssetKey: assetKeys.rewards.goldenCompassPin,
   },
 ];
 

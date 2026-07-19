@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
 import { AppBottomNav, PageShell } from "../../components/layout";
 import { AssetImage, SketchPanel, StampButton } from "../../components/ui";
 import {
-  assetPaths,
+  assetKeys,
   filterShopItemsByCategory,
   mockShopCatalog,
   shopCategories,
@@ -98,7 +98,7 @@ function ShopItemCard({
         alt={itemName}
         className={styles.cardImage}
         height={256}
-        src={item.thumbnailAssetPath}
+        assetKey={item.thumbnailAssetKey}
         width={256}
       >
         <span className={styles.assetFallback} aria-hidden="true" />
@@ -168,7 +168,7 @@ function ShopItemDialog({
               alt={t("appearance.nuvemPortrait")}
               className={styles.mascotImage}
               height={640}
-              src={assetPaths.mascots.portrait("nuvem.webp")}
+              assetKey={assetKeys.mascots.nuvem}
               width={640}
             >
               <span className={styles.assetFallback} aria-hidden="true" />
@@ -178,7 +178,7 @@ function ShopItemDialog({
             alt={itemName}
             className={styles.dialogItemImage}
             height={256}
-            src={item.thumbnailAssetPath}
+            assetKey={item.thumbnailAssetKey}
             width={256}
           >
             <span className={styles.assetFallback} aria-hidden="true" />
@@ -225,7 +225,7 @@ function CurrencyIcon({ currency }: { currency: ShopCatalogItem["currency"] }) {
         alt=""
         className={styles.currencyIcon}
         height={32}
-        src={assetPaths.currency.icon(currency === "free" ? "stamp.svg" : "crystal.svg")}
+        assetKey={currency === "free" ? assetKeys.currency.stamp : assetKeys.currency.crystal}
         width={32}
       >
         <span className={styles.currencyFallback} aria-hidden="true" />

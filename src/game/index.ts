@@ -1,4 +1,5 @@
-export { assetPaths, hasAssetPath } from "./assets";
+export { assetKeys, isOfficialAssetKey, parseOfficialAssetManifest, resolveActiveOfficialAssetPath, resolveOfficialAssetPath } from "./assets";
+export type { OfficialAssetKey, OfficialAssetManifest, OfficialAssetType, OfficialAssetVersion } from "./assets";
 export {
   friendMascots,
   getFriendById,

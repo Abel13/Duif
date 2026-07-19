@@ -31,7 +31,8 @@ import {
   type MapPlaceLabel,
 } from "../../game/mapTravel";
 import type { Delivery } from "../../game/types";
-import { assetPaths } from "../../game/assets";
+import { assetKeys, resolveActiveOfficialAssetPath, type OfficialAssetKey } from "../../game/assets";
+import { useOfficialAssets } from "../../integrations/supabase/OfficialAssetProvider";
 import styles from "./TravelMap.module.css";
 import {
   getMapFocusZoom,
@@ -94,7 +95,7 @@ export type TravelMapProps = {
   originLabel: string;
   originTitle: string;
   petLabel: string;
-  petPortraitAssetPath?: string;
+  petPortraitAssetKey?: OfficialAssetKey;
   petPosition: MapCoordinate;
   placeLabels: MapPlaceLabel[];
   postalTraffic: PostalTrafficPetSnapshot[];
@@ -126,7 +127,7 @@ export function TravelMap({
   originLabel,
   originTitle,
   petLabel,
-  petPortraitAssetPath,
+  petPortraitAssetKey,
   petPosition,
   placeLabels,
   postalTraffic,
@@ -141,6 +142,7 @@ export function TravelMap({
   onTrafficSelect,
   onViewportChange,
 }: TravelMapProps) {
+  const { manifest: officialAssetManifest } = useOfficialAssets();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const petMarkerRef = useRef<maplibregl.Marker | null>(null);
@@ -244,7 +246,7 @@ export function TravelMap({
         map,
         delivery,
         petLabel,
-        petPortraitAssetPath,
+        resolveActiveOfficialAssetPath(petPortraitAssetKey),
         petPosition,
         () => onPetSelectRef.current(),
       );
@@ -342,7 +344,7 @@ export function TravelMap({
         map,
         delivery,
         petLabel,
-        petPortraitAssetPath,
+        resolveActiveOfficialAssetPath(petPortraitAssetKey),
         petPosition,
         () => onPetSelectRef.current(),
       );
@@ -363,7 +365,7 @@ export function TravelMap({
     const petElement = petMarkerRef.current?.getElement();
     if (petElement) {
       petElement.setAttribute("aria-label", petLabel);
-      syncPetPortrait(petElement, petPortraitAssetPath);
+      syncPetPortrait(petElement, resolveActiveOfficialAssetPath(petPortraitAssetKey));
     }
     updateMapProgress(map, delivery, getPetMapPosition(delivery, new Date()));
     if (document.visibilityState === "visible") {
@@ -406,9 +408,10 @@ export function TravelMap({
     delivery,
     deliveryCompleted,
     motionPreference,
+    officialAssetManifest,
     onRewardSelect,
     petLabel,
-    petPortraitAssetPath,
+    petPortraitAssetKey,
     petPosition,
     originLabel,
     destinationLabel,
@@ -696,23 +699,24 @@ function updateTrafficMarker(
   markerElement.setAttribute("aria-pressed", String(selected));
   (markerElement as HTMLButtonElement).disabled = pet.visualPhase === "leaving";
   markerElement.title = pet.label;
+  const portraitPath = resolveActiveOfficialAssetPath(pet.portraitAssetKey);
 
   let portrait = markerElement.querySelector("img");
-  if (markerElement.dataset.portraitError === pet.portraitAssetPath) return;
+  if (markerElement.dataset.portraitError === pet.portraitAssetKey) return;
   if (!portrait) {
     portrait = document.createElement("img");
     portrait.alt = "";
     portrait.draggable = false;
     portrait.setAttribute("aria-hidden", "true");
     portrait.addEventListener("error", () => {
-      markerElement.dataset.portraitError = pet.portraitAssetPath;
+      markerElement.dataset.portraitError = pet.portraitAssetKey;
       portrait?.remove();
     });
     markerElement.append(portrait);
   }
-  if (portrait.getAttribute("src") !== pet.portraitAssetPath) {
+  if (portraitPath && portrait.getAttribute("src") !== portraitPath) {
     delete markerElement.dataset.portraitError;
-    portrait.setAttribute("src", pet.portraitAssetPath);
+    portrait.setAttribute("src", portraitPath);
   }
 }
 
@@ -811,13 +815,13 @@ function syncRouteEndpointMarkers(
     {
       coordinates: delivery.origin,
       id: "origin",
-      imagePath: assetPaths.mapPins.image("nest.webp"),
+      imagePath: resolveActiveOfficialAssetPath(assetKeys.mapPins.nest),
       label: originLabel,
     },
     ...(includeDestination ? [{
       coordinates: delivery.destination,
       id: "destination",
-      imagePath: assetPaths.mapPins.image("destination.webp"),
+      imagePath: resolveActiveOfficialAssetPath(assetKeys.mapPins.destination),
       label: destinationLabel,
     }] : []),
   ];
@@ -835,6 +839,10 @@ function syncRouteEndpointMarkers(
     if (existingMarker) {
       existingMarker.setLngLat(toLngLat(endpoint.coordinates));
       existingMarker.getElement().setAttribute("aria-label", endpoint.label);
+      const existingImage = existingMarker.getElement().querySelector<HTMLImageElement>("img");
+      if (existingImage && endpoint.imagePath && existingImage.getAttribute("src") !== endpoint.imagePath) {
+        existingImage.src = endpoint.imagePath;
+      }
       return;
     }
 
@@ -848,7 +856,7 @@ function syncRouteEndpointMarkers(
     const image = document.createElement("img");
     image.alt = "";
     image.draggable = false;
-    image.src = endpoint.imagePath;
+    if (endpoint.imagePath) image.src = endpoint.imagePath;
     image.addEventListener("error", () => {
       element.dataset.imageError = "true";
       image.remove();
@@ -1114,16 +1122,16 @@ function updatePetDirection(
   element.style.setProperty("--pet-direction-angle", `${directionAngle}deg`);
 }
 
-function syncPetPortrait(element: HTMLElement, portraitAssetPath?: string) {
+function syncPetPortrait(element: HTMLElement, portraitAssetKey?: string) {
   const currentImage = element.querySelector<HTMLImageElement>("img");
 
-  if (!portraitAssetPath) {
+  if (!portraitAssetKey) {
     currentImage?.remove();
     element.removeAttribute("data-has-portrait");
     return;
   }
 
-  if (currentImage?.getAttribute("src") === portraitAssetPath) {
+  if (currentImage?.getAttribute("src") === portraitAssetKey) {
     return;
   }
 
@@ -1132,7 +1140,7 @@ function syncPetPortrait(element: HTMLElement, portraitAssetPath?: string) {
   image.alt = "";
   image.className = styles.petPortrait;
   image.draggable = false;
-  image.src = portraitAssetPath;
+  image.src = portraitAssetKey;
   image.addEventListener("load", () =>
     element.setAttribute("data-has-portrait", "true"),
   );
@@ -1147,7 +1155,7 @@ function createPetMarker(
   map: maplibregl.Map,
   delivery: Delivery,
   label: string,
-  portraitAssetPath: string | undefined,
+  portraitAssetKey: string | undefined,
   position: MapCoordinate,
   onSelect: () => void,
 ) {
@@ -1157,7 +1165,7 @@ function createPetMarker(
   element.style.zIndex = "3";
   element.setAttribute("aria-label", label);
   element.addEventListener("click", onSelect);
-  syncPetPortrait(element, portraitAssetPath);
+  syncPetPortrait(element, portraitAssetKey);
   updatePetDirection(element, getPetMapPosition(delivery, new Date()).leg, delivery);
   return new maplibregl.Marker({ element })
     .setLngLat(toLngLat(position))

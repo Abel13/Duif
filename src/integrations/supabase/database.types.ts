@@ -390,7 +390,7 @@ export type Database = {
           rarity: Database["public"]["Enums"]["reward_rarity"]
           reward_item_id: string | null
           source_key: string | null
-          thumbnail_asset_path: string | null
+          thumbnail_asset_key: string | null
         }
         Insert: {
           category: Database["public"]["Enums"]["inventory_category"]
@@ -405,7 +405,7 @@ export type Database = {
           rarity: Database["public"]["Enums"]["reward_rarity"]
           reward_item_id?: string | null
           source_key?: string | null
-          thumbnail_asset_path?: string | null
+          thumbnail_asset_key?: string | null
         }
         Update: {
           category?: Database["public"]["Enums"]["inventory_category"]
@@ -420,7 +420,7 @@ export type Database = {
           rarity?: Database["public"]["Enums"]["reward_rarity"]
           reward_item_id?: string | null
           source_key?: string | null
-          thumbnail_asset_path?: string | null
+          thumbnail_asset_key?: string | null
         }
         Relationships: [
           {
@@ -494,6 +494,105 @@ export type Database = {
           status?: Database["public"]["Enums"]["catalog_status"]
           suggested_name_key?: string | null
           trait?: Json
+        }
+        Relationships: []
+      }
+      official_asset_versions: {
+        Row: {
+          alt_text_key: string | null
+          asset_id: string
+          author: string
+          byte_size: number
+          created_at: string
+          height: number
+          id: string
+          is_decorative: boolean
+          metadata: Json
+          mime_type: string
+          packaged_path: string | null
+          source: Database["public"]["Enums"]["official_asset_source"]
+          status: Database["public"]["Enums"]["catalog_status"]
+          storage_bucket: string | null
+          storage_object_path: string | null
+          version: number
+          width: number
+        }
+        Insert: {
+          alt_text_key?: string | null
+          asset_id: string
+          author: string
+          byte_size: number
+          created_at?: string
+          height: number
+          id?: string
+          is_decorative?: boolean
+          metadata?: Json
+          mime_type: string
+          packaged_path?: string | null
+          source: Database["public"]["Enums"]["official_asset_source"]
+          status?: Database["public"]["Enums"]["catalog_status"]
+          storage_bucket?: string | null
+          storage_object_path?: string | null
+          version: number
+          width: number
+        }
+        Update: {
+          alt_text_key?: string | null
+          asset_id?: string
+          author?: string
+          byte_size?: number
+          created_at?: string
+          height?: number
+          id?: string
+          is_decorative?: boolean
+          metadata?: Json
+          mime_type?: string
+          packaged_path?: string | null
+          source?: Database["public"]["Enums"]["official_asset_source"]
+          status?: Database["public"]["Enums"]["catalog_status"]
+          storage_bucket?: string | null
+          storage_object_path?: string | null
+          version?: number
+          width?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "official_asset_versions_alt_text_key_fkey"
+            columns: ["alt_text_key"]
+            isOneToOne: false
+            referencedRelation: "official_translation_keys"
+            referencedColumns: ["translation_key"]
+          },
+          {
+            foreignKeyName: "official_asset_versions_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "official_assets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      official_assets: {
+        Row: {
+          asset_key: string
+          asset_type: Database["public"]["Enums"]["official_asset_type"]
+          created_at: string
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          asset_key: string
+          asset_type: Database["public"]["Enums"]["official_asset_type"]
+          created_at?: string
+          id?: string
+          updated_at?: string
+        }
+        Update: {
+          asset_key?: string
+          asset_type?: Database["public"]["Enums"]["official_asset_type"]
+          created_at?: string
+          id?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -670,7 +769,7 @@ export type Database = {
           name_key: string | null
           rarity: Database["public"]["Enums"]["reward_rarity"]
           status: Database["public"]["Enums"]["catalog_status"]
-          thumbnail_asset_path: string | null
+          thumbnail_asset_key: string | null
         }
         Insert: {
           catalog_key: string
@@ -679,7 +778,7 @@ export type Database = {
           name_key?: string | null
           rarity: Database["public"]["Enums"]["reward_rarity"]
           status?: Database["public"]["Enums"]["catalog_status"]
-          thumbnail_asset_path?: string | null
+          thumbnail_asset_key?: string | null
         }
         Update: {
           catalog_key?: string
@@ -688,7 +787,7 @@ export type Database = {
           name_key?: string | null
           rarity?: Database["public"]["Enums"]["reward_rarity"]
           status?: Database["public"]["Enums"]["catalog_status"]
-          thumbnail_asset_path?: string | null
+          thumbnail_asset_key?: string | null
         }
         Relationships: []
       }
@@ -845,7 +944,7 @@ export type Database = {
           origin_region: string
           outbound_arrival_at: string
           outbound_start_at: string
-          portrait_asset_path: string
+          portrait_asset_key: string
           return_arrival_at: string
           return_start_at: string
           species_key: string
@@ -882,6 +981,19 @@ export type Database = {
         | "returned"
         | "completed"
       inventory_category: "equipment" | "stamps" | "keepsakes" | "routeMarks"
+      official_asset_source: "packaged" | "storage"
+      official_asset_type:
+        | "mascotPortrait"
+        | "equipmentIcon"
+        | "rewardThumbnail"
+        | "collectibleThumbnail"
+        | "navigationIcon"
+        | "mapControl"
+        | "mapPin"
+        | "currencyIcon"
+        | "shopArtwork"
+        | "texture"
+        | "postalMark"
       reward_rarity: "common" | "uncommon" | "rare"
     }
     CompositeTypes: {
@@ -1025,6 +1137,20 @@ export const Constants = {
         "completed",
       ],
       inventory_category: ["equipment", "stamps", "keepsakes", "routeMarks"],
+      official_asset_source: ["packaged", "storage"],
+      official_asset_type: [
+        "mascotPortrait",
+        "equipmentIcon",
+        "rewardThumbnail",
+        "collectibleThumbnail",
+        "navigationIcon",
+        "mapControl",
+        "mapPin",
+        "currencyIcon",
+        "shopArtwork",
+        "texture",
+        "postalMark",
+      ],
       reward_rarity: ["common", "uncommon", "rare"],
     },
   },
