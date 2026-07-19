@@ -177,7 +177,7 @@ export function TravelMapPage() {
       reward.id,
       reward.discovered
         ? t(reward.titleKey)
-        : `${t("map.futureReward")}: ${reward.regionLabel}`,
+        : `${t("map.futureReward")}: ${t(reward.regionLabel as TranslationKey)}`,
     ])),
     [rewards, t],
   );
@@ -604,7 +604,7 @@ function CargoSummary({
         <div className={styles.cargoGrid}>
           {rewards.map((reward) => (
             <ItemCard
-              description={`${t(`map.rewardKinds.${reward.kind}`)} · ${reward.regionLabel}`}
+              description={`${t(`map.rewardKinds.${reward.kind}`)} · ${t(reward.regionLabel as TranslationKey)}`}
               key={reward.id}
               label={t(`equipment.rarity.${reward.rarity}`)}
               meta={t("map.visualCargo")}
@@ -1026,7 +1026,7 @@ function RewardDiscoveryCard({
         <span>{reward.discovered ? t(reward.descriptionKey) : t("map.futureRewardHint")}</span>
         <small>{reward.discovered
           ? `${t(`map.rewardKinds.${reward.kind}`)} / ${t(getDiscoveryStateKey(visualState))}`
-          : `${t("map.approximateRegion")}: ${reward.regionLabel}`}</small>
+          : `${t("map.approximateRegion")}: ${t(reward.regionLabel as TranslationKey)}`}</small>
       </span>
     </button>
   );
@@ -1058,7 +1058,7 @@ function RewardDetails({ reward, visualState }: { reward: RouteRewardDiscovery; 
             <SummaryRow label={t("map.rarity")} value={t(`equipment.rarity.${reward.rarity}`)} />
           </>
         ) : null}
-        <SummaryRow label={t("map.approximateRegion")} value={reward.regionLabel} />
+        <SummaryRow label={t("map.approximateRegion")} value={t(reward.regionLabel as TranslationKey)} />
       </dl>
     </article>
   );

@@ -339,6 +339,13 @@ export const ptBR = {
     messengerFalcon: "Falcão-mensageiro",
     mailDuck: "Pato-correio",
   },
+  archetypes: {
+    suggestedNames: {
+      nuvem: "Nuvem",
+      trovao: "Trovão",
+      pipoca: "Pipoca",
+    },
+  },
   traits: {
     steadyRoute: {
       name: "Rota Segura",
@@ -556,6 +563,10 @@ export const ptBR = {
   },
   locations: {
     londrina: "Londrina",
+    cambe: "Cambé",
+    rolandia: "Rolândia",
+    arapongas: "Arapongas",
+    apucarana: "Apucarana",
     maringa: "Maringá",
     beloHorizonte: "Belo Horizonte",
     salvador: "Salvador",

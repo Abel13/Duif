@@ -6,7 +6,7 @@ import {
   type RouteRewardDiscovery,
 } from "../../game";
 import { mapDeliveryRowToDelivery, type DeliveryRow } from "./authenticatedMascots";
-import { readString, readTranslationKey } from "./catalogMappers";
+import { requireTranslationKey } from "./catalogMappers";
 import { getSupabaseClient } from "./client";
 import type { Database, Json } from "./database.types";
 import { mapInventoryItemRow, type InventoryItemRow } from "./inventoryMappers";
@@ -17,7 +17,7 @@ export type DeliveryRouteDiscoveryRow = Database["public"]["Tables"]["delivery_r
 export type RouteRewardPointRow = Database["public"]["Tables"]["route_reward_points"]["Row"];
 export type PlayerMascotRouteRow = Pick<
   Database["public"]["Tables"]["player_mascots"]["Row"],
-  "id" | "mock_key"
+  "id"
 >;
 
 export type AuthenticatedRewardCollection = {
@@ -68,9 +68,9 @@ function isUuid(value: string) {
 
 export function mapRewardItemRowToRewardItem(row: RewardItemRow): RewardItem {
   return {
-    descriptionKey: readTranslationKey(row.description_key, "rewards.items.wornRouteStamp.description"),
-    id: readString(row.mock_key, row.id),
-    nameKey: readTranslationKey(row.name_key, "rewards.items.wornRouteStamp.name"),
+    descriptionKey: requireTranslationKey(row.description_key, "reward description key"),
+    id: row.id,
+    nameKey: requireTranslationKey(row.name_key, "reward name key"),
     rarity: row.rarity,
     thumbnailAssetPath: row.thumbnail_asset_path ?? undefined,
   };
@@ -84,8 +84,8 @@ export function mapDeliveryRewardRowToReward({
   rewardRow: DeliveryRewardRow;
 }): DeliveryReward {
   return {
-    deliveryId: readString(rewardRow.mock_key, rewardRow.delivery_id),
-    id: readString(rewardRow.mock_key, rewardRow.id),
+    deliveryId: rewardRow.delivery_id,
+    id: rewardRow.id,
     item: mapRewardItemRowToRewardItem(itemRow),
     xpGained: rewardRow.xp_gained,
   };
@@ -102,17 +102,17 @@ export function mapPersistedRouteDiscovery({
 }): RouteRewardDiscovery {
   return {
     coordinates: { latitude: pointRow.latitude, longitude: pointRow.longitude },
-    descriptionKey: readTranslationKey(pointRow.description_key, "map.rewards.londrinaPostcard.description"),
+    descriptionKey: requireTranslationKey(pointRow.description_key, "route point description key"),
     discovered: false,
     distanceFromRouteKm: discoveryRow.distance_from_route_km,
-    id: readString(pointRow.mock_key, discoveryRow.id),
+    id: discoveryRow.id,
     kind: readRouteRewardKind(pointRow.kind),
     rarity: itemRow.rarity,
     regionKind: readRouteRegionKind(pointRow.region_kind),
-    regionLabel: pointRow.region_label,
+    regionLabel: requireTranslationKey(pointRow.region_label_key, "route region key"),
     routeProgress: discoveryRow.route_progress,
     thumbnailAssetPath: itemRow.thumbnail_asset_path ?? undefined,
-    titleKey: readTranslationKey(pointRow.title_key, "map.rewards.londrinaPostcard.name"),
+    titleKey: requireTranslationKey(pointRow.title_key, "route point title key"),
   };
 }
 
@@ -167,16 +167,17 @@ export function mapCollectRewardPayload(
 }
 
 function readRouteRewardKind(value: string): RouteRewardDiscovery["kind"] {
-  return value === "badge" || value === "postcard" || value === "stamp" ||
+  if (value === "badge" || value === "postcard" || value === "stamp" ||
     value === "souvenir" || value === "material" || value === "eventItem"
-    ? value
-    : "souvenir";
+  ) return value;
+  throw new Error(`Invalid route reward kind: ${value}`);
 }
 
 function readRouteRegionKind(value: string): RouteRewardDiscovery["regionKind"] {
-  return value === "city" || value === "state" || value === "country" || value === "event"
-    ? value
-    : "country";
+  if (value === "city" || value === "state" || value === "country" || value === "event") {
+    return value;
+  }
+  throw new Error(`Invalid route region kind: ${value}`);
 }
 
 async function fetchDeliveryByPublicId(deliveryId: string) {
@@ -186,10 +187,8 @@ async function fetchDeliveryByPublicId(deliveryId: string) {
     return undefined;
   }
 
-  const query = supabase.from("deliveries").select("*").limit(1);
-  const { data } = isUuid(deliveryId)
-    ? await query.or(`id.eq.${deliveryId},mock_key.eq.${deliveryId}`).maybeSingle()
-    : await query.eq("mock_key", deliveryId).maybeSingle();
+  if (!isUuid(deliveryId)) return undefined;
+  const { data } = await supabase.from("deliveries").select("*").eq("id", deliveryId).maybeSingle();
 
   return data ?? undefined;
 }
@@ -203,11 +202,11 @@ async function fetchMascotPublicId(mascotId: string) {
 
   const { data } = await supabase
     .from("player_mascots")
-    .select("id, mock_key")
+    .select("id")
     .eq("id", mascotId)
     .maybeSingle();
 
-  return data?.mock_key ?? data?.id;
+  return data?.id;
 }
 
 async function fetchPersistedRouteDiscoveries(
@@ -263,7 +262,8 @@ export async function fetchAuthenticatedRewardCollection(
     return undefined;
   }
 
-  const mascotPublicId = (await fetchMascotPublicId(deliveryRow.mascot_id)) ?? "mascot-nuvem";
+  const mascotPublicId = await fetchMascotPublicId(deliveryRow.mascot_id);
+  if (!mascotPublicId) return undefined;
   const delivery = mapDeliveryRowToDelivery(deliveryRow, mascotPublicId);
 
   const [{ data: rewardRow }, { count: inventoryCount }, routeDiscoveries] = await Promise.all([
@@ -313,7 +313,7 @@ export async function collectAuthenticatedReward({
   }
 
   const { data, error } = await supabase.rpc("collect_delivery_reward", {
-    delivery_public_id: deliveryId,
+    delivery_id: deliveryId,
   });
 
   if (error || !data) {

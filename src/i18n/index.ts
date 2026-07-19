@@ -39,6 +39,31 @@ function readKey(dictionary: TranslationDictionary, key: TranslationKey) {
   return typeof value === "string" ? value : undefined;
 }
 
+function flattenTranslationKeys(
+  value: unknown,
+  prefix = "",
+): string[] {
+  if (typeof value === "string") {
+    return prefix ? [prefix] : [];
+  }
+  if (typeof value !== "object" || value === null || Array.isArray(value)) {
+    return [];
+  }
+  return Object.entries(value).flatMap(([key, child]) =>
+    flattenTranslationKeys(child, prefix ? `${prefix}.${key}` : key),
+  );
+}
+
+export function getTranslationManifest(locale: Locale): readonly string[] {
+  return flattenTranslationKeys(dictionaries[locale]).sort();
+}
+
+export function hasTranslationInEveryLocale(key: string): key is TranslationKey {
+  return supportedLocales.every((locale) =>
+    Boolean(readKey(dictionaries[locale], key as TranslationKey)),
+  );
+}
+
 export function translate(key: TranslationKey, locale: Locale = DEFAULT_LOCALE) {
   const translatedValue =
     readKey(dictionaries[locale], key) ?? readKey(dictionaries[DEFAULT_LOCALE], key);

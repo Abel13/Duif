@@ -8,7 +8,11 @@ import {
 import { getSupabaseClient } from "./client";
 import type { Database } from "./database.types";
 
-type TrafficRow = Database["public"]["Functions"]["get_nearby_postal_traffic"]["Returns"][number];
+type GeneratedTrafficRow = Database["public"]["Functions"]["get_nearby_postal_traffic"]["Returns"][number];
+type TrafficRow = Omit<GeneratedTrafficRow, "friend_id" | "friend_name"> & {
+  friend_id: string | null;
+  friend_name: string | null;
+};
 const fallbackRegionKey = "postalTraffic.regions.paranaBrazil" as TranslationKey;
 
 export async function fetchAuthenticatedPostalTraffic(

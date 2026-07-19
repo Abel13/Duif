@@ -1,205 +1,95 @@
 import type { TranslationKey } from "../../i18n";
-import { getMascotById, starterMascots } from "../../game/mockData";
 import type {
-  EquipmentItem,
-  EquipmentRarity,
-  EquipmentType,
-  Mascot,
-  MascotAppearance,
-  MascotAttributeSet,
-  MascotTrait,
-  Skill,
+  EquipmentItem, EquipmentRarity, EquipmentType, MascotAppearance, MascotArchetype,
+  MascotAttributeSet, MascotTrait, Skill,
 } from "../../game/types";
 import type { Database, Json } from "./database.types";
 
-export const STARTER_MASCOT_IDS = [
-  "mascot-nuvem",
-  "mascot-trovao",
-  "mascot-pipoca",
-] as const;
-
+export const STARTER_MASCOT_IDS = ["mascot-nuvem", "mascot-trovao", "mascot-pipoca"] as const;
 export type StarterMascotId = (typeof STARTER_MASCOT_IDS)[number];
 export type MascotTemplateRow = Database["public"]["Tables"]["mascot_templates"]["Row"];
 
-const equipmentTypes = new Set<EquipmentType>(["bag", "scarf", "cap", "badge", "goggles", "charm"]);
-const rarities = new Set<EquipmentRarity>(["common", "uncommon", "rare"]);
-const traitEffects = new Set<MascotTrait["effect"]>([
-  "rareFind",
-  "fastReturn",
-  "deliveryReward",
-  "eventDiscovery",
-  "friendshipBonus",
-]);
+const equipmentTypes = new Set<EquipmentType>(["bag","scarf","cap","badge","goggles","charm"]);
+const rarities = new Set<EquipmentRarity>(["common","uncommon","rare"]);
+const traitEffects = new Set<MascotTrait["effect"]>(["rareFind","fastReturn","deliveryReward","eventDiscovery","friendshipBonus"]);
 
-function isRecord(value: Json | unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
+export class CatalogContractError extends Error {}
+
+function record(value: Json | unknown, label: string): Record<string, unknown> {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) throw new CatalogContractError(`Invalid ${label}`);
+  return value as Record<string, unknown>;
 }
-
+export function requireString(value: unknown, label: string) {
+  if (typeof value !== "string" || value.trim().length === 0) throw new CatalogContractError(`Invalid ${label}`);
+  return value;
+}
 export function readString(value: unknown, fallback: string) {
   return typeof value === "string" && value.trim().length > 0 ? value : fallback;
 }
-
 export function readNumber(value: unknown, fallback: number) {
   return typeof value === "number" && Number.isFinite(value) ? value : fallback;
 }
-
-export function readBoolean(value: unknown, fallback: boolean) {
-  return typeof value === "boolean" ? value : fallback;
-}
-
 export function readTranslationKey(value: unknown, fallback: TranslationKey) {
   return readString(value, fallback) as TranslationKey;
 }
-
-export function mapAttributes(value: Json, fallback: MascotAttributeSet): MascotAttributeSet {
-  if (!isRecord(value)) {
-    return fallback;
-  }
-
-  return {
-    luck: readNumber(value.luck, fallback.luck),
-    orientation: readNumber(value.orientation, fallback.orientation),
-    speed: readNumber(value.speed, fallback.speed),
-    stamina: readNumber(value.stamina, fallback.stamina),
+export function requireTranslationKey(value: unknown, label: string) {
+  return requireString(value, label) as TranslationKey;
+}
+export function mapAttributes(value: Json, fallback?: MascotAttributeSet): MascotAttributeSet {
+  const item = record(value,"attributes");
+  const number = (key: keyof MascotAttributeSet) => {
+    const candidate=item[key];
+    if(typeof candidate!=="number"||!Number.isFinite(candidate)) {
+      if(fallback) return fallback[key];
+      throw new CatalogContractError(`Invalid attribute ${key}`);
+    }
+    return candidate;
   };
+  return {speed:number("speed"),stamina:number("stamina"),orientation:number("orientation"),luck:number("luck")};
 }
-
-export function mapTrait(value: Json, fallback: MascotTrait): MascotTrait {
-  if (!isRecord(value)) {
-    return fallback;
+export function mapTrait(value: Json, fallback?: MascotTrait): MascotTrait {
+  const item=record(value,"trait"); const effect=requireString(item.effect,"trait effect");
+  if(!traitEffects.has(effect as MascotTrait["effect"])) {
+    if(fallback) return fallback;
+    throw new CatalogContractError("Invalid trait effect");
   }
-
-  const effect = readString(value.effect, fallback.effect);
-
-  return {
-    descriptionKey: readTranslationKey(value.descriptionKey, fallback.descriptionKey),
-    effect: traitEffects.has(effect as MascotTrait["effect"])
-      ? (effect as MascotTrait["effect"])
-      : fallback.effect,
-    id: readString(value.id, fallback.id),
-    nameKey: readTranslationKey(value.nameKey, fallback.nameKey),
-  };
+  return {id:requireString(item.id,"trait id"),nameKey:requireTranslationKey(item.nameKey,"trait name key"),
+    descriptionKey:requireTranslationKey(item.descriptionKey,"trait description key"),effect:effect as MascotTrait["effect"]};
 }
-
-function mapEquipmentItem(value: unknown, fallback?: EquipmentItem): EquipmentItem | undefined {
-  if (!isRecord(value)) {
-    return fallback;
-  }
-
-  const type = readString(value.type, fallback?.type ?? "bag");
-  const rarity = readString(value.rarity, fallback?.rarity ?? "common");
-
-  return {
-    descriptionKey:
-      typeof value.descriptionKey === "string"
-        ? (value.descriptionKey as TranslationKey)
-        : fallback?.descriptionKey,
-    equipped: readBoolean(value.equipped, fallback?.equipped ?? false),
-    iconAssetPath:
-      typeof value.iconAssetPath === "string" ? value.iconAssetPath : fallback?.iconAssetPath,
-    id: readString(value.id, fallback?.id ?? "equipment-fallback"),
-    nameKey: readTranslationKey(value.nameKey, fallback?.nameKey ?? "equipment.canvasPostalBag.name"),
-    rarity: rarities.has(rarity as EquipmentRarity) ? (rarity as EquipmentRarity) : "common",
-    type: equipmentTypes.has(type as EquipmentType) ? (type as EquipmentType) : "bag",
-  };
+function mapEquipmentItem(value:unknown):EquipmentItem {
+  const item=record(value,"equipment"); const type=requireString(item.type,"equipment type"); const rarity=requireString(item.rarity,"equipment rarity");
+  if(!equipmentTypes.has(type as EquipmentType)||!rarities.has(rarity as EquipmentRarity)) throw new CatalogContractError("Invalid equipment contract");
+  return {id:requireString(item.id,"equipment id"),nameKey:requireTranslationKey(item.nameKey,"equipment name key"),
+    descriptionKey:item.descriptionKey===undefined?undefined:requireTranslationKey(item.descriptionKey,"equipment description key"),
+    type:type as EquipmentType,rarity:rarity as EquipmentRarity,equipped:typeof item.equipped==="boolean"?item.equipped:false,
+    iconAssetPath:typeof item.iconAssetPath==="string"?item.iconAssetPath:undefined};
 }
-
-export function mapEquipment(value: Json, fallback: EquipmentItem[]): EquipmentItem[] {
-  if (!Array.isArray(value)) {
-    return fallback;
-  }
-
-  const mappedEquipment = value
-    .map((item, index) => mapEquipmentItem(item, fallback[index]))
-    .filter((item): item is EquipmentItem => Boolean(item));
-
-  return mappedEquipment.length > 0 ? mappedEquipment : fallback;
+export function mapEquipment(value:Json, fallback?:EquipmentItem[]):EquipmentItem[]{
+  if(!Array.isArray(value)) {if(fallback)return fallback; throw new CatalogContractError("Invalid equipment list");}
+  return value.map(mapEquipmentItem);
 }
-
-function mapSkill(value: unknown, fallback?: Skill): Skill | undefined {
-  if (!isRecord(value)) {
-    return fallback;
-  }
-
-  return {
-    descriptionKey: readTranslationKey(value.descriptionKey, fallback?.descriptionKey ?? "skills.longRoute.description"),
-    id: readString(value.id, fallback?.id ?? "skill-fallback"),
-    level: readNumber(value.level, fallback?.level ?? 1),
-    nameKey: readTranslationKey(value.nameKey, fallback?.nameKey ?? "skills.longRoute.name"),
-  };
+function mapSkill(value:unknown):Skill {const item=record(value,"skill");
+  if(typeof item.level!=="number"||!Number.isFinite(item.level))throw new CatalogContractError("Invalid skill level");
+  return {id:requireString(item.id,"skill id"),nameKey:requireTranslationKey(item.nameKey,"skill name key"),
+    descriptionKey:requireTranslationKey(item.descriptionKey,"skill description key"),level:item.level};}
+export function mapSkills(value:Json,fallback?:Skill[]):Skill[]{
+  if(!Array.isArray(value)){if(fallback)return fallback;throw new CatalogContractError("Invalid skills list");} return value.map(mapSkill);
 }
-
-export function mapSkills(value: Json, fallback: Skill[]): Skill[] {
-  if (!Array.isArray(value)) {
-    return fallback;
-  }
-
-  const mappedSkills = value
-    .map((skill, index) => mapSkill(skill, fallback[index]))
-    .filter((skill): skill is Skill => Boolean(skill));
-
-  return mappedSkills.length > 0 ? mappedSkills : fallback;
+export function mapAppearance(value:Json,fallback?:MascotAppearance):MascotAppearance{
+  const item=record(value,"appearance");
+  return {primaryColor:requireString(item.primaryColor,"primary color"),accentColor:requireString(item.accentColor,"accent color"),
+    portraitPlaceholderKey:requireTranslationKey(item.portraitPlaceholderKey,"portrait key"),
+    portraitAssetPath:typeof item.portraitAssetPath==="string"?item.portraitAssetPath:fallback?.portraitAssetPath};
 }
-
-export function mapAppearance(value: Json, fallback: MascotAppearance): MascotAppearance {
-  if (!isRecord(value)) {
-    return fallback;
-  }
-
-  return {
-    accentColor: readString(value.accentColor, fallback.accentColor),
-    portraitAssetPath:
-      typeof value.portraitAssetPath === "string"
-        ? value.portraitAssetPath
-        : fallback.portraitAssetPath,
-    portraitPlaceholderKey: readTranslationKey(
-      value.portraitPlaceholderKey,
-      fallback.portraitPlaceholderKey,
-    ),
-    primaryColor: readString(value.primaryColor, fallback.primaryColor),
-  };
+export function selectStarterMascotTemplateRows(rows:MascotTemplateRow[]){
+  const ids=new Set<string>(STARTER_MASCOT_IDS); return rows.filter(row=>row.status==="active"&&ids.has(row.catalog_key))
+    .sort((a,b)=>STARTER_MASCOT_IDS.indexOf(a.catalog_key as StarterMascotId)-STARTER_MASCOT_IDS.indexOf(b.catalog_key as StarterMascotId));
 }
-
-export function selectStarterMascotTemplateRows(rows: MascotTemplateRow[]) {
-  const starterIds = new Set<string>(STARTER_MASCOT_IDS);
-
-  return rows
-    .filter((row) => starterIds.has(row.mock_key))
-    .sort(
-      (firstRow, secondRow) =>
-        STARTER_MASCOT_IDS.indexOf(firstRow.mock_key as StarterMascotId) -
-        STARTER_MASCOT_IDS.indexOf(secondRow.mock_key as StarterMascotId),
-    );
+export function mapMascotTemplateRowToArchetype(row:MascotTemplateRow):MascotArchetype{
+  if(row.status!=="active")throw new CatalogContractError("Archetype is not active");
+  return {id:row.id,catalogKey:row.catalog_key,speciesKey:requireTranslationKey(row.species_key,"species key"),
+    suggestedNameKey:requireTranslationKey(row.suggested_name_key,"suggested name key"),baseLevel:row.base_level,baseXp:row.base_xp,
+    nextLevelXp:row.next_level_xp,attributes:mapAttributes(row.attributes),trait:mapTrait(row.trait),equipment:mapEquipment(row.equipment),
+    skills:mapSkills(row.skills),appearance:mapAppearance(row.appearance)};
 }
-
-export function mapMascotTemplateRowToMascot(
-  row: MascotTemplateRow,
-  fallbackMascot = getMascotById(row.mock_key) ?? starterMascots[0],
-): Mascot {
-  return {
-    appearance: mapAppearance(row.appearance, fallbackMascot.appearance),
-    attributes: mapAttributes(row.attributes, fallbackMascot.attributes),
-    currentDelivery: fallbackMascot.currentDelivery,
-    equipment: mapEquipment(row.equipment, fallbackMascot.equipment),
-    id: readString(row.mock_key, fallbackMascot.id),
-    level: readNumber(row.base_level, fallbackMascot.level),
-    name: readString(row.name, fallbackMascot.name),
-    nextLevelXp: readNumber(row.next_level_xp, fallbackMascot.nextLevelXp),
-    skills: mapSkills(row.skills, fallbackMascot.skills),
-    speciesKey: readTranslationKey(row.species_key, fallbackMascot.speciesKey),
-    trait: mapTrait(row.trait, fallbackMascot.trait),
-    xp: readNumber(row.base_xp, fallbackMascot.xp),
-  };
-}
-
-export function mapStarterMascotTemplateRows(rows: MascotTemplateRow[]) {
-  const selectedRows = selectStarterMascotTemplateRows(rows);
-  const rowsById = new Map(selectedRows.map((row) => [row.mock_key, row]));
-
-  return STARTER_MASCOT_IDS.map((mascotId) => {
-    const fallbackMascot = getMascotById(mascotId) ?? starterMascots[0];
-    const row = rowsById.get(mascotId);
-
-    return row ? mapMascotTemplateRowToMascot(row, fallbackMascot) : fallbackMascot;
-  });
-}
+export function mapStarterMascotTemplateRows(rows:MascotTemplateRow[]){return selectStarterMascotTemplateRows(rows).map(mapMascotTemplateRowToArchetype);}

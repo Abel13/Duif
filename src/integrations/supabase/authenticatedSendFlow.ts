@@ -14,7 +14,7 @@ import {
 } from "../../game";
 import type { TranslationKey } from "../../i18n";
 import { getSupabaseClient } from "./client";
-import { readString, readTranslationKey } from "./catalogMappers";
+import { requireTranslationKey } from "./catalogMappers";
 import type { Database } from "./database.types";
 import { fetchAuthenticatedMascots, mapDeliveryRowToDelivery, type DeliveryRow } from "./authenticatedMascots";
 
@@ -27,7 +27,6 @@ export type SanitizedFriendProfileRow = {
   exchange_count: number;
   favorite_note_key: string | null;
   friendship_level: number;
-  mock_key: string | null;
   postal_base_city: string;
   postal_base_country: string;
   postal_base_state: string;
@@ -50,9 +49,9 @@ export type ConfirmedAuthenticatedSend = {
 
 export function mapCorrespondenceOptionRow(row: CorrespondenceOptionRow): CorrespondenceOption {
   return {
-    descriptionKey: readTranslationKey(row.description_key, "correspondence.letter.description"),
-    id: readString(row.mock_key, row.id),
-    nameKey: readTranslationKey(row.name_key, "correspondence.letter.name"),
+    descriptionKey: requireTranslationKey(row.description_key, "correspondence description key"),
+    id: row.catalog_key,
+    nameKey: requireTranslationKey(row.name_key, "correspondence name key"),
     type: row.type,
   };
 }
@@ -64,7 +63,7 @@ export function mapSanitizedFriendProfileRow(row: SanitizedFriendProfileRow): Fr
       ? (row.favorite_note_key as TranslationKey)
       : undefined,
     friendshipLevel: row.friendship_level,
-    id: readString(row.mock_key, row.profile_id),
+    id: row.profile_id,
     location: {
       city: row.postal_base_city,
       country: row.postal_base_country,
@@ -206,7 +205,7 @@ export async function fetchAuthenticatedSendFlowData(
 
   const [{ data: friends }, { data: options }, mascots] = await Promise.all([
     supabase.rpc("get_accepted_friend_profiles"),
-    supabase.from("correspondence_options").select("*").eq("active", true).order("sort_order"),
+    supabase.from("correspondence_options").select("*").eq("status", "active").order("sort_order"),
     fetchAuthenticatedMascots(profileId),
   ]);
 
@@ -239,10 +238,10 @@ export async function createAuthenticatedDeliveryFromSelection({
   }
 
   const { data, error } = await supabase.rpc("create_delivery_from_selection", {
-    correspondence_mock_key: correspondence.id,
+    correspondence_catalog_key: correspondence.id,
     content_payload: createCorrespondenceContentPayload(content),
-    friend_mock_key: friend.id,
-    mascot_mock_key: mascot.id,
+    friend_profile_id: friend.id,
+    mascot_id: mascot.id,
   });
 
   if (error || !data) {

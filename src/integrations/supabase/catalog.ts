@@ -1,5 +1,4 @@
-import { starterMascots } from "../../game/mockData";
-import type { Mascot } from "../../game/types";
+import type { MascotArchetype } from "../../game/types";
 import { getSupabaseClient } from "./client";
 import {
   STARTER_MASCOT_IDS,
@@ -7,21 +6,22 @@ import {
   type MascotTemplateRow,
 } from "./catalogMappers";
 
-export async function fetchStarterMascotCatalog(): Promise<Mascot[]> {
+export async function fetchStarterMascotCatalog(): Promise<MascotArchetype[]> {
   const supabase = getSupabaseClient();
 
   if (!supabase) {
-    return starterMascots;
+    return [];
   }
 
   const { data, error } = await supabase
     .from("mascot_templates")
     .select("*")
-    .in("mock_key", [...STARTER_MASCOT_IDS]);
+    .eq("status", "active")
+    .in("catalog_key", [...STARTER_MASCOT_IDS]);
 
-  if (error || !data || data.length === 0) {
-    return starterMascots;
+  if (error) {
+    throw error;
   }
 
-  return mapStarterMascotTemplateRows(data as MascotTemplateRow[]);
+  return mapStarterMascotTemplateRows((data ?? []) as MascotTemplateRow[]);
 }

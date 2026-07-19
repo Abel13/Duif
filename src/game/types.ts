@@ -13,6 +13,21 @@ export type MascotAttributeSet = {
   luck: number;
 };
 
+export type MascotArchetype = {
+  id: string;
+  catalogKey: string;
+  speciesKey: TranslationKey;
+  suggestedNameKey: TranslationKey;
+  baseLevel: number;
+  baseXp: number;
+  nextLevelXp: number;
+  attributes: MascotAttributeSet;
+  trait: MascotTrait;
+  equipment: EquipmentItem[];
+  skills: Skill[];
+  appearance: MascotAppearance;
+};
+
 export type MascotTrait = {
   id: string;
   nameKey: TranslationKey;

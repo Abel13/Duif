@@ -331,6 +331,13 @@ export type TranslationDictionary = {
     messengerFalcon: string;
     mailDuck: string;
   };
+  archetypes: {
+    suggestedNames: {
+      nuvem: string;
+      trovao: string;
+      pipoca: string;
+    };
+  };
   traits: {
     steadyRoute: {
       name: string;
@@ -524,6 +531,10 @@ export type TranslationDictionary = {
   };
   locations: {
     londrina: string;
+    cambe: string;
+    rolandia: string;
+    arapongas: string;
+    apucarana: string;
     maringa: string;
     beloHorizonte: string;
     salvador: string;
@@ -1015,12 +1026,19 @@ export type TranslationKey =
   | "locations.saoPaulo"
   | "locations.lisbon"
   | "locations.londrina"
+  | "locations.cambe"
+  | "locations.rolandia"
+  | "locations.arapongas"
+  | "locations.apucarana"
   | "locations.maringa"
   | "locations.beloHorizonte"
   | "locations.salvador"
   | "locations.rioBranco"
   | "locations.curitiba"
   | "locations.toronto"
+  | "archetypes.suggestedNames.nuvem"
+  | "archetypes.suggestedNames.trovao"
+  | "archetypes.suggestedNames.pipoca"
   | "friends.eyebrow"
   | "friends.title"
   | "friends.subtitle"

@@ -1,0 +1,43 @@
+import type { TranslationKey } from "./types";
+
+/** Keys referenced by active official catalog records in the database. */
+export const OFFICIAL_TRANSLATION_KEYS = [
+  "species.carrierPigeon", "species.messengerFalcon", "species.mailDuck",
+  "archetypes.suggestedNames.nuvem", "archetypes.suggestedNames.trovao",
+  "archetypes.suggestedNames.pipoca",
+  "traits.steadyRoute.name", "traits.steadyRoute.description",
+  "traits.directFlight.name", "traits.directFlight.description",
+  "traits.curiousFinder.name", "traits.curiousFinder.description",
+  "equipment.canvasPostalBag.name", "equipment.canvasPostalBag.description",
+  "equipment.blueRouteScarf.name", "equipment.blueRouteScarf.description",
+  "equipment.flightGoggles.name", "equipment.flightGoggles.description",
+  "equipment.urgentBadge.name", "equipment.urgentBadge.description",
+  "equipment.travelCap.name", "equipment.travelCap.description",
+  "equipment.featherCharm.name", "equipment.featherCharm.description",
+  "equipment.smallSatchel.name", "equipment.smallSatchel.description",
+  "skills.longRoute.name", "skills.longRoute.description",
+  "skills.softLanding.name", "skills.softLanding.description",
+  "skills.quickDispatch.name", "skills.quickDispatch.description",
+  "skills.crosswindInstinct.name", "skills.crosswindInstinct.description",
+  "skills.shinyThing.name", "skills.shinyThing.description",
+  "skills.happyDetour.name", "skills.happyDetour.description",
+  "appearance.nuvemPortrait", "appearance.trovaoPortrait", "appearance.pipocaPortrait",
+  "correspondence.letter.name", "correspondence.letter.description",
+  "correspondence.postcard.name", "correspondence.postcard.description",
+  "correspondence.sticker.name", "correspondence.sticker.description",
+  "correspondence.smallGift.name", "correspondence.smallGift.description",
+  "rewards.items.wornRouteStamp.name", "rewards.items.wornRouteStamp.description",
+  "rewards.items.blueAirmailLabel.name", "rewards.items.blueAirmailLabel.description",
+  "rewards.items.goldenCompassPin.name", "rewards.items.goldenCompassPin.description",
+  "map.rewards.londrinaPostcard.name", "map.rewards.londrinaPostcard.description",
+  "map.rewards.cambeSouvenir.name", "map.rewards.cambeSouvenir.description",
+  "map.rewards.rolandiaBadge.name", "map.rewards.rolandiaBadge.description",
+  "map.rewards.arapongasMaterial.name", "map.rewards.arapongasMaterial.description",
+  "map.rewards.apucaranaStamp.name", "map.rewards.apucaranaStamp.description",
+  "map.rewards.maringaEvent.name", "map.rewards.maringaEvent.description",
+  "locations.londrina", "locations.cambe", "locations.rolandia",
+  "locations.arapongas", "locations.apucarana", "locations.maringa",
+  "inventory.sources.routeReward",
+] as const satisfies readonly TranslationKey[];
+
+export type OfficialTranslationKey = (typeof OFFICIAL_TRANSLATION_KEYS)[number];

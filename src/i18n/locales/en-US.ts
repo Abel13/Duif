@@ -338,6 +338,13 @@ export const enUS = {
     messengerFalcon: "Messenger falcon",
     mailDuck: "Mail duck",
   },
+  archetypes: {
+    suggestedNames: {
+      nuvem: "Cloud",
+      trovao: "Thunder",
+      pipoca: "Popcorn",
+    },
+  },
   traits: {
     steadyRoute: {
       name: "Steady Route",
@@ -555,6 +562,10 @@ export const enUS = {
   },
   locations: {
     londrina: "Londrina",
+    cambe: "Cambé",
+    rolandia: "Rolândia",
+    arapongas: "Arapongas",
+    apucarana: "Apucarana",
     maringa: "Maringá",
     beloHorizonte: "Belo Horizonte",
     salvador: "Salvador",

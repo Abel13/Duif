@@ -34,62 +34,32 @@ export type Database = {
   }
   public: {
     Tables: {
-      player_data_reset_audit: {
-        Row: {
-          backup_identifier: string
-          deleted_counts: Json
-          environment: string
-          executed_at: string
-          id: number
-          operator_label: string
-          project_ref: string
-        }
-        Insert: {
-          backup_identifier: string
-          deleted_counts: Json
-          environment: string
-          executed_at?: string
-          id?: never
-          operator_label: string
-          project_ref: string
-        }
-        Update: {
-          backup_identifier?: string
-          deleted_counts?: Json
-          environment?: string
-          executed_at?: string
-          id?: never
-          operator_label?: string
-          project_ref?: string
-        }
-        Relationships: []
-      }
       correspondence_options: {
         Row: {
-          active: boolean
-          description_key: string
+          catalog_key: string
+          description_key: string | null
           id: string
-          mock_key: string
-          name_key: string
+          name_key: string | null
           sort_order: number
+          status: Database["public"]["Enums"]["catalog_status"]
           type: Database["public"]["Enums"]["correspondence_type"]
         }
         Insert: {
-          active?: boolean
-          description_key: string
+          catalog_key: string
+          description_key?: string | null
           id: string
-          mock_key: string
-          name_key: string
+          name_key?: string | null
           sort_order?: number
+          status?: Database["public"]["Enums"]["catalog_status"]
           type: Database["public"]["Enums"]["correspondence_type"]
         }
         Update: {
-          active?: boolean
-          description_key?: string
+          catalog_key?: string
+          description_key?: string | null
           id?: string
-          mock_key?: string
-          name_key?: string
+          name_key?: string | null
           sort_order?: number
+          status?: Database["public"]["Enums"]["catalog_status"]
           type?: Database["public"]["Enums"]["correspondence_type"]
         }
         Relationships: []
@@ -105,7 +75,6 @@ export type Database = {
           distance_km: number
           id: string
           mascot_id: string
-          mock_key: string | null
           origin_label_key: string
           origin_latitude: number
           origin_longitude: number
@@ -131,7 +100,6 @@ export type Database = {
           distance_km: number
           id: string
           mascot_id: string
-          mock_key?: string | null
           origin_label_key: string
           origin_latitude: number
           origin_longitude: number
@@ -157,7 +125,6 @@ export type Database = {
           distance_km?: number
           id?: string
           mascot_id?: string
-          mock_key?: string | null
           origin_label_key?: string
           origin_latitude?: number
           origin_longitude?: number
@@ -251,6 +218,48 @@ export type Database = {
           },
         ]
       }
+      delivery_rewards: {
+        Row: {
+          collected_at: string | null
+          created_at: string
+          delivery_id: string
+          id: string
+          reward_item_id: string
+          xp_gained: number
+        }
+        Insert: {
+          collected_at?: string | null
+          created_at?: string
+          delivery_id: string
+          id: string
+          reward_item_id: string
+          xp_gained: number
+        }
+        Update: {
+          collected_at?: string | null
+          created_at?: string
+          delivery_id?: string
+          id?: string
+          reward_item_id?: string
+          xp_gained?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "delivery_rewards_delivery_id_fkey"
+            columns: ["delivery_id"]
+            isOneToOne: true
+            referencedRelation: "deliveries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "delivery_rewards_reward_item_id_fkey"
+            columns: ["reward_item_id"]
+            isOneToOne: false
+            referencedRelation: "reward_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       delivery_route_discoveries: {
         Row: {
           collected_at: string | null
@@ -316,51 +325,6 @@ export type Database = {
           },
         ]
       }
-      delivery_rewards: {
-        Row: {
-          collected_at: string | null
-          created_at: string
-          delivery_id: string
-          id: string
-          mock_key: string | null
-          reward_item_id: string
-          xp_gained: number
-        }
-        Insert: {
-          collected_at?: string | null
-          created_at?: string
-          delivery_id: string
-          id: string
-          mock_key?: string | null
-          reward_item_id: string
-          xp_gained: number
-        }
-        Update: {
-          collected_at?: string | null
-          created_at?: string
-          delivery_id?: string
-          id?: string
-          mock_key?: string | null
-          reward_item_id?: string
-          xp_gained?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "delivery_rewards_delivery_id_fkey"
-            columns: ["delivery_id"]
-            isOneToOne: true
-            referencedRelation: "deliveries"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "delivery_rewards_reward_item_id_fkey"
-            columns: ["reward_item_id"]
-            isOneToOne: false
-            referencedRelation: "reward_items"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       friendships: {
         Row: {
           addressee_profile_id: string
@@ -369,7 +333,6 @@ export type Database = {
           favorite_note_key: string | null
           friendship_level: number
           id: string
-          mock_key: string | null
           requester_profile_id: string
           status: string
           updated_at: string
@@ -381,7 +344,6 @@ export type Database = {
           favorite_note_key?: string | null
           friendship_level?: number
           id: string
-          mock_key?: string | null
           requester_profile_id: string
           status?: string
           updated_at?: string
@@ -393,7 +355,6 @@ export type Database = {
           favorite_note_key?: string | null
           friendship_level?: number
           id?: string
-          mock_key?: string | null
           requester_profile_id?: string
           status?: string
           updated_at?: string
@@ -420,10 +381,10 @@ export type Database = {
           category: Database["public"]["Enums"]["inventory_category"]
           collected_at: string
           created_at: string
+          delivery_reward_id: string | null
           description_key: string
           equipped: boolean
           id: string
-          mock_key: string | null
           name_key: string
           owner_profile_id: string
           rarity: Database["public"]["Enums"]["reward_rarity"]
@@ -435,10 +396,10 @@ export type Database = {
           category: Database["public"]["Enums"]["inventory_category"]
           collected_at?: string
           created_at?: string
+          delivery_reward_id?: string | null
           description_key: string
           equipped?: boolean
           id: string
-          mock_key?: string | null
           name_key: string
           owner_profile_id: string
           rarity: Database["public"]["Enums"]["reward_rarity"]
@@ -450,10 +411,10 @@ export type Database = {
           category?: Database["public"]["Enums"]["inventory_category"]
           collected_at?: string
           created_at?: string
+          delivery_reward_id?: string | null
           description_key?: string
           equipped?: boolean
           id?: string
-          mock_key?: string | null
           name_key?: string
           owner_profile_id?: string
           rarity?: Database["public"]["Enums"]["reward_rarity"]
@@ -462,6 +423,13 @@ export type Database = {
           thumbnail_asset_path?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "inventory_items_delivery_reward_id_fkey"
+            columns: ["delivery_reward_id"]
+            isOneToOne: true
+            referencedRelation: "delivery_rewards"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "inventory_items_owner_profile_id_fkey"
             columns: ["owner_profile_id"]
@@ -484,14 +452,15 @@ export type Database = {
           attributes: Json
           base_level: number
           base_xp: number
+          catalog_key: string
           created_at: string
           equipment: Json
           id: string
-          mock_key: string
-          name: string
           next_level_xp: number
           skills: Json
-          species_key: string
+          species_key: string | null
+          status: Database["public"]["Enums"]["catalog_status"]
+          suggested_name_key: string | null
           trait: Json
         }
         Insert: {
@@ -499,14 +468,15 @@ export type Database = {
           attributes: Json
           base_level?: number
           base_xp?: number
+          catalog_key: string
           created_at?: string
           equipment?: Json
           id: string
-          mock_key: string
-          name: string
           next_level_xp: number
           skills?: Json
-          species_key: string
+          species_key?: string | null
+          status?: Database["public"]["Enums"]["catalog_status"]
+          suggested_name_key?: string | null
           trait: Json
         }
         Update: {
@@ -514,15 +484,67 @@ export type Database = {
           attributes?: Json
           base_level?: number
           base_xp?: number
+          catalog_key?: string
           created_at?: string
           equipment?: Json
           id?: string
-          mock_key?: string
-          name?: string
           next_level_xp?: number
           skills?: Json
-          species_key?: string
+          species_key?: string | null
+          status?: Database["public"]["Enums"]["catalog_status"]
+          suggested_name_key?: string | null
           trait?: Json
+        }
+        Relationships: []
+      }
+      official_translation_keys: {
+        Row: {
+          created_at: string
+          has_en_us: boolean
+          has_pt_br: boolean
+          translation_key: string
+        }
+        Insert: {
+          created_at?: string
+          has_en_us?: boolean
+          has_pt_br?: boolean
+          translation_key: string
+        }
+        Update: {
+          created_at?: string
+          has_en_us?: boolean
+          has_pt_br?: boolean
+          translation_key?: string
+        }
+        Relationships: []
+      }
+      player_data_reset_audit: {
+        Row: {
+          backup_identifier: string
+          deleted_counts: Json
+          environment: string
+          executed_at: string
+          id: number
+          operator_label: string
+          project_ref: string
+        }
+        Insert: {
+          backup_identifier: string
+          deleted_counts: Json
+          environment: string
+          executed_at?: string
+          id?: never
+          operator_label: string
+          project_ref: string
+        }
+        Update: {
+          backup_identifier?: string
+          deleted_counts?: Json
+          environment?: string
+          executed_at?: string
+          id?: never
+          operator_label?: string
+          project_ref?: string
         }
         Relationships: []
       }
@@ -534,7 +556,6 @@ export type Database = {
           equipment: Json
           id: string
           level: number
-          mock_key: string | null
           name: string
           next_level_xp: number
           owner_profile_id: string
@@ -551,7 +572,6 @@ export type Database = {
           equipment?: Json
           id: string
           level: number
-          mock_key?: string | null
           name: string
           next_level_xp: number
           owner_profile_id: string
@@ -568,7 +588,6 @@ export type Database = {
           equipment?: Json
           id?: string
           level?: number
-          mock_key?: string | null
           name?: string
           next_level_xp?: number
           owner_profile_id?: string
@@ -604,7 +623,6 @@ export type Database = {
           home_latitude: number
           home_longitude: number
           id: string
-          mock_key: string | null
           postal_base_city: string
           postal_base_country: string
           postal_base_neighborhood: string
@@ -620,7 +638,6 @@ export type Database = {
           home_latitude: number
           home_longitude: number
           id: string
-          mock_key?: string | null
           postal_base_city: string
           postal_base_country: string
           postal_base_neighborhood: string
@@ -636,7 +653,6 @@ export type Database = {
           home_latitude?: number
           home_longitude?: number
           id?: string
-          mock_key?: string | null
           postal_base_city?: string
           postal_base_country?: string
           postal_base_neighborhood?: string
@@ -648,82 +664,85 @@ export type Database = {
       }
       reward_items: {
         Row: {
-          description_key: string
+          catalog_key: string
+          description_key: string | null
           id: string
-          mock_key: string
-          name_key: string
+          name_key: string | null
           rarity: Database["public"]["Enums"]["reward_rarity"]
+          status: Database["public"]["Enums"]["catalog_status"]
           thumbnail_asset_path: string | null
         }
         Insert: {
-          description_key: string
+          catalog_key: string
+          description_key?: string | null
           id: string
-          mock_key: string
-          name_key: string
+          name_key?: string | null
           rarity: Database["public"]["Enums"]["reward_rarity"]
+          status?: Database["public"]["Enums"]["catalog_status"]
           thumbnail_asset_path?: string | null
         }
         Update: {
-          description_key?: string
+          catalog_key?: string
+          description_key?: string | null
           id?: string
-          mock_key?: string
-          name_key?: string
+          name_key?: string | null
           rarity?: Database["public"]["Enums"]["reward_rarity"]
+          status?: Database["public"]["Enums"]["catalog_status"]
           thumbnail_asset_path?: string | null
         }
         Relationships: []
       }
       route_reward_points: {
         Row: {
-          active: boolean
+          catalog_key: string
           created_at: string
-          description_key: string
+          description_key: string | null
           eligibility_radius_km: number
           id: string
           inventory_category: Database["public"]["Enums"]["inventory_category"]
           kind: string
           latitude: number
           longitude: number
-          mock_key: string
           region_kind: string
-          region_label: string
+          region_label_key: string | null
           reward_item_id: string
           sort_order: number
-          title_key: string
+          status: Database["public"]["Enums"]["catalog_status"]
+          title_key: string | null
         }
         Insert: {
-          active?: boolean
+          catalog_key: string
           created_at?: string
-          description_key: string
+          description_key?: string | null
           eligibility_radius_km: number
           id: string
           inventory_category: Database["public"]["Enums"]["inventory_category"]
           kind: string
           latitude: number
           longitude: number
-          mock_key: string
           region_kind: string
-          region_label: string
+          region_label_key?: string | null
           reward_item_id: string
           sort_order?: number
-          title_key: string
+          status?: Database["public"]["Enums"]["catalog_status"]
+          title_key?: string | null
         }
         Update: {
-          active?: boolean
+          catalog_key?: string
           created_at?: string
-          description_key?: string
+          description_key?: string | null
           eligibility_radius_km?: number
           id?: string
           inventory_category?: Database["public"]["Enums"]["inventory_category"]
           kind?: string
           latitude?: number
           longitude?: number
-          mock_key?: string
           region_kind?: string
-          region_label?: string
+          region_label_key?: string | null
           reward_item_id?: string
           sort_order?: number
-          title_key?: string
+          status?: Database["public"]["Enums"]["catalog_status"]
+          title_key?: string | null
         }
         Relationships: [
           {
@@ -740,16 +759,13 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      collect_delivery_reward: {
-        Args: { delivery_public_id: string }
-        Returns: Json
-      }
+      collect_delivery_reward: { Args: { delivery_id: string }; Returns: Json }
       create_delivery_from_selection: {
         Args: {
           content_payload: Json
-          correspondence_mock_key: string
-          friend_mock_key: string
-          mascot_mock_key: string
+          correspondence_catalog_key: string
+          friend_profile_id: string
+          mascot_id: string
         }
         Returns: {
           animal_speed_kmh: number
@@ -761,7 +777,6 @@ export type Database = {
           distance_km: number
           id: string
           mascot_id: string
-          mock_key: string | null
           origin_label_key: string
           origin_latitude: number
           origin_longitude: number
@@ -784,6 +799,15 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      derive_mascot_travel_modifiers: {
+        Args: {
+          mascot_attributes: Json
+          mascot_skills: Json
+          mascot_trait: Json
+          route_distance_km: number
+        }
+        Returns: Json
+      }
       get_accepted_friend_profiles: {
         Args: never
         Returns: {
@@ -791,7 +815,6 @@ export type Database = {
           exchange_count: number
           favorite_note_key: string
           friendship_level: number
-          mock_key: string
           postal_base_city: string
           postal_base_country: string
           postal_base_state: string
@@ -814,8 +837,8 @@ export type Database = {
           destination_longitude: number
           destination_region: string
           distance_km: number
-          friend_id: string | null
-          friend_name: string | null
+          friend_id: string
+          friend_name: string
           mascot_name: string
           origin_latitude: number
           origin_longitude: number
@@ -823,15 +846,32 @@ export type Database = {
           outbound_arrival_at: string
           outbound_start_at: string
           portrait_asset_path: string
-          return_arrival_at: string | null
-          return_start_at: string | null
+          return_arrival_at: string
+          return_start_at: string
           species_key: string
           traffic_id: string
           visibility: string
         }[]
       }
+      json_translation_keys_are_official: {
+        Args: { payload: Json }
+        Returns: boolean
+      }
+      set_official_catalog_status: {
+        Args: {
+          entity_id: string
+          entity_type: string
+          next_status: Database["public"]["Enums"]["catalog_status"]
+        }
+        Returns: undefined
+      }
+      translation_key_is_official: {
+        Args: { candidate: string }
+        Returns: boolean
+      }
     }
     Enums: {
+      catalog_status: "draft" | "active" | "archived"
       correspondence_type: "letter" | "postcard" | "sticker" | "smallGift"
       delivery_status:
         | "available"
@@ -973,6 +1013,7 @@ export const Constants = {
   },
   public: {
     Enums: {
+      catalog_status: ["draft", "active", "archived"],
       correspondence_type: ["letter", "postcard", "sticker", "smallGift"],
       delivery_status: [
         "available",

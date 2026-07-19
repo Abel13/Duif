@@ -1,9 +1,7 @@
-import { getMascotById, starterMascots } from "../../game/mockData";
 import type { CorrespondenceType, Delivery, Mascot, MascotTravelModifiers } from "../../game/types";
 import type { TranslationKey } from "../../i18n";
 import { getSupabaseClient } from "./client";
 import {
-  STARTER_MASCOT_IDS,
   mapAppearance,
   mapAttributes,
   mapEquipment,
@@ -11,7 +9,7 @@ import {
   mapTrait,
   readNumber,
   readString,
-  readTranslationKey,
+  requireTranslationKey,
   type MascotTemplateRow,
 } from "./catalogMappers";
 import type { Database } from "./database.types";
@@ -20,12 +18,8 @@ export type PlayerMascotRow = Database["public"]["Tables"]["player_mascots"]["Ro
 export type DeliveryRow = Database["public"]["Tables"]["deliveries"]["Row"];
 export type MascotSpeciesRow = Pick<MascotTemplateRow, "id" | "species_key">;
 
-function getStarterMascotOrder(mascotId: string) {
-  return (STARTER_MASCOT_IDS as readonly string[]).indexOf(mascotId);
-}
-
 function getMascotPublicId(row: PlayerMascotRow) {
-  return row.mock_key ?? row.id;
+  return row.id;
 }
 
 export function mapDeliveryRowToDelivery(row: DeliveryRow, mascotPublicId: string): Delivery {
@@ -38,7 +32,7 @@ export function mapDeliveryRowToDelivery(row: DeliveryRow, mascotPublicId: strin
       longitude: readNumber(row.destination_longitude, 0),
     },
     distanceKm: readNumber(row.distance_km, 0),
-    id: readString(row.mock_key, row.id),
+    id: row.id,
     mascotId: mascotPublicId,
     origin: {
       labelKey: row.origin_label_key as TranslationKey,
@@ -121,21 +115,19 @@ export function mapPlayerMascotRowToMascot({
   row: PlayerMascotRow;
   speciesKey?: string;
 }): Mascot {
-  const fallbackMascot = getMascotById(getMascotPublicId(row)) ?? starterMascots[0];
-
   return {
-    appearance: mapAppearance(row.appearance, fallbackMascot.appearance),
-    attributes: mapAttributes(row.attributes, fallbackMascot.attributes),
+    appearance: mapAppearance(row.appearance),
+    attributes: mapAttributes(row.attributes),
     currentDelivery,
-    equipment: mapEquipment(row.equipment, fallbackMascot.equipment),
+    equipment: mapEquipment(row.equipment),
     id: getMascotPublicId(row),
-    level: readNumber(row.level, fallbackMascot.level),
-    name: readString(row.name, fallbackMascot.name),
-    nextLevelXp: readNumber(row.next_level_xp, fallbackMascot.nextLevelXp),
-    skills: mapSkills(row.skills, fallbackMascot.skills),
-    speciesKey: readTranslationKey(speciesKey, fallbackMascot.speciesKey),
-    trait: mapTrait(row.trait, fallbackMascot.trait),
-    xp: readNumber(row.xp, fallbackMascot.xp),
+    level: readNumber(row.level, 1),
+    name: readString(row.name, ""),
+    nextLevelXp: readNumber(row.next_level_xp, 1),
+    skills: mapSkills(row.skills),
+    speciesKey: requireTranslationKey(speciesKey, "mascot species key"),
+    trait: mapTrait(row.trait),
+    xp: readNumber(row.xp, 0),
   };
 }
 
@@ -168,27 +160,10 @@ export function composeAuthenticatedMascots({
           ? mapDeliveryRowToDelivery(selectedDelivery, mascotPublicId)
           : undefined,
         row: mascotRow,
-        speciesKey: speciesKeyByTemplateId.get(mascotRow.template_id),
+        speciesKey: speciesKeyByTemplateId.get(mascotRow.template_id) ?? undefined,
       });
     })
-    .sort((firstMascot, secondMascot) => {
-      const firstIndex = getStarterMascotOrder(firstMascot.id);
-      const secondIndex = getStarterMascotOrder(secondMascot.id);
-
-      if (firstIndex === -1 && secondIndex === -1) {
-        return firstMascot.name.localeCompare(secondMascot.name);
-      }
-
-      if (firstIndex === -1) {
-        return 1;
-      }
-
-      if (secondIndex === -1) {
-        return -1;
-      }
-
-      return firstIndex - secondIndex;
-    });
+    .sort((firstMascot, secondMascot) => firstMascot.name.localeCompare(secondMascot.name));
 }
 
 export async function fetchAuthenticatedMascots(profileId: string): Promise<Mascot[]> {
@@ -212,7 +187,7 @@ export async function fetchAuthenticatedMascots(profileId: string): Promise<Masc
 
   const [{ data: deliveryRows }, { data: speciesRows }] = await Promise.all([
     supabase.from("deliveries").select("*").in("mascot_id", mascotIds),
-    supabase.from("mascot_templates").select("id, species_key").in("id", templateIds),
+    supabase.from("mascot_templates").select("id, species_key").eq("status", "active").in("id", templateIds),
   ]);
 
   return composeAuthenticatedMascots({
