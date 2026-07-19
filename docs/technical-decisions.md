@@ -240,10 +240,9 @@ The first frontend integration is catalog-first. The browser client may read pub
 definition tables such as `mascot_templates`, while mock data remains the default
 runtime source.
 
-The first auth layer uses Supabase Auth with email/password for local development. A
-small `claim_current_profile` RPC links the authenticated user to the seeded current
-player profile so existing RLS policies can be exercised without building final
-onboarding yet.
+The account foundation uses Supabase Auth with email/password, mandatory email confirmation,
+generic public responses, and recovery links. Authentication never provisions a profile or
+claims seeded player data; confirmed accounts without a profile proceed to the onboarding state.
 
 The first authenticated gameplay read is the mascot detail screen. It may read
 `player_mascots` and `deliveries` for the claimed profile.
@@ -271,8 +270,9 @@ Use a custom Node backend later if the game needs:
 
 ## Authentication History
 
-Authentication was intentionally excluded from the first visual prototype. Supabase Auth is now
-implemented for authenticated gameplay while local mock mode remains available.
+Authentication was intentionally excluded from the first visual prototype. Supabase Auth now
+provides registration, confirmation, login, logout, and password recovery without exposing
+account existence through public copy.
 
 The original options evaluated were:
 

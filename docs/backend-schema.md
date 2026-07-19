@@ -130,10 +130,16 @@ tables stay protected until DUIF adds auth or a server-side read boundary.
 
 ## Auth Foundation
 
-DUIF uses Supabase Auth with email/password. During Milestone 37, `/auth` permits sign-in only;
-provisional sign-up is disabled so it cannot create orphan users before onboarding exists. The
-legacy `claim_current_profile` RPC was removed. A valid session without a profile receives a
-localized account-setup state.
+DUIF uses Supabase Auth with email/password. Registration requires email confirmation and an
+eight-character password containing letters and numbers. Public registration and recovery
+responses do not disclose whether an address is registered. The legacy `claim_current_profile`
+RPC remains removed: authentication creates only an Auth user, while a confirmed session without
+a profile is routed to onboarding. Profile and mascot provisioning remain authoritative work for
+the later onboarding RPC.
+
+Local confirmation and recovery messages can be inspected through Inbucket. Equivalent remote
+password, confirmation, redirect-allowlist, and SMTP settings must be applied only after the
+remote project passes the Milestone 37 identification, backup, and reset gate.
 
 ## Frontend Read Layer
 

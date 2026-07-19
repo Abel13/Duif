@@ -1581,7 +1581,7 @@ and reset through the Milestone 37 runbook.
 
 ## Milestone 39: Secure Registration And Login
 
-Status: Planned.
+Status: Implemented locally; remote Auth configuration remains blocked by the Milestone 37 gate.
 
 Goal:
 
@@ -1612,6 +1612,14 @@ Success criteria:
 - no public response enables email enumeration;
 - session restoration does not flash private gameplay;
 - authenticated users resume the correct onboarding or game state.
+
+Delivered locally:
+
+- generic email/password registration and login with mandatory email confirmation;
+- eight-character letter-and-number password policy, confirmation fields, and visibility controls;
+- confirmation resend, password recovery, secure callback handling, and global recovery sign-out;
+- guarded journey states and sanitized intended-route restoration;
+- localized postal forms for `pt-BR` and `en-US`, without provisioning profiles or mascots.
 
 ## Milestone 40: Official Asset Registry
 
