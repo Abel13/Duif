@@ -1507,7 +1507,8 @@ live multiplayer, and new animation dependencies.
 
 ## Milestone 37: Clean Account And Data Foundation
 
-Status: In progress — implementation and local reset complete; remote target awaiting explicit identification.
+Status: Completed locally and remotely. The remote project was identified and confirmed empty by
+the operator, so no destructive reset or unnecessary backup was executed.
 
 Goal:
 
@@ -1543,7 +1544,7 @@ Success criteria:
 
 ## Milestone 38: Internationalized Database Contracts
 
-Status: Implemented locally; remote application blocked by the Milestone 37 reset gate.
+Status: Implemented and migrated locally and remotely.
 
 Goal:
 
@@ -1581,7 +1582,8 @@ and reset through the Milestone 37 runbook.
 
 ## Milestone 39: Secure Registration And Login
 
-Status: Implemented locally; remote Auth configuration remains blocked by the Milestone 37 gate.
+Status: Implemented locally; production SMTP and domain routing are configured, while the PKCE
+deployment and production smoke test remain pending.
 
 Goal:
 
@@ -1618,6 +1620,8 @@ Delivered locally:
 - generic email/password registration and login with mandatory email confirmation;
 - eight-character letter-and-number password policy, confirmation fields, and visibility controls;
 - confirmation resend, password recovery, secure callback handling, and global recovery sign-out;
+- PKCE-only confirmation and recovery callbacks, with manual code exchange and immediate URL
+  cleanup instead of access or refresh tokens in fragments;
 - guarded journey states and sanitized intended-route restoration;
 - localized postal forms for `pt-BR` and `en-US`, without provisioning profiles or mascots.
 
