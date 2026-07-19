@@ -129,7 +129,9 @@ export const mockPostalTrafficPets: PostalTrafficPet[] = [
       originRegionKey: "postalTraffic.regions.goiasBrazil",
       destinationRegionKey: "postalTraffic.regions.distritoFederalBrazil",
       outboundStartAt: "2026-07-18T21:30:00.000Z",
-      outboundArrivalAt: "2026-07-19T01:30:00.000Z",
+      outboundArrivalAt: "2026-07-19T06:30:00.000Z",
+      returnStartAt: "2026-07-19T07:00:00.000Z",
+      returnArrivalAt: "2026-07-19T16:00:00.000Z",
     },
     speciesKey: "species.messengerFalcon",
     visibility: "public",
@@ -147,6 +149,8 @@ export const mockPostalTrafficPets: PostalTrafficPet[] = [
       destinationRegionKey: "postalTraffic.regions.espiritoSantoBrazil",
       outboundStartAt: "2026-07-18T20:30:00.000Z",
       outboundArrivalAt: "2026-07-19T02:30:00.000Z",
+      returnStartAt: "2026-07-19T03:00:00.000Z",
+      returnArrivalAt: "2026-07-19T09:00:00.000Z",
     },
     speciesKey: "species.mailDuck",
     visibility: "friend",
@@ -162,6 +166,8 @@ export const mockPostalTrafficPets: PostalTrafficPet[] = [
       destinationRegionKey: "postalTraffic.regions.pernambucoBrazil",
       outboundStartAt: "2026-07-18T10:00:00.000Z",
       outboundArrivalAt: "2026-07-20T10:00:00.000Z",
+      returnStartAt: "2026-07-20T10:30:00.000Z",
+      returnArrivalAt: "2026-07-22T10:30:00.000Z",
     },
     speciesKey: "species.mailDuck",
     visibility: "public",
@@ -258,6 +264,21 @@ export function getPostalTrafficSnapshotPosition(
   now: Date = new Date(),
 ) {
   return getPostalTrafficPetPosition(snapshotToPet(snapshot), now);
+}
+
+export function isPostalTrafficJourneyVisible(
+  snapshot: PostalTrafficPetSnapshot,
+  now: Date = new Date(),
+) {
+  const position = getPostalTrafficSnapshotPosition(snapshot, now);
+  if (position.leg === "returned" || position.leg === "completed") return false;
+  if (
+    position.leg === "delivered" &&
+    (!snapshot.route.returnStartAt || !snapshot.route.returnArrivalAt)
+  ) {
+    return false;
+  }
+  return true;
 }
 
 function snapshotToPet(snapshot: PostalTrafficPetSnapshot): PostalTrafficPet {

@@ -1,5 +1,5 @@
 import { getMascotById, starterMascots } from "../../game/mockData";
-import type { Delivery, Mascot, MascotTravelModifiers } from "../../game/types";
+import type { CorrespondenceType, Delivery, Mascot, MascotTravelModifiers } from "../../game/types";
 import type { TranslationKey } from "../../i18n";
 import { getSupabaseClient } from "./client";
 import {
@@ -31,6 +31,7 @@ function getMascotPublicId(row: PlayerMascotRow) {
 export function mapDeliveryRowToDelivery(row: DeliveryRow, mascotPublicId: string): Delivery {
   return {
     animalSpeedKmh: readNumber(row.animal_speed_kmh, 1),
+    correspondenceType: mapCorrespondenceType(row.correspondence_option_id),
     destination: {
       labelKey: row.destination_label_key as TranslationKey,
       latitude: readNumber(row.destination_latitude, 0),
@@ -55,6 +56,17 @@ export function mapDeliveryRowToDelivery(row: DeliveryRow, mascotPublicId: strin
     status: row.status,
     travelModifiers: mapTravelModifiers(row.travel_modifiers),
   };
+}
+
+const correspondenceTypeByOptionId: Record<string, CorrespondenceType> = {
+  "00000000-0000-4000-8000-000000000401": "letter",
+  "00000000-0000-4000-8000-000000000402": "postcard",
+  "00000000-0000-4000-8000-000000000403": "sticker",
+  "00000000-0000-4000-8000-000000000404": "smallGift",
+};
+
+function mapCorrespondenceType(optionId: string | null) {
+  return optionId ? correspondenceTypeByOptionId[optionId] : undefined;
 }
 
 function mapTravelModifiers(value: DeliveryRow["travel_modifiers"]): MascotTravelModifiers | undefined {

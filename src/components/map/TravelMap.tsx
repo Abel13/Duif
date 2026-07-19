@@ -283,7 +283,13 @@ export function TravelMap({
         selectionRef.current,
         (trafficId) => onTrafficSelectRef.current(trafficId),
       );
-      syncPostalTrafficRoutes(map, postalTraffic, selectionRef.current);
+      updatePostalTrafficMotion(
+        map,
+        trafficMarkerRefs.current,
+        postalTraffic,
+        selectionRef.current,
+        new Date(),
+      );
       syncCompletedDeliveryMap(map, deliveryCompleted, rewardMarkerRefs.current);
       focusMap(map, focusTargetRef.current, delivery, petPosition, rewards, postalTraffic);
       if (!map.isMoving()) emitViewport(map, onViewportChangeRef.current);
@@ -388,7 +394,13 @@ export function TravelMap({
       selection,
       (trafficId) => onTrafficSelectRef.current(trafficId),
     );
-    syncPostalTrafficRoutes(map, postalTraffic, selection);
+    updatePostalTrafficMotion(
+      map,
+      trafficMarkerRefs.current,
+      postalTraffic,
+      selection,
+      new Date(),
+    );
     syncCompletedDeliveryMap(map, deliveryCompleted, rewardMarkerRefs.current);
   }, [
     delivery,
@@ -435,11 +447,13 @@ export function TravelMap({
         );
         updateMapProgress(map, delivery, position);
 
-        postalTrafficRef.current.forEach((trafficPet) => {
-          trafficMarkerRefs.current
-            .get(trafficPet.id)
-            ?.setLngLat(toLngLat(getPostalTrafficSnapshotPosition(trafficPet, new Date()).coordinates));
-        });
+        updatePostalTrafficMotion(
+          map,
+          trafficMarkerRefs.current,
+          postalTrafficRef.current,
+          selectionRef.current,
+          new Date(),
+        );
 
         if (followMascotRef.current && !map.isEasing()) {
           map.setCenter(toLngLat(position.coordinates));
@@ -560,7 +574,11 @@ function syncPostalTrafficMarkers(
     markerElement.addEventListener("click", () => onSelect(pet.id));
     updateTrafficMarker(markerElement, pet, selected);
 
-    const marker = new maplibregl.Marker({ element: markerElement })
+    const marker = new maplibregl.Marker({
+      anchor: "center",
+      element: markerElement,
+      offset: [0, 0],
+    })
       .setLngLat(toLngLat(pet.coordinates))
       .addTo(map);
 
@@ -572,6 +590,7 @@ function syncPostalTrafficRoutes(
   map: maplibregl.Map,
   traffic: PostalTrafficPetSnapshot[],
   selection: MapSelection,
+  positions = new Map<string, ReturnType<typeof getPostalTrafficSnapshotPosition>>(),
 ) {
   const source = map.getSource(postalTrafficRoutesSourceId) as GeoJSONSource | undefined;
   const selectedTrafficId = selection?.kind === "traffic" ? selection.trafficId : undefined;
@@ -580,22 +599,67 @@ function syncPostalTrafficRoutes(
     : traffic;
   source?.setData({
     type: "FeatureCollection",
-    features: visibleRoutes.map((pet) => ({
-      type: "Feature",
-      properties: {
-        id: pet.id,
-        opacity: pet.visualPhase === "visible" ? 1 : 0,
-        selected: selectedTrafficId === pet.id,
-      },
-      geometry: {
-        type: "LineString",
-        coordinates: createInterpolatedRouteCoordinates(
-          pet.route.origin,
-          pet.route.destination,
-        ).map(toLngLat),
-      },
-    })),
+    features: visibleRoutes.flatMap((pet) => {
+      const selected = selectedTrafficId === pet.id;
+      const baseFeature = {
+        type: "Feature" as const,
+        properties: {
+          id: pet.id,
+          opacity: pet.visualPhase === "visible" ? 1 : 0,
+          selected,
+          segment: "route",
+        },
+        geometry: {
+          type: "LineString" as const,
+          coordinates: createInterpolatedRouteCoordinates(
+            pet.route.origin,
+            pet.route.destination,
+          ).map(toLngLat),
+        },
+      };
+      const position = positions.get(pet.id);
+      if (!selected || !position) return [baseFeature];
+      const returning = position.leg === "returning" || position.leg === "returned";
+      const progressCoordinates = returning
+        ? createInterpolatedRouteCoordinates(
+            pet.route.destination,
+            pet.route.origin,
+            position.progress,
+          )
+        : createInterpolatedRouteCoordinates(
+            pet.route.origin,
+            pet.route.destination,
+            position.progress,
+          );
+      return [
+        baseFeature,
+        {
+          ...baseFeature,
+          properties: { ...baseFeature.properties, segment: "progress" },
+          geometry: {
+            type: "LineString" as const,
+            coordinates: progressCoordinates.map(toLngLat),
+          },
+        },
+      ];
+    }),
   });
+}
+
+function updatePostalTrafficMotion(
+  map: maplibregl.Map,
+  markers: Map<string, maplibregl.Marker>,
+  traffic: PostalTrafficPetSnapshot[],
+  selection: MapSelection,
+  now: Date,
+) {
+  const positions = new Map(
+    traffic.map((pet) => [pet.id, getPostalTrafficSnapshotPosition(pet, now)]),
+  );
+  positions.forEach((position, id) => {
+    markers.get(id)?.setLngLat(toLngLat(position.coordinates));
+  });
+  syncPostalTrafficRoutes(map, traffic, selection, positions);
 }
 
 function emitViewport(
@@ -621,6 +685,7 @@ function updateTrafficMarker(
   selected: boolean,
 ) {
   markerElement.className = [
+    "maplibregl-marker",
     styles.trafficMarker,
     pet.visibility === "friend" ? styles.friendTrafficMarker : styles.publicTrafficMarker,
     selected ? styles.selectedTrafficMarker : "",
@@ -1000,10 +1065,10 @@ function addMapLayers(
       type: "line",
       source: postalTrafficRoutesSourceId,
       paint: {
-        "line-color": ["case", ["boolean", ["get", "selected"], false], "#6f91a8", "#7a8f68"],
-        "line-dasharray": [1.4, 1.8],
-        "line-opacity": ["*", ["number", ["get", "opacity"], 1], ["case", ["boolean", ["get", "selected"], false], 0.5, 0.22]],
-        "line-width": ["case", ["boolean", ["get", "selected"], false], 2.5, 1.25],
+        "line-color": ["case", ["==", ["get", "segment"], "progress"], "#a44a3f", ["boolean", ["get", "selected"], false], "#6f91a8", "#7a8f68"],
+        "line-dasharray": ["case", ["==", ["get", "segment"], "progress"], ["literal", [1, 0]], ["literal", [1.4, 1.8]]],
+        "line-opacity": ["*", ["number", ["get", "opacity"], 1], ["case", ["==", ["get", "segment"], "progress"], 0.78, ["boolean", ["get", "selected"], false], 0.4, 0.22]],
+        "line-width": ["case", ["==", ["get", "segment"], "progress"], 3, ["boolean", ["get", "selected"], false], 2, 1.25],
         "line-opacity-transition": { duration: 400 },
       },
     }, "duif-route-shadow");

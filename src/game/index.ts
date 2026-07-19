@@ -59,6 +59,7 @@ export {
   getPostalTrafficLabel,
   getPostalTrafficPetPosition,
   getPostalTrafficSnapshotPosition,
+  isPostalTrafficJourneyVisible,
   expandPostalTrafficViewport,
   mockPostalTrafficPets,
   POSTAL_TRAFFIC_MAX_VISIBLE,

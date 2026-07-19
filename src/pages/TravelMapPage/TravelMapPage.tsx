@@ -11,6 +11,7 @@ import {
   getMascotById,
   getMapJourneyPhase,
   getPostalTrafficSnapshotPosition,
+  isPostalTrafficJourneyVisible,
   getRouteDiscoveryVisualState,
   getPetMapPosition,
   getRouteRewardDiscoveries,
@@ -129,15 +130,17 @@ export function TravelMapPage() {
     [newDiscoveryIds, rewards],
   );
   const postalTraffic = useMemo(
-    () => trafficSnapshots.map((pet) => {
-      const position = getPostalTrafficSnapshotPosition(pet, trafficNow);
-      return {
-        ...pet,
-        coordinates: position.coordinates,
-        leg: position.leg,
-        progress: Math.round(position.progress * 100),
-      };
-    }),
+    () => trafficSnapshots
+      .filter((pet) => isPostalTrafficJourneyVisible(pet, trafficNow))
+      .map((pet) => {
+        const position = getPostalTrafficSnapshotPosition(pet, trafficNow);
+        return {
+          ...pet,
+          coordinates: position.coordinates,
+          leg: position.leg,
+          progress: Math.round(position.progress * 100),
+        };
+      }),
     [trafficSnapshots, trafficNow],
   );
   const visiblePostalTraffic = useMemo(
@@ -899,19 +902,60 @@ function TripStatusDialog({
       ref={dialogRef}
     >
       <div className={styles.tripStatusDialogPaper}>
-        <h2 id="trip-status-dialog-title">{displayMascot?.name ?? t("map.tripStatus")}</h2>
-        <dl className={styles.summary}>
+        <header className={styles.tripStatusHeader}>
+          <AssetImage
+            alt={displayMascot?.name ?? ""}
+            className={styles.tripStatusPortrait}
+            src={displayMascot?.appearance.portraitAssetPath}
+          >
+            <span className={styles.tripStatusPortraitFallback} aria-hidden="true" />
+          </AssetImage>
+          <div className={styles.tripStatusIdentity}>
+            <span>{t("map.tripStatus")}</span>
+            <h2 id="trip-status-dialog-title">{displayMascot?.name ?? t("map.tripStatus")}</h2>
+            {displayMascot ? <p>{t(displayMascot.speciesKey)}</p> : null}
+          </div>
+          <strong className={styles.tripStatusStamp}>{progressPercent}%</strong>
+        </header>
+
+        <section className={styles.tripStatusJourney}>
+          <div className={styles.tripStatusEndpoint}>
+            <span>{t("mascot.origin")}</span>
+            <strong>{t(delivery.origin.labelKey)}</strong>
+          </div>
+          <div className={`${styles.tripStatusEndpoint} ${styles.tripStatusEndpointDestination}`}>
+            <span>{t("mascot.destination")}</span>
+            <strong>{t(delivery.destination.labelKey)}</strong>
+          </div>
+          <div className={styles.tripStatusTrack} aria-hidden="true">
+            <span style={{ transform: `scaleX(${progressPercent / 100})` }} />
+          </div>
+        </section>
+
+        {delivery.correspondenceType ? (
+          <section className={styles.tripStatusCargo}>
+            <span className={styles.tripStatusCargoMark} aria-hidden="true" />
+            <div>
+              <span>{t("map.carryingCargo")}</span>
+              <strong>{t(`correspondence.${delivery.correspondenceType}.name`)}</strong>
+              <p>{t(`correspondence.${delivery.correspondenceType}.description`)}</p>
+            </div>
+          </section>
+        ) : null}
+
+        <dl className={`${styles.summary} ${styles.tripStatusSummary}`}>
           <SummaryRow label={t("mascot.status")} value={t(`delivery.status.${status}`)} />
-          <SummaryRow label={t("delivery.progress")} value={`${progressPercent}%`} />
           <SummaryRow label={t("delivery.remainingTime")} value={formatRemainingTime(delivery, now)} />
           <SummaryRow label={t("map.currentLeg")} value={t(`map.legs.${petLeg}`)} />
         </dl>
-        <Link className={styles.routeLink} to={`/mascots/${delivery.mascotId}`}>
-          {t("map.backToMascot")}
-        </Link>
-        <button className={styles.tripStatusClose} onClick={() => dialogRef.current?.close()} type="button">
-          {t("map.closeTripStatus")}
-        </button>
+        <div className={styles.tripStatusActions}>
+          <Link className={styles.routeLink} to={`/mascots/${delivery.mascotId}`}>
+            {t("map.backToMascot")}
+          </Link>
+          <button className={styles.tripStatusClose} onClick={() => dialogRef.current?.close()} type="button">
+            {t("map.closeTripStatus")}
+          </button>
+        </div>
       </div>
     </dialog>
   );

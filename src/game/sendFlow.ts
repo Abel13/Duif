@@ -121,6 +121,7 @@ export function createMockDeliveryFromSelection(
   const returnArrivalAt = new Date(returnStartAt.getTime() + returnDurationHours * HOUR_MS);
 
   const delivery: Delivery = {
+    correspondenceType: correspondence.type,
     id: `delivery-${mascot.id}-${friend.id}-${correspondence.id}`,
     senderId: currentPlayer.id,
     receiverId: friend.id,

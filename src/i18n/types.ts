@@ -193,6 +193,7 @@ export type TranslationDictionary = {
     currentLeg: string;
     discoveries: string;
     cargoFound: string;
+    carryingCargo: string;
     tripCompleted: string;
     deliveryFinished: string;
     finishedDeliveries: string;
@@ -757,6 +758,7 @@ export type TranslationKey =
   | "map.currentLeg"
   | "map.discoveries"
   | "map.cargoFound"
+  | "map.carryingCargo"
   | "map.tripCompleted"
   | "map.deliveryFinished"
   | "map.finishedDeliveries"

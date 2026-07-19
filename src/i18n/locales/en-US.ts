@@ -200,6 +200,7 @@ export const enUS = {
     currentLeg: "Current leg",
     discoveries: "Route discoveries",
     cargoFound: "Cargo found",
+    carryingCargo: "Carrying on this trip",
     tripCompleted: "Trip completed",
     deliveryFinished: "Delivery finished",
     finishedDeliveries: "finished deliveries",

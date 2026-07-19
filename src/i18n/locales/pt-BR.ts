@@ -201,6 +201,7 @@ export const ptBR = {
     currentLeg: "Trecho atual",
     discoveries: "Descobertas da rota",
     cargoFound: "Carga encontrada",
+    carryingCargo: "Levando nesta viagem",
     tripCompleted: "Viagem concluída",
     deliveryFinished: "Entrega finalizada",
     finishedDeliveries: "entregas finalizadas",

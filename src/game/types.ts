@@ -97,6 +97,7 @@ export type Delivery = {
   rewardSeed: string;
   routeDiscoveryVersion?: number;
   travelModifiers?: MascotTravelModifiers;
+  correspondenceType?: CorrespondenceType;
 };
 
 export type RewardItem = {

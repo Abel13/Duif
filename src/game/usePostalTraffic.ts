@@ -6,6 +6,7 @@ import { isSupabaseCatalogEnabled } from "../integrations/supabase/config";
 import {
   createPublicTrafficSnapshot,
   expandPostalTrafficViewport,
+  isPostalTrafficJourneyVisible,
   mockPostalTrafficPets,
   POSTAL_TRAFFIC_REFRESH_MS,
   type PostalTrafficPetSnapshot,
@@ -36,7 +37,8 @@ export function usePostalTraffic() {
         : getMockTraffic(anchor);
       if (!mountedRef.current) return;
       lastRefreshRef.current = Date.now();
-      setTraffic((current) => reconcileTraffic(current, next, removalTimersRef.current, setTraffic));
+      const visibleTraffic = next.filter((pet) => isPostalTrafficJourneyVisible(pet));
+      setTraffic((current) => reconcileTraffic(current, visibleTraffic, removalTimersRef.current, setTraffic));
     } catch {
       // Preserve the last known regional snapshot until the next polling cycle.
     } finally {

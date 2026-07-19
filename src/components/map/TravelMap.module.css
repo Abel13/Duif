@@ -344,7 +344,7 @@
     0.12rem 0.16rem 0 rgba(46, 42, 36, 0.18);
   cursor: pointer;
   opacity: 1;
-  transition: box-shadow 160ms ease, transform 160ms ease, opacity 400ms ease;
+  transition: box-shadow 160ms ease, opacity 400ms ease;
 }
 
 .enteringTrafficMarker,
@@ -358,6 +358,7 @@
   height: 100%;
   border-radius: 999px;
   object-fit: cover;
+  transition: transform 160ms ease;
 }
 
 .friendTrafficMarker {
@@ -376,7 +377,10 @@
     0 0 0 0.24rem var(--color-postal-red),
     0 0 0 0.42rem rgba(255, 248, 232, 0.82),
     0.14rem 0.18rem 0 rgba(46, 42, 36, 0.24);
-  transform: scale(1.12);
+}
+
+.selectedTrafficMarker img {
+  transform: scale(1.08);
 }
 
 .trafficMarker:focus-visible {

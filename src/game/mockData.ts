@@ -15,6 +15,7 @@ export const currentPlayer: Player = {
 };
 
 export const nuvemDelivery: Delivery = {
+  correspondenceType: "letter",
   id: "delivery-nuvem-belo-horizonte",
   senderId: currentPlayer.id,
   receiverId: "friend-lisbon",
@@ -36,6 +37,7 @@ export const nuvemDelivery: Delivery = {
 };
 
 export const trovaoDelivery: Delivery = {
+  correspondenceType: "letter",
   id: "delivery-trovao-rio-branco",
   senderId: currentPlayer.id,
   receiverId: "friend-acre",
@@ -57,6 +59,7 @@ export const trovaoDelivery: Delivery = {
 };
 
 export const pipocaDelivery: Delivery = {
+  correspondenceType: "postcard",
   id: "delivery-pipoca-salvador",
   senderId: currentPlayer.id,
   receiverId: "friend-bahia",

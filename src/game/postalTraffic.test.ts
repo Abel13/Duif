@@ -6,6 +6,7 @@ import {
   expandPostalTrafficViewport,
   getNearbyPostalTrafficPets,
   getPostalTrafficPetPosition,
+  isPostalTrafficJourneyVisible,
   mockPostalTrafficPets,
   resolvePostalTrafficSelection,
   type PostalTrafficPet,
@@ -62,6 +63,51 @@ describe("postal traffic helpers", () => {
         expect(point.longitude).toBeLessThanOrEqual(-34);
       });
     });
+  });
+
+  it("keeps Bento moving on top of his route during the current mock window", () => {
+    const bento = mockPostalTrafficPets.find((pet) => pet.id === "traffic-public-bento")!;
+    const position = getPostalTrafficPetPosition(
+      bento,
+      new Date("2026-07-19T02:00:00.000Z"),
+    );
+
+    expect(position.leg).toBe("outbound");
+    expect(position.progress).toBeGreaterThan(0);
+    expect(position.progress).toBeLessThan(1);
+    expect(position.coordinates.latitude).toBeCloseTo(
+      bento.route.origin.latitude +
+        (bento.route.destination.latitude - bento.route.origin.latitude) * position.progress,
+      8,
+    );
+    expect(position.coordinates.longitude).toBeCloseTo(
+      bento.route.origin.longitude +
+        (bento.route.destination.longitude - bento.route.origin.longitude) * position.progress,
+      8,
+    );
+  });
+
+  it("removes returned traffic and deliveries without a scheduled return", () => {
+    const returned = createPublicTrafficSnapshot(
+      {
+        ...friendPet,
+        route: {
+          ...friendPet.route,
+          returnStartAt: "2026-07-18T13:00:00.000Z",
+          returnArrivalAt: "2026-07-18T15:00:00.000Z",
+        },
+      },
+      mascotCoordinates,
+      referenceTime,
+    );
+    const strandedAtDestination = createPublicTrafficSnapshot(
+      friendPet,
+      mascotCoordinates,
+      new Date("2026-07-18T12:30:00.000Z"),
+    );
+
+    expect(isPostalTrafficJourneyVisible(returned, new Date("2026-07-18T15:01:00.000Z"))).toBe(false);
+    expect(isPostalTrafficJourneyVisible(strandedAtDestination, new Date("2026-07-18T12:30:00.000Z"))).toBe(false);
   });
 
   it("interpolates outbound and returning positions with integer public progress", () => {
