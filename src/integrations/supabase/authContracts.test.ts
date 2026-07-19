@@ -1,6 +1,13 @@
 import { describe, expect, it } from "vitest";
 
-import { maskEmail, meetsPasswordPolicy, resolveAuthJourneyState, resolveSignUpResponse, sanitizeIntendedRoute } from "./authContracts";
+import {
+  maskEmail,
+  meetsPasswordPolicy,
+  parsePkceCallbackUrl,
+  resolveAuthJourneyState,
+  resolveSignUpResponse,
+  sanitizeIntendedRoute,
+} from "./authContracts";
 
 describe("auth contracts", () => {
   it("requires eight characters with letters and numbers", () => {
@@ -21,6 +28,20 @@ describe("auth contracts", () => {
     expect(sanitizeIntendedRoute("https://evil.test/map")).toBe("/");
     expect(sanitizeIntendedRoute("//evil.test/map")).toBe("/");
     expect(sanitizeIntendedRoute("/auth/callback")).toBe("/");
+  });
+
+  it("accepts a PKCE callback and restores only a safe intended route", () => {
+    expect(parsePkceCallbackUrl("https://duif.test/auth/callback?code=postal-code&next=%2Fmap%3FdeliveryId%3Done"))
+      .toEqual({ code: "postal-code", next: "/map?deliveryId=one" });
+    expect(parsePkceCallbackUrl("https://duif.test/auth/callback?code=postal-code&next=https%3A%2F%2Fevil.test"))
+      .toEqual({ code: "postal-code", next: "/" });
+  });
+
+  it("rejects missing codes, expired-style callbacks, and legacy token fragments", () => {
+    expect(parsePkceCallbackUrl("https://duif.test/auth/callback?next=%2Fmap")).toBeNull();
+    expect(parsePkceCallbackUrl("not a url")).toBeNull();
+    expect(parsePkceCallbackUrl("https://duif.test/auth/callback?code=postal-code#access_token=secret&refresh_token=secret"))
+      .toBeNull();
   });
 
   it("masks the local portion of an email", () => {
