@@ -1,12 +1,9 @@
 import {
-  correspondenceOptions,
   currentPlayer,
   estimateMascotSpeedKmh,
   deriveMascotTravelModifiers,
   estimateTravelDurationHours,
   haversineDistanceKm,
-  mockFriends,
-  starterMascots,
   type CorrespondenceOption,
   type CorrespondenceContent,
   type Delivery,
@@ -49,12 +46,6 @@ export type ConfirmedAuthenticatedSend = {
   delivery: Delivery;
   friend: FriendProfile;
   mascot: Mascot;
-};
-
-export const mockSendFlowData: AuthenticatedSendFlowData = {
-  correspondenceOptions,
-  friends: mockFriends,
-  mascots: starterMascots,
 };
 
 export function mapCorrespondenceOptionRow(row: CorrespondenceOptionRow): CorrespondenceOption {

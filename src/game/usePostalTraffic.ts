@@ -4,10 +4,7 @@ import { useAuth } from "../integrations/supabase/AuthProvider";
 import { fetchAuthenticatedPostalTraffic } from "../integrations/supabase/authenticatedPostalTraffic";
 import { isSupabaseCatalogEnabled } from "../integrations/supabase/config";
 import {
-  createPublicTrafficSnapshot,
-  expandPostalTrafficViewport,
   isPostalTrafficJourneyVisible,
-  mockPostalTrafficPets,
   POSTAL_TRAFFIC_REFRESH_MS,
   type PostalTrafficPetSnapshot,
   type PostalTrafficQueryAnchor,
@@ -32,9 +29,7 @@ export function usePostalTraffic() {
     refreshingRef.current = true;
     setIsLoading(true);
     try {
-      const next = authenticated
-        ? await fetchAuthenticatedPostalTraffic(anchor)
-        : getMockTraffic(anchor);
+      const next = authenticated ? await fetchAuthenticatedPostalTraffic(anchor) : [];
       if (!mountedRef.current) return;
       lastRefreshRef.current = Date.now();
       const visibleTraffic = next.filter((pet) => isPostalTrafficJourneyVisible(pet));
@@ -80,25 +75,6 @@ export function usePostalTraffic() {
   }, []);
 
   return { isLoading, postalTraffic: traffic, updatePostalTrafficAnchor: updateAnchor };
-}
-
-function getMockTraffic(anchor: PostalTrafficQueryAnchor) {
-  const expanded = expandPostalTrafficViewport(anchor.viewport);
-  return mockPostalTrafficPets
-    .map((pet) => createPublicTrafficSnapshot(pet, anchor.center))
-    .filter((pet) => isInsideViewport(pet.coordinates, expanded))
-    .sort((a, b) => a.distanceFromMascotKm - b.distanceFromMascotKm || a.id.localeCompare(b.id))
-    .slice(0, 10);
-}
-
-function isInsideViewport(
-  point: { latitude: number; longitude: number },
-  viewport: ReturnType<typeof expandPostalTrafficViewport>,
-) {
-  const longitudeInside = viewport.east >= viewport.west
-    ? point.longitude >= viewport.west && point.longitude <= viewport.east
-    : point.longitude >= viewport.west || point.longitude <= viewport.east;
-  return point.latitude >= viewport.south && point.latitude <= viewport.north && longitudeInside;
 }
 
 function reconcileTraffic(

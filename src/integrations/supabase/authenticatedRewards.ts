@@ -1,5 +1,4 @@
 import {
-  createMockRewardFromDelivery,
   type Delivery,
   type DeliveryReward,
   type InventoryItem,
@@ -139,7 +138,7 @@ export function composeAuthenticatedRewardCollection({
     delivery,
     inventoryCount,
     isCollected: Boolean(rewardRow?.collected_at),
-    reward: persistedReward ?? createMockRewardFromDelivery(delivery),
+    reward: persistedReward,
     routeDiscoveries,
   };
 }

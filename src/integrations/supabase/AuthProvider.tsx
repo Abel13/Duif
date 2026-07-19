@@ -16,24 +16,27 @@ import type { AuthProfile } from "./profile";
 type AuthContextValue = {
   isConfigured: boolean;
   isLoading: boolean;
+  isServiceAvailable: boolean;
   profile: AuthProfile | null;
   session: Session | null;
-  claimCurrentProfile: () => Promise<AuthProfile | null>;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
-  signUp: (email: string, password: string) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-async function claimProfile() {
+async function fetchProfile(authUserId: string) {
   const supabase = getSupabaseClient();
 
   if (!supabase) {
     return null;
   }
 
-  const { data, error } = await supabase.rpc("claim_current_profile");
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("auth_user_id", authUserId)
+    .maybeSingle();
 
   if (error) {
     throw error;
@@ -45,20 +48,15 @@ async function claimProfile() {
 export function AuthProvider({ children }: { children: ReactNode }) {
   const isConfigured = getSupabaseConfig().isConfigured;
   const [isLoading, setIsLoading] = useState(isConfigured);
+  const [isServiceAvailable, setIsServiceAvailable] = useState(isConfigured);
   const [profile, setProfile] = useState<AuthProfile | null>(null);
   const [session, setSession] = useState<Session | null>(null);
-
-  const claimCurrentProfile = useCallback(async () => {
-    const claimedProfile = await claimProfile();
-    setProfile(claimedProfile);
-
-    return claimedProfile;
-  }, []);
 
   useEffect(() => {
     const supabase = getSupabaseClient();
 
     if (!supabase) {
+      setIsServiceAvailable(false);
       setIsLoading(false);
       return undefined;
     }
@@ -67,18 +65,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     supabase.auth
       .getSession()
-      .then(async ({ data }) => {
+      .then(async ({ data, error }) => {
         if (!isMounted) {
           return;
         }
+
+        if (error) {
+          setIsServiceAvailable(false);
+          return;
+        }
+
+        setIsServiceAvailable(true);
 
         setSession(data.session);
 
         if (data.session) {
           try {
-            await claimCurrentProfile();
+            setProfile(await fetchProfile(data.session.user.id));
           } catch {
             setProfile(null);
+            setIsServiceAvailable(false);
           }
         }
       })
@@ -98,16 +104,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return;
       }
 
-      claimCurrentProfile().catch(() => {
-        setProfile(null);
-      });
+      fetchProfile(nextSession.user.id)
+        .then(setProfile)
+        .catch(() => {
+          setProfile(null);
+          setIsServiceAvailable(false);
+        });
     });
 
     return () => {
       isMounted = false;
       subscription.unsubscribe();
     };
-  }, [claimCurrentProfile]);
+  }, [isConfigured]);
 
   const signIn = useCallback(async (email: string, password: string) => {
     const supabase = getSupabaseClient();
@@ -117,20 +126,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     const { error } = await supabase.auth.signInWithPassword({ email, password });
-
-    if (error) {
-      throw error;
-    }
-  }, []);
-
-  const signUp = useCallback(async (email: string, password: string) => {
-    const supabase = getSupabaseClient();
-
-    if (!supabase) {
-      throw new Error("Supabase is not configured.");
-    }
-
-    const { error } = await supabase.auth.signUp({ email, password });
 
     if (error) {
       throw error;
@@ -156,16 +151,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const contextValue = useMemo<AuthContextValue>(
     () => ({
-      claimCurrentProfile,
       isConfigured,
       isLoading,
+      isServiceAvailable,
       profile,
       session,
       signIn,
       signOut,
-      signUp,
     }),
-    [claimCurrentProfile, isConfigured, isLoading, profile, session, signIn, signOut, signUp],
+    [isConfigured, isLoading, isServiceAvailable, profile, session, signIn, signOut],
   );
 
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;

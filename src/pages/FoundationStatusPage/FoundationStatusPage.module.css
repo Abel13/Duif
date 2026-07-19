@@ -1,0 +1,45 @@
+.shell {
+  display: grid;
+  width: min(100%, 34rem);
+  min-height: 100dvh;
+  margin-inline: auto;
+  padding: var(--space-5);
+  place-items: center;
+}
+
+.content {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-4);
+}
+
+.content p {
+  margin: 0;
+  color: var(--color-ink-soft);
+  font-weight: 750;
+  line-height: 1.6;
+}
+
+.content a {
+  padding: 0.7rem 0.9rem;
+  border: 2px dashed var(--color-postal-red);
+  color: var(--color-postal-red);
+  background: var(--color-paper);
+  font-weight: 900;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.content a:focus-visible {
+  outline: 3px solid rgba(164, 74, 63, 0.45);
+  outline-offset: 3px;
+}
+
+.mark {
+  width: 3rem;
+  aspect-ratio: 1;
+  border: 0.35rem double var(--color-postal-blue);
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--color-rare-gold) 0 24%, transparent 26%);
+  transform: rotate(-8deg);
+}

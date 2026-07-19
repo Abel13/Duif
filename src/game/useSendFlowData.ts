@@ -1,78 +1,26 @@
 import { useEffect, useState } from "react";
 
 import { useAuth } from "../integrations/supabase/AuthProvider";
-import {
-  fetchAuthenticatedSendFlowData,
-  mockSendFlowData,
-  type AuthenticatedSendFlowData,
-} from "../integrations/supabase/authenticatedSendFlow";
-import { isSupabaseCatalogEnabled } from "../integrations/supabase/config";
+import { fetchAuthenticatedSendFlowData, type AuthenticatedSendFlowData } from "../integrations/supabase/authenticatedSendFlow";
 
-type SendFlowDataState = {
-  data: AuthenticatedSendFlowData;
-  isAuthenticatedSource: boolean;
-  isLoading: boolean;
-};
+const emptyData: AuthenticatedSendFlowData = { correspondenceOptions: [], friends: [], mascots: [] };
+type SendFlowDataState = { data: AuthenticatedSendFlowData; isAuthenticatedSource: true; isLoading: boolean };
 
 export function useSendFlowData(): SendFlowDataState {
   const { isLoading: isAuthLoading, profile, session } = useAuth();
-  const [state, setState] = useState<SendFlowDataState>({
-    data: mockSendFlowData,
-    isAuthenticatedSource: false,
-    isLoading: isSupabaseCatalogEnabled(),
-  });
+  const [state, setState] = useState<SendFlowDataState>({ data: emptyData, isAuthenticatedSource: true, isLoading: true });
 
   useEffect(() => {
-    if (!isSupabaseCatalogEnabled()) {
-      setState({
-        data: mockSendFlowData,
-        isAuthenticatedSource: false,
-        isLoading: false,
-      });
-      return;
-    }
-
-    if (isAuthLoading) {
-      setState((currentState) => ({ ...currentState, isLoading: true }));
-      return;
-    }
-
+    if (isAuthLoading) return;
     if (!session || !profile) {
-      setState({
-        data: mockSendFlowData,
-        isAuthenticatedSource: false,
-        isLoading: false,
-      });
+      setState({ data: emptyData, isAuthenticatedSource: true, isLoading: false });
       return;
     }
-
-    let isMounted = true;
-
-    setState((currentState) => ({ ...currentState, isLoading: true }));
-
+    let active = true;
     fetchAuthenticatedSendFlowData(profile.id)
-      .then((data) => {
-        if (isMounted) {
-          setState({
-            data: data ?? mockSendFlowData,
-            isAuthenticatedSource: Boolean(data),
-            isLoading: false,
-          });
-        }
-      })
-      .catch(() => {
-        if (isMounted) {
-          setState({
-            data: mockSendFlowData,
-            isAuthenticatedSource: false,
-            isLoading: false,
-          });
-        }
-      });
-
-    return () => {
-      isMounted = false;
-    };
+      .then((data) => active && setState({ data: data ?? emptyData, isAuthenticatedSource: true, isLoading: false }))
+      .catch(() => active && setState({ data: emptyData, isAuthenticatedSource: true, isLoading: false }));
+    return () => { active = false; };
   }, [isAuthLoading, profile, session]);
 
   return state;

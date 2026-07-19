@@ -6,9 +6,50 @@
 
 .shell {
   display: grid;
+  gap: var(--space-3);
   width: min(100%, 34rem);
   margin-inline: auto;
   min-width: 0;
+}
+
+.localeSelector {
+  display: flex;
+  width: fit-content;
+  max-width: 100%;
+  margin-left: auto;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.4rem 0.55rem 0.4rem 0.7rem;
+  border: 1px dashed rgba(46, 42, 36, 0.42);
+  border-radius: 0.2rem;
+  color: var(--color-postal-brown);
+  background: var(--color-postal-label);
+  box-shadow: 0.12rem 0.14rem 0 rgba(46, 42, 36, 0.1);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transform: rotate(0.4deg);
+}
+
+.localeSelector select {
+  min-height: 2.25rem;
+  max-width: 9rem;
+  padding: 0.35rem 1.8rem 0.35rem 0.55rem;
+  border: 1px solid rgba(46, 42, 36, 0.38);
+  border-radius: 0.15rem;
+  color: var(--color-ink);
+  background: var(--color-paper);
+  font: inherit;
+  font-size: 0.76rem;
+  letter-spacing: normal;
+  text-transform: none;
+  cursor: pointer;
+}
+
+.localeSelector select:focus-visible {
+  outline: 3px solid rgba(164, 74, 63, 0.55);
+  outline-offset: 3px;
 }
 
 .description {

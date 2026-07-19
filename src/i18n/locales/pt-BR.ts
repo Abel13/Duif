@@ -27,16 +27,16 @@ export const ptBR = {
     backToNest: "Voltar ao ninho",
   },
   auth: {
-    eyebrow: "Acesso local",
-    title: "Conta do caderno",
+    eyebrow: "Conta postal",
+    title: "Acesse o DUIF",
     subtitle:
-      "Entre com email e senha para ligar sua sessão local ao perfil seedado do protótipo.",
+      "Entre com seu email e senha para continuar sua aventura postal.",
     unavailableTitle: "Supabase não configurado",
     unavailableDescription:
-      "Configure as variáveis locais para testar login. O app continua usando mocks enquanto isso.",
+      "Não foi possível acessar o serviço postal. Confira a configuração e a conexão.",
     loadingSession: "Carregando sessão",
     signedInTitle: "Sessão ativa",
-    signedInDescription: "Seu perfil local já está ligado ao caderno postal.",
+    signedInDescription: "Sua sessão foi confirmada pelo serviço postal.",
     modeLabel: "Modo de acesso",
     signIn: "Entrar",
     signUp: "Criar conta",
@@ -47,6 +47,20 @@ export const ptBR = {
     backToNest: "Voltar ao ninho",
     submitting: "Enviando",
     errorMessage: "Não foi possível completar a ação. Verifique os dados e tente novamente.",
+    registrationPending: "Novos cadastros serão liberados com o próximo fluxo de boas-vindas.",
+    languageLabel: "Idioma",
+    languages: {
+      ptBR: "Português",
+      enUS: "English",
+    },
+  },
+  foundation: {
+    eyebrow: "Manutenção postal",
+    retry: "Tentar novamente",
+    loading: { title: "Consultando o ninho", description: "Estamos conferindo sua sessão e os registros postais." },
+    unavailable: { title: "Serviço temporariamente indisponível", description: "Não foi possível alcançar o serviço postal. Confira sua conexão e tente novamente." },
+    accountPending: { title: "Conta aguardando configuração", description: "Sua sessão existe, mas ainda não possui um perfil postal. O novo onboarding fará essa configuração com segurança." },
+    onboardingPending: { title: "Novo onboarding a caminho", description: "Os dados antigos foram removidos. Em breve você escolherá seu arquétipo, dará um nome ao mascote e fará a primeira rota." },
   },
   units: {
     kilometers: "km",

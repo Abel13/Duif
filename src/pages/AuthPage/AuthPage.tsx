@@ -7,14 +7,11 @@ import { useAuth } from "../../integrations/supabase/AuthProvider";
 import { getProfileDisplayLabel } from "../../integrations/supabase/profile";
 import styles from "./AuthPage.module.css";
 
-type AuthMode = "signIn" | "signUp";
-
 export function AuthPage() {
-  const { t } = useTranslation();
-  const { isConfigured, isLoading, profile, session, signIn, signOut, signUp } = useAuth();
-  const [authMode, setAuthMode] = useState<AuthMode>("signIn");
-  const [email, setEmail] = useState("abel@duif.local");
-  const [password, setPassword] = useState("duif-dev-password");
+  const { locale, setLocale, t } = useTranslation();
+  const { isConfigured, isLoading, isServiceAvailable, profile, session, signIn, signOut } = useAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasError, setHasError] = useState(false);
 
@@ -27,11 +24,7 @@ export function AuthPage() {
     setIsSubmitting(true);
 
     try {
-      if (authMode === "signIn") {
-        await signIn(email, password);
-      } else {
-        await signUp(email, password);
-      }
+      await signIn(email, password);
     } catch {
       setHasError(true);
     } finally {
@@ -54,25 +47,36 @@ export function AuthPage() {
 
   return (
     <PageShell hasTopBar>
-      <MobileTopBar backLabelKey="navigation.backToNest" backTo="/mascots/mascot-nuvem" title={t("auth.title")} />
+      <MobileTopBar backLabelKey="navigation.backToNest" backTo="/" title={t("auth.title")} />
       <div className={styles.shell}>
+        <label className={styles.localeSelector}>
+          <span>{t("auth.languageLabel")}</span>
+          <select
+            aria-label={t("auth.languageLabel")}
+            onChange={(event) => setLocale(event.target.value as "pt-BR" | "en-US")}
+            value={locale}
+          >
+            <option value="pt-BR">{t("auth.languages.ptBR")}</option>
+            <option value="en-US">{t("auth.languages.enUS")}</option>
+          </select>
+        </label>
         <SketchPanel eyebrow={t("auth.eyebrow")} title={t("auth.title")} variant="note">
           <p className={styles.description}>{t("auth.subtitle")}</p>
 
-          {!isConfigured && (
+          {(!isConfigured || !isServiceAvailable) && (
             <div className={styles.statusBlock} role="status">
               <strong>{t("auth.unavailableTitle")}</strong>
               <span>{t("auth.unavailableDescription")}</span>
             </div>
           )}
 
-          {isConfigured && isLoading && (
+          {isConfigured && isServiceAvailable && isLoading && (
             <div className={styles.statusBlock} role="status">
               <span>{t("auth.loadingSession")}</span>
             </div>
           )}
 
-          {isConfigured && !isLoading && isSignedIn && (
+          {isConfigured && isServiceAvailable && !isLoading && isSignedIn && (
             <div className={styles.signedIn}>
               <div className={styles.statusBlock} role="status">
                 <strong>{t("auth.signedInTitle")}</strong>
@@ -100,27 +104,8 @@ export function AuthPage() {
             </div>
           )}
 
-          {isConfigured && !isLoading && !isSignedIn && (
+          {isConfigured && isServiceAvailable && !isLoading && !isSignedIn && (
             <form className={styles.form} onSubmit={handleSubmit}>
-              <div className={styles.modeTabs} role="group" aria-label={t("auth.modeLabel")}>
-                <button
-                  aria-pressed={authMode === "signIn"}
-                  className={authMode === "signIn" ? styles.activeMode : undefined}
-                  onClick={() => setAuthMode("signIn")}
-                  type="button"
-                >
-                  {t("auth.signIn")}
-                </button>
-                <button
-                  aria-pressed={authMode === "signUp"}
-                  className={authMode === "signUp" ? styles.activeMode : undefined}
-                  onClick={() => setAuthMode("signUp")}
-                  type="button"
-                >
-                  {t("auth.signUp")}
-                </button>
-              </div>
-
               <label className={styles.field}>
                 <span>{t("auth.email")}</span>
                 <input
@@ -135,7 +120,7 @@ export function AuthPage() {
               <label className={styles.field}>
                 <span>{t("auth.password")}</span>
                 <input
-                  autoComplete={authMode === "signIn" ? "current-password" : "new-password"}
+                  autoComplete="current-password"
                   minLength={6}
                   onChange={(event) => setPassword(event.target.value)}
                   required
@@ -147,12 +132,9 @@ export function AuthPage() {
               {hasError && <p className={styles.error}>{t("auth.errorMessage")}</p>}
 
               <StampButton disabled={isSubmitting} type="submit">
-                {isSubmitting
-                  ? t("auth.submitting")
-                  : authMode === "signIn"
-                    ? t("auth.signIn")
-                    : t("auth.signUp")}
+                {isSubmitting ? t("auth.submitting") : t("auth.signIn")}
               </StampButton>
+              <p className={styles.statusBlock}>{t("auth.registrationPending")}</p>
             </form>
           )}
         </SketchPanel>

@@ -44,6 +44,20 @@ export type TranslationDictionary = {
     backToNest: string;
     submitting: string;
     errorMessage: string;
+    registrationPending: string;
+    languageLabel: string;
+    languages: {
+      ptBR: string;
+      enUS: string;
+    };
+  };
+  foundation: {
+    eyebrow: string;
+    retry: string;
+    loading: { title: string; description: string };
+    unavailable: { title: string; description: string };
+    accountPending: { title: string; description: string };
+    onboardingPending: { title: string; description: string };
   };
   units: {
     kilometers: string;
@@ -595,6 +609,20 @@ export type TranslationDictionary = {
 };
 
 export type TranslationKey =
+  | "foundation.eyebrow"
+  | "foundation.retry"
+  | "foundation.loading.title"
+  | "foundation.loading.description"
+  | "foundation.unavailable.title"
+  | "foundation.unavailable.description"
+  | "foundation.accountPending.title"
+  | "foundation.accountPending.description"
+  | "foundation.onboardingPending.title"
+  | "foundation.onboardingPending.description"
+  | "auth.registrationPending"
+  | "auth.languageLabel"
+  | "auth.languages.ptBR"
+  | "auth.languages.enUS"
   | "app.title"
   | "pwaInstall.eyebrow"
   | "pwaInstall.title"

@@ -7,13 +7,8 @@ import {
   type AuthenticatedRewardCollection,
   type CollectedRewardResult,
 } from "../integrations/supabase/authenticatedRewards";
-import { isSupabaseCatalogEnabled } from "../integrations/supabase/config";
 import type { TranslationKey } from "../i18n";
-import { mockInventoryItems } from "./inventory";
-import { collectMockRewardOnce, readMockRewardCollection } from "./mockRewardCollection";
-import { createMockRewardFromDelivery } from "./rewards";
-import { getRouteRewardDiscoveries, type RouteRewardDiscovery } from "./mapTravel";
-import { getDeliveryById } from "./mockData";
+import type { RouteRewardDiscovery } from "./mapTravel";
 import type { Delivery, DeliveryReward } from "./types";
 
 type RewardCollectionState = {
@@ -21,7 +16,7 @@ type RewardCollectionState = {
   delivery?: Delivery;
   error?: TranslationKey;
   inventoryCount: number;
-  isAuthenticatedSource: boolean;
+  isAuthenticatedSource: true;
   isCollected: boolean;
   isLoading: boolean;
   isMutating: boolean;
@@ -29,36 +24,17 @@ type RewardCollectionState = {
   routeDiscoveries: RouteRewardDiscovery[];
 };
 
-type RewardCollectionActions = {
-  collectReward: () => Promise<void>;
+const emptyState: RewardCollectionState = {
+  canCollect: false,
+  inventoryCount: 0,
+  isAuthenticatedSource: true,
+  isCollected: false,
+  isLoading: true,
+  isMutating: false,
+  routeDiscoveries: [],
 };
 
-function createMockRewardCollectionState(deliveryId?: string): RewardCollectionState {
-  const delivery = deliveryId ? getDeliveryById(deliveryId) : undefined;
-  const snapshot = readMockRewardCollection();
-  const routeDiscoveries = delivery ? getRouteRewardDiscoveries(delivery) : [];
-
-  return {
-    canCollect: true,
-    delivery,
-    inventoryCount: mockInventoryItems.length + snapshot.inventory.length,
-    isAuthenticatedSource: false,
-    isCollected: Boolean(delivery && snapshot.collectedDeliveryIds.includes(delivery.id)),
-    isLoading: false,
-    isMutating: false,
-    reward: createMockRewardFromDelivery(delivery),
-    routeDiscoveries,
-  };
-}
-
-function mapAuthenticatedState(
-  data: AuthenticatedRewardCollection | undefined,
-  profileId: string,
-): RewardCollectionState | undefined {
-  if (!data) {
-    return undefined;
-  }
-
+function mapState(data: AuthenticatedRewardCollection, profileId: string): RewardCollectionState {
   return {
     canCollect: data.delivery.senderId === profileId,
     delivery: data.delivery,
@@ -72,109 +48,44 @@ function mapAuthenticatedState(
   };
 }
 
-export function useRewardCollectionData(
-  deliveryId?: string,
-): RewardCollectionState & RewardCollectionActions {
+export function useRewardCollectionData(deliveryId?: string) {
   const { isLoading: isAuthLoading, profile, session } = useAuth();
-  const [state, setState] = useState<RewardCollectionState>(() =>
-    createMockRewardCollectionState(deliveryId),
-  );
+  const [state, setState] = useState<RewardCollectionState>(emptyState);
 
   useEffect(() => {
-    if (!isSupabaseCatalogEnabled() || !deliveryId) {
-      setState(createMockRewardCollectionState(deliveryId));
+    if (isAuthLoading) return;
+    if (!deliveryId || !session || !profile) {
+      setState({ ...emptyState, isLoading: false });
       return;
     }
-
-    if (isAuthLoading) {
-      setState((currentState) => ({ ...currentState, isLoading: true }));
-      return;
-    }
-
-    if (!session || !profile) {
-      setState(createMockRewardCollectionState(deliveryId));
-      return;
-    }
-
-    let isMounted = true;
-
-    setState((currentState) => ({ ...currentState, isLoading: true }));
-
+    let active = true;
     fetchAuthenticatedRewardCollection(deliveryId, profile.id)
-      .then((data) => {
-        if (!isMounted) {
-          return;
-        }
-
-        setState(
-          mapAuthenticatedState(data, profile.id) ?? {
-            ...createMockRewardCollectionState(deliveryId),
-          },
-        );
-      })
-      .catch(() => {
-        if (isMounted) {
-          setState({
-            ...createMockRewardCollectionState(deliveryId),
-          });
-        }
-      });
-
-    return () => {
-      isMounted = false;
-    };
+      .then((data) => active && setState(data ? mapState(data, profile.id) : { ...emptyState, isLoading: false }))
+      .catch(() => active && setState({ ...emptyState, isLoading: false, error: "rewards.collectError" }));
+    return () => { active = false; };
   }, [deliveryId, isAuthLoading, profile, session]);
 
   async function collectReward() {
-    if (!state.delivery || !state.reward || state.isCollected) {
-      return;
-    }
-
-    if (!state.isAuthenticatedSource) {
-      const snapshot = collectMockRewardOnce({
-        delivery: state.delivery,
-        reward: state.reward,
-        routeDiscoveries: state.routeDiscoveries,
-      });
-      setState((currentState) => ({
-        ...currentState,
-        inventoryCount: mockInventoryItems.length + snapshot.inventory.length,
-        isCollected: true,
-      }));
-      return;
-    }
-
-    setState((currentState) => ({ ...currentState, error: undefined, isMutating: true }));
-
+    if (!state.delivery || !state.reward || state.isCollected) return;
+    setState((current) => ({ ...current, error: undefined, isMutating: true }));
     try {
       const result: CollectedRewardResult | undefined = await collectAuthenticatedReward({
         deliveryId: state.delivery.id,
         mascotId: state.delivery.mascotId,
       });
-
-      if (!result) {
-        throw new Error("Reward was not collected.");
-      }
-
-      setState((currentState) => ({
-        ...currentState,
+      if (!result) throw new Error("Reward was not collected.");
+      setState((current) => ({
+        ...current,
         delivery: result.delivery,
-        inventoryCount: currentState.inventoryCount + 1 + result.routeInventoryItems.length,
+        inventoryCount: current.inventoryCount + 1 + result.routeInventoryItems.length,
         isCollected: true,
         isMutating: false,
         reward: result.reward,
       }));
     } catch {
-      setState((currentState) => ({
-        ...currentState,
-        error: "rewards.collectError",
-        isMutating: false,
-      }));
+      setState((current) => ({ ...current, error: "rewards.collectError", isMutating: false }));
     }
   }
 
-  return {
-    ...state,
-    collectReward,
-  };
+  return { ...state, collectReward };
 }
