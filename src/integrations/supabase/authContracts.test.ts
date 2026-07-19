@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { maskEmail, meetsPasswordPolicy, resolveAuthJourneyState, sanitizeIntendedRoute } from "./authContracts";
+import { maskEmail, meetsPasswordPolicy, resolveAuthJourneyState, resolveSignUpResponse, sanitizeIntendedRoute } from "./authContracts";
 
 describe("auth contracts", () => {
   it("requires eight characters with letters and numbers", () => {
@@ -25,5 +25,13 @@ describe("auth contracts", () => {
 
   it("masks the local portion of an email", () => {
     expect(maskEmail("abel@example.com")).toBe("ab••@example.com");
+  });
+
+  it("opens verification only for accepted or privacy-preserving signup responses", () => {
+    expect(resolveSignUpResponse({ error: null, hasUser: true })).toEqual({ ok: true });
+    expect(resolveSignUpResponse({ error: { code: "user_already_exists" }, hasUser: false })).toEqual({ ok: true });
+    expect(resolveSignUpResponse({ error: { code: "email_exists" }, hasUser: false })).toEqual({ ok: true });
+    expect(resolveSignUpResponse({ error: { code: "signup_disabled" }, hasUser: false })).toEqual({ ok: false, code: "requestFailed" });
+    expect(resolveSignUpResponse({ error: null, hasUser: false })).toEqual({ ok: false, code: "requestFailed" });
   });
 });
