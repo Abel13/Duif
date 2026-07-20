@@ -158,6 +158,14 @@ labels are suggestions only. The provisional profile uses neutral coordinates an
 fields with `onboarding.tutorialNestLabel`; it is not the player's real nest and must be replaced
 by the later nest-activation flow.
 
+The mandatory first route is stored as a real delivery with `is_tutorial = true` and a unique
+per-sender constraint. `start_or_resume_tutorial_delivery` fixes its authoritative timeline at one
+minute of preparation, seven outbound, one at the destination, and seven returning. Instruction
+acknowledgements are linear and time-gated on `account_onboarding`; elapsed time never pauses while
+the PWA is closed. Generic delivery collection and generic `tutorial → nestSetup` advancement reject
+this flow. `collect_tutorial_delivery` alone inserts the two deterministic inventory items,
+completes the delivery, and advances onboarding atomically and idempotently.
+
 Local confirmation and recovery messages can be inspected through Inbucket. Equivalent remote
 password, confirmation, redirect-allowlist, and SMTP settings must be applied only after the
 remote project passes the Milestone 37 identification, backup, and reset gate.

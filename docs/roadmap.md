@@ -1786,7 +1786,7 @@ Delivered:
 
 ## Milestone 44: Mandatory Tutorial Delivery
 
-Status: Planned.
+Status: Implemented and validated locally; remote migration pending deployment.
 
 Goal:
 
@@ -1811,6 +1811,17 @@ Success criteria:
 - reopening the PWA resumes the correct position and instruction;
 - the collectible appears at its threshold and can only be collected after return;
 - no client action can mark the tutorial complete early.
+
+Delivered:
+
+- an explicit start action and one idempotent, server-timestamped 16-minute tutorial delivery;
+- a restricted onboarding map between the fictional Postal Nest and Messenger Station;
+- seven server-owned instructional acknowledgements that remain ordered across PWA restarts;
+- one guaranteed Inaugural Postcard discovery at the midpoint of the outbound leg;
+- atomic collection of the postcard and First Route Stamp through a tutorial-only RPC;
+- strict exclusion from generic collection, social history, postal traffic, and generic onboarding
+  advancement;
+- completion handoff to `nestSetup` without exposing or assigning a real player location.
 
 ## Milestone 45: Real Nest Activation
 

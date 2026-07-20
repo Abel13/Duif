@@ -241,6 +241,19 @@ Backend implications:
 
 ## Mascot Progression Rules
 
+### Mandatory first route
+
+- The first owned mascot must complete the persisted 16-minute tutorial before a real nest can be
+  configured or normal gameplay can open.
+- Tutorial time is authoritative and continues while the application is closed; instructional
+  cards do not pause travel.
+- Preparation, outbound travel, discovery, destination, return, arrival, and collection are
+  acknowledged in order and cannot be skipped through generic onboarding actions.
+- The tutorial grants exactly the Inaugural Postcard found at 50% of the outbound leg and the First
+  Route Stamp after return. Neither item enters inventory before final collection.
+- Tutorial coordinates are fixed public fiction and never derive from the player's location. The
+  delivery is absent from social traffic and ordinary delivery history.
+
 Each new account chooses exactly one active starter archetype. The archetype defines the initial
 species, portrait, attributes, trait, skills, appearance, and equipment snapshot. The naming field
 starts empty so historical archetype suggestions do not bias players toward repeated names. The
