@@ -125,9 +125,10 @@ The registry contains 42 identities: 41 active versions and the unused `route-do
 archived. PWA icons, the brand logo, and fonts remain outside the runtime registry because they
 must work before Supabase, authentication, or onboarding has loaded.
 
-Until Milestone 46, registry changes and activation occur only through reviewed migrations. The
-administrative studio will later upload new files to private staging, validate them, and publish
-immutable Storage versions without overwriting an active object.
+Milestone 46 provides `/admin/assets` to accounts with the server-verified `duif_role=admin` app
+metadata. It uploads new files to private staging, validates them in the `asset-studio` Edge
+Function, and publishes immutable Storage versions without overwriting an active object. See
+[`asset-studio.md`](./asset-studio.md) for the bootstrap and publishing runbook.
 
 The administrative studio may edit metadata only through the schema for that asset type. It must
 validate file signature, MIME type, dimensions, byte budget, required translation keys, usage

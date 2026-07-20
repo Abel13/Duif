@@ -24,11 +24,16 @@ describe("official asset manifest", () => {
     expect(resolveOfficialAssetPath(manifest, assetKeys.mascots.trovao)).toBeUndefined();
   });
 
-  it("rejects duplicate, unknown, inactive, and free-form records", () => {
+  it("rejects duplicate, inactive, and free-form records while accepting registered-format keys", () => {
     expect(() => parseOfficialAssetManifest([row, row])).toThrow(/Duplicate/);
     expect(() => parseOfficialAssetManifest([{ ...row, status: "draft" }])).toThrow(/Invalid/);
     expect(() => parseOfficialAssetManifest([{ ...row, packaged_path: "https://example.com/image.webp" }])).toThrow(/Invalid/);
-    expect(() => parseOfficialAssetManifest([{ ...row, official_assets: { ...row.official_assets, asset_key: "unknown.asset" } }])).toThrow(/Invalid/);
+    expect(parseOfficialAssetManifest([{ ...row, official_assets: { ...row.official_assets, asset_key: "studio.testAsset" } }]).has("studio.testAsset")).toBe(true);
+    expect(() => parseOfficialAssetManifest([{ ...row, official_assets: { ...row.official_assets, asset_key: "free path" } }])).toThrow(/Invalid/);
+  });
+  it("resolves an active Storage version through its public URL", () => {
+    const manifest=parseOfficialAssetManifest([{ ...row, source:"storage", packaged_path:null, resolved_path:"https://project.supabase.co/storage/v1/object/public/duif-assets/assets/studio/test.webp", official_assets:{asset_key:"studio.testAsset",asset_type:"shopArtwork"} }]);
+    expect(resolveOfficialAssetPath(manifest,"studio.testAsset")).toContain("duif-assets");
   });
 
   it("accepts an empty manifest without inventing fallback paths", () => {

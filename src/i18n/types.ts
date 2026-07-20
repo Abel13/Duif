@@ -163,6 +163,7 @@ export type TranslationDictionary = {
     rewards: { inauguralPostcard: { name: string; description: string }; firstRouteStamp: { name: string; description: string } };
   };
   nest: { eyebrow: string; title: string; description: string; searchLabel: string; searchPlaceholder: string; searchAction: string; mapLabel: string; privacyNote: string; selectedCity: string; selectionReady: string; confirmAction: string };
+  assetStudio: { eyebrow: string; title: string; description: string; newAsset: string; uploadTitle: string; key: string; type: string; file: string; altKey: string; decorative: string; author: string; saveDraft: string; draftSaved: string; publish: string; published: string; archive: string; archived: string; restore: string; restored: string; usage: string; filters: string; all: string; loading: string; error: string };
   units: {
     kilometers: string;
   };
@@ -1307,4 +1308,28 @@ export type TranslationKey =
   | "nest.privacyNote"
   | "nest.selectedCity"
   | "nest.selectionReady"
-  | "nest.confirmAction";
+  | "nest.confirmAction"
+  | "assetStudio.eyebrow"
+  | "assetStudio.title"
+  | "assetStudio.description"
+  | "assetStudio.newAsset"
+  | "assetStudio.uploadTitle"
+  | "assetStudio.key"
+  | "assetStudio.type"
+  | "assetStudio.file"
+  | "assetStudio.altKey"
+  | "assetStudio.decorative"
+  | "assetStudio.author"
+  | "assetStudio.saveDraft"
+  | "assetStudio.draftSaved"
+  | "assetStudio.publish"
+  | "assetStudio.published"
+  | "assetStudio.archive"
+  | "assetStudio.archived"
+  | "assetStudio.restore"
+  | "assetStudio.restored"
+  | "assetStudio.usage"
+  | "assetStudio.filters"
+  | "assetStudio.all"
+  | "assetStudio.loading"
+  | "assetStudio.error";

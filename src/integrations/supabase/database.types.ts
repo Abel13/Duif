@@ -1024,6 +1024,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_list_official_assets: { Args: never; Returns: Json }
       advance_account_onboarding: {
         Args: {
           expected_stage: Database["public"]["Enums"]["onboarding_stage"]
@@ -1254,6 +1255,7 @@ export type Database = {
         | "shopArtwork"
         | "texture"
         | "postalMark"
+        | "postcardArtwork"
       reward_rarity: "common" | "uncommon" | "rare"
       tutorial_instruction_step: "preparing" | "outbound" | "discovery" | "destination" | "returning" | "returned" | "collection"
     }

@@ -249,9 +249,10 @@ database. The browser interpolates these public snapshots between five-minute re
 
 `official_assets` provides stable typed identities for gameplay and illustrated UI art.
 `official_asset_versions` stores immutable version metadata, active-only public reads, packaged
-paths today, and mutually exclusive Storage locations for the future administrative studio.
-Browser roles cannot mutate the registry, and activation remains migration-only until
-Milestone 46.
+paths and mutually exclusive Storage locations. The Asset Studio adds `official_asset_activity`, a
+private `duif-asset-staging` bucket, a public `duif-assets` bucket, admin-only listing/mutation
+RPCs, and the `asset-studio` Edge Function. Browser roles cannot mutate the registry directly;
+active version switching is performed atomically by the server boundary.
 
 ## Clean account foundation
 

@@ -304,6 +304,7 @@ export const ptBR = {
     },
   },
   nest: { eyebrow: "Ninho real", title: "Escolha a região do seu ninho", description: "Busque uma cidade e toque no mapa para indicar uma área aproximada. Ela será usada somente para calcular suas rotas.", searchLabel: "Buscar cidade", searchPlaceholder: "Cidade ou localidade", searchAction: "Buscar", mapLabel: "Mapa para escolher a região do ninho", privacyNote: "O ponto será aproximado em cerca de 2 km. Sua localização não será exibida para outras pessoas.", selectedCity: "Sua cidade: {city}", selectionReady: "Área aproximada selecionada.", confirmAction: "Ativar meu ninho" },
+  assetStudio: { eyebrow: "Ateliê postal", title: "Assets oficiais", description: "Prepare, valide e publique arte oficial sem interromper o jogo.", newAsset: "Novo asset", uploadTitle: "Preparar versão", key: "Chave do asset", type: "Tipo", file: "Arquivo", altKey: "Chave de texto alternativo", decorative: "Arte decorativa", author: "Autoria", saveDraft: "Salvar rascunho", draftSaved: "Rascunho salvo no ateliê.", publish: "Publicar", published: "Versão publicada.", archive: "Arquivar", archived: "Versão arquivada.", restore: "Restaurar versão", restored: "Versão restaurada.", usage: "Usos", filters: "Filtros de assets", all: "Todos", loading: "Abrindo o ateliê…", error: "Não foi possível concluir esta ação do ateliê." },
   units: {
     kilometers: "km",
   },

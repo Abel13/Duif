@@ -8,6 +8,7 @@ import { ResetPasswordPage } from "../pages/ResetPasswordPage/ResetPasswordPage"
 import { OnboardingPage } from "../pages/OnboardingPage/OnboardingPage";
 import { sanitizeIntendedRoute } from "../integrations/supabase/authContracts";
 import { useAuth } from "../integrations/supabase/AuthProvider";
+import { isAssetAdministrator } from "../integrations/supabase/assetStudio";
 
 const TutorialDeliveryPage=lazy(()=>import("../pages/TutorialDeliveryPage/TutorialDeliveryPage").then(module=>({default:module.TutorialDeliveryPage})));
 const NestSetupPage=lazy(()=>import("../pages/NestSetupPage/NestSetupPage").then(module=>({default:module.NestSetupPage})));
@@ -17,6 +18,7 @@ const InventoryAlbumPage=lazy(()=>import("../pages/InventoryAlbumPage/InventoryA
 const FriendsPage=lazy(()=>import("../pages/FriendsPage/FriendsPage").then(module=>({default:module.FriendsPage})));
 const ShopPage=lazy(()=>import("../pages/ShopPage/ShopPage").then(module=>({default:module.ShopPage})));
 const SendFlowPage=lazy(()=>import("../pages/SendFlowPage/SendFlowPage").then(module=>({default:module.SendFlowPage})));
+const AssetStudioPage=lazy(()=>import("../pages/AssetStudioPage/AssetStudioPage").then(module=>({default:module.AssetStudioPage})));
 
 export function AppRoutes() {
   return (
@@ -33,12 +35,14 @@ export function AppRoutes() {
       <Route path="/friends" element={<ProtectedGameRoute><FriendsPage/></ProtectedGameRoute>} />
       <Route path="/shop" element={<ProtectedGameRoute><ShopPage/></ProtectedGameRoute>} />
       <Route path="/send" element={<ProtectedGameRoute><SendFlowPage/></ProtectedGameRoute>} />
+      <Route path="/admin/assets" element={<ProtectedAdminRoute />} />
       <Route path="*" element={<ProtectedFoundationRoute />} />
     </Routes>
   );
 }
 
 function ProtectedNestRoute(){const {journeyState}=useAuth();if(journeyState==="loading")return <FoundationStatusPage state="loading"/>;if(journeyState==="nestSetupRequired")return <Suspense fallback={<FoundationStatusPage state="loading"/>}><NestSetupPage/></Suspense>;return <Navigate replace to={journeyState==="ready"?"/map":"/onboarding"}/>;}
+function ProtectedAdminRoute(){const {isLoading,session}=useAuth();if(isLoading)return <FoundationStatusPage state="loading"/>;if(!session)return <Navigate replace to="/auth?next=%2Fadmin%2Fassets"/>;if(!isAssetAdministrator(session.user.app_metadata))return <Navigate replace to="/map"/>;return <Suspense fallback={<FoundationStatusPage state="loading"/>}><AssetStudioPage/></Suspense>;}
 function ProtectedGameRoute({children}:{children:ReactNode}){const {journeyState}=useAuth();if(journeyState==="loading")return <FoundationStatusPage state="loading"/>;if(journeyState!=="ready")return <Navigate replace to={journeyState==="nestSetupRequired"?"/onboarding/nest":"/onboarding"}/>;return <Suspense fallback={<FoundationStatusPage state="loading"/>}>{children}</Suspense>;}
 
 function ProtectedTutorialRoute() {

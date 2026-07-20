@@ -1852,14 +1852,14 @@ Success criteria:
 - search text and exact clicked coordinates are never persisted;
 - a completed player opens the map at the configured private nest.
 
-## Milestone 46: Administrative Asset And Catalog Studio
+## Milestone 46: Administrative Asset Studio
 
-Status: Planned.
+Status: Complete.
 
 Goal:
 
-Allow authorized maintainers to add, inspect, edit, version, and activate official assets and
-their type-safe catalog attributes.
+Allow authorized maintainers to add, inspect, version, and activate official assets. Gameplay
+catalogs remain migration-managed in this milestone.
 
 Includes:
 
@@ -1873,7 +1873,8 @@ Includes:
   the published object;
 - explicit activation after validation, atomic reference switching, archival, and rollback;
 - prevention of destructive deletion while an asset version is referenced;
-- editing of associated mascot, equipment, reward, item, navigation, map, and shop catalog rows.
+- read-only usage references for mascot, reward, inventory, and map-facing catalog surfaces;
+- private staging and public immutable Storage delivery, guarded by an admin-only Edge Function.
 
 Success criteria:
 
@@ -1881,6 +1882,46 @@ Success criteria:
 - a failed upload never affects the active game;
 - every activation is attributable and reversible;
 - the game reads only validated active versions.
+
+## Milestone 46A: Administrative GeoNames Catalog Refresh
+
+Status: Planned.
+
+Goal:
+
+Make the GeoNames `cities15000` catalog refreshable from the administrative panel without
+moving database credentials or the source archive through a browser.
+
+Includes:
+
+- an admin-only GeoNames section within `/admin/assets` or a dedicated adjacent administrative
+  route, protected by `app_metadata.duif_role = "admin"` at the UI, RPC, and Edge Function
+  boundaries;
+- a server-side import job that downloads `cities15000.zip` directly from GeoNames, validates the
+  archive and its checksum, and runs the same deterministic upsert/archive logic as
+  `scripts/import-geonames-cities.sh`;
+- an exclusive job lock so concurrent maintainers cannot run two imports at once;
+- durable job records with source date, checksum, operator, start/end time, outcome, processed,
+  imported, updated, and archived counts, plus a safe localized error summary;
+- a read-only panel showing the latest successful load, active-city count, recent history, and an
+  explicit “Atualizar catálogo de cidades” action with a confirmation step;
+- an unchanged CLI script as a documented recovery path when the administrative job is unavailable;
+- retention and attribution rules for GeoNames CC BY 4.0 data.
+
+Does not include:
+
+- player search logging;
+- browser uploads of the city dump;
+- direct browser database credentials;
+- address, street, point-of-interest, or Google Places search.
+
+Success criteria:
+
+- only a current administrator can start or inspect an import;
+- a failed download or validation leaves the previously active city catalog intact;
+- two imports cannot overlap;
+- the panel exposes enough history to audit each refresh without exposing player searches;
+- the existing city-search RPC continues to serve only active imported cities.
 
 ## Milestone 47: Account Recovery And Production Readiness
 

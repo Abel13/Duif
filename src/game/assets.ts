@@ -52,7 +52,8 @@ export const assetKeys = {
 } as const;
 
 type NestedValues<T> = T extends string ? T : { [K in keyof T]: NestedValues<T[K]> }[keyof T];
-export type OfficialAssetKey = NestedValues<typeof assetKeys>;
+export type BuiltInOfficialAssetKey = NestedValues<typeof assetKeys>;
+export type OfficialAssetKey = string;
 export type OfficialAssetType =
   | "mascotPortrait" | "equipmentIcon" | "rewardThumbnail" | "collectibleThumbnail"
   | "navigationIcon" | "mapControl" | "mapPin" | "currencyIcon" | "shopArtwork"
@@ -62,7 +63,7 @@ export type OfficialAssetVersion = {
   key: OfficialAssetKey;
   type: OfficialAssetType;
   version: number;
-  source: "packaged";
+  source: "packaged" | "storage";
   path: string;
   mimeType: string;
   width: number;
@@ -75,7 +76,7 @@ export type OfficialAssetManifest = ReadonlyMap<OfficialAssetKey, OfficialAssetV
 let activeManifest: OfficialAssetManifest = new Map();
 
 export type OfficialAssetManifestRow = {
-  version: unknown; source: unknown; status: unknown; packaged_path: unknown;
+  version: unknown; source: unknown; status: unknown; packaged_path: unknown; resolved_path?: unknown;
   mime_type: unknown; width: unknown; height: unknown; byte_size: unknown;
   alt_text_key: unknown; is_decorative: unknown;
   official_assets: { asset_key?: unknown; asset_type?: unknown } | null;
@@ -85,10 +86,10 @@ const assetTypes = new Set<OfficialAssetType>([
   "mascotPortrait", "equipmentIcon", "rewardThumbnail", "collectibleThumbnail",
   "navigationIcon", "mapControl", "mapPin", "currencyIcon", "shopArtwork", "texture", "postalMark", "postcardArtwork",
 ]);
-const knownKeys = new Set<string>(Object.values(assetKeys).flatMap((group) => Object.values(group)));
+const assetKeyPattern = /^[a-z][a-zA-Z0-9]*(\.[a-zA-Z0-9]+)+$/;
 
 export function isOfficialAssetKey(value: unknown): value is OfficialAssetKey {
-  return typeof value === "string" && knownKeys.has(value);
+  return typeof value === "string" && assetKeyPattern.test(value);
 }
 
 export function parseOfficialAssetManifest(rows: OfficialAssetManifestRow[]): OfficialAssetManifest {
@@ -97,9 +98,10 @@ export function parseOfficialAssetManifest(rows: OfficialAssetManifestRow[]): Of
     const identity = row.official_assets;
     const key = identity?.asset_key;
     const type = identity?.asset_type;
-    if (row.status !== "active" || row.source !== "packaged" || typeof key !== "string"
-      || !knownKeys.has(key) || typeof type !== "string" || !assetTypes.has(type as OfficialAssetType)
-      || typeof row.packaged_path !== "string" || !row.packaged_path.startsWith("/assets/")
+    const path = row.source === "packaged" ? row.packaged_path : row.resolved_path;
+    if (row.status !== "active" || (row.source !== "packaged" && row.source !== "storage") || typeof key !== "string"
+      || !assetKeyPattern.test(key) || typeof type !== "string" || !assetTypes.has(type as OfficialAssetType)
+      || typeof path !== "string" || (row.source === "packaged" && !path.startsWith("/assets/"))
       || typeof row.version !== "number" || !Number.isInteger(row.version) || row.version < 1
       || typeof row.width !== "number" || typeof row.height !== "number" || typeof row.byte_size !== "number"
       || typeof row.mime_type !== "string" || typeof row.is_decorative !== "boolean"
@@ -109,7 +111,7 @@ export function parseOfficialAssetManifest(rows: OfficialAssetManifestRow[]): Of
     if (manifest.has(key as OfficialAssetKey)) throw new Error(`Duplicate official asset key: ${key}`);
     manifest.set(key as OfficialAssetKey, {
       key: key as OfficialAssetKey, type: type as OfficialAssetType, version: row.version,
-      source: "packaged", path: row.packaged_path, mimeType: row.mime_type,
+      source: row.source, path, mimeType: row.mime_type,
       width: row.width, height: row.height, byteSize: row.byte_size,
       altTextKey: row.alt_text_key as TranslationKey | null ?? undefined,
       isDecorative: row.is_decorative,

@@ -38,11 +38,14 @@ export function OfficialAssetProvider({ children }: { children: ReactNode }) {
     async function loadManifest() {
       try {
         const { data, error } = await client.from("official_asset_versions")
-          .select("version,source,status,packaged_path,mime_type,width,height,byte_size,alt_text_key,is_decorative,official_assets!inner(asset_key,asset_type)")
+          .select("version,source,status,packaged_path,storage_bucket,storage_object_path,mime_type,width,height,byte_size,alt_text_key,is_decorative,official_assets!inner(asset_key,asset_type)")
           .eq("status", "active");
         if (!active) return;
         if (error) throw error;
-        const nextManifest = parseOfficialAssetManifest((data ?? []) as unknown as OfficialAssetManifestRow[]);
+        const rows = (data ?? []).map((row) => row.source === "storage" && row.storage_bucket && row.storage_object_path
+          ? { ...row, resolved_path: client.storage.from(row.storage_bucket).getPublicUrl(row.storage_object_path).data.publicUrl }
+          : row);
+        const nextManifest = parseOfficialAssetManifest(rows as unknown as OfficialAssetManifestRow[]);
         setActiveOfficialAssetManifest(nextManifest);
         setManifest(nextManifest);
         setStatus("ready");
