@@ -70,9 +70,30 @@ do $$ declare delivery_id uuid; first_result jsonb; repeated_result jsonb; begin
 end $$;
 reset role;
 
+insert into public.geonames_import_runs(
+  id,source,dataset,source_date,source_sha256,source_row_count,imported_city_count,operator_label,completed_at
+) values (
+  '00000000-0000-4000-8000-000000009401','geonames','cities15000',current_date,repeat('c',64),1,1,'Tutorial SQL test',now()
+) on conflict (id) do nothing;
+insert into public.geonames_cities(
+  geoname_id,name,ascii_name,alternate_names,country_code,admin1_code,latitude,longitude,population,search_text,import_run_id
+) values (
+  3448439,'São Paulo','Sao Paulo','','BR','27',-23.5505,-46.6333,12325232,'sao paulo sao paulo','00000000-0000-4000-8000-000000009401'
+) on conflict (geoname_id) do update set is_active=true,archived_at=null;
+
+set local role authenticated;
+select set_config('request.jwt.claim.sub','10000000-0000-4000-8000-000000009401',true);
+do $$ declare first_result jsonb; repeated_result jsonb; begin
+  first_result:=public.complete_nest_setup(-23.5500,-46.6300,3448439); repeated_result:=public.complete_nest_setup(-23.5500,-46.6300,3448439);
+  if first_result->'profile'->>'id'<>repeated_result->'profile'->>'id' or first_result->'onboarding'->>'stage'<>'completed' then raise exception 'Nest setup was not idempotent'; end if;
+  if (first_result->'profile'->>'home_latitude')::double precision=-23.55 or first_result->'profile'->>'postal_base_city'<>'São Paulo' or first_result->'profile'->>'home_city_geoname_id'<>'3448439' then raise exception 'Nest setup did not store the city reference safely'; end if;
+  if (select label from public.get_my_nest_city()) <> 'São Paulo · BR' then raise exception 'Owner could not access the selected nest city'; end if;
+end $$;
+reset role;
+
 do $$ begin
   if (select count(*) from public.inventory_items i join public.profiles p on p.id=i.owner_profile_id where p.auth_user_id='10000000-0000-4000-8000-000000009401')<>2 then raise exception 'Tutorial did not grant exactly two items'; end if;
-  if (select stage from public.account_onboarding where auth_user_id='10000000-0000-4000-8000-000000009401')<>'nestSetup' then raise exception 'Tutorial did not advance to nest setup'; end if;
+  if (select stage from public.account_onboarding where auth_user_id='10000000-0000-4000-8000-000000009401')<>'completed' then raise exception 'Nest setup did not complete onboarding'; end if;
   if (select count(*) from public.deliveries d join public.profiles p on p.id=d.sender_profile_id where d.is_tutorial and p.auth_user_id='10000000-0000-4000-8000-000000009401')<>1 then raise exception 'Expected exactly one tutorial delivery'; end if;
 end $$;
 rollback;
