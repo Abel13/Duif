@@ -64,11 +64,13 @@ declare
   mascot_record public.player_mascots;
 begin
   if (select count(*) from public.profiles where auth_user_id = '10000000-0000-4000-8000-000000009301') <> 1
-    or (select count(*) from public.player_mascots where is_starter) <> 1 then
+    or (select count(*) from public.player_mascots pm join public.profiles p on p.id=pm.owner_profile_id
+      where pm.is_starter and p.auth_user_id='10000000-0000-4000-8000-000000009301') <> 1 then
     raise exception 'Provisioning did not create exactly one profile and starter mascot';
   end if;
   select mt.* into strict template_record from public.mascot_templates mt where catalog_key = 'mascot-nuvem';
-  select pm.* into strict mascot_record from public.player_mascots pm where is_starter;
+  select pm.* into strict mascot_record from public.player_mascots pm join public.profiles p on p.id=pm.owner_profile_id
+  where pm.is_starter and p.auth_user_id='10000000-0000-4000-8000-000000009301';
   if mascot_record.name <> 'Céu Azul'
     or mascot_record.attributes <> template_record.attributes
     or mascot_record.trait <> template_record.trait

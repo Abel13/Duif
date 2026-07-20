@@ -53,6 +53,7 @@ const inventoryItemRow: InventoryItemRow = {
 };
 
 const deliveryRow: DeliveryRow = {
+  is_tutorial: false,
   animal_speed_kmh: 62,
   correspondence_option_id: "00000000-0000-4000-8000-000000000401",
   created_at: "2026-07-09T20:00:00.000Z",

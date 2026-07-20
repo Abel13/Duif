@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   isValidMascotName,
   isValidPlayerDisplayName,
+  limitPlayerNameInput,
   normalizeMascotName,
   normalizePlayerDisplayName,
   onboardingIntroIndex,
@@ -26,6 +27,10 @@ describe("account onboarding contracts", () => {
     expect(isValidPlayerDisplayName("A")).toBe(false);
     expect(isValidPlayerDisplayName("A".repeat(25))).toBe(false);
     expect(isValidPlayerDisplayName("Ana\u0007")).toBe(false);
+  });
+
+  it("limits typed names to 24 Unicode code points", () => {
+    expect(limitPlayerNameInput(`${"Á".repeat(23)}🐦postal`)).toBe(`${"Á".repeat(23)}🐦`);
   });
 
   it("maps persisted stages to the first incomplete visible step", () => {
