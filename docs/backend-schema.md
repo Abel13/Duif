@@ -141,13 +141,22 @@ RPC remains removed: authentication creates only an Auth user, while a confirmed
 a profile is routed to onboarding. `begin_or_resume_onboarding` creates or returns the caller's
 versioned progress row, and `advance_account_onboarding` permits only the next linear stage while
 holding the row lock. Browser roles may read only their own row and cannot write it directly.
-Profile and mascot provisioning remain authoritative work for the later onboarding RPC.
+Profile and initial mascot provisioning are performed together by `provision_initial_mascot`.
+The RPC locks the onboarding row, consumes its selected archetype and literal mascot-name draft,
+copies the official template snapshot, creates exactly one starter mascot, and advances exclusively
+to `tutorial`. Repeated calls return the same profile and mascot. Browser roles cannot create or
+alter the draft directly; `save_initial_mascot_draft` is the only write boundary during
+`mascotChoice`.
 
 The introduction persists `welcome`, `travel`, `discoveries`, `returnCollection`, and
 `displayName` before handing off to `mascotChoice`. Future stages are already represented as
 `tutorial`, `nestSetup`, and `completed`, but this milestone does not create their gameplay data.
 The reserved player display name is normalized to NFC with collapsed whitespace, remains literal
 and non-unique, and must contain 2 to 24 characters.
+Mascot names follow the same normalization and length rules. Localized Nuvem, Trovão, and Pipoca
+labels are suggestions only. The provisional profile uses neutral coordinates and empty postal
+fields with `onboarding.tutorialNestLabel`; it is not the player's real nest and must be replaced
+by the later nest-activation flow.
 
 Local confirmation and recovery messages can be inspected through Inbucket. Equivalent remote
 password, confirmation, redirect-allowlist, and SMTP settings must be applied only after the

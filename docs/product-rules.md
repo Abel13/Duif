@@ -241,6 +241,12 @@ Backend implications:
 
 ## Mascot Progression Rules
 
+Each new account chooses exactly one active starter archetype. The archetype defines the initial
+species, portrait, attributes, trait, skills, appearance, and equipment snapshot. Its localized
+suggested name is never an identity requirement: the player must confirm a literal mascot name,
+which remains unchanged when the interface language changes. Retrying provisioning cannot grant a
+second starter mascot.
+
 Mascots level up by completing deliveries.
 
 Rules:

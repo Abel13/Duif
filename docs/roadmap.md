@@ -1742,7 +1742,7 @@ Delivered:
 
 ## Milestone 43: Initial Mascot Choice And Provisioning
 
-Status: Planned.
+Status: Implemented and validated locally; remote migration pending deployment.
 
 Goal:
 
@@ -1770,6 +1770,19 @@ Success criteria:
 - every new player owns exactly one initial mascot;
 - retrying after a network failure cannot create a second mascot;
 - the chosen name is visible consistently across map, profile, tutorial, and collection UI.
+
+Delivered:
+
+- a circular, touch-enabled postal carousel backed by the three active official archetypes;
+- localized suggested names that remain editable and never replace a player-confirmed literal name;
+- concise comparison of attributes, trait, skills, and starter equipment, followed by an explicit
+  review step;
+- resumable server-owned mascot drafts saved only when the player opens the review;
+- atomic and idempotent profile plus starter-mascot provisioning from an immutable template
+  snapshot;
+- one-starter-per-owner enforcement and exclusive `mascotChoice → tutorial` advancement through
+  the provisioning RPC;
+- a neutral tutorial-nest profile placeholder that contains no real player location.
 
 ## Milestone 44: Mandatory Tutorial Delivery
 
