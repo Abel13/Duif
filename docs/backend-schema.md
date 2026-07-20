@@ -151,8 +151,8 @@ alter the draft directly; `save_initial_mascot_draft` is the only write boundary
 The introduction persists `welcome`, `travel`, `discoveries`, `returnCollection`, and
 `displayName` before handing off to `mascotChoice`. Future stages are already represented as
 `tutorial`, `nestSetup`, and `completed`, but this milestone does not create their gameplay data.
-The reserved player display name is normalized to NFC with collapsed whitespace, remains literal
-and non-unique, and must contain 2 to 24 characters.
+The reserved player display name is normalized to NFC with collapsed whitespace, remains literal,
+must contain 2 to 24 characters, and is reserved uniquely without regard to letter case.
 Mascot names follow the same normalization and length rules. Localized Nuvem, Trovão, and Pipoca
 labels are suggestions only. The provisional profile uses neutral coordinates and empty postal
 fields with `onboarding.tutorialNestLabel`; it is not the player's real nest and must be replaced

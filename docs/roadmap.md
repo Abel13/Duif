@@ -1733,7 +1733,7 @@ Delivered:
 - a versioned `account_onboarding` record tied directly to the confirmed Auth user, without
   provisioning profile, nest, mascot, delivery, or inventory rows;
 - idempotent server-owned initialization and linear stage transitions with owner-only reads;
-- four required illustrated explanations followed by a non-unique public display-name step;
+- four required illustrated explanations followed by a unique public display-name step;
 - review navigation that never regresses accepted server progress and exact resume at the first
   incomplete step;
 - journey-aware route guards for onboarding, tutorial, nest setup, and ready states;
@@ -1774,7 +1774,7 @@ Success criteria:
 Delivered:
 
 - a circular, touch-enabled postal carousel backed by the three active official archetypes;
-- localized suggested names that remain editable and never replace a player-confirmed literal name;
+- a blank naming step that asks every player to create a personal literal mascot name;
 - concise comparison of attributes, trait, skills, and starter equipment, followed by an explicit
   review step;
 - resumable server-owned mascot drafts saved only when the player opens the review;

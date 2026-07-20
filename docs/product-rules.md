@@ -77,7 +77,7 @@ Boosts:
 - A confirmed account must complete the persisted onboarding journey before normal gameplay.
 - Introductory steps cannot be skipped as a group. Players may review accepted explanations, but
   going back never regresses authoritative progress.
-- The public player display name is literal, non-unique, locale-independent, normalized to NFC,
+- The public player display name is literal, unique without regard to letter case, locale-independent, normalized to NFC,
   and limited to 2–24 characters after whitespace normalization.
 - Onboarding progress exists independently from `profiles`; no profile, nest, mascot, delivery,
   or inventory item is created during the introductory shell.
@@ -242,10 +242,10 @@ Backend implications:
 ## Mascot Progression Rules
 
 Each new account chooses exactly one active starter archetype. The archetype defines the initial
-species, portrait, attributes, trait, skills, appearance, and equipment snapshot. Its localized
-suggested name is never an identity requirement: the player must confirm a literal mascot name,
-which remains unchanged when the interface language changes. Retrying provisioning cannot grant a
-second starter mascot.
+species, portrait, attributes, trait, skills, appearance, and equipment snapshot. The naming field
+starts empty so historical archetype suggestions do not bias players toward repeated names. The
+player must confirm a literal mascot name, which remains unchanged when the interface language
+changes. Retrying provisioning cannot grant a second starter mascot.
 
 Mascots level up by completing deliveries.
 
