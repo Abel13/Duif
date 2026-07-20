@@ -243,10 +243,12 @@ Backend implications:
 
 ### Mandatory first route
 
-- The first owned mascot must complete the persisted 16-minute tutorial before a real nest can be
+- The first owned mascot must complete the persisted 5-minute tutorial before a real nest can be
   configured or normal gameplay can open.
 - Tutorial time is authoritative and continues while the application is closed; instructional
   cards do not pause travel.
+- A versioned First Journey Boost shortens only the tutorial. It is not an item, cannot be reused,
+  and never changes the mascot's normal attributes, skills, or delivery modifiers.
 - Preparation, outbound travel, discovery, destination, return, arrival, and collection are
   acknowledged in order and cannot be skipped through generic onboarding actions.
 - The tutorial grants exactly the Inaugural Postcard found at 50% of the outbound leg and the First

@@ -1795,8 +1795,8 @@ Teach the core loop through one real, persisted delivery before the player's own
 Includes:
 
 - an authoritative tutorial delivery between a fictional nest and fictional destination;
-- a fixed total duration of approximately 16 minutes: 1 minute preparation, 7 minutes outbound,
-  1 minute at the destination, and 7 minutes returning;
+- a fixed boosted duration of approximately 5 minutes: 30 seconds preparation, 2 minutes outbound,
+  30 seconds at the destination, and 2 minutes returning;
 - at least one guaranteed persisted collectible on the outbound route;
 - guided camera, movement, automatic discovery, return, and collection explanations;
 - server timestamps so progress continues while the PWA is closed;
@@ -1807,14 +1807,14 @@ Includes:
 
 Success criteria:
 
-- the full preparation-to-return cycle takes approximately 16 real minutes;
+- the full preparation-to-return cycle takes approximately 5 real minutes;
 - reopening the PWA resumes the correct position and instruction;
 - the collectible appears at its threshold and can only be collected after return;
 - no client action can mark the tutorial complete early.
 
 Delivered:
 
-- an explicit start action and one idempotent, server-timestamped 16-minute tutorial delivery;
+- an explicit start action and one idempotent, server-timestamped 5-minute tutorial delivery;
 - a restricted onboarding map between the fictional Postal Nest and Messenger Station;
 - seven server-owned instructional acknowledgements that remain ordered across PWA restarts;
 - one guaranteed Inaugural Postcard discovery at the midpoint of the outbound leg;

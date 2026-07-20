@@ -159,8 +159,9 @@ fields with `onboarding.tutorialNestLabel`; it is not the player's real nest and
 by the later nest-activation flow.
 
 The mandatory first route is stored as a real delivery with `is_tutorial = true` and a unique
-per-sender constraint. `start_or_resume_tutorial_delivery` fixes its authoritative timeline at one
-minute of preparation, seven outbound, one at the destination, and seven returning. Instruction
+per-sender constraint. `start_or_resume_tutorial_delivery` fixes its boosted authoritative timeline
+at 30 seconds of preparation, two minutes outbound, 30 seconds at the destination, and two minutes
+returning. The versioned boost is tutorial-only and does not alter normal mascot attributes. Instruction
 acknowledgements are linear and time-gated on `account_onboarding`; elapsed time never pauses while
 the PWA is closed. Generic delivery collection and generic `tutorial → nestSetup` advancement reject
 this flow. `collect_tutorial_delivery` alone inserts the two deterministic inventory items,
