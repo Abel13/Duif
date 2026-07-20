@@ -15,11 +15,13 @@ do $$ declare template_id uuid; result jsonb; repeated jsonb; delivery_record pu
   result:=public.start_or_resume_tutorial_delivery(); repeated:=public.start_or_resume_tutorial_delivery();
   if result->'delivery'->>'id'<>repeated->'delivery'->>'id' then raise exception 'Tutorial start was not idempotent'; end if;
   select * into strict delivery_record from public.deliveries where id=(result->'delivery'->>'id')::uuid;
-  if delivery_record.return_arrival_at-delivery_record.outbound_start_at<>interval '15 minutes'
-    or delivery_record.outbound_arrival_at-delivery_record.outbound_start_at<>interval '7 minutes'
-    or delivery_record.return_start_at-delivery_record.outbound_arrival_at<>interval '1 minute'
-    or delivery_record.return_arrival_at-delivery_record.return_start_at<>interval '7 minutes' then
-    raise exception 'Tutorial timeline is not exactly 16 minutes'; end if;
+  if delivery_record.outbound_arrival_at-delivery_record.outbound_start_at<>interval '2 minutes'
+    or delivery_record.return_start_at-delivery_record.outbound_arrival_at<>interval '30 seconds'
+    or delivery_record.return_arrival_at-delivery_record.return_start_at<>interval '2 minutes'
+    or delivery_record.return_arrival_at-delivery_record.outbound_start_at<>interval '4 minutes 30 seconds' then
+    raise exception 'Boosted tutorial timeline is not exactly 5 minutes'; end if;
+  if delivery_record.travel_modifiers->'tutorialBoost' <> '{"kind":"firstJourney","version":1,"preparationSeconds":30,"outboundSeconds":120,"destinationSeconds":30,"returnSeconds":120}'::jsonb then
+    raise exception 'Tutorial boost snapshot is invalid'; end if;
   if (select count(*) from public.delivery_route_discoveries where delivery_id=delivery_record.id)<>1
     or (select route_progress from public.delivery_route_discoveries where delivery_id=delivery_record.id)<>0.5 then
     raise exception 'Tutorial discovery was not materialized exactly once at 50 percent'; end if;
@@ -39,9 +41,9 @@ do $$ begin
 end $$;
 
 reset role;
-update public.deliveries set created_at=now()-interval '17 minutes',outbound_start_at=now()-interval '16 minutes',
-outbound_arrival_at=now()-interval '9 minutes',return_start_at=now()-interval '8 minutes',return_arrival_at=now()-interval '1 minute'
-where is_tutorial;
+update public.deliveries set created_at=now()-interval '6 minutes',outbound_start_at=now()-interval '5 minutes 30 seconds',
+outbound_arrival_at=now()-interval '3 minutes 30 seconds',return_start_at=now()-interval '3 minutes',return_arrival_at=now()-interval '1 minute'
+where is_tutorial and sender_profile_id=(select id from public.profiles where auth_user_id='10000000-0000-4000-8000-000000009401');
 set local role authenticated;
 select set_config('request.jwt.claim.sub','10000000-0000-4000-8000-000000009401',true);
 
@@ -62,6 +64,6 @@ reset role;
 do $$ begin
   if (select count(*) from public.inventory_items i join public.profiles p on p.id=i.owner_profile_id where p.auth_user_id='10000000-0000-4000-8000-000000009401')<>2 then raise exception 'Tutorial did not grant exactly two items'; end if;
   if (select stage from public.account_onboarding where auth_user_id='10000000-0000-4000-8000-000000009401')<>'nestSetup' then raise exception 'Tutorial did not advance to nest setup'; end if;
-  if (select count(*) from public.deliveries where is_tutorial)<>1 then raise exception 'Expected exactly one tutorial delivery'; end if;
+  if (select count(*) from public.deliveries d join public.profiles p on p.id=d.sender_profile_id where d.is_tutorial and p.auth_user_id='10000000-0000-4000-8000-000000009401')<>1 then raise exception 'Expected exactly one tutorial delivery'; end if;
 end $$;
 rollback;

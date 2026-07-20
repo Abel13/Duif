@@ -122,6 +122,22 @@ describe("authenticated mascot mappers", () => {
     });
   });
 
+  it("maps the tutorial-only first journey boost without changing normal modifiers", () => {
+    const delivery = mapDeliveryRowToDelivery({
+      ...nuvemDeliveryRow,
+      is_tutorial: true,
+      travel_modifiers: {
+        version: 1, preparationMinutes: 0.5, outboundSpeedMultiplier: 1,
+        returnSpeedMultiplier: 1, discoveryRadiusMultiplier: 1,
+        rarityWeightMultiplier: 1, longRouteConsistency: 1, isLongRoute: false,
+        tutorialBoost: { kind: "firstJourney", version: 1, preparationSeconds: 30, outboundSeconds: 120, destinationSeconds: 30, returnSeconds: 120 },
+      },
+    }, "mascot-nuvem");
+
+    expect(delivery.tutorialTravelBoost).toEqual({ kind: "firstJourney", version: 1, preparationSeconds: 30, outboundSeconds: 120, destinationSeconds: 30, returnSeconds: 120 });
+    expect(delivery.travelModifiers?.outboundSpeedMultiplier).toBe(1);
+  });
+
   it("selects the latest non-completed delivery as current delivery", () => {
     const completedDelivery = {
       ...nuvemDeliveryRow,
