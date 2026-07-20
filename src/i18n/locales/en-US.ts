@@ -215,15 +215,17 @@ export const enUS = {
     },
     locations: { nest: "Postal Nest", station: "Messenger Station", route: "Inaugural path" },
     steps: {
-      preparing: { title: "Preparing to depart", description: "Before leaving, your mascot organizes the bag and checks the route at the nest." },
+      preparing: { title: "Preparing to depart", description: "Before leaving, your mascot organizes the bag and checks the route.\n\nOn regular journeys, this preparation takes some time. On this first route, the postal boost makes everything faster." },
       outbound: { title: "The journey has begun", description: "Your mascot is now heading toward Messenger Station." },
       discovery: { title: "A discovery!", description: "The Inaugural Postcard was found automatically and will travel home with the cargo." },
       destination: { title: "Arrival at the station", description: "The destination has been reached. Your mascot takes a short break before returning." },
       returning: { title: "Returning to the nest", description: "The cargo is safe and your mascot has started the journey home." },
       returned: { title: "Journey complete", description: "Your mascot has returned. Now review and store the entire cargo." },
+      collection: { title: "Cargo ready", description: "Your first cargo has reached the Postal Nest. Confirm to open it and store the items." },
     },
     collection: { title: "Receive your first cargo", description: "Collect the Inaugural Postcard and First Route Stamp to store them in your Collection.", action: "Collect all cargo" },
     completed: { title: "First route complete", description: "The Inaugural Postcard and First Route Stamp are now in your Collection.", nestNext: "Next, you will choose the region for your real nest." },
+    postcard: { open: "Open Inaugural Postcard", close: "Close postcard", flip: "Flip postcard", flipHint: "Tap the postcard to turn it over", front: "Postcard front", back: "Postcard back", completedOn: "Completed on {date}", backMessage: "Congratulations on your first postal journey! This postcard marks the start of your collection and your mascot's adventures.", postmark: "First journey", deliveredBy: "Delivered by" },
     rewards: { inauguralPostcard: { name: "Inaugural Postcard", description: "A postcard recording your mascot's very first journey." }, firstRouteStamp: { name: "First Route Stamp", description: "A stamp awarded for completing the first postal journey." } },
   },
   units: {

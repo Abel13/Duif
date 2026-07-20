@@ -8,3 +8,4 @@ export { SketchPanel } from "./SketchPanel";
 export type { SketchPanelProps } from "./SketchPanel";
 export { StampButton } from "./StampButton";
 export type { StampButtonProps } from "./StampButton";
+export { InauguralPostcard, InauguralPostcardDialog, formatInauguralPostmark } from "./InauguralPostcard";

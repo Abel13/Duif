@@ -1,7 +1,7 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { AppBottomNav, PageShell } from "../../components/layout";
-import { AssetImage, ItemCard, SketchPanel } from "../../components/ui";
+import { AssetImage, InauguralPostcardDialog, ItemCard, SketchPanel } from "../../components/ui";
 import {
   filterInventoryItemsByCategory,
   getInventoryCategoryCounts,
@@ -11,14 +11,21 @@ import {
   type InventoryCategory,
   type InventoryItem,
 } from "../../game";
+import { assetKeys } from "../../game";
+import { useMascotCatalog } from "../../game/useMascotCatalog";
 import { useTranslation } from "../../i18n";
+import { useAuth } from "../../integrations/supabase/AuthProvider";
+import { fetchTutorialReturnArrival } from "../../integrations/supabase/tutorial";
 import styles from "./InventoryAlbumPage.module.css";
 
 const emptySlotCount = 4;
 
 export function InventoryAlbumPage() {
   const { t } = useTranslation();
+  const { onboarding, acknowledgeInauguralPostcardHint } = useAuth();
+  const { mascots } = useMascotCatalog();
   const [selectedCategory, setSelectedCategory] = useState<InventoryCategory>("all");
+  const [postcardOpen, setPostcardOpen] = useState(false); const [completionAt,setCompletionAt]=useState<string | null>();
   const { items: inventoryItems } = useInventoryData();
   const items = useMemo(
     () => filterInventoryItemsByCategory(inventoryItems, selectedCategory),
@@ -29,6 +36,8 @@ export function InventoryAlbumPage() {
     [inventoryItems],
   );
   const summary = useMemo(() => getInventorySummary(items), [items]);
+  const hasInaugural=inventoryItems.some((item)=>item.thumbnailAssetKey===assetKeys.postcards.inauguralFront);
+  useEffect(()=>{if(hasInaugural&&onboarding?.tutorial_delivery_id) void fetchTutorialReturnArrival(onboarding.tutorial_delivery_id).then(setCompletionAt).catch(()=>undefined);},[hasInaugural,onboarding?.tutorial_delivery_id]);
 
   return (
     <PageShell hasBottomNav>
@@ -85,7 +94,7 @@ export function InventoryAlbumPage() {
 
           <section className={styles.album} aria-label={t("inventory.title")}>
             {items.map((item) => (
-              <InventoryCard item={item} key={item.id} />
+              <InventoryCard item={item} key={item.id} onOpenPostcard={()=>setPostcardOpen(true)} />
             ))}
             {Array.from({ length: emptySlotCount }, (_, index) => (
               <EmptySlot key={`empty-slot-${index}`} />
@@ -94,17 +103,19 @@ export function InventoryAlbumPage() {
         </div>
       </div>
       <AppBottomNav />
+      <InauguralPostcardDialog completionAt={completionAt} hintSeen={Boolean(onboarding?.inaugural_postcard_hint_seen_at)} mascotName={mascots[0]?.name} onClose={()=>setPostcardOpen(false)} onFirstFlip={acknowledgeInauguralPostcardHint} open={postcardOpen} senderNickname={onboarding?.display_name ?? undefined}/>
     </PageShell>
   );
 }
 
-function InventoryCard({ item }: { item: InventoryItem }) {
+function InventoryCard({ item, onOpenPostcard }: { item: InventoryItem; onOpenPostcard: () => void }) {
   const { t } = useTranslation();
   const metaParts = [
     t(`inventory.categories.${item.category}`),
     item.equipped ? t("mascot.equipped") : t("mascot.notEquipped"),
   ];
 
+  const isInaugural=item.thumbnailAssetKey===assetKeys.postcards.inauguralFront;
   return (
     <ItemCard
       label={t(`equipment.rarity.${item.rarity}`)}
@@ -113,9 +124,9 @@ function InventoryCard({ item }: { item: InventoryItem }) {
       meta={metaParts.join(" / ")}
       selected={item.equipped}
     >
-      <AssetImage
+      {isInaugural ? <button aria-label={t("tutorial.postcard.open")} className={styles.postcardButton} onClick={onOpenPostcard} type="button"><AssetImage
         alt={t(item.nameKey)}
-        className={styles.assetFrame}
+        className={`${styles.assetFrame} ${styles.postcardFrame}`}
         height={192}
         assetKey={item.thumbnailAssetKey}
         width={192}
@@ -124,7 +135,9 @@ function InventoryCard({ item }: { item: InventoryItem }) {
           <span>{t("inventory.source")}</span>
           <strong>{item.sourceKey ? t(item.sourceKey) : t("common.unavailable")}</strong>
         </div>
-      </AssetImage>
+      </AssetImage></button> : <AssetImage
+        alt={t(item.nameKey)} className={styles.assetFrame} height={192} assetKey={item.thumbnailAssetKey} width={192}
+      ><div className={styles.itemStamp} data-rarity={item.rarity}><span>{t("inventory.source")}</span><strong>{item.sourceKey ? t(item.sourceKey) : t("common.unavailable")}</strong></div></AssetImage>}
     </ItemCard>
   );
 }

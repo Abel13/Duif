@@ -20,6 +20,11 @@ do $$ declare template_id uuid; result jsonb; repeated jsonb; delivery_record pu
     or delivery_record.return_arrival_at-delivery_record.return_start_at<>interval '2 minutes'
     or delivery_record.return_arrival_at-delivery_record.outbound_start_at<>interval '4 minutes 30 seconds' then
     raise exception 'Boosted tutorial timeline is not exactly 5 minutes'; end if;
+  if delivery_record.origin_latitude <> -23.58458338178298
+    or delivery_record.origin_longitude <> -46.6545987644678
+    or delivery_record.destination_latitude <> -23.590075
+    or delivery_record.destination_longitude <> -46.594608 then
+    raise exception 'Tutorial route does not use the configured fictional nest'; end if;
   if delivery_record.travel_modifiers->'tutorialBoost' <> '{"kind":"firstJourney","version":1,"preparationSeconds":30,"outboundSeconds":120,"destinationSeconds":30,"returnSeconds":120}'::jsonb then
     raise exception 'Tutorial boost snapshot is invalid'; end if;
   if (select count(*) from public.delivery_route_discoveries where delivery_id=delivery_record.id)<>1
@@ -58,6 +63,10 @@ do $$ declare delivery_id uuid; first_result jsonb; repeated_result jsonb; begin
   if first_result->'primaryInventoryItem'->>'id'<>repeated_result->'primaryInventoryItem'->>'id'
     or first_result->'routeInventoryItem'->>'id'<>repeated_result->'routeInventoryItem'->>'id' then
     raise exception 'Tutorial collection was not idempotent'; end if;
+  perform public.acknowledge_inaugural_postcard_hint();
+  perform public.acknowledge_inaugural_postcard_hint();
+  if (select inaugural_postcard_hint_seen_at from public.account_onboarding where auth_user_id=auth.uid()) is null then
+    raise exception 'Postcard flip hint was not persisted'; end if;
 end $$;
 reset role;
 

@@ -34,4 +34,8 @@ describe("official asset manifest", () => {
   it("accepts an empty manifest without inventing fallback paths", () => {
     expect(parseOfficialAssetManifest([]).size).toBe(0);
   });
+  it("parses the registered inaugural postcard artwork", () => {
+    const manifest=parseOfficialAssetManifest([{ ...row, width:1024,height:683,byte_size:154572,alt_text_key:"tutorial.rewards.inauguralPostcard.name",official_assets:{asset_key:assetKeys.postcards.inauguralFront,asset_type:"postcardArtwork"},packaged_path:"/assets/tutorial/postcards/inaugural-front.webp" }]);
+    expect(resolveOfficialAssetPath(manifest,assetKeys.postcards.inauguralFront)).toContain("inaugural-front.webp");
+  });
 });

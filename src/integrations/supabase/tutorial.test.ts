@@ -6,6 +6,7 @@ const delivery={outboundStartAt:"2026-07-19T12:00:30Z",outboundArrivalAt:"2026-0
 
 describe("tutorial timeline",()=>{
   it("keeps instruction order linear",()=>{expect(getNextTutorialInstruction(null)).toBe("preparing");expect(getNextTutorialInstruction("outbound")).toBe("discovery");expect(getNextTutorialInstruction("collection")).toBeUndefined();});
+  it("makes the preparation instruction available immediately",()=>{expect(getTutorialInstructionAvailableAt("preparing",delivery)).toBe(Number.NEGATIVE_INFINITY);expect(isTutorialInstructionAvailable("preparing",delivery,new Date("2020-01-01T00:00:00Z"))).toBe(true);});
   it("places discovery at the exact middle of outbound travel",()=>{expect(new Date(getTutorialInstructionAvailableAt("discovery",delivery)).toISOString()).toBe("2026-07-19T12:01:30.000Z");});
   it("unlocks a step exactly at its threshold",()=>{expect(isTutorialInstructionAvailable("destination",delivery,new Date("2026-07-19T12:02:29.999Z"))).toBe(false);expect(isTutorialInstructionAvailable("destination",delivery,new Date("2026-07-19T12:02:30Z"))).toBe(true);});
 });

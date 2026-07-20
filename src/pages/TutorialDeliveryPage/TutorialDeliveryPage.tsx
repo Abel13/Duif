@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { TravelMap } from "../../components/map/TravelMap";
-import { AssetImage, StampButton } from "../../components/ui";
+import { AssetImage, InauguralPostcardDialog, StampButton } from "../../components/ui";
 import { assetKeys, getDeliveryStatus, getPetMapPosition, interpolateCoordinates, type MapFocusTarget, type MapMotionPreference, type OfficialAssetKey, type RouteRewardDiscovery } from "../../game";
 import { useMascotCatalog } from "../../game/useMascotCatalog";
 import { useTranslation, type TranslationKey } from "../../i18n";
 import { useAuth } from "../../integrations/supabase/AuthProvider";
-import { fetchTutorialDelivery, getNextTutorialInstruction, isTutorialInstructionAvailable, type TutorialInstructionStep } from "../../integrations/supabase/tutorial";
+import { fetchTutorialDelivery, fetchTutorialReturnArrival, getNextTutorialInstruction, isTutorialInstructionAvailable, type TutorialInstructionStep } from "../../integrations/supabase/tutorial";
 import type { Delivery } from "../../game";
 import styles from "./TutorialDeliveryPage.module.css";
 
@@ -15,13 +15,14 @@ const tutorialCameraGuideOrder: readonly TutorialCameraControlKind[] = ["mascot"
 
 export function TutorialDeliveryPage() {
   const {t}=useTranslation();
-  const {acknowledgeTutorialInstruction,collectTutorialDelivery,onboarding,startOrResumeTutorialDelivery}=useAuth();
+  const {acknowledgeInauguralPostcardHint,acknowledgeTutorialInstruction,collectTutorialDelivery,onboarding,startOrResumeTutorialDelivery}=useAuth();
   const {mascots}=useMascotCatalog(); const mascot=mascots[0];
   const [delivery,setDelivery]=useState<Delivery>(); const [now,setNow]=useState(()=>new Date());
   const [busy,setBusy]=useState(false); const [error,setError]=useState(false);
   const [mapFocus,setMapFocus]=useState<MapFocusTarget>({kind:"overview"});
   const [followMascot,setFollowMascot]=useState(false);
   const [cameraGuideStep,setCameraGuideStep]=useState(0);
+  const [postcardOpen,setPostcardOpen]=useState(false); const [completionAt,setCompletionAt]=useState<string | null>();
   const [isWaitingForNextCameraGuide,setIsWaitingForNextCameraGuide]=useState(false);
   const cameraGuideTimer=useRef<number>();
   const motionPreference:MapMotionPreference=typeof window!=="undefined"&&window.matchMedia("(prefers-reduced-motion: reduce)").matches?"reduced":"full";
@@ -31,6 +32,7 @@ export function TutorialDeliveryPage() {
   useEffect(()=>{
     if(!delivery&&onboarding?.tutorial_delivery_id&&mascot) void fetchTutorialDelivery(onboarding.tutorial_delivery_id,mascot.id).then(setDelivery).catch(()=>setError(true));
   },[delivery,mascot,onboarding?.tutorial_delivery_id]);
+  useEffect(()=>{if(onboarding?.stage==="nestSetup"&&onboarding.tutorial_delivery_id) void fetchTutorialReturnArrival(onboarding.tutorial_delivery_id).then(setCompletionAt).catch(()=>undefined);},[onboarding?.stage,onboarding?.tutorial_delivery_id]);
 
   const nextStep=getNextTutorialInstruction(onboarding?.tutorial_instruction_step??null);
   const instructionReady=Boolean(delivery&&nextStep&&isTutorialInstructionAvailable(nextStep,delivery,now));
@@ -38,13 +40,13 @@ export function TutorialDeliveryPage() {
   const reward=useMemo<RouteRewardDiscovery|undefined>(()=>delivery?{
     coordinates:interpolateCoordinates(delivery.origin,delivery.destination,.5),descriptionKey:"tutorial.rewards.inauguralPostcard.description" as TranslationKey,
     discovered:Boolean(position&&position.outboundProgress>=.5),distanceFromRouteKm:0,id:"tutorial-inaugural-postcard",kind:"postcard",rarity:"common",
-    regionKind:"event",regionLabel:"tutorial.locations.route",routeProgress:.5,thumbnailAssetKey:"shop.thumbnail.coastalTownPostcard",titleKey:"tutorial.rewards.inauguralPostcard.name" as TranslationKey,
+    regionKind:"event",regionLabel:"tutorial.locations.route",routeProgress:.5,thumbnailAssetKey:assetKeys.postcards.inauguralFront,titleKey:"tutorial.rewards.inauguralPostcard.name" as TranslationKey,
   }:undefined,[delivery,position?.outboundProgress]);
   async function start(){setBusy(true);setError(false);try{const result=await startOrResumeTutorialDelivery();setDelivery(result.delivery);}catch{setError(true);}finally{setBusy(false);}}
   async function acknowledge(){if(!nextStep)return;setBusy(true);setError(false);try{await acknowledgeTutorialInstruction(nextStep);}catch{setError(true);}finally{setBusy(false);}}
   async function collect(){setBusy(true);setError(false);try{await collectTutorialDelivery();}catch{setError(true);}finally{setBusy(false);}}
 
-  if(onboarding?.stage==="nestSetup") return <main className={styles.intro}><section className={styles.paper}><span>{t("tutorial.eyebrow")}</span><h1>{t("tutorial.completed.title")}</h1><p>{t("tutorial.completed.description")}</p><div className={styles.cargo}><strong>{t("tutorial.rewards.inauguralPostcard.name")}</strong><strong>{t("tutorial.rewards.firstRouteStamp.name")}</strong></div><p>{t("tutorial.completed.nestNext")}</p></section></main>;
+  if(onboarding?.stage==="nestSetup") return <main className={styles.intro}><section className={styles.paper}><span>{t("tutorial.eyebrow")}</span><h1>{t("tutorial.completed.title")}</h1><p>{t("tutorial.completed.description")}</p><div className={styles.cargo}><StampButton onClick={()=>setPostcardOpen(true)}>{t("tutorial.postcard.open")}</StampButton><AssetImage alt={t("tutorial.rewards.firstRouteStamp.name")} assetKey={assetKeys.collectibles.firstJourneyStamp} className={styles.firstRouteStamp}><i /></AssetImage></div><p>{t("tutorial.completed.nestNext")}</p></section><InauguralPostcardDialog completionAt={completionAt} hintSeen={Boolean(onboarding.inaugural_postcard_hint_seen_at)} mascotName={mascot?.name} onClose={()=>setPostcardOpen(false)} onFirstFlip={acknowledgeInauguralPostcardHint} open={postcardOpen} senderNickname={onboarding.display_name ?? undefined}/></main>;
 
   if(!delivery&&onboarding?.tutorial_delivery_id) return <main className={styles.intro}><section className={styles.paper}><p>{t("common.loading")}</p></section></main>;
   if(!delivery) return <main className={styles.intro}><section className={styles.paper}><span>{t("tutorial.eyebrow")}</span><h1>{t("tutorial.start.title")}</h1><p>{t("tutorial.start.description")}</p>{mascot&&<AssetImage alt={mascot.name} assetKey={mascot.appearance.portraitAssetKey} className={styles.portrait}><i /></AssetImage>}<StampButton disabled={busy||!mascot} onClick={()=>void start()}>{busy?t("onboarding.saving"):t("tutorial.start.action")}</StampButton>{error&&<p className={styles.error}>{t("onboarding.genericError")}</p>}</section></main>;

@@ -19,6 +19,8 @@ export const assetKeys = {
   activeItems: {
     firstJourneyBoost: "activeItem.firstJourneyBoost",
   },
+  postcards: { inauguralFront: "postcard.inaugural.front" },
+  collectibles: { firstJourneyStamp: "collectible.firstJourneyStamp" },
   rewards: {
     wornRouteStamp: "reward.thumbnail.wornRouteStamp",
     blueAirmailLabel: "reward.thumbnail.blueAirmailLabel",
@@ -54,7 +56,7 @@ export type OfficialAssetKey = NestedValues<typeof assetKeys>;
 export type OfficialAssetType =
   | "mascotPortrait" | "equipmentIcon" | "rewardThumbnail" | "collectibleThumbnail"
   | "navigationIcon" | "mapControl" | "mapPin" | "currencyIcon" | "shopArtwork"
-  | "texture" | "postalMark";
+  | "texture" | "postalMark" | "postcardArtwork";
 
 export type OfficialAssetVersion = {
   key: OfficialAssetKey;
@@ -81,7 +83,7 @@ export type OfficialAssetManifestRow = {
 
 const assetTypes = new Set<OfficialAssetType>([
   "mascotPortrait", "equipmentIcon", "rewardThumbnail", "collectibleThumbnail",
-  "navigationIcon", "mapControl", "mapPin", "currencyIcon", "shopArtwork", "texture", "postalMark",
+  "navigationIcon", "mapControl", "mapPin", "currencyIcon", "shopArtwork", "texture", "postalMark", "postcardArtwork",
 ]);
 const knownKeys = new Set<string>(Object.values(assetKeys).flatMap((group) => Object.values(group)));
 

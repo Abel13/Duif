@@ -199,31 +199,108 @@ export const ptBR = {
   tutorial: {
     eyebrow: "Primeira rota",
     continue: "Entendi",
-    start: { title: "Aprenda com uma viagem curta", description: "Seu mascote fará uma rota rápida entre o Ninho Postal e a Estação dos Mensageiros, retornando em cerca de 5 minutos.\n\nPara facilitar o início, esta primeira viagem recebe um impulso temporário que acelera o percurso sem alterar a velocidade normal do mascote.", action: "Começar primeira rota" },
+    start: {
+      title: "Aprenda com uma viagem curta",
+      description:
+        "Seu mascote fará uma rota rápida entre o Ninho Postal e a Estação dos Mensageiros, retornando em cerca de 5 minutos.\n\nPara facilitar o início, esta primeira viagem recebe um impulso temporário que acelera o percurso sem alterar a velocidade normal do mascote.",
+      action: "Começar primeira rota",
+    },
     boost: { badge: "Impulso da primeira viagem" },
-    traveling: { title: "A viagem continua", description: "Acompanhe o mascote pelo mapa. A próxima orientação aparecerá no momento certo." },
+    traveling: {
+      title: "A viagem continua",
+      description:
+        "Acompanhe o mascote pelo mapa. A próxima orientação aparecerá no momento certo.",
+    },
     controls: {
       hint: "Use os controles do mapa para conhecer a rota.",
       startHere: "Toque aqui",
       instructions: {
         mascot: "Primeiro, acompanhe seu mascote no mapa.",
         origin: "Agora, veja de onde a viagem começa: o Ninho Postal.",
-        destination: "Em seguida, encontre a Estação dos Mensageiros, o destino da rota.",
+        destination:
+          "Em seguida, encontre a Estação dos Mensageiros, o destino da rota.",
         overview: "Por fim, use a visão geral para ver a rota completa.",
       },
     },
-    locations: { nest: "Ninho Postal", station: "Estação dos Mensageiros", route: "Caminho inaugural" },
-    steps: {
-      preparing: { title: "Preparando a partida", description: "Antes de sair, o mascote organiza a bolsa e confere a rota no ninho." },
-      outbound: { title: "A viagem começou", description: "O mascote segue agora em direção à Estação dos Mensageiros." },
-      discovery: { title: "Uma descoberta!", description: "O Cartão Inaugural foi encontrado automaticamente no caminho e seguirá na carga." },
-      destination: { title: "Chegada à estação", description: "O destino foi alcançado. O mascote faz uma pequena pausa antes de retornar." },
-      returning: { title: "Voltando ao ninho", description: "A carga está segura e o mascote iniciou o caminho de volta." },
-      returned: { title: "Viagem concluída", description: "Seu mascote retornou. Agora falta conferir e guardar toda a carga." },
+    locations: {
+      nest: "Ninho Postal",
+      station: "Estação dos Mensageiros",
+      route: "Caminho inaugural",
     },
-    collection: { title: "Receba a primeira carga", description: "Colete o Cartão Inaugural e o Selo de Primeira Rota para guardá-los na Coleção.", action: "Coletar toda a carga" },
-    completed: { title: "Primeira rota concluída", description: "O Cartão Inaugural e o Selo de Primeira Rota foram guardados na sua Coleção.", nestNext: "A próxima etapa será escolher a região do seu ninho real." },
-    rewards: { inauguralPostcard: { name: "Cartão Inaugural", description: "Um cartão postal que registra a primeira viagem do seu mascote." }, firstRouteStamp: { name: "Selo de Primeira Rota", description: "Um selo entregue pela conclusão da primeira jornada postal." } },
+    steps: {
+      preparing: {
+        title: "Preparando a partida",
+        description:
+          "Antes de sair, seu mascote organiza a bolsa e confere a rota.\n\nEm viagens normais, essa preparação leva um tempo. Nesta primeira rota, o impulso postal deixa tudo mais rápido.",
+      },
+      outbound: {
+        title: "A viagem começou",
+        description:
+          "O mascote segue agora em direção à Estação dos Mensageiros.",
+      },
+      discovery: {
+        title: "Uma descoberta!",
+        description:
+          "O Cartão Inaugural foi encontrado automaticamente no caminho e seguirá na carga.",
+      },
+      destination: {
+        title: "Chegada à estação",
+        description:
+          "O destino foi alcançado. O mascote faz uma pequena pausa antes de retornar.",
+      },
+      returning: {
+        title: "Voltando ao ninho",
+        description:
+          "A carga está segura e o mascote iniciou o caminho de volta.",
+      },
+      returned: {
+        title: "Viagem concluída",
+        description:
+          "Seu mascote retornou. Agora falta conferir e guardar toda a carga.",
+      },
+      collection: {
+        title: "Carga pronta",
+        description:
+          "Sua primeira carga chegou ao Ninho Postal. Confirme para abrir e guardar os itens.",
+      },
+    },
+    collection: {
+      title: "Receba a primeira carga",
+      description:
+        "Colete o Cartão Inaugural e o Selo de Primeira Rota para guardá-los na Coleção.",
+      action: "Coletar toda a carga",
+    },
+    completed: {
+      title: "Primeira rota concluída",
+      description:
+        "O Cartão Inaugural e o Selo de Primeira Rota foram guardados na sua Coleção.",
+      nestNext: "A próxima etapa será escolher a região do seu ninho real.",
+    },
+    postcard: {
+      open: "Abrir Cartão Inaugural",
+      close: "Fechar cartão",
+      flip: "Virar cartão",
+      flipHint: "Toque no cartão para virá-lo",
+      front: "Frente do cartão",
+      back: "Verso do cartão",
+      completedOn: "Concluída em {date}",
+      backMessage:
+        "Parabéns pela sua primeira viagem postal! Este cartão registra o começo da sua coleção e das aventuras do seu mascote.",
+      postmark: "Primeira viagem",
+      deliveredBy: "Entregue por",
+    },
+    rewards: {
+      inauguralPostcard: {
+        name: "Cartão Inaugural",
+        description:
+          "Um cartão postal que registra a primeira viagem do seu mascote.",
+      },
+      firstRouteStamp: {
+        name: "Selo de Primeira Rota",
+        description:
+          "Um selo entregue pela conclusão da primeira jornada postal.",
+      },
+    },
   },
   units: {
     kilometers: "km",

@@ -39,6 +39,7 @@ export type Database = {
           auth_user_id: string
           created_at: string
           display_name: string | null
+          inaugural_postcard_hint_seen_at: string | null
           mascot_name: string | null
           selected_mascot_template_id: string | null
           tutorial_collected_at: string | null
@@ -52,6 +53,7 @@ export type Database = {
           auth_user_id: string
           created_at?: string
           display_name?: string | null
+          inaugural_postcard_hint_seen_at?: string | null
           mascot_name?: string | null
           selected_mascot_template_id?: string | null
           tutorial_collected_at?: string | null
@@ -65,6 +67,7 @@ export type Database = {
           auth_user_id?: string
           created_at?: string
           display_name?: string | null
+          inaugural_postcard_hint_seen_at?: string | null
           mascot_name?: string | null
           selected_mascot_template_id?: string | null
           tutorial_collected_at?: string | null
@@ -916,6 +919,7 @@ export type Database = {
           auth_user_id: string
           created_at: string
           display_name: string | null
+          inaugural_postcard_hint_seen_at: string | null
           mascot_name: string | null
           selected_mascot_template_id: string | null
           tutorial_collected_at: string | null
@@ -938,6 +942,7 @@ export type Database = {
           auth_user_id: string
           created_at: string
           display_name: string | null
+          inaugural_postcard_hint_seen_at: string | null
           mascot_name: string | null
           selected_mascot_template_id: string | null
           tutorial_collected_at: string | null
@@ -961,6 +966,7 @@ export type Database = {
           auth_user_id: string
           created_at: string
           display_name: string | null
+          inaugural_postcard_hint_seen_at: string | null
           mascot_name: string | null
           selected_mascot_template_id: string | null
           tutorial_collected_at: string | null
@@ -977,6 +983,7 @@ export type Database = {
         Args: { requested_step: Database["public"]["Enums"]["tutorial_instruction_step"] }
         Returns: Database["public"]["Tables"]["account_onboarding"]["Row"]
       }
+      acknowledge_inaugural_postcard_hint: { Args: never; Returns: Database["public"]["Tables"]["account_onboarding"]["Row"] }
       start_or_resume_tutorial_delivery: { Args: never; Returns: Json }
       create_delivery_from_selection: {
         Args: {

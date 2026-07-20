@@ -43,6 +43,8 @@ Use stable public paths under `public/assets/`:
 - `textures/` for small paper or stamp textures.
 - `maps/` for future lightweight map overlays, labels, stamps, or texture details.
 - `stamps/` for reusable postal marks, cancellation marks, and collectible stamp art.
+- `tutorial/postcards/` for the larger, inspectable tutorial postcard artwork.
+- `tutorial/stamps/` for tutorial-only collectible seals.
 
 Keep asset names lowercase and hyphenated, such as `nuvem.webp` or `worn-route-stamp.webp`.
 
@@ -54,6 +56,11 @@ The current PWA icon family is derived from `assets-source/icons/duif-icon-trans
 - `icon-maskable-512.png` uses the paper background and a safe inset for adaptive masks;
 - `apple-touch-icon.png` uses an opaque paper background for iOS.
 
+`public/assets/fonts/caveat-400-600-latin.woff2` and
+`public/assets/fonts/caveat-400-600-latin-ext.woff2` are the local Caveat subsets used only by
+postcard writing: Regular for messages and SemiBold for postcard highlights. They remain outside
+the official asset registry, alongside the application fonts required during boot.
+
 ## Recommended Sizes
 
 - Mascot portraits: `640x640` or smaller.
@@ -64,6 +71,7 @@ The current PWA icon family is derived from `assets-source/icons/duif-icon-trans
 - Currency icons: SVG with a compact square view box when practical; raster fallback no
   larger than `128x128`.
 - Sticker and stamp art: `256x256` or smaller unless it must be inspected in detail.
+- Postcard artwork: up to `1024x683` (3:2), with a reviewed budget up to `180KB`.
 - Textures: tileable and as small as possible, usually `512x512` or smaller.
 - PWA icons: keep generated runtime icons at the exact manifest sizes, such as `192x192`, `512x512`, and `180x180` for Apple touch icons.
 
@@ -113,7 +121,7 @@ versions. Current versions remain packaged under `public/assets/`; the schema al
 packaged and future Storage locations. Runtime screens load one active public manifest and never
 persist or construct free-form art paths.
 
-The registry contains 40 identities: 39 active versions and the unused `route-doodle-mark`
+The registry contains 42 identities: 41 active versions and the unused `route-doodle-mark`
 archived. PWA icons, the brand logo, and fonts remain outside the runtime registry because they
 must work before Supabase, authentication, or onboarding has loaded.
 
@@ -178,6 +186,14 @@ Milestone 27.75 added the first validation slice:
 The slice was generated as AI raster artwork, cropped from small concept sheets, and exported
 as optimized WebP runtime files. The generated source sheets remain outside the runtime app
 under the local Codex generated image directory.
+
+Milestone 44 adds the interactive tutorial collection slice:
+
+- `public/assets/tutorial/postcards/inaugural-front.webp` (`1024x683`, about `151KB`), the
+  watercolor front of the Cartão Inaugural; its seal and completion postmark are rendered in
+  HTML so the date remains localized and authoritative.
+- `public/assets/tutorial/stamps/first-journey.webp` (`256x256`, about `16KB`), a transparent
+  Selo de Primeira Viagem reused on both sides of the card.
 
 Milestone 27.8 adds the first graphic navigation slice:
 

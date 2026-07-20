@@ -27,7 +27,7 @@ import {
   type AccountOnboarding,
   type OnboardingStage,
 } from "./onboarding";
-import { acknowledgeTutorialInstruction as acknowledgeTutorialInstructionRequest, collectTutorialDelivery as collectTutorialDeliveryRequest, startOrResumeTutorialDelivery as startOrResumeTutorialDeliveryRequest, type TutorialDeliveryState, type TutorialInstructionStep } from "./tutorial";
+import { acknowledgeInauguralPostcardHint as acknowledgeInauguralPostcardHintRequest, acknowledgeTutorialInstruction as acknowledgeTutorialInstructionRequest, collectTutorialDelivery as collectTutorialDeliveryRequest, startOrResumeTutorialDelivery as startOrResumeTutorialDeliveryRequest, type TutorialDeliveryState, type TutorialInstructionStep } from "./tutorial";
 
 const pendingEmailStorageKey = "duif.auth.pendingVerificationEmail";
 
@@ -58,6 +58,7 @@ type AuthContextValue = {
   provisionInitialMascot: () => Promise<void>;
   acknowledgeTutorialInstruction: (step: TutorialInstructionStep) => Promise<AccountOnboarding>;
   collectTutorialDelivery: () => Promise<void>;
+  acknowledgeInauguralPostcardHint: () => Promise<void>;
   startOrResumeTutorialDelivery: () => Promise<TutorialDeliveryState>;
 };
 
@@ -293,6 +294,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const collectTutorialDelivery = useCallback(async () => {
     const result=await collectTutorialDeliveryRequest(); setOnboarding(result.onboarding);
   }, []);
+  const acknowledgeInauguralPostcardHint = useCallback(async () => { const result=await acknowledgeInauguralPostcardHintRequest(); setOnboarding(result); }, []);
   const startOrResumeTutorialDelivery = useCallback(async () => {
     const result=await startOrResumeTutorialDeliveryRequest(); setOnboarding(result.onboarding); return result;
   }, []);
@@ -309,6 +311,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const contextValue = useMemo<AuthContextValue>(() => ({
     acknowledgeTutorialInstruction,
+    acknowledgeInauguralPostcardHint,
     advanceOnboarding,
     completePasswordReset,
     collectTutorialDelivery,
@@ -331,7 +334,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     signUp,
     saveInitialMascotDraft,
     startOrResumeTutorialDelivery,
-  }), [acknowledgeTutorialInstruction, advanceOnboarding, completePasswordReset, collectTutorialDelivery, dismissVerification, exchangeAuthCode, isConfigured, isLoading, isPasswordRecovery, isServiceAvailable,
+  }), [acknowledgeTutorialInstruction, acknowledgeInauguralPostcardHint, advanceOnboarding, completePasswordReset, collectTutorialDelivery, dismissVerification, exchangeAuthCode, isConfigured, isLoading, isPasswordRecovery, isServiceAvailable,
     journeyState, onboarding, pendingVerificationEmail, profile, requestPasswordReset, resendConfirmation,
     provisionInitialMascot, saveInitialMascotDraft, session, signIn, signOut, signUp, startOrResumeTutorialDelivery]);
 

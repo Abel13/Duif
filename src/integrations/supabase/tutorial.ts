@@ -26,12 +26,13 @@ export function getNextTutorialInstruction(current: TutorialInstructionStep | nu
 }
 
 export function getTutorialInstructionAvailableAt(step: TutorialInstructionStep, delivery: Delivery) {
+  if (step === "preparing") return Number.NEGATIVE_INFINITY;
+
   const outboundStart = Date.parse(delivery.outboundStartAt);
   const outboundArrival = Date.parse(delivery.outboundArrivalAt);
   const returnStart = Date.parse(delivery.returnStartAt ?? "");
   const returnArrival = Date.parse(delivery.returnArrivalAt ?? "");
-  const value = step === "preparing" ? Number.NEGATIVE_INFINITY
-    : step === "outbound" ? outboundStart
+  const value = step === "outbound" ? outboundStart
     : step === "discovery" ? outboundStart + (outboundArrival - outboundStart) / 2
     : step === "destination" ? outboundArrival
     : step === "returning" ? returnStart
@@ -65,6 +66,16 @@ export async function acknowledgeTutorialInstruction(step:TutorialInstructionSte
   const supabase=getSupabaseClient(); if(!supabase) throw new Error("Supabase is not configured");
   const {data,error}=await supabase.rpc("acknowledge_tutorial_instruction",{requested_step:step});
   if(error||!data) throw error??new Error("Tutorial instruction could not be saved"); return data;
+}
+export async function acknowledgeInauguralPostcardHint() {
+  const supabase=getSupabaseClient(); if(!supabase) throw new Error("Supabase is not configured");
+  const {data,error}=await supabase.rpc("acknowledge_inaugural_postcard_hint");
+  if(error||!data) throw error??new Error("Postcard hint could not be saved"); return data as TutorialOnboarding;
+}
+export async function fetchTutorialReturnArrival(deliveryId: string) {
+  const supabase=getSupabaseClient(); if(!supabase) return undefined;
+  const {data,error}=await supabase.from("deliveries").select("return_arrival_at").eq("id",deliveryId).eq("is_tutorial",true).maybeSingle();
+  if(error) throw error; return data?.return_arrival_at;
 }
 
 export async function collectTutorialDelivery():Promise<TutorialCollectionResult> {

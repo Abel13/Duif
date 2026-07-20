@@ -155,9 +155,10 @@ export type TranslationDictionary = {
       instructions: { mascot: string; origin: string; destination: string; overview: string };
     };
     locations: { nest: string; station: string; route: string };
-    steps: Record<"preparing" | "outbound" | "discovery" | "destination" | "returning" | "returned", { title: string; description: string }>;
+    steps: Record<"preparing" | "outbound" | "discovery" | "destination" | "returning" | "returned" | "collection", { title: string; description: string }>;
     collection: { title: string; description: string; action: string };
     completed: { title: string; description: string; nestNext: string };
+    postcard: { open: string; close: string; flip: string; flipHint: string; front: string; back: string; completedOn: string; backMessage: string; postmark: string; deliveredBy: string };
     rewards: { inauguralPostcard: { name: string; description: string }; firstRouteStamp: { name: string; description: string } };
   };
   units: {
@@ -788,6 +789,7 @@ export type TranslationKey =
   | "tutorial.steps.destination.title" | "tutorial.steps.destination.description"
   | "tutorial.steps.returning.title" | "tutorial.steps.returning.description"
   | "tutorial.steps.returned.title" | "tutorial.steps.returned.description"
+  | "tutorial.steps.collection.title" | "tutorial.steps.collection.description"
   | "tutorial.collection.title" | "tutorial.collection.description" | "tutorial.collection.action"
   | "tutorial.completed.title" | "tutorial.completed.description" | "tutorial.completed.nestNext"
   | "tutorial.rewards.inauguralPostcard.name" | "tutorial.rewards.inauguralPostcard.description"
@@ -1282,4 +1284,13 @@ export type TranslationKey =
   | "appearance.friendTicoPortrait"
   | "appearance.friendAtlasPortrait"
   | "appearance.friendLumaPortrait"
-  | "appearance.friendMaplePortrait";
+  | "appearance.friendMaplePortrait"
+  | "tutorial.postcard.open"
+  | "tutorial.postcard.close"
+  | "tutorial.postcard.flip"
+  | "tutorial.postcard.flipHint"
+  | "tutorial.postcard.front"
+  | "tutorial.postcard.back"
+  | "tutorial.postcard.backMessage"
+  | "tutorial.postcard.postmark"
+  | "tutorial.postcard.deliveredBy";
