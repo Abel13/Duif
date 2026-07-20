@@ -558,3 +558,13 @@ The following topics still need explicit product decisions before deep implement
 - moderation implementation and operations for user-written letters and future photo
   postcards;
 - final map tile provider and map visual art direction.
+## Private nest activation
+
+The real nest is selected after the mandatory tutorial. City search uses the imported GeoNames
+catalog only to position the OpenStreetMap view; the search text is not retained. The player then
+chooses an area manually. The server rounds that point to an approximately 2 km cell before
+storing it for route calculations and keeps the selected GeoNames city as the route's postal city.
+Accepted friends may see one another's city; unknown players receive only the broad regional
+representation. Streets, neighborhoods, exact clicked coordinates, and nest addresses are never
+displayed. GeoNames is refreshed manually every six months; Google Places is reserved for a
+future, explicit point-of-interest flow.

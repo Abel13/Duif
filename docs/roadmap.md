@@ -1825,7 +1825,7 @@ Delivered:
 
 ## Milestone 45: Real Nest Activation
 
-Status: Planned.
+Status: Implemented locally; production requires the first GeoNames city import.
 
 Goal:
 
@@ -1834,10 +1834,14 @@ Replace the fictional tutorial nest with the player's privacy-safe real regional
 Includes:
 
 - nest setup only after tutorial collection;
-- a controlled region/city catalog with city, state, country, localized label keys, and safe
-  representative coordinates resolved by the backend;
-- no street, neighborhood, residential GPS, house number, or precise address input;
-- review and confirmation of the public regional identity;
+- global city search through a private GeoNames catalog, followed by a manual OpenStreetMap map
+  selection;
+- an administrative, versioned GeoNames `cities15000` import refreshed manually every six months;
+- an approximate private point normalized by the backend to a ~2 km cell;
+- no street, neighborhood, residential GPS, house number, state, country, or precise coordinate
+  exposed as player-facing profile data; the selected GeoNames city is available to its owner and
+  accepted friends only;
+- review and confirmation of the approximate private route origin;
 - `onboarding_completed_at` and a ready account state;
 - transition to `/map`, framed around the new nest;
 - release of normal send, friends, inventory, collection, and map routes.
@@ -1845,8 +1849,8 @@ Includes:
 Success criteria:
 
 - the real nest cannot be configured before tutorial completion;
-- private residential information is never requested;
-- a completed player opens the map at the configured regional nest.
+- search text and exact clicked coordinates are never persisted;
+- a completed player opens the map at the configured private nest.
 
 ## Milestone 46: Administrative Asset And Catalog Studio
 

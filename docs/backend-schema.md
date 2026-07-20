@@ -46,6 +46,9 @@ The initial schema lives in `supabase/migrations/20260709200000_initial_duif_sch
 - `delivery_route_discoveries`: authoritative per-delivery cargo with route progress, corridor
   distance, and idempotent collection references.
 - `inventory_items`: player-owned inventory item state.
+- `geonames_cities`: private, imported global-city catalog used only to center the nest-selection
+  map; clients access it solely through an authenticated RPC.
+- `geonames_import_runs`: operational records for versioned GeoNames imports.
 
 ## Enums
 
@@ -72,6 +75,11 @@ Official translated fields reference `official_translation_keys`. A catalog reco
 incomplete while its status is `draft`, but the database rejects activation unless every direct
 and nested key is registered for both `pt-BR` and `en-US`. Public catalog reads return only
 `active` records.
+
+GeoNames labels are external geographic data, not official game copy. A profile keeps its selected
+GeoNames city as route metadata; accepted friends may read that city through the friend RPC, while
+unknown players receive only broad regional traffic labels. It is never a translation key. The
+`cities15000` catalog is imported administratively and refreshed every six months.
 
 ## Data Shape Decisions
 
