@@ -1,12 +1,21 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  isValidMascotName,
   isValidPlayerDisplayName,
+  normalizeMascotName,
   normalizePlayerDisplayName,
   onboardingIntroIndex,
 } from "./onboarding";
 
 describe("account onboarding contracts", () => {
+  it("normalizes and validates literal mascot names", () => {
+    expect(normalizeMascotName("  Ce\u0301u   Azul ")).toBe("Céu Azul");
+    expect(isValidMascotName("Céu Azul")).toBe(true);
+    expect(isValidMascotName("A")).toBe(false);
+    expect(isValidMascotName("Ave\u0000Postal")).toBe(false);
+  });
+
   it("normalizes Unicode and surrounding or repeated whitespace", () => {
     expect(normalizePlayerDisplayName("  Jose\u0301   da  Silva  ")).toBe("José da Silva");
   });

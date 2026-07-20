@@ -34,6 +34,7 @@ const nuvemMascotRow: PlayerMascotRow = {
       type: "bag",
     },
   ],
+  is_starter: true,
   id: "00000000-0000-4000-8000-000000000201",
   level: 3,
   name: "Nuvem",

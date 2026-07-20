@@ -85,7 +85,10 @@ reset role;
 
 do $$
 begin
-  if (select count(*) from public.account_onboarding) <> 2 then
+  if (select count(*) from public.account_onboarding where auth_user_id in (
+    '10000000-0000-4000-8000-000000009201',
+    '10000000-0000-4000-8000-000000009202'
+  )) <> 2 then
     raise exception 'Expected two independently persisted onboarding rows';
   end if;
   if exists (select 1 from public.profiles) or exists (select 1 from public.player_mascots) then
