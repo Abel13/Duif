@@ -5,6 +5,7 @@ begin;
 create temporary table reset_counts as
 select
   (select count(*) from auth.users) as auth_users,
+  (select count(*) from public.account_onboarding) as account_onboarding,
   (select count(*) from public.profiles) as profiles,
   (select count(*) from public.player_mascots) as player_mascots,
   (select count(*) from public.friendships) as friendships,
@@ -34,6 +35,7 @@ select
   delete from public.friendships;
   delete from public.player_mascots;
   delete from public.profiles;
+  delete from public.account_onboarding;
   delete from auth.users;
 
   insert into public.player_data_reset_audit (
@@ -43,6 +45,7 @@ select
     :'environment', :'project_ref', :'operator_label', :'backup_identifier',
     jsonb_build_object(
       'auth_users', auth_users,
+      'account_onboarding', account_onboarding,
       'profiles', profiles,
       'player_mascots', player_mascots,
       'friendships', friendships,

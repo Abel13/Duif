@@ -19,6 +19,12 @@ import {
 import { getSupabaseClient } from "./client";
 import { getSupabaseConfig } from "./config";
 import type { AuthProfile } from "./profile";
+import {
+  advanceOnboarding as advanceOnboardingRequest,
+  beginOrResumeOnboarding,
+  type AccountOnboarding,
+  type OnboardingStage,
+} from "./onboarding";
 
 const pendingEmailStorageKey = "duif.auth.pendingVerificationEmail";
 
@@ -29,6 +35,7 @@ type AuthContextValue = {
   isPasswordRecovery: boolean;
   journeyState: AuthJourneyState;
   pendingVerificationEmail: string | null;
+  onboarding: AccountOnboarding | null;
   profile: AuthProfile | null;
   session: Session | null;
   completePasswordReset: (password: string) => Promise<AuthPublicResult>;
@@ -39,6 +46,11 @@ type AuthContextValue = {
   signIn: (email: string, password: string) => Promise<AuthPublicResult>;
   signOut: () => Promise<void>;
   signUp: (email: string, password: string, intendedRoute?: string | null) => Promise<AuthPublicResult>;
+  advanceOnboarding: (
+    expectedStage: OnboardingStage,
+    nextStage: OnboardingStage,
+    displayName?: string,
+  ) => Promise<AccountOnboarding>;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -70,6 +82,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(isConfigured);
   const [isServiceAvailable, setIsServiceAvailable] = useState(isConfigured);
   const [profile, setProfile] = useState<AuthProfile | null>(null);
+  const [onboarding, setOnboarding] = useState<AccountOnboarding | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [isPasswordRecovery, setIsPasswordRecovery] = useState(false);
   const [pendingVerificationEmail, setPendingVerificationEmail] = useState<string | null>(() =>
@@ -90,11 +103,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(nextSession);
       if (!nextSession) {
         setProfile(null);
+        setOnboarding(null);
         return;
       }
       setPendingVerificationEmail(null);
       window.sessionStorage.removeItem(pendingEmailStorageKey);
-      setProfile(await fetchProfile(nextSession.user.id));
+      const [nextProfile, nextOnboarding] = await Promise.all([
+        fetchProfile(nextSession.user.id),
+        beginOrResumeOnboarding(),
+      ]);
+      setProfile(nextProfile);
+      setOnboarding(nextOnboarding);
     }
 
     supabase.auth.getSession()
@@ -232,22 +251,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (error) throw error;
     }
     setProfile(null);
+    setOnboarding(null);
     setSession(null);
     setIsPasswordRecovery(false);
     setPendingVerificationEmail(null);
     window.sessionStorage.removeItem(pendingEmailStorageKey);
   }, []);
 
+  const advanceOnboarding = useCallback(async (
+    expectedStage: OnboardingStage,
+    nextStage: OnboardingStage,
+    displayName?: string,
+  ) => {
+    const nextOnboarding = await advanceOnboardingRequest(expectedStage, nextStage, displayName);
+    setOnboarding(nextOnboarding);
+    return nextOnboarding;
+  }, []);
+
   const journeyState = resolveAuthJourneyState({
     hasPendingVerification: Boolean(pendingVerificationEmail),
     hasProfile: Boolean(profile),
     hasSession: Boolean(session),
+    onboardingStage: onboarding?.stage ?? null,
     isConfigured,
     isLoading,
     isServiceAvailable,
   });
 
   const contextValue = useMemo<AuthContextValue>(() => ({
+    advanceOnboarding,
     completePasswordReset,
     dismissVerification,
     exchangeAuthCode,
@@ -257,6 +289,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     isServiceAvailable,
     journeyState,
     pendingVerificationEmail,
+    onboarding,
     profile,
     requestPasswordReset,
     resendConfirmation,
@@ -264,8 +297,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     signIn,
     signOut,
     signUp,
-  }), [completePasswordReset, dismissVerification, exchangeAuthCode, isConfigured, isLoading, isPasswordRecovery, isServiceAvailable,
-    journeyState, pendingVerificationEmail, profile, requestPasswordReset, resendConfirmation,
+  }), [advanceOnboarding, completePasswordReset, dismissVerification, exchangeAuthCode, isConfigured, isLoading, isPasswordRecovery, isServiceAvailable,
+    journeyState, onboarding, pendingVerificationEmail, profile, requestPasswordReset, resendConfirmation,
     session, signIn, signOut, signUp]);
 
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;

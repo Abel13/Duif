@@ -100,6 +100,43 @@ export const enUS = {
     accountPending: { title: "Account awaiting setup", description: "Your session exists but has no postal profile yet. The new onboarding will configure it safely." },
     onboardingPending: { title: "A new onboarding is coming", description: "Old player data has been removed. Soon you will choose an archetype, name your mascot, and complete the first route." },
   },
+  onboarding: {
+    eyebrow: "First route",
+    progress: "Step {current} of {total}",
+    languageLabel: "Language",
+    signOut: "Sign out",
+    back: "Back",
+    next: "Continue",
+    saving: "Saving",
+    genericError: "This step could not be saved. Check your connection and try again.",
+    welcome: {
+      title: "Welcome to the mascot post",
+      description: "In DUIF, your mascot carries correspondence, explores routes, and always returns to the nest.",
+    },
+    travel: {
+      title: "Travel continues as time passes",
+      description: "After dispatch, the route follows its recorded schedule even while the app is closed.",
+    },
+    discoveries: {
+      title: "Small discoveries appear along the way",
+      description: "As route points are crossed, your mascot finds keepsakes automatically and carries them home.",
+    },
+    returnCollection: {
+      title: "Cargo is collected after the return",
+      description: "When the trip ends, you review the cargo and place its items in your Collection.",
+    },
+    displayName: {
+      title: "What should we call you?",
+      description: "Choose a public nickname for your friends to see. It does not need to be unique.",
+      label: "Your nickname",
+      hint: "Use 2 to 24 characters.",
+      error: "Enter a valid nickname containing 2 to 24 characters.",
+    },
+    mascotChoice: {
+      title: "Ready to choose your mascot",
+      description: "Your progress has been saved. The first archetype choice will open in the next stage.",
+    },
+  },
   units: {
     kilometers: "km",
   },

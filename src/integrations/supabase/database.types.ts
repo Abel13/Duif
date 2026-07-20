@@ -34,6 +34,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      account_onboarding: {
+        Row: {
+          auth_user_id: string
+          created_at: string
+          display_name: string | null
+          stage: Database["public"]["Enums"]["onboarding_stage"]
+          stage_version: number
+          updated_at: string
+        }
+        Insert: {
+          auth_user_id: string
+          created_at?: string
+          display_name?: string | null
+          stage?: Database["public"]["Enums"]["onboarding_stage"]
+          stage_version?: number
+          updated_at?: string
+        }
+        Update: {
+          auth_user_id?: string
+          created_at?: string
+          display_name?: string | null
+          stage?: Database["public"]["Enums"]["onboarding_stage"]
+          stage_version?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       correspondence_options: {
         Row: {
           catalog_key: string
@@ -858,6 +885,44 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      advance_account_onboarding: {
+        Args: {
+          expected_stage: Database["public"]["Enums"]["onboarding_stage"]
+          next_stage: Database["public"]["Enums"]["onboarding_stage"]
+          requested_display_name?: string
+        }
+        Returns: {
+          auth_user_id: string
+          created_at: string
+          display_name: string | null
+          stage: Database["public"]["Enums"]["onboarding_stage"]
+          stage_version: number
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "account_onboarding"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      begin_or_resume_onboarding: {
+        Args: never
+        Returns: {
+          auth_user_id: string
+          created_at: string
+          display_name: string | null
+          stage: Database["public"]["Enums"]["onboarding_stage"]
+          stage_version: number
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "account_onboarding"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       collect_delivery_reward: { Args: { delivery_id: string }; Returns: Json }
       create_delivery_from_selection: {
         Args: {
@@ -981,6 +1046,16 @@ export type Database = {
         | "returned"
         | "completed"
       inventory_category: "equipment" | "stamps" | "keepsakes" | "routeMarks"
+      onboarding_stage:
+        | "welcome"
+        | "travel"
+        | "discoveries"
+        | "returnCollection"
+        | "displayName"
+        | "mascotChoice"
+        | "tutorial"
+        | "nestSetup"
+        | "completed"
       official_asset_source: "packaged" | "storage"
       official_asset_type:
         | "mascotPortrait"
@@ -1150,6 +1225,17 @@ export const Constants = {
         "shopArtwork",
         "texture",
         "postalMark",
+      ],
+      onboarding_stage: [
+        "welcome",
+        "travel",
+        "discoveries",
+        "returnCollection",
+        "displayName",
+        "mascotChoice",
+        "tutorial",
+        "nestSetup",
+        "completed",
       ],
       reward_rarity: ["common", "uncommon", "rare"],
     },

@@ -101,6 +101,43 @@ export const ptBR = {
     accountPending: { title: "Conta aguardando configuração", description: "Sua sessão existe, mas ainda não possui um perfil postal. O novo onboarding fará essa configuração com segurança." },
     onboardingPending: { title: "Novo onboarding a caminho", description: "Os dados antigos foram removidos. Em breve você escolherá seu arquétipo, dará um nome ao mascote e fará a primeira rota." },
   },
+  onboarding: {
+    eyebrow: "Primeira rota",
+    progress: "Passo {current} de {total}",
+    languageLabel: "Idioma",
+    signOut: "Sair da conta",
+    back: "Voltar",
+    next: "Avançar",
+    saving: "Guardando",
+    genericError: "Não foi possível guardar este passo. Confira a conexão e tente novamente.",
+    welcome: {
+      title: "Bem-vindo ao correio dos mascotes",
+      description: "No DUIF, seu mascote leva correspondências, conhece rotas e sempre retorna ao ninho.",
+    },
+    travel: {
+      title: "As viagens continuam com o tempo",
+      description: "Depois do envio, o trajeto segue pelos horários registrados mesmo quando o aplicativo está fechado.",
+    },
+    discoveries: {
+      title: "Pequenas descobertas aparecem no caminho",
+      description: "Ao cruzar pontos da rota, o mascote encontra lembranças automaticamente e as carrega até voltar.",
+    },
+    returnCollection: {
+      title: "A carga é coletada depois do retorno",
+      description: "Quando a viagem termina, você confere a carga e guarda os itens na sua Coleção.",
+    },
+    displayName: {
+      title: "Como devemos chamar você?",
+      description: "Escolha um apelido público para aparecer aos seus amigos. Ele não precisa ser exclusivo.",
+      label: "Seu apelido",
+      hint: "Use de 2 a 24 caracteres.",
+      error: "Informe um apelido válido com 2 a 24 caracteres.",
+    },
+    mascotChoice: {
+      title: "Tudo pronto para escolher seu mascote",
+      description: "Seu progresso foi guardado. A escolha do primeiro arquétipo será aberta na próxima etapa.",
+    },
+  },
   units: {
     kilometers: "km",
   },

@@ -98,6 +98,28 @@ export type TranslationDictionary = {
     accountPending: { title: string; description: string };
     onboardingPending: { title: string; description: string };
   };
+  onboarding: {
+    eyebrow: string;
+    progress: string;
+    languageLabel: string;
+    signOut: string;
+    back: string;
+    next: string;
+    saving: string;
+    genericError: string;
+    welcome: { title: string; description: string };
+    travel: { title: string; description: string };
+    discoveries: { title: string; description: string };
+    returnCollection: { title: string; description: string };
+    displayName: {
+      title: string;
+      description: string;
+      label: string;
+      hint: string;
+      error: string;
+    };
+    mascotChoice: { title: string; description: string };
+  };
   units: {
     kilometers: string;
   };
@@ -669,6 +691,29 @@ export type TranslationKey =
   | "foundation.accountPending.description"
   | "foundation.onboardingPending.title"
   | "foundation.onboardingPending.description"
+  | "onboarding.eyebrow"
+  | "onboarding.progress"
+  | "onboarding.languageLabel"
+  | "onboarding.signOut"
+  | "onboarding.back"
+  | "onboarding.next"
+  | "onboarding.saving"
+  | "onboarding.genericError"
+  | "onboarding.welcome.title"
+  | "onboarding.welcome.description"
+  | "onboarding.travel.title"
+  | "onboarding.travel.description"
+  | "onboarding.discoveries.title"
+  | "onboarding.discoveries.description"
+  | "onboarding.returnCollection.title"
+  | "onboarding.returnCollection.description"
+  | "onboarding.displayName.title"
+  | "onboarding.displayName.description"
+  | "onboarding.displayName.label"
+  | "onboarding.displayName.hint"
+  | "onboarding.displayName.error"
+  | "onboarding.mascotChoice.title"
+  | "onboarding.mascotChoice.description"
   | "auth.registrationPending"
   | "auth.languageLabel"
   | "auth.languages.ptBR"

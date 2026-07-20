@@ -63,6 +63,7 @@ export function resolveAuthJourneyState({
   hasPendingVerification,
   hasProfile,
   hasSession,
+  onboardingStage,
 }: {
   isConfigured: boolean;
   isLoading: boolean;
@@ -70,10 +71,16 @@ export function resolveAuthJourneyState({
   hasPendingVerification: boolean;
   hasProfile: boolean;
   hasSession: boolean;
+  onboardingStage: "tutorial" | "nestSetup" | "completed" | string | null;
 }): AuthJourneyState {
   if (isLoading) return "loading";
   if (!isConfigured || !isServiceAvailable) return "serviceUnavailable";
-  if (hasSession) return hasProfile ? "ready" : "onboardingRequired";
+  if (hasSession) {
+    if (onboardingStage === "tutorial") return "tutorialActive";
+    if (onboardingStage === "nestSetup") return "nestSetupRequired";
+    if (onboardingStage === "completed" && hasProfile) return "ready";
+    return "onboardingRequired";
+  }
   if (hasPendingVerification) return "verificationPending";
   return "anonymous";
 }

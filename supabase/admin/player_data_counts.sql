@@ -2,6 +2,7 @@
 \pset format unaligned
 select jsonb_build_object(
   'auth_users', (select count(*) from auth.users),
+  'account_onboarding', (select count(*) from public.account_onboarding),
   'profiles', (select count(*) from public.profiles),
   'player_mascots', (select count(*) from public.player_mascots),
   'friendships', (select count(*) from public.friendships),
