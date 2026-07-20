@@ -464,6 +464,12 @@
   }
 }
 
+@media (max-width: 819px) {
+  .labels {
+    display: none;
+  }
+}
+
 @media (min-width: 820px) {
   .map :global(.maplibregl-ctrl-top-right) {
     top: max(var(--space-4), env(safe-area-inset-top));
