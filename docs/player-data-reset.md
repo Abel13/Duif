@@ -12,7 +12,7 @@ an application startup, migration, seed, or deployment hook.
 - migrations, translations, and official packaged assets;
 - previous rows in `player_data_reset_audit`.
 
-Everything in Auth plus profiles, owned mascots, friendships, deliveries, correspondence content,
+Everything in Auth plus onboarding progress, profiles, owned mascots, friendships, deliveries, correspondence content,
 delivery rewards, route discoveries, and inventory is deleted.
 
 ## Prerequisites

@@ -72,6 +72,18 @@ Boosts:
 - Fuel capacity, recharge rates, boost strength, and acquisition rates remain balancing
   decisions for a later milestone.
 
+## Account Onboarding Rules
+
+- A confirmed account must complete the persisted onboarding journey before normal gameplay.
+- Introductory steps cannot be skipped as a group. Players may review accepted explanations, but
+  going back never regresses authoritative progress.
+- The public player display name is literal, non-unique, locale-independent, normalized to NFC,
+  and limited to 2–24 characters after whitespace normalization.
+- Onboarding progress exists independently from `profiles`; no profile, nest, mascot, delivery,
+  or inventory item is created during the introductory shell.
+- Profile and initial mascot creation must remain one authoritative, idempotent operation in the
+  mascot-choice stage.
+
 ## Real-Time Map Rules
 
 The map is a core mechanic, not just a route visualization.

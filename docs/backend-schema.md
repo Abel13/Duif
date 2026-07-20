@@ -25,6 +25,8 @@ The initial schema lives in `supabase/migrations/20260709200000_initial_duif_sch
 
 ### Core Player Data
 
+- `account_onboarding`: server-owned progress and reserved public display name tied directly to
+  an Auth user before a profile exists.
 - `profiles`: player or friend profile, display name, private calculation coordinates,
   postal-base fields, and optional future auth user link.
 - `mascot_templates`: static starter mascot definitions.
@@ -53,6 +55,7 @@ The schema uses PostgreSQL enums for stable game categories:
 - `correspondence_type`
 - `reward_rarity`
 - `inventory_category`
+- `onboarding_stage`
 
 These match the current TypeScript game unions closely enough for future mapping work.
 
@@ -107,6 +110,7 @@ city/state/country, friendship level, exchange count, and favorite note key.
 
 RLS is enabled on player-owned or relationship-sensitive tables:
 
+- `account_onboarding`;
 - `profiles`;
 - `player_mascots`;
 - `friendships`;
@@ -134,8 +138,16 @@ DUIF uses Supabase Auth with email/password. Registration requires email confirm
 eight-character password containing letters and numbers. Public registration and recovery
 responses do not disclose whether an address is registered. The legacy `claim_current_profile`
 RPC remains removed: authentication creates only an Auth user, while a confirmed session without
-a profile is routed to onboarding. Profile and mascot provisioning remain authoritative work for
-the later onboarding RPC.
+a profile is routed to onboarding. `begin_or_resume_onboarding` creates or returns the caller's
+versioned progress row, and `advance_account_onboarding` permits only the next linear stage while
+holding the row lock. Browser roles may read only their own row and cannot write it directly.
+Profile and mascot provisioning remain authoritative work for the later onboarding RPC.
+
+The introduction persists `welcome`, `travel`, `discoveries`, `returnCollection`, and
+`displayName` before handing off to `mascotChoice`. Future stages are already represented as
+`tutorial`, `nestSetup`, and `completed`, but this milestone does not create their gameplay data.
+The reserved player display name is normalized to NFC with collapsed whitespace, remains literal
+and non-unique, and must contain 2 to 24 characters.
 
 Local confirmation and recovery messages can be inspected through Inbucket. Equivalent remote
 password, confirmation, redirect-allowlist, and SMTP settings must be applied only after the
@@ -152,8 +164,8 @@ VITE_SUPABASE_ANON_KEY=<local anon key from supabase status>
 
 If configuration is missing or the service cannot be reached, the UI shows a localized
 service-unavailable state. It never falls back to player, delivery, inventory, social, or catalog
-fixtures. Until the new account onboarding is available, protected routes require a session and
-show an account-setup state rather than inventing a profile.
+fixtures. Protected routes require both a session and the correct persisted journey stage; an
+unfinished account is redirected to `/onboarding` rather than receiving an invented profile.
 
 The current read layer intentionally reads only:
 

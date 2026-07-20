@@ -1706,7 +1706,7 @@ Delivered:
 
 ## Milestone 42: Resumable Onboarding Shell
 
-Status: Planned.
+Status: Implemented and validated locally; remote migration pending deployment.
 
 Goal:
 
@@ -1727,6 +1727,18 @@ Success criteria:
 - closing the PWA never loses an accepted step;
 - explanations remain short and understandable without a separate manual;
 - the player cannot access normal gameplay before completing required stages.
+
+Delivered:
+
+- a versioned `account_onboarding` record tied directly to the confirmed Auth user, without
+  provisioning profile, nest, mascot, delivery, or inventory rows;
+- idempotent server-owned initialization and linear stage transitions with owner-only reads;
+- four required illustrated explanations followed by a non-unique public display-name step;
+- review navigation that never regresses accepted server progress and exact resume at the first
+  incomplete step;
+- journey-aware route guards for onboarding, tutorial, nest setup, and ready states;
+- localized mobile-first paper UI with language selection, sign-out, progress, focus management,
+  validation, and a Milestone 43 handoff state.
 
 ## Milestone 43: Initial Mascot Choice And Provisioning
 
