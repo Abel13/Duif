@@ -1,4 +1,5 @@
 import { FormEvent, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { AssetImage, StampButton } from "../../components/ui";
 import { assetKeys, type OfficialAssetKey } from "../../game";
@@ -9,6 +10,7 @@ import { fetchStarterMascotCatalog } from "../../integrations/supabase/catalog";
 import {
   isValidMascotName,
   isValidPlayerDisplayName,
+  limitPlayerNameInput,
   normalizePlayerDisplayName,
   onboardingIntroIndex,
   onboardingIntroStages,
@@ -43,7 +45,7 @@ export function OnboardingPage() {
   }, [onboarding?.stage]);
 
   useEffect(() => {
-    titleRef.current?.focus();
+    titleRef.current?.focus({ preventScroll: true });
   }, [visibleIndex]);
 
   const progress = useMemo(() => t("onboarding.progress")
@@ -120,7 +122,7 @@ export function OnboardingPage() {
             aria-invalid={error === "name"}
             autoComplete="nickname"
             maxLength={48}
-            onChange={(event) => setDisplayName(event.target.value)}
+            onChange={(event) => setDisplayName(limitPlayerNameInput(event.target.value))}
             value={displayName}
           />
         </label>
@@ -142,8 +144,9 @@ export function OnboardingPage() {
 }
 
 function MascotChoice() {
+  const navigate=useNavigate();
   const { locale, setLocale, t } = useTranslation();
-  const { onboarding, provisionInitialMascot, saveInitialMascotDraft, signOut } = useAuth();
+  const { onboarding, provisionInitialMascot, saveInitialMascotDraft, signOut, startOrResumeTutorialDelivery } = useAuth();
   const [archetypes, setArchetypes] = useState<MascotArchetype[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [name, setName] = useState(onboarding?.mascot_name ?? "");
@@ -167,7 +170,7 @@ function MascotChoice() {
   }, [onboarding?.selected_mascot_template_id]);
 
   const selected = archetypes[selectedIndex];
-  useEffect(() => { titleRef.current?.focus(); }, [mode, selectedIndex]);
+  useEffect(() => { titleRef.current?.focus({ preventScroll: true }); }, [mode, selectedIndex]);
 
   function rotate(direction: number) {
     if (!archetypes.length || state === "saving") return;
@@ -193,6 +196,7 @@ function MascotChoice() {
       setState("ready");
     } catch { setState("error"); }
   }
+  async function beginTutorial(){setState("saving");try{await startOrResumeTutorialDelivery();navigate("/onboarding/tutorial");}catch{setState("error");}}
 
   return <OnboardingShell locale={locale} onLocaleChange={setLocale} onSignOut={signOut}>
     <section className={`${styles.card} ${styles.mascotCard}`}>
@@ -226,11 +230,12 @@ function MascotChoice() {
         </div>
 
         {mode === "choice" && <form className={styles.nameForm} onSubmit={review}>
-          <label><span>{t("onboarding.mascotChoice.nameLabel")}</span><input aria-invalid={state === "error"} maxLength={48} value={name} onChange={(event) => { setName(event.target.value); setState("ready"); }} /></label>
+          <label><span>{t("onboarding.mascotChoice.nameLabel")}</span><input aria-invalid={state === "error"} maxLength={48} value={name} onChange={(event) => { setName(limitPlayerNameInput(event.target.value)); setState("ready"); }} /></label>
           <small>{state === "error" ? t("onboarding.mascotChoice.nameError") : t("onboarding.mascotChoice.nameHint")}</small>
           <div className={styles.actions}><StampButton disabled={state === "saving"} type="submit">{state === "saving" ? t("onboarding.saving") : t("onboarding.mascotChoice.review")}</StampButton></div>
         </form>}
         {mode === "review" && <div className={styles.actions}><StampButton disabled={state === "saving"} onClick={() => setMode("choice")} variant="secondary">{t("onboarding.back")}</StampButton><StampButton disabled={state === "saving"} onClick={() => void confirm()}>{state === "saving" ? t("onboarding.mascotChoice.preparing") : t("onboarding.mascotChoice.confirm")}</StampButton></div>}
+        {mode === "ready" && <div className={styles.actions}><StampButton disabled={state==="saving"} onClick={()=>void beginTutorial()}>{state==="saving"?t("onboarding.saving"):t("tutorial.start.action")}</StampButton></div>}
       </>}
     </section>
   </OnboardingShell>;

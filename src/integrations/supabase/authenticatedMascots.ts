@@ -99,7 +99,7 @@ export function selectCurrentDelivery(deliveries: DeliveryRow[]) {
 
 export function selectDeliveryHistory(deliveries: DeliveryRow[]) {
   return deliveries
-    .filter((delivery) => delivery.status === "completed")
+    .filter((delivery) => delivery.status === "completed" && !delivery.is_tutorial)
     .sort(
       (firstDelivery, secondDelivery) =>
         new Date(secondDelivery.updated_at).getTime() - new Date(firstDelivery.updated_at).getTime(),

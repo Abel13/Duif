@@ -31,11 +31,11 @@ select
   delete from public.delivery_correspondence_contents;
   delete from public.delivery_rewards;
   delete from public.inventory_items;
+  delete from public.account_onboarding;
   delete from public.deliveries;
   delete from public.friendships;
   delete from public.player_mascots;
   delete from public.profiles;
-  delete from public.account_onboarding;
   delete from auth.users;
 
   insert into public.player_data_reset_audit (

@@ -41,6 +41,9 @@ export type Database = {
           display_name: string | null
           mascot_name: string | null
           selected_mascot_template_id: string | null
+          tutorial_collected_at: string | null
+          tutorial_delivery_id: string | null
+          tutorial_instruction_step: Database["public"]["Enums"]["tutorial_instruction_step"] | null
           stage: Database["public"]["Enums"]["onboarding_stage"]
           stage_version: number
           updated_at: string
@@ -51,6 +54,9 @@ export type Database = {
           display_name?: string | null
           mascot_name?: string | null
           selected_mascot_template_id?: string | null
+          tutorial_collected_at?: string | null
+          tutorial_delivery_id?: string | null
+          tutorial_instruction_step?: Database["public"]["Enums"]["tutorial_instruction_step"] | null
           stage?: Database["public"]["Enums"]["onboarding_stage"]
           stage_version?: number
           updated_at?: string
@@ -61,6 +67,9 @@ export type Database = {
           display_name?: string | null
           mascot_name?: string | null
           selected_mascot_template_id?: string | null
+          tutorial_collected_at?: string | null
+          tutorial_delivery_id?: string | null
+          tutorial_instruction_step?: Database["public"]["Enums"]["tutorial_instruction_step"] | null
           stage?: Database["public"]["Enums"]["onboarding_stage"]
           stage_version?: number
           updated_at?: string
@@ -107,6 +116,7 @@ export type Database = {
           destination_longitude: number
           distance_km: number
           id: string
+          is_tutorial: boolean
           mascot_id: string
           origin_label_key: string
           origin_latitude: number
@@ -132,6 +142,7 @@ export type Database = {
           destination_longitude: number
           distance_km: number
           id: string
+          is_tutorial?: boolean
           mascot_id: string
           origin_label_key: string
           origin_latitude: number
@@ -157,6 +168,7 @@ export type Database = {
           destination_longitude?: number
           distance_km?: number
           id?: string
+          is_tutorial?: boolean
           mascot_id?: string
           origin_label_key?: string
           origin_latitude?: number
@@ -906,6 +918,9 @@ export type Database = {
           display_name: string | null
           mascot_name: string | null
           selected_mascot_template_id: string | null
+          tutorial_collected_at: string | null
+          tutorial_delivery_id: string | null
+          tutorial_instruction_step: Database["public"]["Enums"]["tutorial_instruction_step"] | null
           stage: Database["public"]["Enums"]["onboarding_stage"]
           stage_version: number
           updated_at: string
@@ -925,6 +940,9 @@ export type Database = {
           display_name: string | null
           mascot_name: string | null
           selected_mascot_template_id: string | null
+          tutorial_collected_at: string | null
+          tutorial_delivery_id: string | null
+          tutorial_instruction_step: Database["public"]["Enums"]["tutorial_instruction_step"] | null
           stage: Database["public"]["Enums"]["onboarding_stage"]
           stage_version: number
           updated_at: string
@@ -945,12 +963,21 @@ export type Database = {
           display_name: string | null
           mascot_name: string | null
           selected_mascot_template_id: string | null
+          tutorial_collected_at: string | null
+          tutorial_delivery_id: string | null
+          tutorial_instruction_step: Database["public"]["Enums"]["tutorial_instruction_step"] | null
           stage: Database["public"]["Enums"]["onboarding_stage"]
           stage_version: number
           updated_at: string
         }
       }
       collect_delivery_reward: { Args: { delivery_id: string }; Returns: Json }
+      collect_tutorial_delivery: { Args: never; Returns: Json }
+      acknowledge_tutorial_instruction: {
+        Args: { requested_step: Database["public"]["Enums"]["tutorial_instruction_step"] }
+        Returns: Database["public"]["Tables"]["account_onboarding"]["Row"]
+      }
+      start_or_resume_tutorial_delivery: { Args: never; Returns: Json }
       create_delivery_from_selection: {
         Args: {
           content_payload: Json
@@ -1097,6 +1124,7 @@ export type Database = {
         | "texture"
         | "postalMark"
       reward_rarity: "common" | "uncommon" | "rare"
+      tutorial_instruction_step: "preparing" | "outbound" | "discovery" | "destination" | "returning" | "returned" | "collection"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1265,6 +1293,7 @@ export const Constants = {
         "completed",
       ],
       reward_rarity: ["common", "uncommon", "rare"],
+      tutorial_instruction_step: ["preparing", "outbound", "discovery", "destination", "returning", "returned", "collection"],
     },
   },
 } as const

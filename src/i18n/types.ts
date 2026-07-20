@@ -143,6 +143,17 @@ export type TranslationDictionary = {
     };
     tutorialNestLabel: string;
   };
+  tutorial: {
+    eyebrow: string;
+    continue: string;
+    start: { title: string; description: string; action: string };
+    traveling: { title: string; description: string };
+    locations: { nest: string; station: string; route: string };
+    steps: Record<"preparing" | "outbound" | "discovery" | "destination" | "returning" | "returned", { title: string; description: string }>;
+    collection: { title: string; description: string; action: string };
+    completed: { title: string; description: string; nestNext: string };
+    rewards: { inauguralPostcard: { name: string; description: string }; firstRouteStamp: { name: string; description: string } };
+  };
   units: {
     kilometers: string;
   };
@@ -757,6 +768,20 @@ export type TranslationKey =
   | "onboarding.mascotChoice.readyTitle"
   | "onboarding.mascotChoice.readyDescription"
   | "onboarding.tutorialNestLabel"
+  | "tutorial.eyebrow" | "tutorial.continue"
+  | "tutorial.start.title" | "tutorial.start.description" | "tutorial.start.action"
+  | "tutorial.traveling.title" | "tutorial.traveling.description"
+  | "tutorial.locations.nest" | "tutorial.locations.station" | "tutorial.locations.route"
+  | "tutorial.steps.preparing.title" | "tutorial.steps.preparing.description"
+  | "tutorial.steps.outbound.title" | "tutorial.steps.outbound.description"
+  | "tutorial.steps.discovery.title" | "tutorial.steps.discovery.description"
+  | "tutorial.steps.destination.title" | "tutorial.steps.destination.description"
+  | "tutorial.steps.returning.title" | "tutorial.steps.returning.description"
+  | "tutorial.steps.returned.title" | "tutorial.steps.returned.description"
+  | "tutorial.collection.title" | "tutorial.collection.description" | "tutorial.collection.action"
+  | "tutorial.completed.title" | "tutorial.completed.description" | "tutorial.completed.nestNext"
+  | "tutorial.rewards.inauguralPostcard.name" | "tutorial.rewards.inauguralPostcard.description"
+  | "tutorial.rewards.firstRouteStamp.name" | "tutorial.rewards.firstRouteStamp.description"
   | "auth.registrationPending"
   | "auth.languageLabel"
   | "auth.languages.ptBR"

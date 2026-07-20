@@ -27,6 +27,7 @@ import {
   type AccountOnboarding,
   type OnboardingStage,
 } from "./onboarding";
+import { acknowledgeTutorialInstruction as acknowledgeTutorialInstructionRequest, collectTutorialDelivery as collectTutorialDeliveryRequest, startOrResumeTutorialDelivery as startOrResumeTutorialDeliveryRequest, type TutorialDeliveryState, type TutorialInstructionStep } from "./tutorial";
 
 const pendingEmailStorageKey = "duif.auth.pendingVerificationEmail";
 
@@ -55,6 +56,9 @@ type AuthContextValue = {
   ) => Promise<AccountOnboarding>;
   saveInitialMascotDraft: (templateId: string, mascotName: string) => Promise<AccountOnboarding>;
   provisionInitialMascot: () => Promise<void>;
+  acknowledgeTutorialInstruction: (step: TutorialInstructionStep) => Promise<AccountOnboarding>;
+  collectTutorialDelivery: () => Promise<void>;
+  startOrResumeTutorialDelivery: () => Promise<TutorialDeliveryState>;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -283,6 +287,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setOnboarding(result.onboarding);
     setProfile(result.profile);
   }, []);
+  const acknowledgeTutorialInstruction = useCallback(async (step: TutorialInstructionStep) => {
+    const result=await acknowledgeTutorialInstructionRequest(step); setOnboarding(result); return result;
+  }, []);
+  const collectTutorialDelivery = useCallback(async () => {
+    const result=await collectTutorialDeliveryRequest(); setOnboarding(result.onboarding);
+  }, []);
+  const startOrResumeTutorialDelivery = useCallback(async () => {
+    const result=await startOrResumeTutorialDeliveryRequest(); setOnboarding(result.onboarding); return result;
+  }, []);
 
   const journeyState = resolveAuthJourneyState({
     hasPendingVerification: Boolean(pendingVerificationEmail),
@@ -295,8 +308,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   });
 
   const contextValue = useMemo<AuthContextValue>(() => ({
+    acknowledgeTutorialInstruction,
     advanceOnboarding,
     completePasswordReset,
+    collectTutorialDelivery,
     dismissVerification,
     exchangeAuthCode,
     isConfigured,
@@ -315,9 +330,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     signOut,
     signUp,
     saveInitialMascotDraft,
-  }), [advanceOnboarding, completePasswordReset, dismissVerification, exchangeAuthCode, isConfigured, isLoading, isPasswordRecovery, isServiceAvailable,
+    startOrResumeTutorialDelivery,
+  }), [acknowledgeTutorialInstruction, advanceOnboarding, completePasswordReset, collectTutorialDelivery, dismissVerification, exchangeAuthCode, isConfigured, isLoading, isPasswordRecovery, isServiceAvailable,
     journeyState, onboarding, pendingVerificationEmail, profile, requestPasswordReset, resendConfirmation,
-    provisionInitialMascot, saveInitialMascotDraft, session, signIn, signOut, signUp]);
+    provisionInitialMascot, saveInitialMascotDraft, session, signIn, signOut, signUp, startOrResumeTutorialDelivery]);
 
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
 }

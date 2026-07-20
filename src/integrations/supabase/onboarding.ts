@@ -23,6 +23,10 @@ export function normalizePlayerDisplayName(value: string) {
   return value.normalize("NFC").trim().replace(/\s+/gu, " ");
 }
 
+export function limitPlayerNameInput(value: string, maximumLength = 24) {
+  return Array.from(value).slice(0, maximumLength).join("");
+}
+
 export function isValidPlayerDisplayName(value: string) {
   const normalized = normalizePlayerDisplayName(value);
   const length = Array.from(normalized).length;
