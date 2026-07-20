@@ -96,6 +96,15 @@ export type MascotTravelModifiers = {
   isLongRoute: boolean;
 };
 
+export type TutorialTravelBoost = {
+  kind: "firstJourney";
+  version: 1;
+  preparationSeconds: 30;
+  outboundSeconds: 120;
+  destinationSeconds: 30;
+  returnSeconds: 120;
+};
+
 export type Delivery = {
   id: string;
   senderId: string;
@@ -113,6 +122,7 @@ export type Delivery = {
   rewardSeed: string;
   routeDiscoveryVersion?: number;
   travelModifiers?: MascotTravelModifiers;
+  tutorialTravelBoost?: TutorialTravelBoost;
   correspondenceType?: CorrespondenceType;
 };
 

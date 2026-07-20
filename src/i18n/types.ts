@@ -147,7 +147,9 @@ export type TranslationDictionary = {
     eyebrow: string;
     continue: string;
     start: { title: string; description: string; action: string };
+    boost: { badge: string };
     traveling: { title: string; description: string };
+    controls: { hint: string; startHere: string };
     locations: { nest: string; station: string; route: string };
     steps: Record<"preparing" | "outbound" | "discovery" | "destination" | "returning" | "returned", { title: string; description: string }>;
     collection: { title: string; description: string; action: string };
@@ -770,7 +772,9 @@ export type TranslationKey =
   | "onboarding.tutorialNestLabel"
   | "tutorial.eyebrow" | "tutorial.continue"
   | "tutorial.start.title" | "tutorial.start.description" | "tutorial.start.action"
+  | "tutorial.boost.badge"
   | "tutorial.traveling.title" | "tutorial.traveling.description"
+  | "tutorial.controls.hint" | "tutorial.controls.startHere"
   | "tutorial.locations.nest" | "tutorial.locations.station" | "tutorial.locations.route"
   | "tutorial.steps.preparing.title" | "tutorial.steps.preparing.description"
   | "tutorial.steps.outbound.title" | "tutorial.steps.outbound.description"

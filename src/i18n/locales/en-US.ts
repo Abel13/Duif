@@ -200,8 +200,10 @@ export const enUS = {
   tutorial: {
     eyebrow: "First route",
     continue: "Got it",
-    start: { title: "A route to learn", description: "Your mascot will take a short journey from the Postal Nest to Messenger Station and return in 16 minutes.", action: "Start first route" },
+    start: { title: "A route to learn", description: "Your mascot will take a short journey from the Postal Nest to Messenger Station and return in about 5 minutes. A temporary boost speeds up this first journey without changing the mascot's normal speed.", action: "Start first route" },
+    boost: { badge: "First journey boost" },
     traveling: { title: "The journey continues", description: "Follow your mascot on the map. The next instruction will appear at the right time." },
+    controls: { hint: "Start with the map controls. Tap the highlighted button to find your mascot.", startHere: "Tap here" },
     locations: { nest: "Postal Nest", station: "Messenger Station", route: "Inaugural path" },
     steps: {
       preparing: { title: "Preparing to depart", description: "Before leaving, your mascot organizes the bag and checks the route at the nest." },

@@ -11,4 +11,15 @@
 .portrait>img{clip-path:circle(45.25% at 50% 50%);object-fit:cover;scale:1.1}
 .cargo{display:flex;flex-wrap:wrap;justify-content:center;gap:.6rem}.cargo strong{padding:.6rem;border:1px dashed var(--color-postal-brown);background:var(--color-postal-label)}
 .error{color:var(--color-postal-red)!important}
+.boostBadge{position:absolute;z-index:5;top:max(1rem,env(safe-area-inset-top));right:max(1rem,env(safe-area-inset-right));max-width:11rem;padding:.45rem .6rem;border:1px dashed var(--color-rare-gold);border-radius:.25rem;color:var(--color-ink);background:rgba(255,248,232,.95);box-shadow:.15rem .18rem 0 rgba(46,42,36,.16);font-size:.66rem;font-weight:900;line-height:1.25;text-align:center;text-transform:uppercase}
+.cameraGuide{position:absolute;z-index:5;top:max(1rem,env(safe-area-inset-top));left:max(1rem,env(safe-area-inset-left));display:grid;max-width:13rem;gap:.5rem;pointer-events:none}
+.cameraGuide>p{padding:.5rem .65rem;border:1px dashed var(--color-postal-brown);border-radius:.3rem;color:var(--color-ink);background:rgba(255,248,232,.96);box-shadow:.18rem .2rem 0 rgba(46,42,36,.18);font-size:.72rem;font-weight:800;line-height:1.35}
+.cameraControls{display:grid;width:3.75rem;gap:.5rem;pointer-events:auto}
+.cameraControls button{position:relative;display:grid;width:3.75rem;aspect-ratio:1;place-items:center;padding:.16rem;border:2px solid rgba(46,42,36,.55);border-radius:.25rem .5rem .28rem .42rem;background:rgba(255,248,232,.94);box-shadow:.12rem .16rem 0 rgba(46,42,36,.17)}
+.cameraControlIcon{position:absolute;inset:.16rem;overflow:hidden;border-radius:.2rem .38rem .22rem .34rem}
+.cameraControlIcon>i{display:block;width:1.4rem;aspect-ratio:1;border:2px dashed var(--color-postal-brown);border-radius:50%;background:var(--color-paper-dark)}
+.cameraControls small{position:absolute;top:50%;left:calc(100% + .5rem);width:max-content;max-width:8rem;padding:.3rem .45rem;border:1px dashed var(--color-postal-red);border-radius:.2rem;color:var(--color-postal-red);background:var(--color-postal-label);font-size:.62rem;font-weight:900;line-height:1.15;text-transform:uppercase;transform:translateY(-50%)}
+.recommendedControl{border-color:var(--color-postal-red)!important;box-shadow:0 0 0 .25rem rgba(164,74,63,.22),.12rem .16rem 0 rgba(46,42,36,.17)!important;animation:tutorial-control-pulse 1.5s ease-in-out infinite}
+@keyframes tutorial-control-pulse{50%{transform:scale(1.06)}}
+@media(prefers-reduced-motion:reduce){.recommendedControl{animation:none}}
 @media(min-width:760px){.guide{right:1.5rem;bottom:1.5rem;left:auto;width:28rem}}

@@ -1,4 +1,4 @@
-import type { CorrespondenceType, Delivery, Mascot, MascotTravelModifiers } from "../../game/types";
+import type { CorrespondenceType, Delivery, Mascot, MascotTravelModifiers, TutorialTravelBoost } from "../../game/types";
 import type { TranslationKey } from "../../i18n";
 import { getSupabaseClient } from "./client";
 import {
@@ -49,6 +49,7 @@ export function mapDeliveryRowToDelivery(row: DeliveryRow, mascotPublicId: strin
     senderId: row.sender_profile_id,
     status: row.status,
     travelModifiers: mapTravelModifiers(row.travel_modifiers),
+    tutorialTravelBoost: mapTutorialTravelBoost(row.travel_modifiers),
   };
 }
 
@@ -87,6 +88,17 @@ function mapTravelModifiers(value: DeliveryRow["travel_modifiers"]): MascotTrave
   }
 
   return candidate as MascotTravelModifiers;
+}
+
+function mapTutorialTravelBoost(value: DeliveryRow["travel_modifiers"]): TutorialTravelBoost | undefined {
+  if (!value || Array.isArray(value) || typeof value !== "object") return undefined;
+  const boost = (value as Record<string, unknown>).tutorialBoost;
+  if (!boost || Array.isArray(boost) || typeof boost !== "object") return undefined;
+  const candidate = boost as Record<string, unknown>;
+  return candidate.kind === "firstJourney" && candidate.version === 1
+    && candidate.preparationSeconds === 30 && candidate.outboundSeconds === 120
+    && candidate.destinationSeconds === 30 && candidate.returnSeconds === 120
+    ? candidate as TutorialTravelBoost : undefined;
 }
 
 export function selectCurrentDelivery(deliveries: DeliveryRow[]) {
