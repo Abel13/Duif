@@ -6,6 +6,7 @@ begin
     raise exception 'Auth users must be empty after the clean foundation seed';
   end if;
   if (select count(*) from public.profiles) <> 0
+    or (select count(*) from public.account_onboarding) <> 0
     or (select count(*) from public.player_mascots) <> 0
     or (select count(*) from public.deliveries) <> 0
     or (select count(*) from public.inventory_items) <> 0 then

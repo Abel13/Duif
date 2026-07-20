@@ -18,9 +18,14 @@ describe("auth contracts", () => {
   });
 
   it("resolves the guarded account journey without flashing private content", () => {
-    expect(resolveAuthJourneyState({ isConfigured: true, isLoading: true, isServiceAvailable: true, hasPendingVerification: false, hasProfile: false, hasSession: false })).toBe("loading");
-    expect(resolveAuthJourneyState({ isConfigured: true, isLoading: false, isServiceAvailable: true, hasPendingVerification: true, hasProfile: false, hasSession: false })).toBe("verificationPending");
-    expect(resolveAuthJourneyState({ isConfigured: true, isLoading: false, isServiceAvailable: true, hasPendingVerification: false, hasProfile: false, hasSession: true })).toBe("onboardingRequired");
+    const base = { isConfigured: true, isLoading: false, isServiceAvailable: true, hasPendingVerification: false, hasProfile: false, hasSession: false, onboardingStage: null };
+    expect(resolveAuthJourneyState({ ...base, isLoading: true })).toBe("loading");
+    expect(resolveAuthJourneyState({ ...base, hasPendingVerification: true })).toBe("verificationPending");
+    expect(resolveAuthJourneyState({ ...base, hasSession: true })).toBe("onboardingRequired");
+    expect(resolveAuthJourneyState({ ...base, hasSession: true, onboardingStage: "tutorial" })).toBe("tutorialActive");
+    expect(resolveAuthJourneyState({ ...base, hasSession: true, onboardingStage: "nestSetup" })).toBe("nestSetupRequired");
+    expect(resolveAuthJourneyState({ ...base, hasSession: true, hasProfile: true, onboardingStage: "completed" })).toBe("ready");
+    expect(resolveAuthJourneyState({ ...base, hasSession: true, hasProfile: false, onboardingStage: "completed" })).toBe("onboardingRequired");
   });
 
   it("accepts only internal non-auth intended routes", () => {
