@@ -202,7 +202,16 @@ export const ptBR = {
     start: { title: "Aprenda com uma viagem curta", description: "Seu mascote fará uma rota rápida entre o Ninho Postal e a Estação dos Mensageiros, retornando em cerca de 5 minutos.\n\nPara facilitar o início, esta primeira viagem recebe um impulso temporário que acelera o percurso sem alterar a velocidade normal do mascote.", action: "Começar primeira rota" },
     boost: { badge: "Impulso da primeira viagem" },
     traveling: { title: "A viagem continua", description: "Acompanhe o mascote pelo mapa. A próxima orientação aparecerá no momento certo." },
-    controls: { hint: "Comece usando os controles do mapa. Toque no botão destacado para encontrar seu mascote.", startHere: "Toque aqui" },
+    controls: {
+      hint: "Use os controles do mapa para conhecer a rota.",
+      startHere: "Toque aqui",
+      instructions: {
+        mascot: "Primeiro, acompanhe seu mascote no mapa.",
+        origin: "Agora, veja de onde a viagem começa: o Ninho Postal.",
+        destination: "Em seguida, encontre a Estação dos Mensageiros, o destino da rota.",
+        overview: "Por fim, use a visão geral para ver a rota completa.",
+      },
+    },
     locations: { nest: "Ninho Postal", station: "Estação dos Mensageiros", route: "Caminho inaugural" },
     steps: {
       preparing: { title: "Preparando a partida", description: "Antes de sair, o mascote organiza a bolsa e confere a rota no ninho." },

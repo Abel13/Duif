@@ -113,7 +113,7 @@ versions. Current versions remain packaged under `public/assets/`; the schema al
 packaged and future Storage locations. Runtime screens load one active public manifest and never
 persist or construct free-form art paths.
 
-The registry contains 39 identities: 38 active versions and the unused `route-doodle-mark`
+The registry contains 40 identities: 39 active versions and the unused `route-doodle-mark`
 archived. PWA icons, the brand logo, and fonts remain outside the runtime registry because they
 must work before Supabase, authentication, or onboarding has loaded.
 
@@ -215,6 +215,15 @@ The currency naming pass adds two code-native balance marks:
 
 Both marks follow the visual rules in `docs/visual-direction.md`. They are decorative beside
 an accessible localized currency name and must retain a lightweight CSS fallback.
+
+Milestone 44 adds the active tutorial item:
+
+- `public/assets/items/active/first-journey-boost.webp` (`192x192`, about `9KB`), registered as
+  `activeItem.firstJourneyBoost`.
+
+It is an isolated watercolor postal seal with a transparent background. The tutorial displays it
+as the first-journey boost at the middle-right edge of the map; its accessible name remains the
+localized “First journey boost” label rather than text baked into the artwork.
 
 Milestone 31 adds four code-native guided-map controls:
 

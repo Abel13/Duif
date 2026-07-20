@@ -16,6 +16,9 @@ export const assetKeys = {
     flightGoggles: "equipment.icon.flightGoggles",
     urgentBadge: "equipment.icon.urgentBadge",
   },
+  activeItems: {
+    firstJourneyBoost: "activeItem.firstJourneyBoost",
+  },
   rewards: {
     wornRouteStamp: "reward.thumbnail.wornRouteStamp",
     blueAirmailLabel: "reward.thumbnail.blueAirmailLabel",

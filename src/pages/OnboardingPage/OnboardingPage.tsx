@@ -146,7 +146,7 @@ export function OnboardingPage() {
 function MascotChoice() {
   const navigate=useNavigate();
   const { locale, setLocale, t } = useTranslation();
-  const { onboarding, provisionInitialMascot, saveInitialMascotDraft, signOut, startOrResumeTutorialDelivery } = useAuth();
+  const { onboarding, provisionInitialMascot, saveInitialMascotDraft, signOut } = useAuth();
   const [archetypes, setArchetypes] = useState<MascotArchetype[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [name, setName] = useState(onboarding?.mascot_name ?? "");
@@ -196,7 +196,7 @@ function MascotChoice() {
       setState("ready");
     } catch { setState("error"); }
   }
-  async function beginTutorial(){setState("saving");try{await startOrResumeTutorialDelivery();navigate("/onboarding/tutorial");}catch{setState("error");}}
+  function beginTutorial(){navigate("/onboarding/tutorial");}
 
   return <OnboardingShell locale={locale} onLocaleChange={setLocale} onSignOut={signOut}>
     <section className={`${styles.card} ${styles.mascotCard}`}>

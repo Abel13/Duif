@@ -149,7 +149,11 @@ export type TranslationDictionary = {
     start: { title: string; description: string; action: string };
     boost: { badge: string };
     traveling: { title: string; description: string };
-    controls: { hint: string; startHere: string };
+    controls: {
+      hint: string;
+      startHere: string;
+      instructions: { mascot: string; origin: string; destination: string; overview: string };
+    };
     locations: { nest: string; station: string; route: string };
     steps: Record<"preparing" | "outbound" | "discovery" | "destination" | "returning" | "returned", { title: string; description: string }>;
     collection: { title: string; description: string; action: string };
@@ -775,6 +779,8 @@ export type TranslationKey =
   | "tutorial.boost.badge"
   | "tutorial.traveling.title" | "tutorial.traveling.description"
   | "tutorial.controls.hint" | "tutorial.controls.startHere"
+  | "tutorial.controls.instructions.mascot" | "tutorial.controls.instructions.origin"
+  | "tutorial.controls.instructions.destination" | "tutorial.controls.instructions.overview"
   | "tutorial.locations.nest" | "tutorial.locations.station" | "tutorial.locations.route"
   | "tutorial.steps.preparing.title" | "tutorial.steps.preparing.description"
   | "tutorial.steps.outbound.title" | "tutorial.steps.outbound.description"
