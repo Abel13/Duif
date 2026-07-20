@@ -71,10 +71,12 @@ begin
   perform public.advance_account_onboarding('travel', 'discoveries');
   perform public.advance_account_onboarding('discoveries', 'returnCollection');
   perform public.advance_account_onboarding('returnCollection', 'displayName');
-  second_record := public.advance_account_onboarding('displayName', 'mascotChoice', 'José da Silva');
-  if second_record.display_name <> 'José da Silva' then
-    raise exception 'Non-unique display names were not accepted';
-  end if;
+  begin
+    perform public.advance_account_onboarding('displayName', 'mascotChoice', 'JOSÉ DA SILVA');
+    raise exception 'Duplicate display name was accepted';
+  exception when unique_violation then null;
+  end;
+  second_record := public.advance_account_onboarding('displayName', 'mascotChoice', 'Outro Carteiro');
   if (select count(*) from public.account_onboarding) <> 1 then
     raise exception 'RLS exposed another player onboarding row';
   end if;
