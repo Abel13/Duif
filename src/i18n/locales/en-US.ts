@@ -142,22 +142,22 @@ export const enUS = {
     welcome: {
       title: "Welcome to DUIF",
       description:
-        "In DUIF, your mascot carries correspondence, explores routes, and always returns to the nest.",
+        "In DUIF, you send mascots around the world to deliver letters, postcards, and gifts.\n\nEach mascot has its own speed. Choose a route, follow the journey, and wait for them to return to the nest.",
     },
     travel: {
-      title: "Travel continues as time passes",
+      title: "Real-time journeys",
       description:
-        "After dispatch, the route follows its recorded schedule even while the app is closed.",
+        "After dispatch, the journey keeps moving even while the app is closed.\n\nYou can return later to follow the progress or welcome your mascot when it returns.",
     },
     discoveries: {
-      title: "Small discoveries appear along the way",
+      title: "Discoveries along the route",
       description:
-        "As route points are crossed, your mascot finds keepsakes automatically and carries them home.",
+        "During the journey, your mascot may find keepsakes at certain points along the way.\n\nThey are collected automatically and arrive with your mascot when it returns to the nest.",
     },
     returnCollection: {
-      title: "Cargo is collected after the return",
+      title: "Cargo on return",
       description:
-        "When the trip ends, you review the cargo and place its items in your Collection.",
+        "When the journey ends, your mascot returns carrying the cargo found along the way.\n\nReview the items you received and store your discoveries in the Collection.",
     },
     displayName: {
       title: "What should we call you?",

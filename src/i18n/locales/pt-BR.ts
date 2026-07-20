@@ -142,22 +142,22 @@ export const ptBR = {
     welcome: {
       title: "Bem-vindo ao DUIF",
       description:
-        "No DUIF, seu mascote leva correspondências, conhece rotas e sempre retorna ao ninho.",
+        "No DUIF, você envia mascotes pelo mundo para entregar cartas, cartões e presentes.\n\nCada mascote tem sua própria velocidade. Escolha uma rota, acompanhe a viagem e espere ele voltar ao ninho.",
     },
     travel: {
-      title: "As viagens continuam com o tempo",
+      title: "Viagens em tempo real",
       description:
-        "Depois do envio, o trajeto segue pelos horários registrados mesmo quando o aplicativo está fechado.",
+        "Depois do envio, a viagem continua avançando mesmo com o aplicativo fechado.\n\nVocê pode voltar mais tarde para acompanhar o progresso ou receber seu mascote quando ele retornar.",
     },
     discoveries: {
-      title: "Pequenas descobertas aparecem no caminho",
+      title: "Descobertas na rota",
       description:
-        "Ao cruzar pontos da rota, o mascote encontra lembranças automaticamente e as carrega até voltar.",
+        "Durante a viagem, seu mascote pode encontrar lembranças em alguns pontos do caminho.\n\nElas são coletadas automaticamente e chegam junto com ele no retorno ao ninho.",
     },
     returnCollection: {
-      title: "A carga é coletada depois do retorno",
+      title: "Carga no retorno",
       description:
-        "Quando a viagem termina, você confere a carga e guarda os itens na sua Coleção.",
+        "Quando a viagem termina, seu mascote volta trazendo a carga encontrada pelo caminho.\n\nConfira os itens recebidos e guarde suas descobertas na Coleção.",
     },
     displayName: {
       title: "Como devemos chamar você?",
