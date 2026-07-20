@@ -248,7 +248,53 @@ function OnboardingShell({ children, locale, onLocaleChange, onSignOut }: {
   onSignOut: () => Promise<void>;
 }) {
   const { t } = useTranslation();
-  return <main className={styles.page}>
+  const pageRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const page = pageRef.current;
+    const viewport = window.visualViewport;
+    if (!page || !viewport) return;
+
+    let scrollBeforeKeyboard: number | null = null;
+    let keyboardWasVisible = false;
+    let deferredRestore: number | undefined;
+
+    const isEditable = (target: EventTarget | null) => target instanceof HTMLElement
+      && target.matches("input, textarea, select, [contenteditable='true']");
+
+    const restoreScrollPosition = () => {
+      if (scrollBeforeKeyboard === null) return;
+      page.scrollTop = scrollBeforeKeyboard;
+      window.scrollTo(0, 0);
+    };
+
+    const onFocusIn = (event: FocusEvent) => {
+      if (isEditable(event.target)) scrollBeforeKeyboard = page.scrollTop;
+    };
+
+    const onViewportResize = () => {
+      const keyboardIsVisible = viewport.height < window.innerHeight - 100;
+      if (keyboardIsVisible) {
+        keyboardWasVisible = true;
+        return;
+      }
+
+      if (!keyboardWasVisible || scrollBeforeKeyboard === null) return;
+      keyboardWasVisible = false;
+      requestAnimationFrame(restoreScrollPosition);
+      deferredRestore = window.setTimeout(restoreScrollPosition, 80);
+    };
+
+    page.addEventListener("focusin", onFocusIn);
+    viewport.addEventListener("resize", onViewportResize);
+    return () => {
+      page.removeEventListener("focusin", onFocusIn);
+      viewport.removeEventListener("resize", onViewportResize);
+      if (deferredRestore !== undefined) window.clearTimeout(deferredRestore);
+    };
+  }, []);
+
+  return <main className={styles.page} ref={pageRef}>
     <header className={styles.toolbar}>
       <label>
         <span>{t("onboarding.languageLabel")}</span>

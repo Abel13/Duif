@@ -199,7 +199,7 @@ export const ptBR = {
   tutorial: {
     eyebrow: "Primeira rota",
     continue: "Entendi",
-    start: { title: "Uma rota para aprender", description: "Seu mascote fará uma viagem curta do Ninho Postal até a Estação dos Mensageiros e voltará em cerca de 5 minutos. Nesta primeira viagem, um impulso temporário acelera o percurso sem alterar a velocidade normal do mascote.", action: "Começar primeira rota" },
+    start: { title: "Aprenda com uma viagem curta", description: "Seu mascote fará uma rota rápida entre o Ninho Postal e a Estação dos Mensageiros, retornando em cerca de 5 minutos.\n\nPara facilitar o início, esta primeira viagem recebe um impulso temporário que acelera o percurso sem alterar a velocidade normal do mascote.", action: "Começar primeira rota" },
     boost: { badge: "Impulso da primeira viagem" },
     traveling: { title: "A viagem continua", description: "Acompanhe o mascote pelo mapa. A próxima orientação aparecerá no momento certo." },
     controls: { hint: "Comece usando os controles do mapa. Toque no botão destacado para encontrar seu mascote.", startHere: "Toque aqui" },
