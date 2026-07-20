@@ -196,6 +196,7 @@ export const enUS = {
         "{name} is already waiting for the first tutorial route.",
     },
     tutorialNestLabel: "Tutorial nest",
+    privateNestLabel: "My nest",
   },
   tutorial: {
     eyebrow: "First route",
@@ -228,6 +229,7 @@ export const enUS = {
     postcard: { open: "Open Inaugural Postcard", close: "Close postcard", flip: "Flip postcard", flipHint: "Tap the postcard to turn it over", front: "Postcard front", back: "Postcard back", completedOn: "Completed on {date}", backMessage: "Congratulations on your first postal journey! This postcard marks the start of your collection and your mascot's adventures.", postmark: "First journey", deliveredBy: "Delivered by" },
     rewards: { inauguralPostcard: { name: "Inaugural Postcard", description: "A postcard recording your mascot's very first journey." }, firstRouteStamp: { name: "First Route Stamp", description: "A stamp awarded for completing the first postal journey." } },
   },
+  nest: { eyebrow: "Real nest", title: "Choose your nest region", description: "Search for a city and tap the map to select an approximate area. It will only be used to calculate your journeys.", searchLabel: "Search city", searchPlaceholder: "City or locality", searchAction: "Search", mapLabel: "Map to choose the nest region", privacyNote: "The point will be rounded to about 2 km. Your location will not be shown to other people.", selectedCity: "Your city: {city}", selectionReady: "Approximate area selected.", confirmAction: "Activate my nest" },
   units: {
     kilometers: "km",
   },

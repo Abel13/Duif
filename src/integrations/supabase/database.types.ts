@@ -38,6 +38,7 @@ export type Database = {
         Row: {
           auth_user_id: string
           created_at: string
+          completed_at: string | null
           display_name: string | null
           inaugural_postcard_hint_seen_at: string | null
           mascot_name: string | null
@@ -52,6 +53,7 @@ export type Database = {
         Insert: {
           auth_user_id: string
           created_at?: string
+          completed_at?: string | null
           display_name?: string | null
           inaugural_postcard_hint_seen_at?: string | null
           mascot_name?: string | null
@@ -66,6 +68,7 @@ export type Database = {
         Update: {
           auth_user_id?: string
           created_at?: string
+          completed_at?: string | null
           display_name?: string | null
           inaugural_postcard_hint_seen_at?: string | null
           mascot_name?: string | null
@@ -218,6 +221,107 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      geonames_cities: {
+        Row: {
+          admin1_code: string | null
+          alternate_names: string
+          archived_at: string | null
+          ascii_name: string
+          country_code: string
+          geoname_id: number
+          import_run_id: string
+          is_active: boolean
+          latitude: number
+          longitude: number
+          name: string
+          population: number
+          search_text: string
+          updated_at: string
+        }
+        Insert: {
+          admin1_code?: string | null
+          alternate_names?: string
+          archived_at?: string | null
+          ascii_name: string
+          country_code: string
+          geoname_id: number
+          import_run_id: string
+          is_active?: boolean
+          latitude: number
+          longitude: number
+          name: string
+          population?: number
+          search_text: string
+          updated_at?: string
+        }
+        Update: {
+          admin1_code?: string | null
+          alternate_names?: string
+          archived_at?: string | null
+          ascii_name?: string
+          country_code?: string
+          geoname_id?: number
+          import_run_id?: string
+          is_active?: boolean
+          latitude?: number
+          longitude?: number
+          name?: string
+          population?: number
+          search_text?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "geonames_cities_import_run_id_fkey"
+            columns: ["import_run_id"]
+            isOneToOne: false
+            referencedRelation: "geonames_import_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      geonames_import_runs: {
+        Row: {
+          archived_city_count: number
+          completed_at: string | null
+          created_at: string
+          dataset: string
+          id: string
+          imported_city_count: number
+          operator_label: string
+          source: string
+          source_date: string
+          source_row_count: number
+          source_sha256: string
+        }
+        Insert: {
+          archived_city_count?: number
+          completed_at?: string | null
+          created_at?: string
+          dataset: string
+          id?: string
+          imported_city_count?: number
+          operator_label: string
+          source: string
+          source_date: string
+          source_row_count: number
+          source_sha256: string
+        }
+        Update: {
+          archived_city_count?: number
+          completed_at?: string | null
+          created_at?: string
+          dataset?: string
+          id?: string
+          imported_city_count?: number
+          operator_label?: string
+          source?: string
+          source_date?: string
+          source_row_count?: number
+          source_sha256?: string
+        }
+        Relationships: []
       }
       delivery_correspondence_contents: {
         Row: {
@@ -769,6 +873,7 @@ export type Database = {
           auth_user_id: string | null
           created_at: string
           display_name: string
+          home_city_geoname_id: number | null
           home_label_key: string
           home_latitude: number
           home_longitude: number
@@ -784,6 +889,7 @@ export type Database = {
           auth_user_id?: string | null
           created_at?: string
           display_name: string
+          home_city_geoname_id?: number | null
           home_label_key: string
           home_latitude: number
           home_longitude: number
@@ -799,6 +905,7 @@ export type Database = {
           auth_user_id?: string | null
           created_at?: string
           display_name?: string
+          home_city_geoname_id?: number | null
           home_label_key?: string
           home_latitude?: number
           home_longitude?: number
@@ -810,7 +917,15 @@ export type Database = {
           postal_base_street?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_home_city_geoname_id_fkey"
+            columns: ["home_city_geoname_id"]
+            isOneToOne: false
+            referencedRelation: "geonames_cities"
+            referencedColumns: ["geoname_id"]
+          },
+        ]
       }
       reward_items: {
         Row: {
@@ -918,6 +1033,7 @@ export type Database = {
         Returns: {
           auth_user_id: string
           created_at: string
+          completed_at: string | null
           display_name: string | null
           inaugural_postcard_hint_seen_at: string | null
           mascot_name: string | null
@@ -941,6 +1057,7 @@ export type Database = {
         Returns: {
           auth_user_id: string
           created_at: string
+          completed_at: string | null
           display_name: string | null
           inaugural_postcard_hint_seen_at: string | null
           mascot_name: string | null
@@ -965,6 +1082,7 @@ export type Database = {
         Returns: {
           auth_user_id: string
           created_at: string
+          completed_at: string | null
           display_name: string | null
           inaugural_postcard_hint_seen_at: string | null
           mascot_name: string | null
@@ -978,6 +1096,12 @@ export type Database = {
         }
       }
       collect_delivery_reward: { Args: { delivery_id: string }; Returns: Json }
+      complete_nest_setup: { Args: { selected_latitude: number; selected_longitude: number; selected_city_geoname_id: number }; Returns: Json }
+      get_my_nest_city: { Args: never; Returns: { label: string }[] }
+      search_nest_cities: {
+        Args: { search_query: string }
+        Returns: { id: string; label: string; latitude: number; longitude: number }[]
+      }
       collect_tutorial_delivery: { Args: never; Returns: Json }
       acknowledge_tutorial_instruction: {
         Args: { requested_step: Database["public"]["Enums"]["tutorial_instruction_step"] }

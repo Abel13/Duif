@@ -40,6 +40,7 @@ import { useRewardCollectionData } from "../../game/useRewardCollectionData";
 import { useMascotCatalog } from "../../game/useMascotCatalog";
 import { useAuth } from "../../integrations/supabase/AuthProvider";
 import { isSupabaseCatalogEnabled } from "../../integrations/supabase/config";
+import { getMyNestCityLabel } from "../../integrations/supabase/nest";
 import { type TranslationKey, useTranslation } from "../../i18n";
 import styles from "./TravelMapPage.module.css";
 import { isMapCameraTargetDisabled } from "../../components/map/travelMapCamera";
@@ -66,6 +67,7 @@ export function TravelMapPage() {
   const [selectedTrafficSnapshot, setSelectedTrafficSnapshot] = useState<PostalTrafficPetSnapshot>();
   const [selectedMascotId, setSelectedMascotId] = useState(defaultMascotId);
   const [tripStatusOpen, setTripStatusOpen] = useState(false);
+  const [homeCityLabel, setHomeCityLabel] = useState<string | null>(null);
   const tripStatusTriggerRef = useRef<HTMLElement | null>(null);
   const highlightTimersRef = useRef<Map<string, number>>(new Map());
   const toastTimerRef = useRef<number>();
@@ -105,6 +107,18 @@ export function TravelMapPage() {
   const delivery = collectionDelivery
     ?? activeDelivery
     ?? createIdleNestDelivery(profile, activeMascot);
+  useEffect(() => {
+    let active = true;
+    if (!profile?.home_city_geoname_id) { setHomeCityLabel(null); return () => { active = false; }; }
+    void getMyNestCityLabel().then((label) => { if (active) setHomeCityLabel(label); }).catch(() => { if (active) setHomeCityLabel(null); });
+    return () => { active = false; };
+  }, [profile?.home_city_geoname_id]);
+  const originLabel = delivery.id === "idle-nest" && homeCityLabel
+    ? homeCityLabel
+    : t(delivery.origin.labelKey);
+  const destinationLabel = delivery.id === "idle-nest" && homeCityLabel
+    ? homeCityLabel
+    : t(delivery.destination.labelKey);
   const displayMascot = mascots.find((mascot) => mascot.id === delivery.mascotId)
     ?? getMascotById(delivery.mascotId)
     ?? activeMascot
@@ -151,8 +165,8 @@ export function TravelMapPage() {
     [postalTraffic],
   );
   const placeLabels = useMemo(
-    () => createMapPlaceLabels(delivery, rewards, t),
-    [delivery, rewards, t],
+    () => createMapPlaceLabels(delivery, rewards, t, originLabel, destinationLabel),
+    [delivery, destinationLabel, originLabel, rewards, t],
   );
   const discoveredCount = rewards.filter((reward) => reward.discovered).length;
   const status = getDeliveryStatus(delivery, now);
@@ -371,7 +385,7 @@ export function TravelMapPage() {
             }
             delivery={delivery}
             deliveryCompleted={journeyPhase === "completed"}
-            destinationLabel={t(delivery.destination.labelKey)}
+            destinationLabel={destinationLabel}
             destinationTitle={t("mascot.destination")}
             fallbackLabel={t("map.unavailable")}
             focusTarget={focusTarget}
@@ -383,7 +397,7 @@ export function TravelMapPage() {
             onRewardSelect={selectReward}
             onTrafficSelect={selectTraffic}
             onViewportChange={updatePostalTrafficAnchor}
-            originLabel={t(delivery.origin.labelKey)}
+            originLabel={originLabel}
             originTitle={t("mascot.origin")}
             petLabel={displayMascot?.name ?? t("common.unavailable")}
             petPortraitAssetKey={displayMascot?.appearance.portraitAssetKey}
@@ -560,8 +574,10 @@ export function TravelMapPage() {
           <TripStatusDialog
             delivery={delivery}
             displayMascot={displayMascot}
+            destinationLabel={destinationLabel}
             now={now}
             onClosed={closeTripStatus}
+            originLabel={originLabel}
             petLeg={petPosition.leg}
             progressPercent={progressPercent}
             status={status}
@@ -870,17 +886,21 @@ function MascotMapSelector({
 
 function TripStatusDialog({
   delivery,
+  destinationLabel,
   displayMascot,
   now,
   onClosed,
+  originLabel,
   petLeg,
   progressPercent,
   status,
 }: {
   delivery: Delivery;
+  destinationLabel: string;
   displayMascot: Mascot | undefined;
   now: Date;
   onClosed: () => void;
+  originLabel: string;
   petLeg: TravelLeg;
   progressPercent: number;
   status: DeliveryStatus;
@@ -921,11 +941,11 @@ function TripStatusDialog({
         <section className={styles.tripStatusJourney}>
           <div className={styles.tripStatusEndpoint}>
             <span>{t("mascot.origin")}</span>
-            <strong>{t(delivery.origin.labelKey)}</strong>
+            <strong>{originLabel}</strong>
           </div>
           <div className={`${styles.tripStatusEndpoint} ${styles.tripStatusEndpointDestination}`}>
             <span>{t("mascot.destination")}</span>
-            <strong>{t(delivery.destination.labelKey)}</strong>
+            <strong>{destinationLabel}</strong>
           </div>
           <div className={styles.tripStatusTrack} aria-hidden="true">
             <span style={{ transform: `scaleX(${progressPercent / 100})` }} />
@@ -1227,19 +1247,21 @@ function createMapPlaceLabels(
   delivery: Delivery,
   rewards: RouteRewardDiscovery[],
   t: (key: TranslationKey) => string,
+  originLabel = t(delivery.origin.labelKey),
+  destinationLabel = t(delivery.destination.labelKey),
 ): MapPlaceLabel[] {
   return [
     {
       coordinates: delivery.origin,
       id: `${delivery.id}-origin`,
       kind: "origin",
-      label: t(delivery.origin.labelKey),
+      label: originLabel,
     },
     {
       coordinates: delivery.destination,
       id: `${delivery.id}-destination`,
       kind: "destination",
-      label: t(delivery.destination.labelKey),
+      label: destinationLabel,
     },
     ...rewards.map((reward) => ({
       coordinates: reward.coordinates,

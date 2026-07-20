@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, type ReactNode } from "react";
 import { Navigate, Route, Routes, useLocation, useSearchParams } from "react-router-dom";
 
 import { FoundationStatusPage } from "../pages/FoundationStatusPage/FoundationStatusPage";
@@ -10,6 +10,13 @@ import { sanitizeIntendedRoute } from "../integrations/supabase/authContracts";
 import { useAuth } from "../integrations/supabase/AuthProvider";
 
 const TutorialDeliveryPage=lazy(()=>import("../pages/TutorialDeliveryPage/TutorialDeliveryPage").then(module=>({default:module.TutorialDeliveryPage})));
+const NestSetupPage=lazy(()=>import("../pages/NestSetupPage/NestSetupPage").then(module=>({default:module.NestSetupPage})));
+const TravelMapPage=lazy(()=>import("../pages/TravelMapPage/TravelMapPage").then(module=>({default:module.TravelMapPage})));
+const MascotDetailPage=lazy(()=>import("../pages/MascotDetailPage/MascotDetailPage").then(module=>({default:module.MascotDetailPage})));
+const InventoryAlbumPage=lazy(()=>import("../pages/InventoryAlbumPage/InventoryAlbumPage").then(module=>({default:module.InventoryAlbumPage})));
+const FriendsPage=lazy(()=>import("../pages/FriendsPage/FriendsPage").then(module=>({default:module.FriendsPage})));
+const ShopPage=lazy(()=>import("../pages/ShopPage/ShopPage").then(module=>({default:module.ShopPage})));
+const SendFlowPage=lazy(()=>import("../pages/SendFlowPage/SendFlowPage").then(module=>({default:module.SendFlowPage})));
 
 export function AppRoutes() {
   return (
@@ -19,10 +26,20 @@ export function AppRoutes() {
       <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
       <Route path="/onboarding" element={<ProtectedOnboardingRoute />} />
       <Route path="/onboarding/tutorial" element={<ProtectedTutorialRoute />} />
+      <Route path="/onboarding/nest" element={<ProtectedNestRoute />} />
+      <Route path="/map" element={<ProtectedGameRoute><TravelMapPage/></ProtectedGameRoute>} />
+      <Route path="/mascots/:mascotId" element={<ProtectedGameRoute><MascotDetailPage/></ProtectedGameRoute>} />
+      <Route path="/inventory" element={<ProtectedGameRoute><InventoryAlbumPage/></ProtectedGameRoute>} />
+      <Route path="/friends" element={<ProtectedGameRoute><FriendsPage/></ProtectedGameRoute>} />
+      <Route path="/shop" element={<ProtectedGameRoute><ShopPage/></ProtectedGameRoute>} />
+      <Route path="/send" element={<ProtectedGameRoute><SendFlowPage/></ProtectedGameRoute>} />
       <Route path="*" element={<ProtectedFoundationRoute />} />
     </Routes>
   );
 }
+
+function ProtectedNestRoute(){const {journeyState}=useAuth();if(journeyState==="loading")return <FoundationStatusPage state="loading"/>;if(journeyState==="nestSetupRequired")return <Suspense fallback={<FoundationStatusPage state="loading"/>}><NestSetupPage/></Suspense>;return <Navigate replace to={journeyState==="ready"?"/map":"/onboarding"}/>;}
+function ProtectedGameRoute({children}:{children:ReactNode}){const {journeyState}=useAuth();if(journeyState==="loading")return <FoundationStatusPage state="loading"/>;if(journeyState!=="ready")return <Navigate replace to={journeyState==="nestSetupRequired"?"/onboarding/nest":"/onboarding"}/>;return <Suspense fallback={<FoundationStatusPage state="loading"/>}>{children}</Suspense>;}
 
 function ProtectedTutorialRoute() {
   const {journeyState,onboarding}=useAuth();
@@ -63,6 +80,8 @@ function ProtectedFoundationRoute() {
     return <Navigate replace to="/onboarding" />;
   }
   if(journeyState==="tutorialActive") return <Navigate replace to="/onboarding/tutorial"/>;
+  if(journeyState==="nestSetupRequired") return <Navigate replace to="/onboarding/nest"/>;
+  if(journeyState==="ready") return <Navigate replace to="/map"/>;
 
   return <FoundationStatusPage state="onboardingPending" />;
 }

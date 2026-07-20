@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { TravelMap } from "../../components/map/TravelMap";
 import { AssetImage, InauguralPostcardDialog, StampButton } from "../../components/ui";
@@ -15,6 +16,7 @@ const tutorialCameraGuideOrder: readonly TutorialCameraControlKind[] = ["mascot"
 
 export function TutorialDeliveryPage() {
   const {t}=useTranslation();
+  const navigate=useNavigate();
   const {acknowledgeInauguralPostcardHint,acknowledgeTutorialInstruction,collectTutorialDelivery,onboarding,startOrResumeTutorialDelivery}=useAuth();
   const {mascots}=useMascotCatalog(); const mascot=mascots[0];
   const [delivery,setDelivery]=useState<Delivery>(); const [now,setNow]=useState(()=>new Date());
@@ -46,7 +48,7 @@ export function TutorialDeliveryPage() {
   async function acknowledge(){if(!nextStep)return;setBusy(true);setError(false);try{await acknowledgeTutorialInstruction(nextStep);}catch{setError(true);}finally{setBusy(false);}}
   async function collect(){setBusy(true);setError(false);try{await collectTutorialDelivery();}catch{setError(true);}finally{setBusy(false);}}
 
-  if(onboarding?.stage==="nestSetup") return <main className={styles.intro}><section className={styles.paper}><span>{t("tutorial.eyebrow")}</span><h1>{t("tutorial.completed.title")}</h1><p>{t("tutorial.completed.description")}</p><div className={styles.cargo}><StampButton onClick={()=>setPostcardOpen(true)}>{t("tutorial.postcard.open")}</StampButton><AssetImage alt={t("tutorial.rewards.firstRouteStamp.name")} assetKey={assetKeys.collectibles.firstJourneyStamp} className={styles.firstRouteStamp}><i /></AssetImage></div><p>{t("tutorial.completed.nestNext")}</p></section><InauguralPostcardDialog completionAt={completionAt} hintSeen={Boolean(onboarding.inaugural_postcard_hint_seen_at)} mascotName={mascot?.name} onClose={()=>setPostcardOpen(false)} onFirstFlip={acknowledgeInauguralPostcardHint} open={postcardOpen} senderNickname={onboarding.display_name ?? undefined}/></main>;
+  if(onboarding?.stage==="nestSetup") return <main className={styles.intro}><section className={styles.paper}><span>{t("tutorial.eyebrow")}</span><h1>{t("tutorial.completed.title")}</h1><p>{t("tutorial.completed.description")}</p><div className={styles.cargo}><StampButton onClick={()=>setPostcardOpen(true)}>{t("tutorial.postcard.open")}</StampButton><AssetImage alt={t("tutorial.rewards.firstRouteStamp.name")} assetKey={assetKeys.collectibles.firstJourneyStamp} className={styles.firstRouteStamp}><i /></AssetImage></div><p>{t("tutorial.completed.nestNext")}</p><StampButton onClick={()=>navigate("/onboarding/nest")}>{t("nest.confirmAction")}</StampButton></section><InauguralPostcardDialog completionAt={completionAt} hintSeen={Boolean(onboarding.inaugural_postcard_hint_seen_at)} mascotName={mascot?.name} onClose={()=>setPostcardOpen(false)} onFirstFlip={acknowledgeInauguralPostcardHint} open={postcardOpen} senderNickname={onboarding.display_name ?? undefined}/></main>;
 
   if(!delivery&&onboarding?.tutorial_delivery_id) return <main className={styles.intro}><section className={styles.paper}><p>{t("common.loading")}</p></section></main>;
   if(!delivery) return <main className={styles.intro}><section className={styles.paper}><span>{t("tutorial.eyebrow")}</span><h1>{t("tutorial.start.title")}</h1><p>{t("tutorial.start.description")}</p>{mascot&&<AssetImage alt={mascot.name} assetKey={mascot.appearance.portraitAssetKey} className={styles.portrait}><i /></AssetImage>}<StampButton disabled={busy||!mascot} onClick={()=>void start()}>{busy?t("onboarding.saving"):t("tutorial.start.action")}</StampButton>{error&&<p className={styles.error}>{t("onboarding.genericError")}</p>}</section></main>;

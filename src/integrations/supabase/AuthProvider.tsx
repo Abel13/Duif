@@ -28,6 +28,8 @@ import {
   type OnboardingStage,
 } from "./onboarding";
 import { acknowledgeInauguralPostcardHint as acknowledgeInauguralPostcardHintRequest, acknowledgeTutorialInstruction as acknowledgeTutorialInstructionRequest, collectTutorialDelivery as collectTutorialDeliveryRequest, startOrResumeTutorialDelivery as startOrResumeTutorialDeliveryRequest, type TutorialDeliveryState, type TutorialInstructionStep } from "./tutorial";
+import { completeNestSetup as completeNestSetupRequest } from "./nest";
+import type { NestCoordinate } from "../../game/nest";
 
 const pendingEmailStorageKey = "duif.auth.pendingVerificationEmail";
 
@@ -60,6 +62,7 @@ type AuthContextValue = {
   collectTutorialDelivery: () => Promise<void>;
   acknowledgeInauguralPostcardHint: () => Promise<void>;
   startOrResumeTutorialDelivery: () => Promise<TutorialDeliveryState>;
+  completeNestSetup: (selection: NestCoordinate, cityId: string) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -298,6 +301,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const startOrResumeTutorialDelivery = useCallback(async () => {
     const result=await startOrResumeTutorialDeliveryRequest(); setOnboarding(result.onboarding); return result;
   }, []);
+  const completeNestSetup = useCallback(async (selection: NestCoordinate, cityId: string) => {
+    const result=await completeNestSetupRequest(selection, cityId); setProfile(result.profile); setOnboarding(result.onboarding);
+  }, []);
 
   const journeyState = resolveAuthJourneyState({
     hasPendingVerification: Boolean(pendingVerificationEmail),
@@ -315,6 +321,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     advanceOnboarding,
     completePasswordReset,
     collectTutorialDelivery,
+    completeNestSetup,
     dismissVerification,
     exchangeAuthCode,
     isConfigured,
@@ -334,7 +341,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     signUp,
     saveInitialMascotDraft,
     startOrResumeTutorialDelivery,
-  }), [acknowledgeTutorialInstruction, acknowledgeInauguralPostcardHint, advanceOnboarding, completePasswordReset, collectTutorialDelivery, dismissVerification, exchangeAuthCode, isConfigured, isLoading, isPasswordRecovery, isServiceAvailable,
+  }), [acknowledgeTutorialInstruction, acknowledgeInauguralPostcardHint, advanceOnboarding, completePasswordReset, collectTutorialDelivery, completeNestSetup, dismissVerification, exchangeAuthCode, isConfigured, isLoading, isPasswordRecovery, isServiceAvailable,
     journeyState, onboarding, pendingVerificationEmail, profile, requestPasswordReset, resendConfirmation,
     provisionInitialMascot, saveInitialMascotDraft, session, signIn, signOut, signUp, startOrResumeTutorialDelivery]);
 

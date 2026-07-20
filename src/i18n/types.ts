@@ -142,6 +142,7 @@ export type TranslationDictionary = {
       readyDescription: string;
     };
     tutorialNestLabel: string;
+    privateNestLabel: string;
   };
   tutorial: {
     eyebrow: string;
@@ -161,6 +162,7 @@ export type TranslationDictionary = {
     postcard: { open: string; close: string; flip: string; flipHint: string; front: string; back: string; completedOn: string; backMessage: string; postmark: string; deliveredBy: string };
     rewards: { inauguralPostcard: { name: string; description: string }; firstRouteStamp: { name: string; description: string } };
   };
+  nest: { eyebrow: string; title: string; description: string; searchLabel: string; searchPlaceholder: string; searchAction: string; mapLabel: string; privacyNote: string; selectedCity: string; selectionReady: string; confirmAction: string };
   units: {
     kilometers: string;
   };
@@ -775,6 +777,7 @@ export type TranslationKey =
   | "onboarding.mascotChoice.readyTitle"
   | "onboarding.mascotChoice.readyDescription"
   | "onboarding.tutorialNestLabel"
+  | "onboarding.privateNestLabel"
   | "tutorial.eyebrow" | "tutorial.continue"
   | "tutorial.start.title" | "tutorial.start.description" | "tutorial.start.action"
   | "tutorial.boost.badge"
@@ -1293,4 +1296,15 @@ export type TranslationKey =
   | "tutorial.postcard.back"
   | "tutorial.postcard.backMessage"
   | "tutorial.postcard.postmark"
-  | "tutorial.postcard.deliveredBy";
+  | "tutorial.postcard.deliveredBy"
+  | "nest.eyebrow"
+  | "nest.title"
+  | "nest.description"
+  | "nest.searchLabel"
+  | "nest.searchPlaceholder"
+  | "nest.searchAction"
+  | "nest.mapLabel"
+  | "nest.privacyNote"
+  | "nest.selectedCity"
+  | "nest.selectionReady"
+  | "nest.confirmAction";

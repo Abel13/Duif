@@ -195,6 +195,7 @@ export const ptBR = {
       readyDescription: "{name} já está esperando pela primeira rota tutorial.",
     },
     tutorialNestLabel: "Ninho do tutorial",
+    privateNestLabel: "Meu ninho",
   },
   tutorial: {
     eyebrow: "Primeira rota",
@@ -302,6 +303,7 @@ export const ptBR = {
       },
     },
   },
+  nest: { eyebrow: "Ninho real", title: "Escolha a região do seu ninho", description: "Busque uma cidade e toque no mapa para indicar uma área aproximada. Ela será usada somente para calcular suas rotas.", searchLabel: "Buscar cidade", searchPlaceholder: "Cidade ou localidade", searchAction: "Buscar", mapLabel: "Mapa para escolher a região do ninho", privacyNote: "O ponto será aproximado em cerca de 2 km. Sua localização não será exibida para outras pessoas.", selectedCity: "Sua cidade: {city}", selectionReady: "Área aproximada selecionada.", confirmAction: "Ativar meu ninho" },
   units: {
     kilometers: "km",
   },
