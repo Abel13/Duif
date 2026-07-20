@@ -174,9 +174,7 @@ export function TravelMapPage() {
   const journeyPhase = getMapJourneyPhase(status, isCollected);
   const completedMap = journeyPhase === "completed";
   const progressPercent = Math.round(getTravelProgress(delivery, now) * 100);
-  const displayedPlaceLabels = completedMap
-    ? placeLabels.filter((label) => label.kind === "origin")
-    : placeLabels;
+  const displayedPlaceLabels = journeyPhase === "traveling" ? placeLabels : [];
   const selectedReward = selection?.kind === "reward"
     ? rewards.find((reward) => reward.id === selection.rewardId)
     : undefined;
@@ -408,6 +406,7 @@ export function TravelMapPage() {
             rewardStates={rewardStates}
             rewards={completedMap ? [] : rewards}
             selection={selection}
+            showRouteLabels={journeyPhase === "traveling"}
           />
         </div>
 

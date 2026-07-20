@@ -103,6 +103,7 @@ export type TravelMapProps = {
   rewardStates: Record<string, RouteDiscoveryVisualState>;
   rewards: RouteRewardDiscovery[];
   selection: MapSelection;
+  showRouteLabels: boolean;
   onFollowChange: (follow: boolean) => void;
   onRewardDiscoveries: (
     rewardIds: string[],
@@ -135,6 +136,7 @@ export function TravelMap({
   rewardStates,
   rewards,
   selection,
+  showRouteLabels,
   onFollowChange,
   onRewardDiscoveries,
   onRewardSelect,
@@ -514,19 +516,19 @@ export function TravelMap({
       {hasMapError ? (
         <div className={styles.mapFallback}>{fallbackLabel}</div>
       ) : null}
-      <div className={styles.labels}>
+      {showRouteLabels ? <div className={styles.labels}>
         <span>
           <small>{originTitle}</small>
           <strong>{originLabel}</strong>
         </span>
-        {centerControl ? <div className={styles.centerControl}>{centerControl}</div> : null}
         {!deliveryCompleted ? (
           <span>
             <small>{destinationTitle}</small>
             <strong>{destinationLabel}</strong>
           </span>
         ) : null}
-      </div>
+      </div> : null}
+      {centerControl ? <div className={styles.centerControl}>{centerControl}</div> : null}
     </div>
   );
 }
