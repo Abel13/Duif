@@ -7,18 +7,23 @@ export const enUS = {
   pwaInstall: {
     eyebrow: "Special delivery",
     title: "Bring DUIF to your home screen",
-    installDescription: "Install the postal notebook to open it faster and play like an app.",
+    installDescription:
+      "Install the postal notebook to open it faster and play like an app.",
     iosDescription: "Tap Share, then choose “Add to Home Screen”.",
-    browserDescription: "Open the browser menu and choose “Install app” or “Add to Home screen”.",
-    unsupportedDescription: "This browser cannot install DUIF. Copy or open this address in Safari or Chrome to continue.",
-    openInstalledDescription: "Installation was accepted. Close this tab and open DUIF from the icon on your home screen.",
+    browserDescription:
+      "Open the browser menu and choose “Install app” or “Add to Home screen”.",
+    unsupportedDescription:
+      "This browser cannot install DUIF. Copy or open this address in Safari or Chrome to continue.",
+    openInstalledDescription:
+      "Installation was accepted. Close this tab and open DUIF from the icon on your home screen.",
     iosStepShare: "Tap the browser Share button.",
     iosStepAdd: "Choose “Add to Home Screen”.",
     iosStepOpen: "Open DUIF from its new icon.",
     browserStepMenu: "Open the browser menu.",
     browserStepInstall: "Choose install or add to home screen.",
     browserStepOpen: "Open DUIF from its new icon.",
-    requiredNote: "Installation is required on mobile to ensure the complete game experience.",
+    requiredNote:
+      "Installation is required on mobile to ensure the complete game experience.",
     install: "Install",
   },
   common: {
@@ -35,7 +40,8 @@ export const enUS = {
   auth: {
     eyebrow: "Postal account",
     title: "Access DUIF",
-    subtitle: "Sign in with your email and password to continue your postal adventure.",
+    subtitle:
+      "Sign in with your email and password to continue your postal adventure.",
     unavailableTitle: "Supabase is not configured",
     unavailableDescription:
       "The postal service could not be reached. Check its configuration and your connection.",
@@ -55,11 +61,14 @@ export const enUS = {
     show: "Show",
     hide: "Hide",
     forgotPassword: "I forgot my password",
-    recoveryDescription: "Enter your email. If it can be used, we will send a new access route.",
+    recoveryDescription:
+      "Enter your email. If it can be used, we will send a new access route.",
     sendRecovery: "Send instructions",
-    genericEmailSent: "If this address can be used, we will send instructions by email.",
+    genericEmailSent:
+      "If this address can be used, we will send instructions by email.",
     verificationTitle: "Check your inbox",
-    verificationDescription: "If this address can be used, you will receive a postal confirmation to unlock onboarding.",
+    verificationDescription:
+      "If this address can be used, you will receive a postal confirmation to unlock onboarding.",
     resendConfirmation: "Resend confirmation",
     resendIn: "Resend in",
     backToLogin: "Back to sign in",
@@ -72,20 +81,25 @@ export const enUS = {
     confirmingEmail: "Checking the confirmation stamp",
     callbackDescription: "Please wait while we validate your postal access.",
     confirmedTitle: "Account confirmed",
-    confirmedDescription: "Your confirmation stamp is valid. Now return to the installed DUIF app to sign in.",
+    confirmedDescription:
+      "Your confirmation stamp is valid. Now return to the installed DUIF app to sign in.",
     returnToInstalledApp: "Open DUIF from the home screen",
     invalidLinkTitle: "This link is no longer valid",
-    invalidLinkDescription: "Request new instructions without revealing whether an account exists.",
+    invalidLinkDescription:
+      "Request new instructions without revealing whether an account exists.",
     resetTitle: "Create a new password",
-    resetDescription: "Choose a strong password to protect your postal notebook.",
+    resetDescription:
+      "Choose a strong password to protect your postal notebook.",
     resetSuccess: "Password updated. Sign in again to continue.",
     requestNewLink: "Request another link",
     updatePassword: "Update password",
     currentProfile: "Current profile",
     backToNest: "Back to nest",
     submitting: "Sending",
-    errorMessage: "The action could not be completed. Check the details and try again.",
-    registrationPending: "New registrations will open with the upcoming welcome flow.",
+    errorMessage:
+      "The action could not be completed. Check the details and try again.",
+    registrationPending:
+      "New registrations will open with the upcoming welcome flow.",
     languageLabel: "Language",
     languages: {
       ptBR: "Português",
@@ -95,10 +109,25 @@ export const enUS = {
   foundation: {
     eyebrow: "Postal maintenance",
     retry: "Try again",
-    loading: { title: "Checking the nest", description: "We are checking your session and postal records." },
-    unavailable: { title: "Service temporarily unavailable", description: "We could not reach the postal service. Check your connection and try again." },
-    accountPending: { title: "Account awaiting setup", description: "Your session exists but has no postal profile yet. The new onboarding will configure it safely." },
-    onboardingPending: { title: "A new onboarding is coming", description: "Old player data has been removed. Soon you will choose an archetype, name your mascot, and complete the first route." },
+    loading: {
+      title: "Checking the nest",
+      description: "We are checking your session and postal records.",
+    },
+    unavailable: {
+      title: "Service temporarily unavailable",
+      description:
+        "We could not reach the postal service. Check your connection and try again.",
+    },
+    accountPending: {
+      title: "Account awaiting setup",
+      description:
+        "Your session exists but has no postal profile yet. The new onboarding will configure it safely.",
+    },
+    onboardingPending: {
+      title: "A new onboarding is coming",
+      description:
+        "Old player data has been removed. Soon you will choose an archetype, name your mascot, and complete the first route.",
+    },
   },
   onboarding: {
     eyebrow: "First route",
@@ -108,34 +137,65 @@ export const enUS = {
     back: "Back",
     next: "Continue",
     saving: "Saving",
-    genericError: "This step could not be saved. Check your connection and try again.",
+    genericError:
+      "This step could not be saved. Check your connection and try again.",
     welcome: {
-      title: "Welcome to the mascot post",
-      description: "In DUIF, your mascot carries correspondence, explores routes, and always returns to the nest.",
+      title: "Welcome to DUIF",
+      description:
+        "In DUIF, your mascot carries correspondence, explores routes, and always returns to the nest.",
     },
     travel: {
       title: "Travel continues as time passes",
-      description: "After dispatch, the route follows its recorded schedule even while the app is closed.",
+      description:
+        "After dispatch, the route follows its recorded schedule even while the app is closed.",
     },
     discoveries: {
       title: "Small discoveries appear along the way",
-      description: "As route points are crossed, your mascot finds keepsakes automatically and carries them home.",
+      description:
+        "As route points are crossed, your mascot finds keepsakes automatically and carries them home.",
     },
     returnCollection: {
       title: "Cargo is collected after the return",
-      description: "When the trip ends, you review the cargo and place its items in your Collection.",
+      description:
+        "When the trip ends, you review the cargo and place its items in your Collection.",
     },
     displayName: {
       title: "What should we call you?",
-      description: "Choose a public nickname for your friends to see. It does not need to be unique.",
+      description:
+        "Choose a public nickname for your friends to see. It does not need to be unique.",
       label: "Your nickname",
       hint: "Use 2 to 24 characters.",
       error: "Enter a valid nickname containing 2 to 24 characters.",
     },
     mascotChoice: {
-      title: "Ready to choose your mascot",
-      description: "Your progress has been saved. The first archetype choice will open in the next stage.",
+      title: "Choose your first messenger",
+      description:
+        "Each species travels in its own way. Choose the one that fits your adventure.",
+      loading: "Opening the mascot catalog…",
+      unavailable:
+        "The mascot catalog is unavailable right now. Please try again shortly.",
+      previous: "Previous mascot",
+      nextMascot: "Next mascot",
+      suggestedName: "Suggested name: {name}",
+      nameLabel: "Mascot name",
+      nameHint:
+        "Use 2 to 24 characters. This name is yours and does not change with language.",
+      nameError: "Enter a valid name containing 2 to 24 characters.",
+      attributes: "Attributes",
+      trait: "Special trait",
+      skills: "Skills",
+      equipment: "Starter equipment",
+      review: "Review choice",
+      reviewTitle: "Your travel companion",
+      reviewDescription:
+        "Check the species and name. Once confirmed, this will be your first mascot.",
+      confirm: "Confirm mascot",
+      preparing: "Preparing the nest…",
+      readyTitle: "Your mascot is ready",
+      readyDescription:
+        "{name} is already waiting for the first tutorial route.",
     },
+    tutorialNestLabel: "Tutorial nest",
   },
   units: {
     kilometers: "km",
@@ -222,7 +282,8 @@ export const enUS = {
     chooseCorrespondence: "Choose correspondence",
     summary: "Send summary",
     confirmationTitle: "Delivery started",
-    confirmationDescription: "The mascot is preparing the trip and will soon follow the route.",
+    confirmationDescription:
+      "The mascot is preparing the trip and will soon follow the route.",
     sendButton: "Confirm send",
     sendAnother: "Send another",
     backToMascot: "View mascot",
@@ -257,7 +318,8 @@ export const enUS = {
     postcardPlaceholder: "Short message on the back of the postcard.",
     giftPlaceholder: "A short note for the future gift.",
     giftPendingTitle: "Gifts are still being defined",
-    giftPendingDescription: "In this version, the gift carries only a mocked note.",
+    giftPendingDescription:
+      "In this version, the gift carries only a mocked note.",
     content: {
       letterLabel: "Letter text",
       postcardLabel: "Postcard back",
@@ -295,15 +357,18 @@ export const enUS = {
     deliveryFinished: "Delivery finished",
     finishedDeliveries: "finished deliveries",
     collectFinishedDelivery: "View collection",
-    cargoFoundDescription: "The mascot returned to the nest carrying the discoveries seen along the route.",
-    completedDescription: "The primary reward was collected and this trip is complete.",
+    cargoFoundDescription:
+      "The mascot returned to the nest carrying the discoveries seen along the route.",
+    completedDescription:
+      "The primary reward was collected and this trip is complete.",
     routeCargo: "Carried discoveries",
     primaryReward: "Primary reward",
     visualCargo: "Route cargo",
     collectionPending: "Waiting for collection",
     rewardCollected: "Collected",
     noPrimaryReward: "This delivery has no primary reward available.",
-    routeCargoPreviewNote: "Route discoveries are a cargo preview. Multiple-item collection will arrive in a future milestone.",
+    routeCargoPreviewNote:
+      "Route discoveries are a cargo preview. Multiple-item collection will arrive in a future milestone.",
     goToCollection: "Review and collect",
     ownerCollectionOnly: "Only the mascot owner can collect this cargo.",
     openCollection: "Open Collection",
@@ -316,7 +381,8 @@ export const enUS = {
     discoveryToastMultiple: "New postal discoveries",
     onTheRoute: "On the route",
     backToMascot: "Back to mascot",
-    unavailable: "The real map could not be loaded right now. The route is still available in trip details.",
+    unavailable:
+      "The real map could not be loaded right now. The route is still available in trip details.",
     cameraControls: "Map framing controls",
     overview: "Overview",
     focusMascot: "Mascot",
@@ -351,7 +417,8 @@ export const enUS = {
     rewards: {
       londrinaPostcard: {
         name: "Londrina postcard",
-        description: "An illustrated keepsake from the start of the route in northern Paraná.",
+        description:
+          "An illustrated keepsake from the start of the route in northern Paraná.",
       },
       cambeSouvenir: {
         name: "Cambé souvenir",
@@ -359,15 +426,18 @@ export const enUS = {
       },
       rolandiaBadge: {
         name: "Rolândia badge",
-        description: "A postal emblem found between the cities along the route.",
+        description:
+          "A postal emblem found between the cities along the route.",
       },
       arapongasMaterial: {
         name: "Arapongas fiber",
-        description: "A lightweight material gathered while passing through Arapongas.",
+        description:
+          "A lightweight material gathered while passing through Arapongas.",
       },
       apucaranaStamp: {
         name: "Apucarana stamp",
-        description: "A rare stamp marked while passing through the Apucarana region.",
+        description:
+          "A rare stamp marked while passing through the Apucarana region.",
       },
       maringaEvent: {
         name: "Maringá invitation",
@@ -384,7 +454,8 @@ export const enUS = {
     owner: "Owner",
     openFriendProfile: "Open friend profile",
     privateOwner: "This mascot's owner details are private.",
-    outOfRange: "This mascot left the queried region. Showing its last known record.",
+    outOfRange:
+      "This mascot left the queried region. Showing its last known record.",
     visibility: {
       friend: "Friend",
       public: "Public mascot",
@@ -424,7 +495,8 @@ export const enUS = {
   traits: {
     steadyRoute: {
       name: "Steady Route",
-      description: "Keeps deliveries stable and improves rewards on long routes.",
+      description:
+        "Keeps deliveries stable and improves rewards on long routes.",
     },
     directFlight: {
       name: "Direct Flight",
@@ -432,7 +504,8 @@ export const enUS = {
     },
     curiousFinder: {
       name: "Curious Finder",
-      description: "Increases the chance of finding souvenirs and rare items en route.",
+      description:
+        "Increases the chance of finding souvenirs and rare items en route.",
     },
   },
   equipment: {
@@ -514,16 +587,20 @@ export const enUS = {
     eyebrow: "Postal return",
     title: "Reward collection",
     readyTitle: "Return envelope",
-    readyDescription: "The mascot came back with route marks and a small discovery.",
+    readyDescription:
+      "The mascot came back with route marks and a small discovery.",
     travelingTitle: "Still traveling",
-    travelingDescription: "This delivery has not returned to the nest yet. The reward appears when the mascot comes back.",
+    travelingDescription:
+      "This delivery has not returned to the nest yet. The reward appears when the mascot comes back.",
     completedTitle: "Reward collected",
-    completedDescription: "The envelope was archived in the notebook and the discovery entered the collection.",
+    completedDescription:
+      "The envelope was archived in the notebook and the discovery entered the collection.",
     loading: "Checking the return envelope...",
     collectButton: "Collect",
     collectAllButton: "Collect all cargo",
     collecting: "Collecting...",
-    collectError: "The reward could not be collected right now. Try again in a moment.",
+    collectError:
+      "The reward could not be collected right now. Try again in a moment.",
     backToMascot: "Back to mascot",
     backToMap: "Back to map",
     xpGained: "XP gained",
@@ -554,7 +631,8 @@ export const enUS = {
   inventory: {
     eyebrow: "Postal collection",
     title: "Collection",
-    subtitle: "Stamps, keepsakes, travel marks, and equipment discovered by pets on routes.",
+    subtitle:
+      "Stamps, keepsakes, travel marks, and equipment discovered by pets on routes.",
     categoriesLabel: "Filter collection",
     collectedTotal: "Collected items",
     equippedTotal: "Equipped",
@@ -579,17 +657,21 @@ export const enUS = {
   shop: {
     eyebrow: "Postal counter",
     title: "Shop",
-    subtitle: "Small details for personalizing mascots, notebooks, and correspondence.",
-    prototypeNotice: "Demonstration catalog: fictional prices, with no balance or purchases.",
+    subtitle:
+      "Small details for personalizing mascots, notebooks, and correspondence.",
+    prototypeNotice:
+      "Demonstration catalog: fictional prices, with no balance or purchases.",
     categoriesLabel: "Filter catalog",
     prototypePrice: "Prototype price",
     viewDetails: "View details",
     close: "Close",
     detailsTitle: "Item details",
     mascotPreview: "Preview with Nuvem",
-    mascotPreviewNote: "Illustrative composition; the item will not be equipped or saved.",
+    mascotPreviewNote:
+      "Illustrative composition; the item will not be equipped or saved.",
     emptyTitle: "Empty shelf",
-    emptyDescription: "There are no items in this part of the postal counter yet.",
+    emptyDescription:
+      "There are no items in this part of the postal counter yet.",
     categories: {
       all: "All",
       cosmetics: "Cosmetics",
@@ -608,11 +690,13 @@ export const enUS = {
       },
       meadowPostCap: {
         name: "Meadow post cap",
-        description: "A small green cap, worn at the edges and ready for new routes.",
+        description:
+          "A small green cap, worn at the edges and ready for new routes.",
       },
       sunnyRouteSticker: {
         name: "Sunny route sticker",
-        description: "An ink-drawn sun for brightening letters and notebook pages.",
+        description:
+          "An ink-drawn sun for brightening letters and notebook pages.",
       },
       blueEnvelopeSticker: {
         name: "Blue envelope sticker",
@@ -620,19 +704,23 @@ export const enUS = {
       },
       coastalTownPostcard: {
         name: "Coastal town postcard",
-        description: "Bright houses, a calm sea, and a postal path beside the harbor.",
+        description:
+          "Bright houses, a calm sea, and a postal path beside the harbor.",
       },
       lanternFestivalPostcard: {
         name: "Lantern festival postcard",
-        description: "A paper night warmed by lanterns and small golden postmarks.",
+        description:
+          "A paper night warmed by lanterns and small golden postmarks.",
       },
       brassNestPlaque: {
         name: "Brass nest plaque",
-        description: "An aged little plaque for marking a mascot's favorite corner.",
+        description:
+          "An aged little plaque for marking a mascot's favorite corner.",
       },
       airmailProfileRibbon: {
         name: "Airmail profile ribbon",
-        description: "A blue-and-red ribbon for framing portraits in the postal notebook.",
+        description:
+          "A blue-and-red ribbon for framing portraits in the postal notebook.",
       },
     },
   },
@@ -654,7 +742,8 @@ export const enUS = {
   friends: {
     eyebrow: "Social notebook",
     title: "Friends",
-    subtitle: "See correspondence companions, visiting mascots, and small received notes.",
+    subtitle:
+      "See correspondence companions, visiting mascots, and small received notes.",
     profileTitle: "Friend profile",
     viewProfile: "View profile",
     sendToFriend: "Send to friend",
@@ -665,7 +754,8 @@ export const enUS = {
     receivedCorrespondence: "Received correspondence",
     location: "Location",
     backToFriends: "Back to friends",
-    noCorrespondence: "There is no received correspondence from this friend yet.",
+    noCorrespondence:
+      "There is no received correspondence from this friend yet.",
     mascotLabel: "Visiting mascot",
     lia: {
       note: "Likes cards with route marks and old stamps.",
@@ -679,7 +769,8 @@ export const enUS = {
     correspondence: {
       liaPostcard: {
         title: "Card from Lisbon hills",
-        description: "A postcard with blue marks, tilted stamps, and a sea-breeze scent.",
+        description:
+          "A postcard with blue marks, tilted stamps, and a sea-breeze scent.",
       },
       liaSticker: {
         title: "Yellow tram sticker",
@@ -687,7 +778,8 @@ export const enUS = {
       },
       caioLetter: {
         title: "Folded note from the south",
-        description: "A short letter, carefully folded and marked by fine rain.",
+        description:
+          "A short letter, carefully folded and marked by fine rain.",
       },
       minaGift: {
         title: "Boarding parcel",

@@ -2,9 +2,12 @@ import { FormEvent, type ReactNode, useEffect, useMemo, useRef, useState } from 
 
 import { AssetImage, StampButton } from "../../components/ui";
 import { assetKeys, type OfficialAssetKey } from "../../game";
+import type { MascotArchetype } from "../../game/types";
 import { useTranslation, type TranslationKey } from "../../i18n";
 import { useAuth } from "../../integrations/supabase/AuthProvider";
+import { fetchStarterMascotCatalog } from "../../integrations/supabase/catalog";
 import {
+  isValidMascotName,
   isValidPlayerDisplayName,
   normalizePlayerDisplayName,
   onboardingIntroIndex,
@@ -50,14 +53,7 @@ export function OnboardingPage() {
   if (!onboarding) return null;
 
   if (persistedIndex >= totalSteps) {
-    return <OnboardingShell locale={locale} onLocaleChange={setLocale} onSignOut={signOut}>
-      <section className={styles.card}>
-        <div className={styles.handoffMark} aria-hidden="true" />
-        <span className={styles.eyebrow}>{t("onboarding.eyebrow")}</span>
-        <h1 ref={titleRef} tabIndex={-1}>{t("onboarding.mascotChoice.title")}</h1>
-        <p>{t("onboarding.mascotChoice.description")}</p>
-      </section>
-    </OnboardingShell>;
+    return <MascotChoice />;
   }
 
   const card = introCards[visibleIndex];
@@ -140,6 +136,107 @@ export function OnboardingPage() {
           {visibleIndex > 0 && <StampButton disabled={isSaving} onClick={() => setVisibleIndex((current) => current - 1)} variant="secondary">{t("onboarding.back")}</StampButton>}
           <StampButton disabled={isSaving} onClick={() => void advance()}>{isSaving ? t("onboarding.saving") : t("onboarding.next")}</StampButton>
         </div>
+      </>}
+    </section>
+  </OnboardingShell>;
+}
+
+function MascotChoice() {
+  const { locale, setLocale, t } = useTranslation();
+  const { onboarding, provisionInitialMascot, saveInitialMascotDraft, signOut } = useAuth();
+  const [archetypes, setArchetypes] = useState<MascotArchetype[]>([]);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [name, setName] = useState(onboarding?.mascot_name ?? "");
+  const [nameEdited, setNameEdited] = useState(Boolean(onboarding?.mascot_name));
+  const [mode, setMode] = useState<"choice" | "review" | "ready">(
+    onboarding?.stage === "tutorial" ? "ready" : onboarding?.selected_mascot_template_id ? "review" : "choice",
+  );
+  const [state, setState] = useState<"loading" | "ready" | "error" | "saving">("loading");
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const touchStart = useRef<number | null>(null);
+
+  useEffect(() => {
+    let current = true;
+    fetchStarterMascotCatalog().then((items) => {
+      if (!current) return;
+      setArchetypes(items);
+      const savedIndex = items.findIndex((item) => item.id === onboarding?.selected_mascot_template_id);
+      setSelectedIndex(savedIndex >= 0 ? savedIndex : 0);
+      setState(items.length === 3 ? "ready" : "error");
+    }).catch(() => current && setState("error"));
+    return () => { current = false; };
+  }, [onboarding?.selected_mascot_template_id]);
+
+  const selected = archetypes[selectedIndex];
+  const suggestion = selected ? t(selected.suggestedNameKey) : "";
+  useEffect(() => {
+    if (!nameEdited && suggestion) setName(suggestion);
+  }, [locale, nameEdited, selected?.id, suggestion]);
+  useEffect(() => { titleRef.current?.focus(); }, [mode, selectedIndex]);
+
+  function rotate(direction: number) {
+    if (!archetypes.length || state === "saving") return;
+    setSelectedIndex((current) => (current + direction + archetypes.length) % archetypes.length);
+    setNameEdited(false);
+  }
+
+  async function review(event: FormEvent) {
+    event.preventDefault();
+    if (!selected || !isValidMascotName(name)) return setState("error");
+    setState("saving");
+    try {
+      await saveInitialMascotDraft(selected.id, name);
+      setMode("review");
+      setState("ready");
+    } catch { setState("error"); }
+  }
+
+  async function confirm() {
+    setState("saving");
+    try {
+      await provisionInitialMascot();
+      setMode("ready");
+      setState("ready");
+    } catch { setState("error"); }
+  }
+
+  return <OnboardingShell locale={locale} onLocaleChange={setLocale} onSignOut={signOut}>
+    <section className={`${styles.card} ${styles.mascotCard}`}>
+      <span className={styles.eyebrow}>{t("onboarding.eyebrow")}</span>
+      <h1 ref={titleRef} tabIndex={-1}>{t(mode === "choice" ? "onboarding.mascotChoice.title" : mode === "review" ? "onboarding.mascotChoice.reviewTitle" : "onboarding.mascotChoice.readyTitle")}</h1>
+      <p>{mode === "ready"
+        ? t("onboarding.mascotChoice.readyDescription").replace("{name}", onboarding?.mascot_name ?? name)
+        : t(mode === "review" ? "onboarding.mascotChoice.reviewDescription" : "onboarding.mascotChoice.description")}</p>
+
+      {state === "loading" && <p aria-live="polite">{t("onboarding.mascotChoice.loading")}</p>}
+      {state === "error" && !selected && <p className={styles.error}>{t("onboarding.mascotChoice.unavailable")}</p>}
+      {selected && <>
+        <div className={styles.carousel} onTouchStart={(event) => { touchStart.current = event.touches[0]?.clientX ?? null; }} onTouchEnd={(event) => {
+          const end = event.changedTouches[0]?.clientX; if (touchStart.current !== null && end !== undefined && Math.abs(end - touchStart.current) > 44) rotate(end > touchStart.current ? -1 : 1); touchStart.current = null;
+        }}>
+          <button aria-label={t("onboarding.mascotChoice.previous")} className={styles.carouselArrow} onClick={() => rotate(-1)} type="button">‹</button>
+          {[-1, 0, 1].map((offset) => {
+            const item = archetypes[(selectedIndex + offset + archetypes.length) % archetypes.length];
+            return item && <AssetImage alt={t(item.speciesKey)} assetKey={item.appearance.portraitAssetKey} className={offset === 0 ? styles.selectedPortrait : styles.sidePortrait} key={`${item.id}-${offset}`}><span className={styles.fallbackMark} /></AssetImage>;
+          })}
+          <button aria-label={t("onboarding.mascotChoice.nextMascot")} className={styles.carouselArrow} onClick={() => rotate(1)} type="button">›</button>
+        </div>
+        <strong className={styles.species}>{t(selected.speciesKey)}</strong>
+        <span className={styles.suggestion}>{t("onboarding.mascotChoice.suggestedName").replace("{name}", suggestion)}</span>
+
+        <div className={styles.mascotFacts}>
+          <section><h2>{t("onboarding.mascotChoice.attributes")}</h2><dl>{Object.entries(selected.attributes).map(([key, value]) => <div key={key}><dt>{t(`mascot.${key}` as TranslationKey)}</dt><dd>{value}/10</dd></div>)}</dl></section>
+          <section><h2>{t("onboarding.mascotChoice.trait")}</h2><strong>{t(selected.trait.nameKey)}</strong><p>{t(selected.trait.descriptionKey)}</p></section>
+          <section><h2>{t("onboarding.mascotChoice.skills")}</h2><ul>{selected.skills.slice(0, 2).map((skill) => <li key={skill.id}>{t(skill.nameKey)}</li>)}</ul></section>
+          <section><h2>{t("onboarding.mascotChoice.equipment")}</h2><ul>{selected.equipment.map((item) => <li key={item.id}>{t(item.nameKey)}</li>)}</ul></section>
+        </div>
+
+        {mode === "choice" && <form className={styles.nameForm} onSubmit={review}>
+          <label><span>{t("onboarding.mascotChoice.nameLabel")}</span><input aria-invalid={state === "error"} maxLength={48} value={name} onChange={(event) => { setName(event.target.value); setNameEdited(true); setState("ready"); }} /></label>
+          <small>{state === "error" ? t("onboarding.mascotChoice.nameError") : t("onboarding.mascotChoice.nameHint")}</small>
+          <div className={styles.actions}><StampButton disabled={state === "saving"} type="submit">{state === "saving" ? t("onboarding.saving") : t("onboarding.mascotChoice.review")}</StampButton></div>
+        </form>}
+        {mode === "review" && <div className={styles.actions}><StampButton disabled={state === "saving"} onClick={() => setMode("choice")} variant="secondary">{t("onboarding.back")}</StampButton><StampButton disabled={state === "saving"} onClick={() => void confirm()}>{state === "saving" ? t("onboarding.mascotChoice.preparing") : t("onboarding.mascotChoice.confirm")}</StampButton></div>}
       </>}
     </section>
   </OnboardingShell>;

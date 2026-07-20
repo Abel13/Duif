@@ -7,18 +7,24 @@ export const ptBR = {
   pwaInstall: {
     eyebrow: "Entrega especial",
     title: "Leve o DUIF para sua tela inicial",
-    installDescription: "Instale o caderno postal para abrir mais rápido e jogar como um aplicativo.",
-    iosDescription: "Toque em Compartilhar e depois em “Adicionar à Tela de Início”.",
-    browserDescription: "Abra o menu do navegador e escolha “Instalar aplicativo” ou “Adicionar à tela inicial”.",
-    unsupportedDescription: "Este navegador não permite instalar o DUIF. Copie ou abra este endereço no Safari ou Chrome para continuar.",
-    openInstalledDescription: "A instalação foi aceita. Feche esta aba e abra o DUIF pelo ícone na sua tela inicial.",
+    installDescription:
+      "Instale o caderno postal para abrir mais rápido e jogar como um aplicativo.",
+    iosDescription:
+      "Toque em Compartilhar e depois em “Adicionar à Tela de Início”.",
+    browserDescription:
+      "Abra o menu do navegador e escolha “Instalar aplicativo” ou “Adicionar à tela inicial”.",
+    unsupportedDescription:
+      "Este navegador não permite instalar o DUIF. Copie ou abra este endereço no Safari ou Chrome para continuar.",
+    openInstalledDescription:
+      "A instalação foi aceita. Feche esta aba e abra o DUIF pelo ícone na sua tela inicial.",
     iosStepShare: "Toque no botão Compartilhar do navegador.",
     iosStepAdd: "Escolha “Adicionar à Tela de Início”.",
     iosStepOpen: "Abra o DUIF pelo novo ícone.",
     browserStepMenu: "Abra o menu do navegador.",
     browserStepInstall: "Escolha instalar ou adicionar à tela inicial.",
     browserStepOpen: "Abra o DUIF pelo novo ícone.",
-    requiredNote: "A instalação é necessária no celular para garantir a experiência completa do jogo.",
+    requiredNote:
+      "A instalação é necessária no celular para garantir a experiência completa do jogo.",
     install: "Instalar",
   },
   common: {
@@ -35,8 +41,7 @@ export const ptBR = {
   auth: {
     eyebrow: "Conta postal",
     title: "Acesse o DUIF",
-    subtitle:
-      "Entre com seu email e senha para continuar sua aventura postal.",
+    subtitle: "Entre com seu email e senha para continuar sua aventura postal.",
     unavailableTitle: "Supabase não configurado",
     unavailableDescription:
       "Não foi possível acessar o serviço postal. Confira a configuração e a conexão.",
@@ -56,11 +61,14 @@ export const ptBR = {
     show: "Mostrar",
     hide: "Ocultar",
     forgotPassword: "Esqueci minha senha",
-    recoveryDescription: "Informe seu email. Se ele puder ser usado, enviaremos uma nova rota de acesso.",
+    recoveryDescription:
+      "Informe seu email. Se ele puder ser usado, enviaremos uma nova rota de acesso.",
     sendRecovery: "Enviar instruções",
-    genericEmailSent: "Se este endereço puder ser usado, enviaremos as instruções por email.",
+    genericEmailSent:
+      "Se este endereço puder ser usado, enviaremos as instruções por email.",
     verificationTitle: "Confira sua caixa de entrada",
-    verificationDescription: "Se este endereço puder ser usado, você receberá uma confirmação postal para liberar o onboarding.",
+    verificationDescription:
+      "Se este endereço puder ser usado, você receberá uma confirmação postal para liberar o onboarding.",
     resendConfirmation: "Reenviar confirmação",
     resendIn: "Reenviar em",
     backToLogin: "Voltar ao login",
@@ -73,20 +81,25 @@ export const ptBR = {
     confirmingEmail: "Conferindo o selo de confirmação",
     callbackDescription: "Aguarde enquanto validamos seu acesso postal.",
     confirmedTitle: "Conta confirmada",
-    confirmedDescription: "Seu selo de confirmação foi validado. Agora volte ao DUIF instalado para entrar.",
+    confirmedDescription:
+      "Seu selo de confirmação foi validado. Agora volte ao DUIF instalado para entrar.",
     returnToInstalledApp: "Abrir o DUIF pela tela inicial",
     invalidLinkTitle: "Este link não está mais válido",
-    invalidLinkDescription: "Solicite novas instruções sem informar se uma conta está cadastrada.",
+    invalidLinkDescription:
+      "Solicite novas instruções sem informar se uma conta está cadastrada.",
     resetTitle: "Criar nova senha",
-    resetDescription: "Escolha uma senha forte para proteger seu caderno postal.",
+    resetDescription:
+      "Escolha uma senha forte para proteger seu caderno postal.",
     resetSuccess: "Senha atualizada. Entre novamente para continuar.",
     requestNewLink: "Solicitar outro link",
     updatePassword: "Atualizar senha",
     currentProfile: "Perfil atual",
     backToNest: "Voltar ao ninho",
     submitting: "Enviando",
-    errorMessage: "Não foi possível completar a ação. Verifique os dados e tente novamente.",
-    registrationPending: "Novos cadastros serão liberados com o próximo fluxo de boas-vindas.",
+    errorMessage:
+      "Não foi possível completar a ação. Verifique os dados e tente novamente.",
+    registrationPending:
+      "Novos cadastros serão liberados com o próximo fluxo de boas-vindas.",
     languageLabel: "Idioma",
     languages: {
       ptBR: "Português",
@@ -96,10 +109,25 @@ export const ptBR = {
   foundation: {
     eyebrow: "Manutenção postal",
     retry: "Tentar novamente",
-    loading: { title: "Consultando o ninho", description: "Estamos conferindo sua sessão e os registros postais." },
-    unavailable: { title: "Serviço temporariamente indisponível", description: "Não foi possível alcançar o serviço postal. Confira sua conexão e tente novamente." },
-    accountPending: { title: "Conta aguardando configuração", description: "Sua sessão existe, mas ainda não possui um perfil postal. O novo onboarding fará essa configuração com segurança." },
-    onboardingPending: { title: "Novo onboarding a caminho", description: "Os dados antigos foram removidos. Em breve você escolherá seu arquétipo, dará um nome ao mascote e fará a primeira rota." },
+    loading: {
+      title: "Consultando o ninho",
+      description: "Estamos conferindo sua sessão e os registros postais.",
+    },
+    unavailable: {
+      title: "Serviço temporariamente indisponível",
+      description:
+        "Não foi possível alcançar o serviço postal. Confira sua conexão e tente novamente.",
+    },
+    accountPending: {
+      title: "Conta aguardando configuração",
+      description:
+        "Sua sessão existe, mas ainda não possui um perfil postal. O novo onboarding fará essa configuração com segurança.",
+    },
+    onboardingPending: {
+      title: "Novo onboarding a caminho",
+      description:
+        "Os dados antigos foram removidos. Em breve você escolherá seu arquétipo, dará um nome ao mascote e fará a primeira rota.",
+    },
   },
   onboarding: {
     eyebrow: "Primeira rota",
@@ -109,34 +137,64 @@ export const ptBR = {
     back: "Voltar",
     next: "Avançar",
     saving: "Guardando",
-    genericError: "Não foi possível guardar este passo. Confira a conexão e tente novamente.",
+    genericError:
+      "Não foi possível guardar este passo. Confira a conexão e tente novamente.",
     welcome: {
-      title: "Bem-vindo ao correio dos mascotes",
-      description: "No DUIF, seu mascote leva correspondências, conhece rotas e sempre retorna ao ninho.",
+      title: "Bem-vindo ao DUIF",
+      description:
+        "No DUIF, seu mascote leva correspondências, conhece rotas e sempre retorna ao ninho.",
     },
     travel: {
       title: "As viagens continuam com o tempo",
-      description: "Depois do envio, o trajeto segue pelos horários registrados mesmo quando o aplicativo está fechado.",
+      description:
+        "Depois do envio, o trajeto segue pelos horários registrados mesmo quando o aplicativo está fechado.",
     },
     discoveries: {
       title: "Pequenas descobertas aparecem no caminho",
-      description: "Ao cruzar pontos da rota, o mascote encontra lembranças automaticamente e as carrega até voltar.",
+      description:
+        "Ao cruzar pontos da rota, o mascote encontra lembranças automaticamente e as carrega até voltar.",
     },
     returnCollection: {
       title: "A carga é coletada depois do retorno",
-      description: "Quando a viagem termina, você confere a carga e guarda os itens na sua Coleção.",
+      description:
+        "Quando a viagem termina, você confere a carga e guarda os itens na sua Coleção.",
     },
     displayName: {
       title: "Como devemos chamar você?",
-      description: "Escolha um apelido público para aparecer aos seus amigos. Ele não precisa ser exclusivo.",
+      description:
+        "Escolha um apelido público para aparecer aos seus amigos. Ele não precisa ser exclusivo.",
       label: "Seu apelido",
       hint: "Use de 2 a 24 caracteres.",
       error: "Informe um apelido válido com 2 a 24 caracteres.",
     },
     mascotChoice: {
-      title: "Tudo pronto para escolher seu mascote",
-      description: "Seu progresso foi guardado. A escolha do primeiro arquétipo será aberta na próxima etapa.",
+      title: "Escolha seu primeiro mensageiro",
+      description:
+        "Cada espécie viaja de um jeito próprio. Escolha aquela que combina com a sua aventura.",
+      loading: "Abrindo o catálogo de mascotes…",
+      unavailable:
+        "O catálogo de mascotes está indisponível agora. Tente novamente em instantes.",
+      previous: "Mascote anterior",
+      nextMascot: "Próximo mascote",
+      suggestedName: "Nome sugerido: {name}",
+      nameLabel: "Nome do mascote",
+      nameHint:
+        "Use de 2 a 24 caracteres. O nome será seu e não muda com o idioma.",
+      nameError: "Informe um nome válido com 2 a 24 caracteres.",
+      attributes: "Atributos",
+      trait: "Traço especial",
+      skills: "Habilidades",
+      equipment: "Equipamento inicial",
+      review: "Revisar escolha",
+      reviewTitle: "Seu companheiro de viagem",
+      reviewDescription:
+        "Confira a espécie e o nome. Depois de confirmar, este será seu primeiro mascote.",
+      confirm: "Confirmar mascote",
+      preparing: "Preparando o ninho…",
+      readyTitle: "Seu mascote está pronto",
+      readyDescription: "{name} já está esperando pela primeira rota tutorial.",
     },
+    tutorialNestLabel: "Ninho do tutorial",
   },
   units: {
     kilometers: "km",
@@ -201,7 +259,8 @@ export const ptBR = {
     customization: "Visual",
     currentDelivery: "Entrega Atual",
     noDeliveryTitle: "No ninho",
-    noDeliveryDescription: "Este mascote está disponível para a próxima entrega.",
+    noDeliveryDescription:
+      "Este mascote está disponível para a próxima entrega.",
     route: "Rota",
     origin: "Origem",
     destination: "Destino",
@@ -217,13 +276,15 @@ export const ptBR = {
     startAction: "Enviar",
     eyebrow: "Envio postal",
     title: "Preparar entrega",
-    subtitle: "Escolha um amigo, um mascote e uma lembrança para iniciar uma nova rota.",
+    subtitle:
+      "Escolha um amigo, um mascote e uma lembrança para iniciar uma nova rota.",
     chooseFriend: "Escolha um amigo",
     chooseMascot: "Escolha um mascote",
     chooseCorrespondence: "Escolha o envio",
     summary: "Resumo do envio",
     confirmationTitle: "Entrega iniciada",
-    confirmationDescription: "O mascote está preparando a viagem e logo seguirá pela rota.",
+    confirmationDescription:
+      "O mascote está preparando a viagem e logo seguirá pela rota.",
     sendButton: "Confirmar envio",
     sendAnother: "Enviar outro",
     backToMascot: "Ver mascote",
@@ -254,11 +315,13 @@ export const ptBR = {
     contentInvalid: "Revise o conteúdo antes de despachar.",
     characterCount: "Caracteres",
     selectedStickers: "Adesivos selecionados",
-    letterPlaceholder: "Escreva uma carta curta para atravessar a rota com calma.",
+    letterPlaceholder:
+      "Escreva uma carta curta para atravessar a rota com calma.",
     postcardPlaceholder: "Mensagem curta no verso do cartão.",
     giftPlaceholder: "Uma nota curta para acompanhar o presente futuro.",
     giftPendingTitle: "Presentes ainda estão em definição",
-    giftPendingDescription: "Nesta versão, o presente leva apenas uma nota mockada.",
+    giftPendingDescription:
+      "Nesta versão, o presente leva apenas uma nota mockada.",
     content: {
       letterLabel: "Texto da carta",
       postcardLabel: "Verso do cartão",
@@ -296,15 +359,19 @@ export const ptBR = {
     deliveryFinished: "Entrega finalizada",
     finishedDeliveries: "entregas finalizadas",
     collectFinishedDelivery: "Ver coleta",
-    cargoFoundDescription: "O mascote voltou ao ninho com as descobertas vistas durante a rota.",
-    completedDescription: "A recompensa principal foi coletada e esta viagem está concluída.",
+    cargoFoundDescription:
+      "O mascote voltou ao ninho com as descobertas vistas durante a rota.",
+    completedDescription:
+      "A recompensa principal foi coletada e esta viagem está concluída.",
     routeCargo: "Descobertas carregadas",
     primaryReward: "Recompensa principal",
     visualCargo: "Carga da rota",
     collectionPending: "Aguardando coleta",
     rewardCollected: "Coletada",
-    noPrimaryReward: "Esta entrega não possui uma recompensa principal disponível.",
-    routeCargoPreviewNote: "As descobertas da rota são uma prévia da carga. A coleta múltipla será liberada em uma etapa futura.",
+    noPrimaryReward:
+      "Esta entrega não possui uma recompensa principal disponível.",
+    routeCargoPreviewNote:
+      "As descobertas da rota são uma prévia da carga. A coleta múltipla será liberada em uma etapa futura.",
     goToCollection: "Conferir e coletar",
     ownerCollectionOnly: "Somente o dono do mascote pode coletar esta carga.",
     openCollection: "Abrir Coleção",
@@ -317,7 +384,8 @@ export const ptBR = {
     discoveryToastMultiple: "Novas descobertas postais",
     onTheRoute: "No caminho",
     backToMascot: "Voltar ao mascote",
-    unavailable: "Não foi possível carregar o mapa real agora. A rota continua disponível nos detalhes da viagem.",
+    unavailable:
+      "Não foi possível carregar o mapa real agora. A rota continua disponível nos detalhes da viagem.",
     cameraControls: "Controles de enquadramento do mapa",
     overview: "Visão geral",
     focusMascot: "Mascote",
@@ -352,7 +420,8 @@ export const ptBR = {
     rewards: {
       londrinaPostcard: {
         name: "Cartão postal de Londrina",
-        description: "Uma lembrança ilustrada do começo da rota no norte do Paraná.",
+        description:
+          "Uma lembrança ilustrada do começo da rota no norte do Paraná.",
       },
       cambeSouvenir: {
         name: "Lembrança de Cambé",
@@ -364,11 +433,13 @@ export const ptBR = {
       },
       arapongasMaterial: {
         name: "Fibra de Arapongas",
-        description: "Um material leve recolhido durante a passagem por Arapongas.",
+        description:
+          "Um material leve recolhido durante a passagem por Arapongas.",
       },
       apucaranaStamp: {
         name: "Selo de Apucarana",
-        description: "Um selo raro marcado durante a passagem pela região de Apucarana.",
+        description:
+          "Um selo raro marcado durante a passagem pela região de Apucarana.",
       },
       maringaEvent: {
         name: "Convite de Maringá",
@@ -385,7 +456,8 @@ export const ptBR = {
     owner: "Dono",
     openFriendProfile: "Abrir perfil do amigo",
     privateOwner: "Os dados do dono deste mascote são privados.",
-    outOfRange: "Este mascote saiu da região consultada. Exibindo o último registro conhecido.",
+    outOfRange:
+      "Este mascote saiu da região consultada. Exibindo o último registro conhecido.",
     visibility: {
       friend: "Amigo",
       public: "Mascote público",
@@ -425,15 +497,18 @@ export const ptBR = {
   traits: {
     steadyRoute: {
       name: "Rota Segura",
-      description: "Mantém entregas estáveis e melhora recompensas em rotas longas.",
+      description:
+        "Mantém entregas estáveis e melhora recompensas em rotas longas.",
     },
     directFlight: {
       name: "Voo Direto",
-      description: "Reduz desvios e favorece retornos rápidos depois da entrega.",
+      description:
+        "Reduz desvios e favorece retornos rápidos depois da entrega.",
     },
     curiousFinder: {
       name: "Achador Curioso",
-      description: "Aumenta a chance de encontrar lembranças e itens raros pelo caminho.",
+      description:
+        "Aumenta a chance de encontrar lembranças e itens raros pelo caminho.",
     },
   },
   equipment: {
@@ -515,16 +590,20 @@ export const ptBR = {
     eyebrow: "Retorno postal",
     title: "Coleta de recompensa",
     readyTitle: "Envelope de retorno",
-    readyDescription: "O mascote voltou com marcas da rota e uma pequena descoberta.",
+    readyDescription:
+      "O mascote voltou com marcas da rota e uma pequena descoberta.",
     travelingTitle: "Ainda em viagem",
-    travelingDescription: "Esta entrega ainda não retornou ao ninho. A recompensa aparece quando o mascote voltar.",
+    travelingDescription:
+      "Esta entrega ainda não retornou ao ninho. A recompensa aparece quando o mascote voltar.",
     completedTitle: "Recompensa coletada",
-    completedDescription: "O envelope foi arquivado no caderno e a descoberta entrou na coleção.",
+    completedDescription:
+      "O envelope foi arquivado no caderno e a descoberta entrou na coleção.",
     loading: "Conferindo o envelope de retorno...",
     collectButton: "Coletar",
     collectAllButton: "Coletar toda a carga",
     collecting: "Coletando...",
-    collectError: "Não foi possível coletar agora. Tente novamente em instantes.",
+    collectError:
+      "Não foi possível coletar agora. Tente novamente em instantes.",
     backToMascot: "Voltar ao mascote",
     backToMap: "Voltar ao mapa",
     xpGained: "XP ganho",
@@ -540,28 +619,33 @@ export const ptBR = {
     items: {
       wornRouteStamp: {
         name: "Selo de rota gasto",
-        description: "Um selo marcado pelo caminho, perfeito para páginas de viagem.",
+        description:
+          "Um selo marcado pelo caminho, perfeito para páginas de viagem.",
       },
       blueAirmailLabel: {
         name: "Etiqueta azul de correio aéreo",
-        description: "Uma etiqueta dobrada com tinta azul e cheiro de papel antigo.",
+        description:
+          "Uma etiqueta dobrada com tinta azul e cheiro de papel antigo.",
       },
       goldenCompassPin: {
         name: "Broche de bússola dourada",
-        description: "Um achado raro que aponta para histórias ainda não contadas.",
+        description:
+          "Um achado raro que aponta para histórias ainda não contadas.",
       },
     },
   },
   inventory: {
     eyebrow: "Coleção postal",
     title: "Coleção",
-    subtitle: "Selos, lembranças, marcas de viagem e equipamentos descobertos pelos pets nas rotas.",
+    subtitle:
+      "Selos, lembranças, marcas de viagem e equipamentos descobertos pelos pets nas rotas.",
     categoriesLabel: "Filtrar coleção",
     collectedTotal: "Itens coletados",
     equippedTotal: "Equipados",
     raritySummary: "Raridades",
     emptySlotTitle: "Espaço por descobrir",
-    emptySlotDescription: "Um lugar reservado para uma próxima lembrança de viagem.",
+    emptySlotDescription:
+      "Um lugar reservado para uma próxima lembrança de viagem.",
     source: "Origem",
     category: "Tipo",
     categories: {
@@ -580,15 +664,18 @@ export const ptBR = {
   shop: {
     eyebrow: "Balcão postal",
     title: "Loja",
-    subtitle: "Pequenos detalhes para personalizar mascotes, cadernos e correspondências.",
-    prototypeNotice: "Catálogo demonstrativo: preços fictícios, sem saldo ou compras.",
+    subtitle:
+      "Pequenos detalhes para personalizar mascotes, cadernos e correspondências.",
+    prototypeNotice:
+      "Catálogo demonstrativo: preços fictícios, sem saldo ou compras.",
     categoriesLabel: "Filtrar catálogo",
     prototypePrice: "Preço de protótipo",
     viewDetails: "Ver detalhes",
     close: "Fechar",
     detailsTitle: "Detalhes do item",
     mascotPreview: "Prévia com Nuvem",
-    mascotPreviewNote: "Composição ilustrativa; o item não será equipado ou salvo.",
+    mascotPreviewNote:
+      "Composição ilustrativa; o item não será equipado ou salvo.",
     emptyTitle: "Prateleira vazia",
     emptyDescription: "Ainda não há itens nesta parte do balcão postal.",
     categories: {
@@ -609,31 +696,38 @@ export const ptBR = {
       },
       meadowPostCap: {
         name: "Quepe postal do campo",
-        description: "Um pequeno quepe verde, gasto nas bordas e pronto para novas rotas.",
+        description:
+          "Um pequeno quepe verde, gasto nas bordas e pronto para novas rotas.",
       },
       sunnyRouteSticker: {
         name: "Adesivo rota ensolarada",
-        description: "Um sol desenhado a tinta para iluminar cartas e páginas do caderno.",
+        description:
+          "Um sol desenhado a tinta para iluminar cartas e páginas do caderno.",
       },
       blueEnvelopeSticker: {
         name: "Adesivo envelope azul",
-        description: "Um envelope de correio aéreo com uma delicada marca de viagem.",
+        description:
+          "Um envelope de correio aéreo com uma delicada marca de viagem.",
       },
       coastalTownPostcard: {
         name: "Cartão da vila costeira",
-        description: "Casas claras, mar calmo e um caminho postal junto ao porto.",
+        description:
+          "Casas claras, mar calmo e um caminho postal junto ao porto.",
       },
       lanternFestivalPostcard: {
         name: "Cartão do festival de lanternas",
-        description: "Uma noite de papel aquecida por lanternas e pequenos carimbos dourados.",
+        description:
+          "Uma noite de papel aquecida por lanternas e pequenos carimbos dourados.",
       },
       brassNestPlaque: {
         name: "Placa de ninho em latão",
-        description: "Uma plaquinha envelhecida para marcar o cantinho favorito do mascote.",
+        description:
+          "Uma plaquinha envelhecida para marcar o cantinho favorito do mascote.",
       },
       airmailProfileRibbon: {
         name: "Fita de perfil correio aéreo",
-        description: "Uma fita azul e vermelha para contornar retratos no caderno postal.",
+        description:
+          "Uma fita azul e vermelha para contornar retratos no caderno postal.",
       },
     },
   },
@@ -655,7 +749,8 @@ export const ptBR = {
   friends: {
     eyebrow: "Caderno social",
     title: "Amigos",
-    subtitle: "Veja companheiros de correspondência, mascotes visitantes e pequenos registros recebidos.",
+    subtitle:
+      "Veja companheiros de correspondência, mascotes visitantes e pequenos registros recebidos.",
     profileTitle: "Perfil de amigo",
     viewProfile: "Ver perfil",
     sendToFriend: "Enviar para amigo",
@@ -680,19 +775,23 @@ export const ptBR = {
     correspondence: {
       liaPostcard: {
         title: "Cartão das colinas de Lisboa",
-        description: "Um cartão-postal com riscos azuis, carimbos inclinados e cheiro de maresia.",
+        description:
+          "Um cartão-postal com riscos azuis, carimbos inclinados e cheiro de maresia.",
       },
       liaSticker: {
         title: "Adesivo de bonde amarelo",
-        description: "Uma pequena lembrança para colar perto das rotas mais ensolaradas.",
+        description:
+          "Uma pequena lembrança para colar perto das rotas mais ensolaradas.",
       },
       caioLetter: {
         title: "Bilhete dobrado do sul",
-        description: "Uma carta curta, dobrada com cuidado e marcada por chuva fina.",
+        description:
+          "Uma carta curta, dobrada com cuidado e marcada por chuva fina.",
       },
       minaGift: {
         title: "Pacotinho de bordo",
-        description: "Um embrulho leve com uma etiqueta de viagem atravessando o oceano.",
+        description:
+          "Um embrulho leve com uma etiqueta de viagem atravessando o oceano.",
       },
     },
   },

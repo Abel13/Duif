@@ -22,6 +22,8 @@ import type { AuthProfile } from "./profile";
 import {
   advanceOnboarding as advanceOnboardingRequest,
   beginOrResumeOnboarding,
+  provisionInitialMascot as provisionInitialMascotRequest,
+  saveInitialMascotDraft as saveInitialMascotDraftRequest,
   type AccountOnboarding,
   type OnboardingStage,
 } from "./onboarding";
@@ -51,6 +53,8 @@ type AuthContextValue = {
     nextStage: OnboardingStage,
     displayName?: string,
   ) => Promise<AccountOnboarding>;
+  saveInitialMascotDraft: (templateId: string, mascotName: string) => Promise<AccountOnboarding>;
+  provisionInitialMascot: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -268,6 +272,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return nextOnboarding;
   }, []);
 
+  const saveInitialMascotDraft = useCallback(async (templateId: string, mascotName: string) => {
+    const nextOnboarding = await saveInitialMascotDraftRequest(templateId, mascotName);
+    setOnboarding(nextOnboarding);
+    return nextOnboarding;
+  }, []);
+
+  const provisionInitialMascot = useCallback(async () => {
+    const result = await provisionInitialMascotRequest();
+    setOnboarding(result.onboarding);
+    setProfile(result.profile);
+  }, []);
+
   const journeyState = resolveAuthJourneyState({
     hasPendingVerification: Boolean(pendingVerificationEmail),
     hasProfile: Boolean(profile),
@@ -290,6 +306,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     journeyState,
     pendingVerificationEmail,
     onboarding,
+    provisionInitialMascot,
     profile,
     requestPasswordReset,
     resendConfirmation,
@@ -297,9 +314,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     signIn,
     signOut,
     signUp,
+    saveInitialMascotDraft,
   }), [advanceOnboarding, completePasswordReset, dismissVerification, exchangeAuthCode, isConfigured, isLoading, isPasswordRecovery, isServiceAvailable,
     journeyState, onboarding, pendingVerificationEmail, profile, requestPasswordReset, resendConfirmation,
-    session, signIn, signOut, signUp]);
+    provisionInitialMascot, saveInitialMascotDraft, session, signIn, signOut, signUp]);
 
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
 }

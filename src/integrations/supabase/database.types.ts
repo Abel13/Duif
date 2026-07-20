@@ -39,6 +39,8 @@ export type Database = {
           auth_user_id: string
           created_at: string
           display_name: string | null
+          mascot_name: string | null
+          selected_mascot_template_id: string | null
           stage: Database["public"]["Enums"]["onboarding_stage"]
           stage_version: number
           updated_at: string
@@ -47,6 +49,8 @@ export type Database = {
           auth_user_id: string
           created_at?: string
           display_name?: string | null
+          mascot_name?: string | null
+          selected_mascot_template_id?: string | null
           stage?: Database["public"]["Enums"]["onboarding_stage"]
           stage_version?: number
           updated_at?: string
@@ -55,6 +59,8 @@ export type Database = {
           auth_user_id?: string
           created_at?: string
           display_name?: string | null
+          mascot_name?: string | null
+          selected_mascot_template_id?: string | null
           stage?: Database["public"]["Enums"]["onboarding_stage"]
           stage_version?: number
           updated_at?: string
@@ -681,6 +687,7 @@ export type Database = {
           created_at: string
           equipment: Json
           id: string
+          is_starter: boolean
           level: number
           name: string
           next_level_xp: number
@@ -697,6 +704,7 @@ export type Database = {
           created_at?: string
           equipment?: Json
           id: string
+          is_starter?: boolean
           level: number
           name: string
           next_level_xp: number
@@ -713,6 +721,7 @@ export type Database = {
           created_at?: string
           equipment?: Json
           id?: string
+          is_starter?: boolean
           level?: number
           name?: string
           next_level_xp?: number
@@ -895,6 +904,8 @@ export type Database = {
           auth_user_id: string
           created_at: string
           display_name: string | null
+          mascot_name: string | null
+          selected_mascot_template_id: string | null
           stage: Database["public"]["Enums"]["onboarding_stage"]
           stage_version: number
           updated_at: string
@@ -912,6 +923,8 @@ export type Database = {
           auth_user_id: string
           created_at: string
           display_name: string | null
+          mascot_name: string | null
+          selected_mascot_template_id: string | null
           stage: Database["public"]["Enums"]["onboarding_stage"]
           stage_version: number
           updated_at: string
@@ -921,6 +934,20 @@ export type Database = {
           to: "account_onboarding"
           isOneToOne: true
           isSetofReturn: false
+        }
+      }
+      provision_initial_mascot: { Args: never; Returns: Json }
+      save_initial_mascot_draft: {
+        Args: { requested_mascot_name: string; template_id: string }
+        Returns: {
+          auth_user_id: string
+          created_at: string
+          display_name: string | null
+          mascot_name: string | null
+          selected_mascot_template_id: string | null
+          stage: Database["public"]["Enums"]["onboarding_stage"]
+          stage_version: number
+          updated_at: string
         }
       }
       collect_delivery_reward: { Args: { delivery_id: string }; Returns: Json }

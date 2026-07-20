@@ -118,7 +118,30 @@ export type TranslationDictionary = {
       hint: string;
       error: string;
     };
-    mascotChoice: { title: string; description: string };
+    mascotChoice: {
+      title: string;
+      description: string;
+      loading: string;
+      unavailable: string;
+      previous: string;
+      nextMascot: string;
+      suggestedName: string;
+      nameLabel: string;
+      nameHint: string;
+      nameError: string;
+      attributes: string;
+      trait: string;
+      skills: string;
+      equipment: string;
+      review: string;
+      reviewTitle: string;
+      reviewDescription: string;
+      confirm: string;
+      preparing: string;
+      readyTitle: string;
+      readyDescription: string;
+    };
+    tutorialNestLabel: string;
   };
   units: {
     kilometers: string;
@@ -714,6 +737,26 @@ export type TranslationKey =
   | "onboarding.displayName.error"
   | "onboarding.mascotChoice.title"
   | "onboarding.mascotChoice.description"
+  | "onboarding.mascotChoice.loading"
+  | "onboarding.mascotChoice.unavailable"
+  | "onboarding.mascotChoice.previous"
+  | "onboarding.mascotChoice.nextMascot"
+  | "onboarding.mascotChoice.suggestedName"
+  | "onboarding.mascotChoice.nameLabel"
+  | "onboarding.mascotChoice.nameHint"
+  | "onboarding.mascotChoice.nameError"
+  | "onboarding.mascotChoice.attributes"
+  | "onboarding.mascotChoice.trait"
+  | "onboarding.mascotChoice.skills"
+  | "onboarding.mascotChoice.equipment"
+  | "onboarding.mascotChoice.review"
+  | "onboarding.mascotChoice.reviewTitle"
+  | "onboarding.mascotChoice.reviewDescription"
+  | "onboarding.mascotChoice.confirm"
+  | "onboarding.mascotChoice.preparing"
+  | "onboarding.mascotChoice.readyTitle"
+  | "onboarding.mascotChoice.readyDescription"
+  | "onboarding.tutorialNestLabel"
   | "auth.registrationPending"
   | "auth.languageLabel"
   | "auth.languages.ptBR"

@@ -1,8 +1,15 @@
 import type { Database } from "./database.types";
+import type { AuthProfile } from "./profile";
 import { getSupabaseClient } from "./client";
 
 export type AccountOnboarding = Database["public"]["Tables"]["account_onboarding"]["Row"];
 export type OnboardingStage = Database["public"]["Enums"]["onboarding_stage"];
+export type InitialMascot = Database["public"]["Tables"]["player_mascots"]["Row"];
+export type InitialMascotProvisioningResult = {
+  onboarding: AccountOnboarding;
+  profile: AuthProfile;
+  mascot: InitialMascot;
+};
 
 export const onboardingIntroStages = [
   "welcome",
@@ -21,6 +28,9 @@ export function isValidPlayerDisplayName(value: string) {
   const length = Array.from(normalized).length;
   return length >= 2 && length <= 24 && !/\p{Cc}/u.test(normalized);
 }
+
+export const normalizeMascotName = normalizePlayerDisplayName;
+export const isValidMascotName = isValidPlayerDisplayName;
 
 export function onboardingIntroIndex(stage: OnboardingStage) {
   const index = onboardingIntroStages.indexOf(stage as typeof onboardingIntroStages[number]);
@@ -49,4 +59,29 @@ export async function advanceOnboarding(
   });
   if (error || !data) throw error ?? new Error("Onboarding could not be advanced");
   return data;
+}
+
+export async function saveInitialMascotDraft(templateId: string, mascotName: string) {
+  const supabase = getSupabaseClient();
+  if (!supabase) throw new Error("Supabase is not configured");
+  const { data, error } = await supabase.rpc("save_initial_mascot_draft", {
+    template_id: templateId,
+    requested_mascot_name: normalizeMascotName(mascotName),
+  });
+  if (error || !data) throw error ?? new Error("Mascot draft could not be saved");
+  return data;
+}
+
+export async function provisionInitialMascot() {
+  const supabase = getSupabaseClient();
+  if (!supabase) throw new Error("Supabase is not configured");
+  const { data, error } = await supabase.rpc("provision_initial_mascot");
+  if (error || !data || typeof data !== "object" || Array.isArray(data)) {
+    throw error ?? new Error("Initial mascot could not be provisioned");
+  }
+  const result = data as unknown as InitialMascotProvisioningResult;
+  if (!result.onboarding || !result.profile || !result.mascot) {
+    throw new Error("Invalid initial mascot provisioning response");
+  }
+  return result;
 }
