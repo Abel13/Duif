@@ -162,13 +162,14 @@ export const ptBR = {
     displayName: {
       title: "Como devemos chamar você?",
       description:
-        "Escolha um apelido público para aparecer aos seus amigos. Ele não precisa ser exclusivo.",
+        "Escolha um apelido público e exclusivo para aparecer aos seus amigos.",
       label: "Seu apelido",
       hint: "Use de 2 a 24 caracteres.",
       error: "Informe um apelido válido com 2 a 24 caracteres.",
+      taken: "Este apelido já está em uso. Escolha outro para continuar.",
     },
     mascotChoice: {
-      title: "Escolha seu primeiro mensageiro",
+      title: "Escolha seu mascote",
       description:
         "Cada espécie viaja de um jeito próprio. Escolha aquela que combina com a sua aventura.",
       loading: "Abrindo o catálogo de mascotes…",
@@ -176,8 +177,7 @@ export const ptBR = {
         "O catálogo de mascotes está indisponível agora. Tente novamente em instantes.",
       previous: "Mascote anterior",
       nextMascot: "Próximo mascote",
-      suggestedName: "Nome sugerido: {name}",
-      nameLabel: "Nome do mascote",
+      nameLabel: "Dê um nome ao seu mascote",
       nameHint:
         "Use de 2 a 24 caracteres. O nome será seu e não muda com o idioma.",
       nameError: "Informe um nome válido com 2 a 24 caracteres.",
@@ -186,7 +186,7 @@ export const ptBR = {
       skills: "Habilidades",
       equipment: "Equipamento inicial",
       review: "Revisar escolha",
-      reviewTitle: "Seu companheiro de viagem",
+      reviewTitle: "Revise sua escolha",
       reviewDescription:
         "Confira a espécie e o nome. Depois de confirmar, este será seu primeiro mascote.",
       confirm: "Confirmar mascote",

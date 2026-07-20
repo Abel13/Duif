@@ -162,13 +162,14 @@ export const enUS = {
     displayName: {
       title: "What should we call you?",
       description:
-        "Choose a public nickname for your friends to see. It does not need to be unique.",
+        "Choose a unique public nickname for your friends to see.",
       label: "Your nickname",
       hint: "Use 2 to 24 characters.",
       error: "Enter a valid nickname containing 2 to 24 characters.",
+      taken: "This nickname is already in use. Choose another one to continue.",
     },
     mascotChoice: {
-      title: "Choose your first messenger",
+      title: "Choose your mascot",
       description:
         "Each species travels in its own way. Choose the one that fits your adventure.",
       loading: "Opening the mascot catalog…",
@@ -176,8 +177,7 @@ export const enUS = {
         "The mascot catalog is unavailable right now. Please try again shortly.",
       previous: "Previous mascot",
       nextMascot: "Next mascot",
-      suggestedName: "Suggested name: {name}",
-      nameLabel: "Mascot name",
+      nameLabel: "Name your mascot",
       nameHint:
         "Use 2 to 24 characters. This name is yours and does not change with language.",
       nameError: "Enter a valid name containing 2 to 24 characters.",
@@ -186,7 +186,7 @@ export const enUS = {
       skills: "Skills",
       equipment: "Starter equipment",
       review: "Review choice",
-      reviewTitle: "Your travel companion",
+      reviewTitle: "Review your choice",
       reviewDescription:
         "Check the species and name. Once confirmed, this will be your first mascot.",
       confirm: "Confirm mascot",

@@ -117,6 +117,7 @@ export type TranslationDictionary = {
       label: string;
       hint: string;
       error: string;
+      taken: string;
     };
     mascotChoice: {
       title: string;
@@ -125,7 +126,6 @@ export type TranslationDictionary = {
       unavailable: string;
       previous: string;
       nextMascot: string;
-      suggestedName: string;
       nameLabel: string;
       nameHint: string;
       nameError: string;
@@ -735,13 +735,13 @@ export type TranslationKey =
   | "onboarding.displayName.label"
   | "onboarding.displayName.hint"
   | "onboarding.displayName.error"
+  | "onboarding.displayName.taken"
   | "onboarding.mascotChoice.title"
   | "onboarding.mascotChoice.description"
   | "onboarding.mascotChoice.loading"
   | "onboarding.mascotChoice.unavailable"
   | "onboarding.mascotChoice.previous"
   | "onboarding.mascotChoice.nextMascot"
-  | "onboarding.mascotChoice.suggestedName"
   | "onboarding.mascotChoice.nameLabel"
   | "onboarding.mascotChoice.nameHint"
   | "onboarding.mascotChoice.nameError"

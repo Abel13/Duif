@@ -35,7 +35,7 @@ export function OnboardingPage() {
   const [visibleIndex, setVisibleIndex] = useState(persistedIndex);
   const [displayName, setDisplayName] = useState(onboarding?.display_name ?? "");
   const [isSaving, setIsSaving] = useState(false);
-  const [error, setError] = useState<"name" | "request" | null>(null);
+  const [error, setError] = useState<"name" | "taken" | "request" | null>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
@@ -91,8 +91,8 @@ export function OnboardingPage() {
     setIsSaving(true);
     try {
       await advanceOnboarding("displayName", "mascotChoice", normalized);
-    } catch {
-      setError("request");
+    } catch (requestError) {
+      setError(typeof requestError === "object" && requestError !== null && "code" in requestError && requestError.code === "23505" ? "taken" : "request");
     } finally {
       setIsSaving(false);
     }
@@ -124,7 +124,7 @@ export function OnboardingPage() {
             value={displayName}
           />
         </label>
-        <small id="display-name-hint">{error === "name" ? t("onboarding.displayName.error") : t("onboarding.displayName.hint")}</small>
+        <small id="display-name-hint">{error === "name" ? t("onboarding.displayName.error") : error === "taken" ? t("onboarding.displayName.taken") : t("onboarding.displayName.hint")}</small>
         {error === "request" && <p aria-live="polite" className={styles.error}>{t("onboarding.genericError")}</p>}
         <div className={styles.actions}>
           <StampButton disabled={isSaving} onClick={() => setVisibleIndex((current) => Math.max(0, current - 1))} variant="secondary">{t("onboarding.back")}</StampButton>
@@ -147,7 +147,6 @@ function MascotChoice() {
   const [archetypes, setArchetypes] = useState<MascotArchetype[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [name, setName] = useState(onboarding?.mascot_name ?? "");
-  const [nameEdited, setNameEdited] = useState(Boolean(onboarding?.mascot_name));
   const [mode, setMode] = useState<"choice" | "review" | "ready">(
     onboarding?.stage === "tutorial" ? "ready" : onboarding?.selected_mascot_template_id ? "review" : "choice",
   );
@@ -168,16 +167,11 @@ function MascotChoice() {
   }, [onboarding?.selected_mascot_template_id]);
 
   const selected = archetypes[selectedIndex];
-  const suggestion = selected ? t(selected.suggestedNameKey) : "";
-  useEffect(() => {
-    if (!nameEdited && suggestion) setName(suggestion);
-  }, [locale, nameEdited, selected?.id, suggestion]);
   useEffect(() => { titleRef.current?.focus(); }, [mode, selectedIndex]);
 
   function rotate(direction: number) {
     if (!archetypes.length || state === "saving") return;
     setSelectedIndex((current) => (current + direction + archetypes.length) % archetypes.length);
-    setNameEdited(false);
   }
 
   async function review(event: FormEvent) {
@@ -211,7 +205,7 @@ function MascotChoice() {
       {state === "loading" && <p aria-live="polite">{t("onboarding.mascotChoice.loading")}</p>}
       {state === "error" && !selected && <p className={styles.error}>{t("onboarding.mascotChoice.unavailable")}</p>}
       {selected && <>
-        <div className={styles.carousel} onTouchStart={(event) => { touchStart.current = event.touches[0]?.clientX ?? null; }} onTouchEnd={(event) => {
+        {mode === "choice" ? <div className={styles.carousel} onTouchStart={(event) => { touchStart.current = event.touches[0]?.clientX ?? null; }} onTouchEnd={(event) => {
           const end = event.changedTouches[0]?.clientX; if (touchStart.current !== null && end !== undefined && Math.abs(end - touchStart.current) > 44) rotate(end > touchStart.current ? -1 : 1); touchStart.current = null;
         }}>
           <button aria-label={t("onboarding.mascotChoice.previous")} className={styles.carouselArrow} onClick={() => rotate(-1)} type="button">‹</button>
@@ -220,9 +214,9 @@ function MascotChoice() {
             return item && <AssetImage alt={t(item.speciesKey)} assetKey={item.appearance.portraitAssetKey} className={offset === 0 ? styles.selectedPortrait : styles.sidePortrait} key={`${item.id}-${offset}`}><span className={styles.fallbackMark} /></AssetImage>;
           })}
           <button aria-label={t("onboarding.mascotChoice.nextMascot")} className={styles.carouselArrow} onClick={() => rotate(1)} type="button">›</button>
-        </div>
+        </div> : <AssetImage alt={t(selected.speciesKey)} assetKey={selected.appearance.portraitAssetKey} className={styles.reviewPortrait}><span className={styles.fallbackMark} /></AssetImage>}
+        {mode !== "choice" && <strong className={styles.chosenName}>{onboarding?.mascot_name ?? name}</strong>}
         <strong className={styles.species}>{t(selected.speciesKey)}</strong>
-        <span className={styles.suggestion}>{t("onboarding.mascotChoice.suggestedName").replace("{name}", suggestion)}</span>
 
         <div className={styles.mascotFacts}>
           <section><h2>{t("onboarding.mascotChoice.attributes")}</h2><dl>{Object.entries(selected.attributes).map(([key, value]) => <div key={key}><dt>{t(`mascot.${key}` as TranslationKey)}</dt><dd>{value}/10</dd></div>)}</dl></section>
@@ -232,7 +226,7 @@ function MascotChoice() {
         </div>
 
         {mode === "choice" && <form className={styles.nameForm} onSubmit={review}>
-          <label><span>{t("onboarding.mascotChoice.nameLabel")}</span><input aria-invalid={state === "error"} maxLength={48} value={name} onChange={(event) => { setName(event.target.value); setNameEdited(true); setState("ready"); }} /></label>
+          <label><span>{t("onboarding.mascotChoice.nameLabel")}</span><input aria-invalid={state === "error"} maxLength={48} value={name} onChange={(event) => { setName(event.target.value); setState("ready"); }} /></label>
           <small>{state === "error" ? t("onboarding.mascotChoice.nameError") : t("onboarding.mascotChoice.nameHint")}</small>
           <div className={styles.actions}><StampButton disabled={state === "saving"} type="submit">{state === "saving" ? t("onboarding.saving") : t("onboarding.mascotChoice.review")}</StampButton></div>
         </form>}
