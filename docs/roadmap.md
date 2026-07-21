@@ -1957,6 +1957,33 @@ Success criteria:
 - account lookup responses do not leak membership;
 - reset and asset operations have explicit safeguards and rollback paths.
 
+## Milestone 48: Postal Connections And First Real Send
+
+Status: Implemented locally.
+
+Goal:
+
+Give a player who has finished onboarding a private, deliberate way to establish their first
+postal connection and begin the normal sending loop.
+
+Includes:
+
+- one regenerable Postal Friend Code per profile, displayed only to its owner;
+- code-based friendship requests with recipient-only accept or decline actions;
+- no nickname search, public directory, automatic acceptance, invite link, or chat;
+- pending requests exposing only the sender nickname, while accepted friends may receive the
+  sanitized city data already used by sending;
+- an authenticated Friends surface with code sharing, incoming/outgoing requests, accepted
+  connections, and a first-letter CTA after the first acceptance;
+- an idle-map CTA that directs players without friends to their postal connections.
+
+Success criteria:
+
+- codes cannot be enumerated freely, self-applied, duplicated across a profile pair, or read by
+  another player;
+- only the request recipient can accept or decline;
+- a first accepted friend can be selected in the existing real send flow.
+
 ## Historical First Execution Order
 
 The following order records how the initial prototype was bootstrapped. It is complete and must

@@ -197,6 +197,15 @@ Rules:
 - The invite does not reveal location details.
 - Sending correspondence requires an accepted friendship.
 - Users who are not accepted friends cannot send to each other.
+
+### Postal friendship codes
+
+- Each player has one private, regenerable Postal Friend Code used to request friendship.
+- A valid code creates a pending request; only its recipient can accept or decline it.
+- Pending requests show only the sender nickname. City and nest data become available only after
+  acceptance through existing sanitized friend contracts.
+- Codes are not authentication credentials and never appear in public profiles, traffic, or
+  player-search results.
 - The recipient sees visible received content based on what was sent: letter, postcard,
   sticker, gift, or future correspondence type.
 
