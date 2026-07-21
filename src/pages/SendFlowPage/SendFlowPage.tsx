@@ -183,10 +183,6 @@ export function SendFlowPage() {
     }
   }
 
-  function handleReset() {
-    setConfirmedSend(undefined);
-  }
-
   const summaryHint = isSendFlowLoading
     ? t("send.loadingData")
     : isSelectionComplete && isContentValid
@@ -307,7 +303,7 @@ export function SendFlowPage() {
             variant="note"
           >
             {confirmedSend ? (
-              <ConfirmationPanel confirmedSend={confirmedSend} onReset={handleReset} />
+              <ConfirmationPanel confirmedSend={confirmedSend} />
             ) : (
               <div className={styles.summary}>
                 <p className={styles.hint}>{summaryHint}</p>
@@ -654,10 +650,8 @@ function CorrespondenceContentPreview({ content }: { content: CorrespondenceCont
 
 function ConfirmationPanel({
   confirmedSend,
-  onReset,
 }: {
   confirmedSend: ConfirmedSend;
-  onReset: () => void;
 }) {
   const { t } = useTranslation();
   const { delivery, friend, mascot, correspondence, content } = confirmedSend;
@@ -688,7 +682,9 @@ function ConfirmationPanel({
         <SummaryRow label={t("mascot.status")} value={t(`delivery.status.${status}`)} />
       </dl>
       <div className={styles.actions}>
-        <StampButton onClick={onReset}>{t("send.sendAnother")}</StampButton>
+        <Link className={styles.primaryLink} to={`/map?mascotId=${mascot.id}`}>
+          {t("mascot.viewTrip")}
+        </Link>
         <Link className={styles.returnLink} to={`/mascots/${mascot.id}`}>
           {t("send.backToMascot")}
         </Link>
