@@ -174,6 +174,9 @@ Milestone 27.75 added the first validation slice:
   - `blue-route-scarf.webp`;
   - `flight-goggles.webp`;
   - `urgent-badge.webp`.
+  - `feather-charm.webp` (`192x192`, about `6KB`);
+  - `small-satchel.webp` (`192x192`, about `8KB`);
+  - `travel-cap.webp` (`192x192`, about `8KB`).
 - Route reward thumbnails:
   - `worn-route-stamp.webp`;
   - `blue-airmail-label.webp`;
