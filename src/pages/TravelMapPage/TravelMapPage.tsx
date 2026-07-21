@@ -41,6 +41,7 @@ import { useMascotCatalog } from "../../game/useMascotCatalog";
 import { useAuth } from "../../integrations/supabase/AuthProvider";
 import { isSupabaseCatalogEnabled } from "../../integrations/supabase/config";
 import { getMyNestCityLabel } from "../../integrations/supabase/nest";
+import { usePostalFriends } from "../../integrations/supabase/usePostalFriends";
 import { type TranslationKey, useTranslation } from "../../i18n";
 import styles from "./TravelMapPage.module.css";
 import { isMapCameraTargetDisabled } from "../../components/map/travelMapCamera";
@@ -53,6 +54,7 @@ const discoveryHighlightMs = 4 * 1000;
 export function TravelMapPage() {
   const { t } = useTranslation();
   const { profile } = useAuth();
+  const { connections, isLoading: isPostalFriendsLoading } = usePostalFriends(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const { isLoading, mascots } = useMascotCatalog();
   const [now, setNow] = useState(() => new Date());
@@ -437,6 +439,13 @@ export function TravelMapPage() {
             <Link to={`/rewards/${finishedDeliveries[0]!.delivery.id}`}>
               {t("map.collectFinishedDelivery")}
             </Link>
+          </div>
+        ) : null}
+
+        {journeyPhase !== "traveling" && !isPostalFriendsLoading && connections.accepted.length === 0 ? (
+          <div className={styles.friendPrompt}>
+            <div><strong>{t("friends.emptyTitle")}</strong><span>{t("friends.emptyDescription")}</span></div>
+            <Link to="/friends">{t("friends.findFriend")}</Link>
           </div>
         ) : null}
 

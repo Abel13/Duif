@@ -100,6 +100,28 @@
   text-transform: uppercase;
 }
 
+.friendPrompt {
+  position: absolute;
+  z-index: 8;
+  top: max(var(--space-3), env(safe-area-inset-top));
+  left: var(--space-3);
+  display: grid;
+  gap: .5rem;
+  width: min(21rem, calc(100vw - 7.25rem));
+  padding: .7rem .8rem;
+  border: 2px solid var(--color-muted-green);
+  border-radius: .35rem .65rem .3rem .5rem;
+  color: var(--color-ink);
+  background: var(--color-postal-label);
+  box-shadow: .16rem .22rem 0 rgba(46,42,36,.2);
+}
+
+.friendPrompt div { display: grid; gap: .2rem; min-width: 0; }
+.friendPrompt strong { font-size: .72rem; letter-spacing: .05em; text-transform: uppercase; }
+.friendPrompt span { display: -webkit-box; overflow: hidden; color: var(--color-ink-soft); font-size: .72rem; font-weight: 800; line-height: 1.25; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.friendPrompt a { justify-self: start; min-height: 2rem; padding: .42rem .65rem; border: 1px dashed rgba(46,42,36,.48); border-radius: .25rem; color: var(--color-ink); background: var(--color-paper-dark); font-size: .65rem; font-weight: 900; text-decoration: none; text-transform: uppercase; }
+.friendPrompt a:focus-visible { outline: 3px solid var(--color-postal-blue); outline-offset: 2px; }
+
 .finishedDeliveryMark {
   position: relative;
   width: 1.7rem;

@@ -665,6 +665,37 @@ export type TranslationDictionary = {
     backToFriends: string;
     noCorrespondence: string;
     mascotLabel: string;
+    emptyTitle: string;
+    emptyDescription: string;
+    postalCodeTitle: string;
+    postalCodeDescription: string;
+    copyCode: string;
+    copiedCode: string;
+    shareCode: string;
+    regenerateCode: string;
+    regenerateConfirm: string;
+    addCodeTitle: string;
+    addCodeDescription: string;
+    codeLabel: string;
+    sendRequest: string;
+    requestsReceived: string;
+    requestsSent: string;
+    acceptRequest: string;
+    declineRequest: string;
+    noRequests: string;
+    requestSent: string;
+    requestUnavailable: string;
+    requestAlreadyPending: string;
+    requestAlreadyFriends: string;
+    requestReceivedPending: string;
+    firstFriendTitle: string;
+    firstFriendDescription: string;
+    prepareFirstLetter: string;
+    findFriend: string;
+    connectTitle: string;
+    useCode: string;
+    myCode: string;
+    showCode: string;
     lia: {
       note: string;
     };
@@ -1261,6 +1292,37 @@ export type TranslationKey =
   | "friends.backToFriends"
   | "friends.noCorrespondence"
   | "friends.mascotLabel"
+  | "friends.emptyTitle"
+  | "friends.emptyDescription"
+  | "friends.postalCodeTitle"
+  | "friends.postalCodeDescription"
+  | "friends.copyCode"
+  | "friends.copiedCode"
+  | "friends.shareCode"
+  | "friends.regenerateCode"
+  | "friends.regenerateConfirm"
+  | "friends.addCodeTitle"
+  | "friends.addCodeDescription"
+  | "friends.codeLabel"
+  | "friends.sendRequest"
+  | "friends.requestsReceived"
+  | "friends.requestsSent"
+  | "friends.acceptRequest"
+  | "friends.declineRequest"
+  | "friends.noRequests"
+  | "friends.requestSent"
+  | "friends.requestUnavailable"
+  | "friends.requestAlreadyPending"
+  | "friends.requestAlreadyFriends"
+  | "friends.requestReceivedPending"
+  | "friends.firstFriendTitle"
+  | "friends.firstFriendDescription"
+  | "friends.prepareFirstLetter"
+  | "friends.findFriend"
+  | "friends.connectTitle"
+  | "friends.useCode"
+  | "friends.myCode"
+  | "friends.showCode"
   | "friends.lia.note"
   | "friends.caio.note"
   | "friends.mina.note"
