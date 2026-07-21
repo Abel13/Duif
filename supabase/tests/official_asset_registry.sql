@@ -2,11 +2,21 @@ begin;
 
 do $$
 begin
-  if (select count(*) from public.official_assets) <> 39 then
-    raise exception 'Expected 39 official asset identities';
+  if (select count(*) from public.official_assets where asset_key in (
+    'equipment.icon.featherCharm',
+    'equipment.icon.smallSatchel',
+    'equipment.icon.travelCap'
+  )) <> 3 then
+    raise exception 'Expected three starter equipment asset identities';
   end if;
-  if (select count(*) from public.official_asset_versions where status = 'active') <> 38 then
-    raise exception 'Expected 38 active official asset versions';
+  if (select count(*) from public.official_asset_versions version
+      join public.official_assets asset on asset.id = version.asset_id
+      where asset.asset_key in (
+        'equipment.icon.featherCharm',
+        'equipment.icon.smallSatchel',
+        'equipment.icon.travelCap'
+      ) and version.status = 'active' and version.packaged_path like '/assets/equipment/icons/%') <> 3 then
+    raise exception 'Expected three active packaged starter equipment versions';
   end if;
   if exists (
     select 1 from public.official_asset_versions v join public.official_assets a on a.id=v.asset_id
@@ -18,11 +28,50 @@ begin
   end if;
 end $$;
 
+do $$
+begin
+  if exists (
+    select 1
+    from public.player_mascots mascot,
+      lateral jsonb_array_elements(mascot.equipment) item
+    where item->>'id' in (
+      'equipment-trovao-travel-cap',
+      'equipment-pipoca-feather-charm',
+      'equipment-pipoca-small-satchel'
+    ) and item->>'iconAssetKey' is null
+  ) then
+    raise exception 'Starter equipment asset backfill left a mascot without an icon key';
+  end if;
+end $$;
+
 set local role anon;
 do $$ begin
-  if (select count(*) from public.official_assets) <> 38
-    or (select count(*) from public.official_asset_versions) <> 38 then
-    raise exception 'Anonymous manifest must expose only active identities and versions';
+  if (select count(*) from public.official_assets where asset_key in (
+    'equipment.icon.featherCharm',
+    'equipment.icon.smallSatchel',
+    'equipment.icon.travelCap'
+  )) <> 3
+    or (select count(*) from public.official_asset_versions version
+        join public.official_assets asset on asset.id = version.asset_id
+        where asset.asset_key in (
+          'equipment.icon.featherCharm',
+          'equipment.icon.smallSatchel',
+          'equipment.icon.travelCap'
+        )) <> 3 then
+    raise exception 'Anonymous manifest must expose active starter equipment assets';
+  end if;
+end $$;
+
+do $$
+begin
+  if (select count(*) from public.mascot_templates mt,
+      lateral jsonb_array_elements(mt.equipment) item
+      where item->>'id' in (
+        'equipment-trovao-travel-cap',
+        'equipment-pipoca-feather-charm',
+        'equipment-pipoca-small-satchel'
+      ) and item->>'iconAssetKey' is not null) <> 3 then
+    raise exception 'Starter equipment assets were not persisted on archetypes';
   end if;
 end $$;
 reset role;

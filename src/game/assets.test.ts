@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { assetKeys, parseOfficialAssetManifest, resolveOfficialAssetPath } from "./assets";
+import { starterMascots } from "./mockData";
 
 const row = {
   version: 1,
@@ -42,5 +43,37 @@ describe("official asset manifest", () => {
   it("parses the registered inaugural postcard artwork", () => {
     const manifest=parseOfficialAssetManifest([{ ...row, width:1024,height:683,byte_size:154572,alt_text_key:"tutorial.rewards.inauguralPostcard.name",official_assets:{asset_key:assetKeys.postcards.inauguralFront,asset_type:"postcardArtwork"},packaged_path:"/assets/tutorial/postcards/inaugural-front.webp" }]);
     expect(resolveOfficialAssetPath(manifest,assetKeys.postcards.inauguralFront)).toContain("inaugural-front.webp");
+  });
+
+  it("resolves the three registered starter equipment icons", () => {
+    const equipment = [
+      [assetKeys.equipment.featherCharm, "/assets/equipment/icons/feather-charm.webp"],
+      [assetKeys.equipment.smallSatchel, "/assets/equipment/icons/small-satchel.webp"],
+      [assetKeys.equipment.travelCap, "/assets/equipment/icons/travel-cap.webp"],
+    ] as const;
+    const manifest = parseOfficialAssetManifest(equipment.map(([key, packaged_path]) => ({
+      ...row,
+      width: 192,
+      height: 192,
+      byte_size: 8192,
+      alt_text_key: key === assetKeys.equipment.featherCharm
+        ? "equipment.featherCharm.name"
+        : key === assetKeys.equipment.smallSatchel
+          ? "equipment.smallSatchel.name"
+          : "equipment.travelCap.name",
+      packaged_path,
+      official_assets: { asset_key: key, asset_type: "equipmentIcon" },
+    })));
+
+    equipment.forEach(([key, path]) => {
+      expect(resolveOfficialAssetPath(manifest, key)).toBe(path);
+    });
+  });
+
+  it("keeps every starter equipment record connected to an official asset key", () => {
+    const equipment = starterMascots.flatMap((mascot) => mascot.equipment);
+
+    expect(equipment).toHaveLength(7);
+    expect(equipment.every((item) => Boolean(item.iconAssetKey))).toBe(true);
   });
 });
