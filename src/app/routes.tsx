@@ -18,6 +18,7 @@ const InventoryAlbumPage=lazy(()=>import("../pages/InventoryAlbumPage/InventoryA
 const FriendsPage=lazy(()=>import("../pages/FriendsPage/FriendsPage").then(module=>({default:module.FriendsPage})));
 const ShopPage=lazy(()=>import("../pages/ShopPage/ShopPage").then(module=>({default:module.ShopPage})));
 const SendFlowPage=lazy(()=>import("../pages/SendFlowPage/SendFlowPage").then(module=>({default:module.SendFlowPage})));
+const RewardCollectionPage=lazy(()=>import("../pages/RewardCollectionPage/RewardCollectionPage").then(module=>({default:module.RewardCollectionPage})));
 const AssetStudioPage=lazy(()=>import("../pages/AssetStudioPage/AssetStudioPage").then(module=>({default:module.AssetStudioPage})));
 
 export function AppRoutes() {
@@ -36,6 +37,7 @@ export function AppRoutes() {
       <Route path="/friends" element={<ProtectedGameRoute><FriendsPage/></ProtectedGameRoute>} />
       <Route path="/shop" element={<ProtectedGameRoute><ShopPage/></ProtectedGameRoute>} />
       <Route path="/send" element={<ProtectedGameRoute><SendFlowPage/></ProtectedGameRoute>} />
+      <Route path="/rewards/:deliveryId" element={<ProtectedGameRoute><RewardCollectionPage/></ProtectedGameRoute>} />
       <Route path="/admin/assets" element={<ProtectedAdminRoute />} />
       <Route path="*" element={<ProtectedFoundationRoute />} />
     </Routes>
