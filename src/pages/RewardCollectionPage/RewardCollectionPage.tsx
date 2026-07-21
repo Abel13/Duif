@@ -13,6 +13,7 @@ import {
   type Delivery,
   type DeliveryReward,
 } from "../../game";
+import { useMascotCatalog } from "../../game/useMascotCatalog";
 import { useTranslation, type TranslationKey } from "../../i18n";
 import styles from "./RewardCollectionPage.module.css";
 
@@ -31,6 +32,7 @@ export function RewardCollectionPage() {
     reward,
     routeDiscoveries,
   } = useRewardCollectionData(deliveryId);
+  const { mascots } = useMascotCatalog();
 
   if (isLoading) {
     return (
@@ -49,11 +51,11 @@ export function RewardCollectionPage() {
     return <Navigate replace to="/mascots" />;
   }
 
-  const mascot = getMascotById(delivery.mascotId);
+  const mascot = mascots.find((candidate) => candidate.id === delivery.mascotId)
+    ?? getMascotById(delivery.mascotId);
   const status = isCollected ? "completed" : getDeliveryStatus(delivery);
-  const isReady = status === "returned" && reward;
+  const isReady = status === "returned";
   const displayReward = reward;
-  const shouldShowReward = Boolean(displayReward && (isReady || isCollected));
 
   return (
     <PageShell className={styles.page} hasTopBar>
@@ -91,7 +93,7 @@ export function RewardCollectionPage() {
             </div>
           </SketchPanel>
 
-          {shouldShowReward ? (
+          {isReady || isCollected ? (
             <RewardPanel
               error={error}
               inventoryCount={inventoryCount}
@@ -100,7 +102,7 @@ export function RewardCollectionPage() {
               isMutating={isMutating}
               deliveryId={delivery.id}
               onCollect={collectReward}
-              reward={displayReward as DeliveryReward}
+              reward={displayReward}
               routeDiscoveries={routeDiscoveries}
             />
           ) : (
@@ -130,7 +132,7 @@ function RewardPanel({
   isMutating: boolean;
   deliveryId: string;
   onCollect: () => void;
-  reward: DeliveryReward;
+  reward?: DeliveryReward;
   routeDiscoveries: ReturnType<typeof useRewardCollectionData>["routeDiscoveries"];
 }) {
   const { t } = useTranslation();
@@ -138,14 +140,18 @@ function RewardPanel({
   return (
     <SketchPanel title={t("rewards.fullCargoTitle")}>
       <div className={styles.rewardStack}>
-        <h3 className={styles.cargoTitle}>{t("rewards.primaryReward")}</h3>
-        <ItemCard
-          label={t(`equipment.rarity.${reward.item.rarity}`)}
-          title={t(reward.item.nameKey)}
-          description={t(reward.item.descriptionKey)}
-          meta={isCollected ? t("rewards.collected") : `${t("rewards.xpGained")}: ${reward.xpGained}`}
-          selected={isCollected}
-        />
+        {reward ? (
+          <>
+            <h3 className={styles.cargoTitle}>{t("rewards.primaryReward")}</h3>
+            <ItemCard
+              label={t(`equipment.rarity.${reward.item.rarity}`)}
+              title={t(reward.item.nameKey)}
+              description={t(reward.item.descriptionKey)}
+              meta={isCollected ? t("rewards.collected") : `${t("rewards.xpGained")}: ${reward.xpGained}`}
+              selected={isCollected}
+            />
+          </>
+        ) : <p className={styles.feedback}>{t("rewards.collectionPending")}</p>}
         {routeDiscoveries.length > 0 ? (
           <section className={styles.routeCargo} aria-labelledby="route-cargo-title">
             <h3 className={styles.cargoTitle} id="route-cargo-title">
@@ -165,17 +171,19 @@ function RewardPanel({
             </div>
           </section>
         ) : null}
-        <dl className={styles.rewardDetails}>
-          <SummaryRow
-            label={t("rewards.xpGained")}
-            value={`${reward.xpGained} ${t("mascot.xp")}`}
-          />
-          <SummaryRow
-            label={t("rewards.rarity")}
-            value={t(`equipment.rarity.${reward.item.rarity}`)}
-          />
-          <SummaryRow label={t("rewards.inventory")} value={`${inventoryCount}`} />
-        </dl>
+        {reward ? (
+          <dl className={styles.rewardDetails}>
+            <SummaryRow
+              label={t("rewards.xpGained")}
+              value={`${reward.xpGained} ${t("mascot.xp")}`}
+            />
+            <SummaryRow
+              label={t("rewards.rarity")}
+              value={t(`equipment.rarity.${reward.item.rarity}`)}
+            />
+            <SummaryRow label={t("rewards.inventory")} value={`${inventoryCount}`} />
+          </dl>
+        ) : null}
         {isCollected ? (
           <Link className={styles.returnLink} to={`/map?deliveryId=${encodeURIComponent(deliveryId)}`}>
             {t("rewards.backToMap")}

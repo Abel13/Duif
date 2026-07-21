@@ -66,7 +66,7 @@ export function useRewardCollectionData(deliveryId?: string) {
   }, [deliveryId, isAuthLoading, profile, session]);
 
   async function collectReward() {
-    if (!state.delivery || !state.reward || state.isCollected) return;
+    if (!state.delivery || state.isCollected) return;
     setState((current) => ({ ...current, error: undefined, isMutating: true }));
     try {
       const result: CollectedRewardResult | undefined = await collectAuthenticatedReward({
