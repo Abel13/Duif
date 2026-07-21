@@ -41,6 +41,21 @@ begin
     or (select destination_place_label from public.deliveries where id = created_delivery.id) <> saved_destination then
     raise exception 'Delivery place snapshots changed after a nest update';
   end if;
+
+  begin
+    perform public.create_delivery_from_selection(
+      '00000000-0000-4000-8000-000000000203',
+      '00000000-0000-4000-8000-000000000101',
+      'correspondence-letter',
+      '{"type":"letter","letterText":"A duplicate postal hello."}'::jsonb
+    );
+    raise exception 'A mascot was allowed to start a concurrent delivery';
+  exception when check_violation then null;
+  end;
+
+  if (select count(*) from public.deliveries where mascot_id = created_delivery.mascot_id and status <> 'completed') <> 1 then
+    raise exception 'Concurrent delivery prevention did not preserve exactly one open delivery';
+  end if;
 end;
 $$;
 
