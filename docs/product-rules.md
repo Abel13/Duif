@@ -342,13 +342,21 @@ Skill direction:
 
 - `Rota Longa` mitigates `25%` of the long-route penalty per level, capped at `50%`.
 - `Pouso Suave` favors safe completion or later duplicate-preservation rules.
-- `Despacho Rápido` reduces the base `30` minute preparation by `5%` per level, capped at
-  `20%`.
+- `Despacho Rápido` reduces the base `5` minute preparation by `5%` per level, capped at
+  `20%`. It therefore reaches `4` minutes at the cap. The system reserves an absolute `3`
+  minute floor for future optional dispatch accelerators; no such item exists yet.
 - `Instinto de Vento Cruzado` expands discovery reach by `2%` per level.
 - `Coisa Brilhante` adds `3%` of rarity weight per level.
 - `Desvio Feliz` expands discovery reach by `3%` per level and reduces effective travel
   speed by `2%` per level.
 - Skill level scales an existing effect; it should not introduce hidden unrelated bonuses.
+
+Preparation snapshot compatibility:
+
+- New ordinary deliveries use travel modifier version `2`, with a five-minute base preparation.
+- Version `1` snapshots retain their materialized preparation and timestamps, including older
+  thirty-minute deliveries. They are never recalculated after dispatch.
+- The tutorial keeps its independent thirty-second preparation boost.
 
 Determinism and authority:
 
