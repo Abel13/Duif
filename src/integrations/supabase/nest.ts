@@ -17,10 +17,3 @@ export async function completeNestSetup(selection: NestCoordinate, cityId: strin
   const result=data as {profile?:AuthProfile;onboarding?:AccountOnboarding};
   if(!result.profile||!result.onboarding) throw new Error("Invalid nest setup response"); return {profile:result.profile,onboarding:result.onboarding};
 }
-
-export async function getMyNestCityLabel(): Promise<string | null> {
-  const supabase=getSupabaseClient(); if(!supabase) throw new Error("Supabase is not configured");
-  const {data,error}=await supabase.rpc("get_my_nest_city");
-  if(error) throw error;
-  return Array.isArray(data) && typeof data[0]?.label === "string" ? data[0].label : null;
-}

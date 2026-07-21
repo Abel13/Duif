@@ -1,6 +1,7 @@
 import type { FriendLocation, FriendMascotPreview, FriendProfile } from "./types";
 import type { TranslationKey } from "../i18n";
 import { assetKeys } from "./assets";
+import { formatPostalLocationLabel } from "./locationLabels";
 
 export const friendMascots: FriendMascotPreview[] = [
   {
@@ -170,11 +171,8 @@ export function getFriendLocationLabel(
   location: FriendLocation,
   translate: (key: TranslationKey) => string,
 ) {
-  const publicParts = [location.city, location.state, location.country].filter(Boolean);
-
-  if (publicParts.length > 0) {
-    return publicParts.join(", ");
-  }
+  const label = formatPostalLocationLabel(location);
+  if (label) return label;
 
   return location.labelKey ? translate(location.labelKey) : "";
 }

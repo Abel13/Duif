@@ -118,6 +118,7 @@ export type Database = {
           correspondence_option_id: string | null
           created_at: string
           destination_label_key: string
+          destination_place_label: string | null
           destination_latitude: number
           destination_longitude: number
           distance_km: number
@@ -125,6 +126,7 @@ export type Database = {
           is_tutorial: boolean
           mascot_id: string
           origin_label_key: string
+          origin_place_label: string | null
           origin_latitude: number
           origin_longitude: number
           outbound_arrival_at: string
@@ -144,6 +146,7 @@ export type Database = {
           correspondence_option_id?: string | null
           created_at?: string
           destination_label_key: string
+          destination_place_label?: string | null
           destination_latitude: number
           destination_longitude: number
           distance_km: number
@@ -151,6 +154,7 @@ export type Database = {
           is_tutorial?: boolean
           mascot_id: string
           origin_label_key: string
+          origin_place_label?: string | null
           origin_latitude: number
           origin_longitude: number
           outbound_arrival_at: string
@@ -170,6 +174,7 @@ export type Database = {
           correspondence_option_id?: string | null
           created_at?: string
           destination_label_key?: string
+          destination_place_label?: string | null
           destination_latitude?: number
           destination_longitude?: number
           distance_km?: number
@@ -177,6 +182,7 @@ export type Database = {
           is_tutorial?: boolean
           mascot_id?: string
           origin_label_key?: string
+          origin_place_label?: string | null
           origin_latitude?: number
           origin_longitude?: number
           outbound_arrival_at?: string
@@ -281,14 +287,61 @@ export type Database = {
           },
         ]
       }
+      geonames_admin1_regions: {
+        Row: {
+          admin1_code: string
+          archived_at: string | null
+          ascii_name: string
+          country_code: string
+          geoname_id: number | null
+          import_run_id: string
+          is_active: boolean
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          admin1_code: string
+          archived_at?: string | null
+          ascii_name: string
+          country_code: string
+          geoname_id?: number | null
+          import_run_id: string
+          is_active?: boolean
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          admin1_code?: string
+          archived_at?: string | null
+          ascii_name?: string
+          country_code?: string
+          geoname_id?: number | null
+          import_run_id?: string
+          is_active?: boolean
+          name?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "geonames_admin1_regions_import_run_id_fkey"
+            columns: ["import_run_id"]
+            isOneToOne: false
+            referencedRelation: "geonames_import_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       geonames_import_runs: {
         Row: {
+          admin1_source_sha256: string | null
           archived_city_count: number
+          archived_region_count: number
           completed_at: string | null
           created_at: string
           dataset: string
           id: string
           imported_city_count: number
+          imported_region_count: number
           operator_label: string
           source: string
           source_date: string
@@ -296,12 +349,15 @@ export type Database = {
           source_sha256: string
         }
         Insert: {
+          admin1_source_sha256?: string | null
           archived_city_count?: number
+          archived_region_count?: number
           completed_at?: string | null
           created_at?: string
           dataset: string
           id?: string
           imported_city_count?: number
+          imported_region_count?: number
           operator_label: string
           source: string
           source_date: string
@@ -309,12 +365,15 @@ export type Database = {
           source_sha256: string
         }
         Update: {
+          admin1_source_sha256?: string | null
           archived_city_count?: number
+          archived_region_count?: number
           completed_at?: string | null
           created_at?: string
           dataset?: string
           id?: string
           imported_city_count?: number
+          imported_region_count?: number
           operator_label?: string
           source?: string
           source_date?: string

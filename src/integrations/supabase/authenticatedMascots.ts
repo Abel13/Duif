@@ -32,6 +32,7 @@ export function mapDeliveryRowToDelivery(row: DeliveryRow, mascotPublicId: strin
       longitude: readNumber(row.destination_longitude, 0),
     },
     distanceKm: readNumber(row.distance_km, 0),
+    destinationPlaceLabel: row.destination_place_label ?? undefined,
     id: row.id,
     mascotId: mascotPublicId,
     origin: {
@@ -39,6 +40,7 @@ export function mapDeliveryRowToDelivery(row: DeliveryRow, mascotPublicId: strin
       latitude: readNumber(row.origin_latitude, 0),
       longitude: readNumber(row.origin_longitude, 0),
     },
+    originPlaceLabel: row.origin_place_label ?? undefined,
     outboundArrivalAt: row.outbound_arrival_at,
     outboundStartAt: row.outbound_start_at,
     receiverId: row.receiver_profile_id,

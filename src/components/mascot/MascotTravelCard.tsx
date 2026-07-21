@@ -4,6 +4,7 @@ import {
   formatRemainingTime,
   getDeliveryStatus,
   getTravelProgress,
+  resolveDeliveryPlaceLabel,
   resolveMascotDeliveryAction,
   type Delivery,
 } from "../../game";
@@ -35,14 +36,16 @@ export function MascotTravelCard({ delivery }: MascotTravelCardProps) {
   const remainingTime = formatRemainingTime(delivery);
   const distanceLabel = `${delivery.distanceKm} ${t("units.kilometers")}`;
   const action = resolveMascotDeliveryAction(delivery);
+  const resolvedOriginLabel = resolveDeliveryPlaceLabel(delivery, "origin", t);
+  const resolvedDestinationLabel = resolveDeliveryPlaceLabel(delivery, "destination", t);
 
   return (
     <SketchPanel eyebrow={t("mascot.currentDelivery")} title={t("mascot.route")} variant="map">
       <div className={styles.previewRegion} role="group" aria-label={t("delivery.routePreview")}>
         <p className={styles.previewLabel}>{t("delivery.routePreview")}</p>
         <RoutePreview
-          originLabel={t(delivery.origin.labelKey)}
-          destinationLabel={t(delivery.destination.labelKey)}
+          originLabel={resolvedOriginLabel}
+          destinationLabel={resolvedDestinationLabel}
           progress={progress}
           statusLabel={statusLabel}
           remainingTime={remainingTime}
@@ -52,11 +55,11 @@ export function MascotTravelCard({ delivery }: MascotTravelCardProps) {
       <dl className={styles.details}>
         <div>
           <dt>{t("mascot.origin")}</dt>
-          <dd>{t(delivery.origin.labelKey)}</dd>
+          <dd>{resolvedOriginLabel}</dd>
         </div>
         <div>
           <dt>{t("mascot.destination")}</dt>
-          <dd>{t(delivery.destination.labelKey)}</dd>
+          <dd>{resolvedDestinationLabel}</dd>
         </div>
         <div>
           <dt>{t("mascot.distance")}</dt>

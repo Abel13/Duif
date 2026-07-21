@@ -17,6 +17,7 @@ export {
   mockInventoryItems,
 } from "./inventory";
 export { currentPlayer, getDeliveryById, getMascotById, nuvemDelivery, starterMascots } from "./mockData";
+export { formatPostalLocationLabel, resolveDeliveryPlaceLabel, type PostalLocationParts } from "./locationLabels";
 export { getMockDeliveryHistory } from "./mockRewardCollection";
 export {
   createMapPlaceLabelsGeoJson,

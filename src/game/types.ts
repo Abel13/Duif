@@ -112,6 +112,9 @@ export type Delivery = {
   mascotId: string;
   origin: Coordinates;
   destination: Coordinates;
+  /** Public city-level location snapshots captured when the delivery was sent. */
+  originPlaceLabel?: string;
+  destinationPlaceLabel?: string;
   distanceKm: number;
   animalSpeedKmh: number;
   outboundStartAt: string;

@@ -8,6 +8,7 @@ import {
   getDeliveryStatus,
   getMascotById,
   getTravelProgress,
+  resolveDeliveryPlaceLabel,
   useRewardCollectionData,
   type Delivery,
   type DeliveryReward,
@@ -83,8 +84,8 @@ export function RewardCollectionPage() {
                   label={t("send.selectedMascot")}
                   value={mascot?.name ?? t("common.unavailable")}
                 />
-                <SummaryRow label={t("mascot.origin")} value={t(delivery.origin.labelKey)} />
-                <SummaryRow label={t("mascot.destination")} value={t(delivery.destination.labelKey)} />
+                <SummaryRow label={t("mascot.origin")} value={resolveDeliveryPlaceLabel(delivery, "origin", t)} />
+                <SummaryRow label={t("mascot.destination")} value={resolveDeliveryPlaceLabel(delivery, "destination", t)} />
                 <SummaryRow label={t("mascot.status")} value={t(`delivery.status.${status}`)} />
               </dl>
             </div>
@@ -200,8 +201,8 @@ function TravelingPanel({ delivery }: { delivery: Delivery }) {
     <SketchPanel title={t("mascot.route")} variant="map">
       <div className={styles.routeWrap}>
         <RoutePreview
-          originLabel={t(delivery.origin.labelKey)}
-          destinationLabel={t(delivery.destination.labelKey)}
+          originLabel={resolveDeliveryPlaceLabel(delivery, "origin", t)}
+          destinationLabel={resolveDeliveryPlaceLabel(delivery, "destination", t)}
           progress={getTravelProgress(delivery)}
           statusLabel={t(`delivery.status.${status}`)}
           remainingTime={formatRemainingTime(delivery)}

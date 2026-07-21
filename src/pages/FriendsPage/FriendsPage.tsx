@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { AppBottomNav, PageShell } from "../../components/layout";
 import { ItemCard, SketchPanel, StampButton } from "../../components/ui";
 import { useTranslation } from "../../i18n";
+import { formatPostalLocationLabel } from "../../game";
 import { regeneratePostalFriendCode, requestPostalFriendship, respondToPostalFriendRequest } from "../../integrations/supabase/postalFriends";
 import { usePostalFriends } from "../../integrations/supabase/usePostalFriends";
 import styles from "./FriendsPage.module.css";
@@ -59,7 +60,7 @@ export function FriendsPage() {
       </SketchPanel>}
       {connections.incoming.length > 0 ? <RequestSection busy={busy} onRespond={respond} title={t("friends.requestsReceived")} empty={t("friends.noRequests")} accept={t("friends.acceptRequest")} decline={t("friends.declineRequest")} requests={connections.incoming} /> : null}
       {connections.outgoing.length > 0 ? <RequestSection busy={busy} title={t("friends.requestsSent")} empty={t("friends.noRequests")} requests={connections.outgoing} /> : null}
-      {hasFriends ? <section className={styles.grid} aria-label={t("friends.title")}>{connections.accepted.map((friend) => <article className={styles.friendCard} key={friend.id}><ItemCard label={[friend.city, friend.state, friend.country].filter(Boolean).join(", ")} title={friend.displayName} meta={`${t("friends.friendshipLevel")} ${friend.friendshipLevel}`} /><dl className={styles.stats}><div><dt>{t("friends.exchangeCount")}</dt><dd>{friend.exchangeCount}</dd></div></dl><div className={styles.actions}><Link className={styles.primaryLink} to={`/send?friendId=${friend.profileId}`}>{t("friends.quickSend")}</Link></div></article>)}</section> : null}
+      {hasFriends ? <section className={styles.grid} aria-label={t("friends.title")}>{connections.accepted.map((friend) => <article className={styles.friendCard} key={friend.id}><ItemCard label={formatPostalLocationLabel(friend)} title={friend.displayName} meta={`${t("friends.friendshipLevel")} ${friend.friendshipLevel}`} /><dl className={styles.stats}><div><dt>{t("friends.exchangeCount")}</dt><dd>{friend.exchangeCount}</dd></div></dl><div className={styles.actions}><Link className={styles.primaryLink} to={`/send?friendId=${friend.profileId}`}>{t("friends.quickSend")}</Link></div></article>)}</section> : null}
     </div><AppBottomNav />
   </PageShell>;
 }

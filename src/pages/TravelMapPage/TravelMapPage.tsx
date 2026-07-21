@@ -16,6 +16,7 @@ import {
   getPetMapPosition,
   getRouteRewardDiscoveries,
   getTravelProgress,
+  resolveDeliveryPlaceLabel,
   hasActiveMascotDelivery,
   resolveRequestedTravelMascotId,
   resolvePostalTrafficSelection,
@@ -42,7 +43,6 @@ import { useRewardCollectionData } from "../../game/useRewardCollectionData";
 import { useMascotCatalog } from "../../game/useMascotCatalog";
 import { useAuth } from "../../integrations/supabase/AuthProvider";
 import { isSupabaseCatalogEnabled } from "../../integrations/supabase/config";
-import { getMyNestCityLabel } from "../../integrations/supabase/nest";
 import { usePostalFriends } from "../../integrations/supabase/usePostalFriends";
 import { type TranslationKey, useTranslation } from "../../i18n";
 import styles from "./TravelMapPage.module.css";
@@ -71,7 +71,6 @@ export function TravelMapPage() {
   const [selectedTrafficSnapshot, setSelectedTrafficSnapshot] = useState<PostalTrafficPetSnapshot>();
   const [selectedMascotId, setSelectedMascotId] = useState(defaultMascotId);
   const [tripStatusOpen, setTripStatusOpen] = useState(false);
-  const [homeCityLabel, setHomeCityLabel] = useState<string | null>(null);
   const tripStatusTriggerRef = useRef<HTMLElement | null>(null);
   const highlightTimersRef = useRef<Map<string, number>>(new Map());
   const toastTimerRef = useRef<number>();
@@ -112,22 +111,8 @@ export function TravelMapPage() {
   const delivery = collectionDelivery
     ?? activeDelivery
     ?? createIdleNestDelivery(profile, activeMascot);
-  useEffect(() => {
-    let active = true;
-    if (!profile?.home_city_geoname_id) { setHomeCityLabel(null); return () => { active = false; }; }
-    void getMyNestCityLabel().then((label) => { if (active) setHomeCityLabel(label); }).catch(() => { if (active) setHomeCityLabel(null); });
-    return () => { active = false; };
-  }, [profile?.home_city_geoname_id]);
-  const ownCityLabel = homeCityLabel ?? getNonEmptyLabel(profile?.postal_base_city);
-  const recipientCityLabel = connections.accepted.find(
-    (friend) => friend.profileId === delivery.receiverId,
-  )?.city ?? undefined;
-  const originLabel = delivery.senderId === profile?.id && ownCityLabel
-    ? ownCityLabel
-    : t(delivery.origin.labelKey);
-  const destinationLabel = delivery.id === "idle-nest" && ownCityLabel
-    ? ownCityLabel
-    : getNonEmptyLabel(recipientCityLabel) ?? t(delivery.destination.labelKey);
+  const originLabel = resolveDeliveryPlaceLabel(delivery, "origin", t);
+  const destinationLabel = resolveDeliveryPlaceLabel(delivery, "destination", t);
   const displayMascot = mascots.find((mascot) => mascot.id === delivery.mascotId)
     ?? getMascotById(delivery.mascotId)
     ?? activeMascot
@@ -1249,11 +1234,6 @@ function selectMapMascot(mascots: Mascot[], now: Date) {
   );
 }
 
-function getNonEmptyLabel(value: string | null | undefined) {
-  const label = value?.trim();
-  return label || undefined;
-}
-
 function createIdleNestDelivery(
   profile: { id: string; home_latitude: number; home_longitude: number; home_label_key: string } | null,
   mascot: Mascot | undefined,
@@ -1287,8 +1267,8 @@ function createMapPlaceLabels(
   delivery: Delivery,
   rewards: RouteRewardDiscovery[],
   t: (key: TranslationKey) => string,
-  originLabel = t(delivery.origin.labelKey),
-  destinationLabel = t(delivery.destination.labelKey),
+  originLabel = resolveDeliveryPlaceLabel(delivery, "origin", t),
+  destinationLabel = resolveDeliveryPlaceLabel(delivery, "destination", t),
 ): MapPlaceLabel[] {
   return [
     {

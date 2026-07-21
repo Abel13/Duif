@@ -13,11 +13,13 @@ import {
   estimateMascotSpeedKmh,
   estimateTravelDurationHours,
   formatRemainingTime,
+  formatPostalLocationLabel,
   getCorrespondenceContentCount,
   getFriendCoordinates,
   getFriendLocationLabel,
   getDeliveryStatus,
   getTravelProgress,
+  resolveDeliveryPlaceLabel,
   haversineDistanceKm,
   isCorrespondenceContentValid,
   LETTER_MAX_CHARACTERS,
@@ -288,7 +290,13 @@ export function SendFlowPage() {
             <CorrespondenceComposer
               content={content}
               onChange={setContent}
-              senderLocation={profile?.postal_base_city?.trim() || t("common.unavailable")}
+              senderLocation={profile
+                ? formatPostalLocationLabel({
+                    city: profile.postal_base_city,
+                    state: profile.postal_base_state,
+                    country: profile.postal_base_country,
+                  }) || t("common.unavailable")
+                : t("common.unavailable")}
               senderName={profile?.display_name?.trim() || t("common.unavailable")}
             />
           </SketchPanel>
@@ -662,8 +670,8 @@ function ConfirmationPanel({
     <div className={styles.confirmation}>
       <p className={styles.hint}>{t("send.confirmationDescription")}</p>
       <RoutePreview
-        originLabel={t(delivery.origin.labelKey)}
-        destinationLabel={getFriendLocationLabel(friend.location, t)}
+        originLabel={resolveDeliveryPlaceLabel(delivery, "origin", t)}
+        destinationLabel={resolveDeliveryPlaceLabel(delivery, "destination", t)}
         progress={progress}
         statusLabel={t(`delivery.status.${status}`)}
         remainingTime={remainingTime}
