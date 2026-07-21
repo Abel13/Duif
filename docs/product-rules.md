@@ -271,16 +271,16 @@ starts empty so historical archetype suggestions do not bias players toward repe
 player must confirm a literal mascot name, which remains unchanged when the interface language
 changes. Retrying provisioning cannot grant a second starter mascot.
 
-Mascots level up by completing deliveries.
+Mascots level up by completing deliveries. The approved three-layer progression, formulas,
+curves, skill-XP triggers, and economy guardrails are specified in [XP System](xp-system.md).
 
 Rules:
 
 - Every mascot uses the same base XP formula. Species, archetype, traits, and skills must not
   grant a permanent multiplier to all earned XP.
-- The provisional base formula is `distance + novelty + route bonus`, resolved once for the
-  delivery and shared by every mascot. Its numerical coefficients remain a balancing decision.
-- Because every delivery includes outbound and return, the distance component should consider the
-  total traveled distance: `distanceKm * 2`.
+- Mascot base XP uses the approved formula `15 + totalDistanceKm^0.8 × 6`, resolved once for
+  the delivery and shared by every mascot. Total distance includes outbound and return
+  (`distanceKm * 2`).
 - Novelty rewards meaningful first-time route context, such as a first delivery to a destination;
   it belongs to the delivery and player history, not to a mascot species.
 - Route bonuses are transparent, delivery-context bonuses. Correspondence type may later supply
@@ -292,7 +292,7 @@ Rules:
   same identity can be expressed without changing XP.
 - The player should choose a mascot for affection, visual identity, and travel style—not because
   one species farms XP more efficiently than every other choice.
-- Player XP and mascot XP both exist, but their formulas can differ.
+- Reputação Postal, mascot XP, and skill XP are separate progressions with distinct sources.
 - Mascot XP represents travel practice and route experience.
 - Player XP represents overall account progression.
 - There is no consumable stamina/energy system.
@@ -394,10 +394,8 @@ Possible level unlocks:
 - attribute increases;
 - visual titles or mascot appearance upgrades.
 
-Open balancing question:
-
-- Exact base-XP coefficients, novelty conditions, route-bonus rules, affinity cap, XP curve, and
-  per-level stat growth are not defined yet.
+The approved XP curves and initial affinity values live in the XP System. Per-level stat growth and
+the detailed library of skill triggers remain implementation and balance work.
 
 ## Equipment, Cosmetics, and Cargo Rules
 
@@ -587,8 +585,6 @@ First prototype boundary:
 
 The following topics still need explicit product decisions before deep implementation:
 
-- exact mascot XP curve;
-- exact player XP formula;
 - level unlock cadence;
 - reward formulas and rarity tables;
 - mascot modifier coefficients, caps, long-route thresholds, and skill-level curves;

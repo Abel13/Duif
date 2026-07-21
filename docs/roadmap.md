@@ -1984,27 +1984,27 @@ Success criteria:
 - only the request recipient can accept or decline;
 - a first accepted friend can be selected in the existing real send flow.
 
-## Milestone 49: Authoritative Mascot XP and Situational Affinity
+## Milestone 49: Authoritative Postal Progression and Situational Affinity
 
 Status: Planned.
 
 Goal:
 
-Turn the displayed mascot XP fields into an authoritative, balanced progression system without
-creating a universally optimal species for leveling.
+Implement the approved three-layer progression — Reputação Postal, mascot flight XP, and
+conditional skill XP — without creating a universally optimal species for leveling. The product
+definition is in [XP System](xp-system.md).
 
 Includes:
 
-- one versioned, server-resolved base XP formula shared by every mascot:
-  `distance + novelty + route bonus`;
+- one versioned, server-resolved mascot base formula shared by every mascot:
+  `15 + totalDistanceKm^0.8 × 6`;
 - total delivery distance includes outbound and return travel;
-- transparent, snapshotted novelty and route-context inputs so collection retries cannot reroll or
-  duplicate XP;
-- atomic XP award during authoritative delivery collection, with idempotent replay returning the
-  same result;
-- level thresholds and level-up resolution owned by the backend;
-- delivery and collection UI that explains the XP awarded without promising a rare reward;
-- a deliberately small, explicit cap for any future situational affinity;
+- transparent, snapshotted novelty, affinity, action, and skill-trigger inputs;
+- atomic, idempotent award of account, mascot, and eligible skill XP during collection;
+- backend-owned level thresholds for Reputação Postal, mascot level, and skills capped at level
+  10 for the MVP;
+- collection UI that separates the three XP results and explains any contextual multiplier;
+- the approved `×1.10` value for each situational mascot affinity, with explicit coexistence rules;
 - affinity conditions tied to route context, such as urban, long-distance, night, coastal, or
   social correspondence, rather than a permanent species multiplier;
 - the option for an affinity to affect discovery or travel behavior instead of XP when that better
@@ -2015,13 +2015,15 @@ Does not include:
 - a permanent `+XP%` bonus by species or archetype;
 - paid XP, Crystal-to-XP conversion, stamina, or an energy meter;
 - equipment, fuel, or cosmetics that grant universal XP farming advantages;
-- skill-tree redesign or new mascot archetypes.
+- a redesign of existing skill effects or new mascot archetypes.
 
 Success criteria:
 
-- equivalent routes produce the same base XP regardless of mascot species;
+- equivalent routes produce the same base mascot XP regardless of mascot species;
+- Reputação Postal rewards relevant actions and milestones instead of only distance;
+- skills advance only from their related trigger, never automatically on every trip;
 - route novelty and affinity are auditable, capped, and shown as contextual effects;
-- concurrent and repeated collection cannot award XP twice;
+- concurrent and repeated collection cannot award any XP twice;
 - the choice of mascot remains expressive and strategic without making one mascot objectively
   best for progression.
 
