@@ -101,7 +101,10 @@ function ProtectedOnboardingRoute() {
   if (journeyState === "anonymous" || journeyState === "verificationPending") {
     return <Navigate replace to="/auth?next=%2Fonboarding" />;
   }
-  if ((journeyState !== "onboardingRequired" && journeyState !== "tutorialActive") || !onboarding) {
+  if ((journeyState === "onboardingRequired" || journeyState === "tutorialActive") && !onboarding) {
+    return <FoundationStatusPage state="loading" />;
+  }
+  if (journeyState !== "onboardingRequired" && journeyState !== "tutorialActive") {
     return <FoundationStatusPage state="onboardingPending" />;
   }
   return <OnboardingPage />;

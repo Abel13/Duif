@@ -6,6 +6,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 
@@ -96,6 +97,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<AuthProfile | null>(null);
   const [onboarding, setOnboarding] = useState<AccountOnboarding | null>(null);
   const [session, setSession] = useState<Session | null>(null);
+  const sessionLoadIdRef = useRef(0);
   const [isPasswordRecovery, setIsPasswordRecovery] = useState(false);
   const [pendingVerificationEmail, setPendingVerificationEmail] = useState<string | null>(() =>
     typeof window === "undefined" ? null : window.sessionStorage.getItem(pendingEmailStorageKey),
@@ -112,20 +114,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     let isMounted = true;
     async function applySession(nextSession: Session | null) {
       if (!isMounted) return;
-      setSession(nextSession);
-      if (!nextSession) {
-        setProfile(null);
-        setOnboarding(null);
-        return;
+      const loadId = ++sessionLoadIdRef.current;
+      setIsLoading(true);
+      try {
+        setSession(nextSession);
+        if (!nextSession) {
+          setProfile(null);
+          setOnboarding(null);
+          return;
+        }
+        setPendingVerificationEmail(null);
+        window.sessionStorage.removeItem(pendingEmailStorageKey);
+        const [nextProfile, nextOnboarding] = await Promise.all([
+          fetchProfile(nextSession.user.id),
+          beginOrResumeOnboarding(),
+        ]);
+        if (!isMounted || loadId !== sessionLoadIdRef.current) return;
+        setProfile(nextProfile);
+        setOnboarding(nextOnboarding);
+      } finally {
+        if (isMounted && loadId === sessionLoadIdRef.current) setIsLoading(false);
       }
-      setPendingVerificationEmail(null);
-      window.sessionStorage.removeItem(pendingEmailStorageKey);
-      const [nextProfile, nextOnboarding] = await Promise.all([
-        fetchProfile(nextSession.user.id),
-        beginOrResumeOnboarding(),
-      ]);
-      setProfile(nextProfile);
-      setOnboarding(nextOnboarding);
     }
 
     supabase.auth.getSession()
@@ -135,10 +144,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         await applySession(data.session);
       })
       .catch(() => {
-        if (isMounted) setIsServiceAvailable(false);
-      })
-      .finally(() => {
-        if (isMounted) setIsLoading(false);
+        if (isMounted) {
+          setIsServiceAvailable(false);
+          setIsLoading(false);
+        }
       });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, nextSession) => {
