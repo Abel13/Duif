@@ -48,6 +48,8 @@ The initial schema lives in `supabase/migrations/20260709200000_initial_duif_sch
 - `inventory_items`: player-owned inventory item state.
 - `geonames_cities`: private, imported global-city catalog used only to center the nest-selection
   map; clients access it solely through an authenticated RPC.
+- `geonames_admin1_regions`: private GeoNames state/province catalog that resolves each city's
+  administrative code into a player-facing regional name.
 - `geonames_import_runs`: operational records for versioned GeoNames imports.
 
 ## Enums

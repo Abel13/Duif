@@ -1,6 +1,6 @@
 # GeoNames city catalog
 
-The private nest search uses the GeoNames `cities15000` dump. DUIF imports this catalog into
+The private nest search uses the GeoNames `cities15000` and `admin1CodesASCII` dumps. DUIF imports these catalogs into
 Supabase; the game never requests GeoNames at runtime. The map remains an OpenStreetMap visual
 layer, and neither source receives the player's chosen nest coordinate.
 
@@ -12,10 +12,12 @@ Run the import after applying migrations, initially and every six months:
 scripts/import-geonames-cities.sh --db-url "$DATABASE_URL" --operator "your-name"
 ```
 
-The command downloads and validates `cities15000.zip`, records its SHA-256 and source date, upserts
-cities by GeoNames ID, and archives cities absent from the new dump. It does not record player
-search terms. It uses a local Supabase database container automatically when `psql` is unavailable;
-remote imports require a privileged database URL and a local `psql` client.
+The command downloads and validates both datasets, records their SHA-256 values and source date,
+upserts cities and administrative regions by GeoNames ID/code, and archives records absent from the
+new dump. It also normalizes existing player-facing region labels and delivery snapshots only when
+they still match the current profile location. It does not record player search terms. It uses a
+local Supabase database container automatically when `psql` is unavailable; remote imports require
+a privileged database URL and a local `psql` client.
 
 ## Attribution
 
