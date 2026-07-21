@@ -76,6 +76,7 @@ Rules:
 - Keep components small and focused.
 - Keep game logic outside UI components.
 - Put reusable UI components in `src/components/ui`.
+- Follow atomic design for shared UI: when two or more surfaces perform the same visual and behavioral function, extract a focused reusable component at the appropriate UI layer instead of duplicating markup and styles in pages.
 - Put mascot-specific components in `src/components/mascot`.
 - Put game types and mock data in `src/game`.
 - Put page-level components in `src/pages`.
