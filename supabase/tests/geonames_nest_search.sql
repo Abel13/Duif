@@ -24,6 +24,12 @@ insert into public.geonames_cities(
   (990000002, 'São Carlos Test', 'Sao Carlos Test', '', 'BR', '27', -22.0174, -47.8909, 254857, 'sao carlos test sao carlos test', '00000000-0000-4000-8000-000000009501'),
   (990000003, 'Munich Test', 'Munich Test', 'Muenchen Test,München Test', 'DE', '02', 48.1374, 11.5755, 1487708, 'munich test munich test muenchen test munchen test', '00000000-0000-4000-8000-000000009501');
 
+insert into public.geonames_admin1_regions(
+  country_code, admin1_code, name, ascii_name, import_run_id
+) values
+  ('BR', '27', 'São Paulo', 'Sao Paulo', '00000000-0000-4000-8000-000000009501'),
+  ('DE', '02', 'Bavaria', 'Bavaria', '00000000-0000-4000-8000-000000009501');
+
 set local role authenticated;
 select set_config('request.jwt.claim.sub', '10000000-0000-4000-8000-000000009501', true);
 
@@ -33,7 +39,7 @@ declare
   request_number integer;
 begin
   select * into strict search_result from public.search_nest_cities('Sao Paulo Test') limit 1;
-  if search_result.id <> '990000001' or search_result.label <> 'São Paulo Test · BR' then
+  if search_result.id <> '990000001' or search_result.label <> 'São Paulo Test, São Paulo • BR' then
     raise exception 'GeoNames search did not normalize accents or rank population';
   end if;
 

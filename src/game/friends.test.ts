@@ -37,7 +37,7 @@ describe("friend helpers", () => {
         },
         (key) => key,
       ),
-    ).toBe("Lisboa, Lisboa, Portugal");
+    ).toBe("Lisboa, Lisboa • Portugal");
   });
 
   it("returns empty values for an invalid friend id", () => {
