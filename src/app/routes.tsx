@@ -30,6 +30,7 @@ export function AppRoutes() {
       <Route path="/onboarding/tutorial" element={<ProtectedTutorialRoute />} />
       <Route path="/onboarding/nest" element={<ProtectedNestRoute />} />
       <Route path="/map" element={<ProtectedGameRoute><TravelMapPage/></ProtectedGameRoute>} />
+      <Route path="/mascots" element={<ProtectedGameRoute><MascotDetailPage/></ProtectedGameRoute>} />
       <Route path="/mascots/:mascotId" element={<ProtectedGameRoute><MascotDetailPage/></ProtectedGameRoute>} />
       <Route path="/inventory" element={<ProtectedGameRoute><InventoryAlbumPage/></ProtectedGameRoute>} />
       <Route path="/friends" element={<ProtectedGameRoute><FriendsPage/></ProtectedGameRoute>} />

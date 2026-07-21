@@ -39,7 +39,6 @@ import { createAuthenticatedDeliveryFromSelection } from "../../integrations/sup
 import { useAuth } from "../../integrations/supabase/AuthProvider";
 import styles from "./SendFlowPage.module.css";
 
-const defaultMascotId = "mascot-nuvem";
 const isMvpCorrespondence = (option: CorrespondenceOption) => option.type === "letter";
 
 type ConfirmedSend = {
@@ -197,7 +196,7 @@ export function SendFlowPage() {
     ? `/friends/${selectedFriend.id}`
     : selectedMascot
       ? `/mascots/${selectedMascot.id}`
-      : `/mascots/${defaultMascotId}`;
+      : "/mascots";
 
   return (
     <PageShell hasTopBar>
@@ -750,7 +749,7 @@ function getMascotRouteEffect(
 function getInitialMascotId(mascots: Mascot[], requestedMascotId: string | null) {
   return mascots.some((mascot) => mascot.id === requestedMascotId)
     ? requestedMascotId ?? mascots[0]?.id
-    : (mascots[0]?.id ?? defaultMascotId);
+    : mascots[0]?.id;
 }
 
 function getInitialFriendId(friends: FriendProfile[], requestedFriendId: string | null) {

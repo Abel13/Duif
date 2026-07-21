@@ -19,7 +19,7 @@ export function NotFoundPage() {
             </div>
             <p className={styles.description}>{t("notFound.description")}</p>
             <p className={styles.path}>{location.pathname}</p>
-            <Link className={styles.action} to="/mascots/mascot-nuvem">
+            <Link className={styles.action} to="/mascots">
               {t("notFound.backToNest")}
             </Link>
           </div>

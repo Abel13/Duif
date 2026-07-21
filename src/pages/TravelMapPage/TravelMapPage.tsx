@@ -16,6 +16,8 @@ import {
   getPetMapPosition,
   getRouteRewardDiscoveries,
   getTravelProgress,
+  hasActiveMascotDelivery,
+  resolveRequestedTravelMascotId,
   resolvePostalTrafficSelection,
   resolveActiveOfficialAssetPath,
   nuvemDelivery,
@@ -73,6 +75,7 @@ export function TravelMapPage() {
   const tripStatusTriggerRef = useRef<HTMLElement | null>(null);
   const highlightTimersRef = useRef<Map<string, number>>(new Map());
   const toastTimerRef = useRef<number>();
+  const handledMascotQueryRef = useRef<string | null>(null);
   const motionPreference = useMotionPreference();
   const {
     isLoading: isTrafficLoading,
@@ -81,7 +84,7 @@ export function TravelMapPage() {
   } = usePostalTraffic();
   const activeMascot = useMemo(() => {
     const selectedMascot = mascots.find((mascot) => mascot.id === selectedMascotId);
-    return selectedMascot && hasActiveMapDelivery(selectedMascot, now)
+    return selectedMascot && hasActiveMascotDelivery(selectedMascot, now)
       ? selectedMascot
       : selectMapMascot(mascots, now);
   }, [mascots, now, selectedMascotId]);
@@ -233,6 +236,22 @@ export function TravelMapPage() {
   }, [motionPreference]);
 
   useEffect(() => {
+    if (isLoading) return;
+    const requestedMascotId = searchParams.get("mascotId");
+    if (handledMascotQueryRef.current === requestedMascotId) return;
+    handledMascotQueryRef.current = requestedMascotId;
+
+    const mascotId = resolveRequestedTravelMascotId(mascots, requestedMascotId, now);
+    if (!mascotId) return;
+
+    setSelectedMascotId(mascotId);
+    setFollowMascot(true);
+    setSelection(null);
+    setSelectedTrafficSnapshot(undefined);
+    setFocusTarget({ kind: "mascot" });
+  }, [isLoading, mascots, now, searchParams]);
+
+  useEffect(() => {
     if (mascots.some((mascot) => mascot.id === selectedMascotId)) return;
     const fallbackMascot = selectMapMascot(mascots, now);
     if (fallbackMascot) setSelectedMascotId(fallbackMascot.id);
@@ -240,13 +259,14 @@ export function TravelMapPage() {
 
   useEffect(() => {
     const selectedMascot = mascots.find((mascot) => mascot.id === selectedMascotId);
-    if (selectedMascot && hasActiveMapDelivery(selectedMascot, now)) return;
+    if (selectedMascot && hasActiveMascotDelivery(selectedMascot, now)) return;
+    if (resolveRequestedTravelMascotId(mascots, searchParams.get("mascotId"), now)) return;
     const travelingMascot = selectMapMascot(mascots, now);
     if (travelingMascot) {
       setSelectedMascotId(travelingMascot.id);
       setFocusTarget({ kind: "overview" });
     }
-  }, [mascots, now, selectedMascotId]);
+  }, [mascots, now, searchParams, selectedMascotId]);
 
   useEffect(() => {
     if (trafficSelection.rangeState === "visible" && trafficSelection.pet) {
@@ -355,6 +375,7 @@ export function TravelMapPage() {
     if (!mascot) return;
     const nextSearchParams = new URLSearchParams(searchParams);
     nextSearchParams.delete("deliveryId");
+    nextSearchParams.set("mascotId", mascotId);
     setSearchParams(nextSearchParams, { replace: true });
     setSelectedMascotId(mascotId);
     setFollowMascot(true);
@@ -1221,16 +1242,9 @@ function SummaryRow({ label, value }: { label: string; value: string }) {
   );
 }
 
-function hasActiveMapDelivery(mascot: Mascot, now: Date) {
-  if (!mascot.currentDelivery) return false;
-  return !["returned", "completed"].includes(
-    getDeliveryStatus(mascot.currentDelivery, now),
-  );
-}
-
 function selectMapMascot(mascots: Mascot[], now: Date) {
   return (
-    mascots.find((mascot) => hasActiveMapDelivery(mascot, now)) ??
+    mascots.find((mascot) => hasActiveMascotDelivery(mascot, now)) ??
     mascots.find((mascot) => mascot.id === defaultMascotId)
   );
 }

@@ -1,0 +1,55 @@
+.navigator {
+  display: grid;
+  grid-template-columns: minmax(2.75rem, 3.5rem) minmax(0, 1fr) minmax(2.75rem, 3.5rem);
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.arrow {
+  display: grid;
+  width: 100%;
+  aspect-ratio: 1;
+  place-items: center;
+  padding: 0;
+  border: 2px solid rgba(46, 42, 36, 0.58);
+  border-radius: 0.3rem 0.52rem 0.28rem 0.44rem;
+  color: var(--color-ink);
+  background: var(--color-postal-label);
+  box-shadow: 0.12rem 0.16rem 0 rgba(46, 42, 36, 0.16);
+  cursor: pointer;
+  transition: background 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.arrow:hover:not(:disabled) {
+  background: var(--color-paper-dark);
+  transform: translateY(-1px);
+}
+
+.arrow:active:not(:disabled) {
+  box-shadow: 0.04rem 0.06rem 0 rgba(46, 42, 36, 0.16);
+  transform: translateY(1px);
+}
+
+.arrow:focus-visible {
+  outline: 3px solid var(--color-postal-blue);
+  outline-offset: 3px;
+}
+
+.arrow:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.arrow span {
+  width: 0.68rem;
+  height: 0.68rem;
+  border-top: 3px solid currentColor;
+  border-right: 3px solid currentColor;
+}
+
+.previousArrow { transform: rotate(-135deg) translate(-0.06rem, -0.06rem); }
+.nextArrow { transform: rotate(45deg) translate(-0.06rem, -0.06rem); }
+
+@media (prefers-reduced-motion: reduce) {
+  .arrow { transition: none; }
+}

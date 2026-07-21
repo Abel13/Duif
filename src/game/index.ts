@@ -78,6 +78,19 @@ export {
 } from "./postalTraffic";
 export { createMockRewardFromDelivery, initialMockInventory } from "./rewards";
 export {
+  nestMascotStorageKey,
+  getNestMascotNeighbors,
+  readStoredNestMascotId,
+  resolveNestMascotId,
+  writeStoredNestMascotId,
+} from "./mascotNavigation";
+export {
+  hasActiveMascotDelivery,
+  resolveMascotDeliveryAction,
+  resolveRequestedTravelMascotId,
+  type MascotDeliveryAction,
+} from "./mascotDeliveryAction";
+export {
   filterShopItemsByCategory,
   mockShopCatalog,
   shopCategories,

@@ -19,7 +19,7 @@ export function AppBottomNav() {
       active: isNestActive,
       icon: assetKeys.navigation.nest,
       label: t("navigation.nest"),
-      onClick: () => navigate("/mascots/mascot-nuvem"),
+      onClick: () => navigate("/mascots"),
     },
     {
       active: isInventoryActive,

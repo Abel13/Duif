@@ -15,8 +15,6 @@ import {
 import { useTranslation, type TranslationKey } from "../../i18n";
 import styles from "./RewardCollectionPage.module.css";
 
-const defaultMascotId = "mascot-nuvem";
-
 export function RewardCollectionPage() {
   const { t } = useTranslation();
   const { deliveryId } = useParams();
@@ -36,7 +34,7 @@ export function RewardCollectionPage() {
   if (isLoading) {
     return (
       <PageShell className={styles.page} hasTopBar>
-        <MobileTopBar backLabelKey="navigation.backToNest" backTo={`/mascots/${defaultMascotId}`} title={t("rewards.title")} />
+        <MobileTopBar backLabelKey="navigation.backToNest" backTo="/mascots" title={t("rewards.title")} />
         <div className={styles.shell}>
           <SketchPanel eyebrow={t("rewards.eyebrow")} title={t("rewards.title")}>
             <p className={styles.subtitle}>{t("rewards.loading")}</p>
@@ -47,7 +45,7 @@ export function RewardCollectionPage() {
   }
 
   if (!delivery) {
-    return <Navigate replace to={`/mascots/${defaultMascotId}`} />;
+    return <Navigate replace to="/mascots" />;
   }
 
   const mascot = getMascotById(delivery.mascotId);

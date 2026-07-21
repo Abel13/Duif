@@ -1,9 +1,10 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import {
   formatRemainingTime,
   getDeliveryStatus,
   getTravelProgress,
+  resolveMascotDeliveryAction,
   type Delivery,
 } from "../../game";
 import { useTranslation } from "../../i18n";
@@ -17,6 +18,7 @@ type MascotTravelCardProps = {
 
 export function MascotTravelCard({ delivery }: MascotTravelCardProps) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   if (!delivery) {
     return (
@@ -32,6 +34,7 @@ export function MascotTravelCard({ delivery }: MascotTravelCardProps) {
   const statusLabel = t(`delivery.status.${calculatedStatus}`);
   const remainingTime = formatRemainingTime(delivery);
   const distanceLabel = `${delivery.distanceKm} ${t("units.kilometers")}`;
+  const action = resolveMascotDeliveryAction(delivery);
 
   return (
     <SketchPanel eyebrow={t("mascot.currentDelivery")} title={t("mascot.route")} variant="map">
@@ -72,13 +75,15 @@ export function MascotTravelCard({ delivery }: MascotTravelCardProps) {
           <dd>{remainingTime}</dd>
         </div>
       </dl>
-      {calculatedStatus === "returned" ? (
+      {action === "collect" ? (
         <Link className={styles.rewardLink} to={`/rewards/${delivery.id}`}>
           {t("rewards.collectButton")}
         </Link>
-      ) : (
-        <StampButton>{t("mascot.viewTrip")}</StampButton>
-      )}
+      ) : action === "viewTrip" ? (
+        <StampButton onClick={() => navigate(`/map?mascotId=${delivery.mascotId}`)}>
+          {t("mascot.viewTrip")}
+        </StampButton>
+      ) : null}
     </SketchPanel>
   );
 }

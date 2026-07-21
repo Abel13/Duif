@@ -12,10 +12,6 @@
   min-width: 0;
 }
 
-.sidebar {
-  min-width: 0;
-}
-
 .dataNotice {
   width: fit-content;
   margin: var(--space-3) 0 0;
@@ -116,18 +112,6 @@
   .mainGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: start;
-  }
-}
-
-@media (min-width: 960px) {
-  .shell {
-    grid-template-columns: minmax(14rem, 16rem) minmax(0, 1fr);
-    align-items: start;
-  }
-
-  .sidebar {
-    position: sticky;
-    top: var(--space-5);
   }
 }
 
