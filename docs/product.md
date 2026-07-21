@@ -294,6 +294,11 @@ Possible rewards:
 
 Rewards can be generated from a deterministic seed based on the delivery, animal, and event context.
 
+Mascot progression uses the same base XP formula for every species: distance, novelty, and a
+route-context bonus. Species identity should shape travel style, situational affinities, and
+discoveries—not provide a permanent XP-farming advantage. Exact coefficients and level curves are
+defined in `product-rules.md` and remain deferred until authoritative progression is implemented.
+
 The first version can use simple random rewards.
 
 ## Inventory

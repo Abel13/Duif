@@ -275,10 +275,23 @@ Mascots level up by completing deliveries.
 
 Rules:
 
-- Mascot XP comes primarily from kilometers traveled.
-- Because every delivery includes outbound and return, XP should consider total distance
-  traveled: `distanceKm * 2`.
-- Delivery type may later apply modifiers.
+- Every mascot uses the same base XP formula. Species, archetype, traits, and skills must not
+  grant a permanent multiplier to all earned XP.
+- The provisional base formula is `distance + novelty + route bonus`, resolved once for the
+  delivery and shared by every mascot. Its numerical coefficients remain a balancing decision.
+- Because every delivery includes outbound and return, the distance component should consider the
+  total traveled distance: `distanceKm * 2`.
+- Novelty rewards meaningful first-time route context, such as a first delivery to a destination;
+  it belongs to the delivery and player history, not to a mascot species.
+- Route bonuses are transparent, delivery-context bonuses. Correspondence type may later supply
+  one, but it must not turn a species into the universally fastest way to level.
+- Situational affinity may apply a small, explicit bonus only when its route condition is met,
+  such as an urban, long-distance, night, or coastal route. It is never a permanent XP bonus and
+  must remain capped conservatively.
+- Affinity may instead affect travel style or reward discovery. This is preferred whenever the
+  same identity can be expressed without changing XP.
+- The player should choose a mascot for affection, visual identity, and travel style—not because
+  one species farms XP more efficiently than every other choice.
 - Player XP and mascot XP both exist, but their formulas can differ.
 - Mascot XP represents travel practice and route experience.
 - Player XP represents overall account progression.
@@ -314,6 +327,16 @@ Starter mascot identities:
   `10%`, without moving outbound discovery thresholds.
 - Pipoca is the exploration specialist. `Achador Curioso` adds `15` percentage points to
   the route-discovery corridor.
+
+Future species direction:
+
+- A balanced carrier can offer predictable travel without an XP advantage.
+- A fast carrier can complete more deliveries in the same real time, but earns the same base XP
+  for an equivalent route.
+- A night-oriented carrier can receive a small night-route affinity or a night discovery effect.
+- A coastal carrier can receive a small coastal-route affinity or coastal discovery effect.
+- A social carrier can influence correspondence- or friendship-related discoveries rather than
+  receiving a universal XP multiplier.
 
 Skill direction:
 
@@ -365,7 +388,8 @@ Possible level unlocks:
 
 Open balancing question:
 
-- Exact XP curve and per-level stat growth are not defined yet.
+- Exact base-XP coefficients, novelty conditions, route-bonus rules, affinity cap, XP curve, and
+  per-level stat growth are not defined yet.
 
 ## Equipment, Cosmetics, and Cargo Rules
 

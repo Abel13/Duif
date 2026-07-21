@@ -1984,6 +1984,47 @@ Success criteria:
 - only the request recipient can accept or decline;
 - a first accepted friend can be selected in the existing real send flow.
 
+## Milestone 49: Authoritative Mascot XP and Situational Affinity
+
+Status: Planned.
+
+Goal:
+
+Turn the displayed mascot XP fields into an authoritative, balanced progression system without
+creating a universally optimal species for leveling.
+
+Includes:
+
+- one versioned, server-resolved base XP formula shared by every mascot:
+  `distance + novelty + route bonus`;
+- total delivery distance includes outbound and return travel;
+- transparent, snapshotted novelty and route-context inputs so collection retries cannot reroll or
+  duplicate XP;
+- atomic XP award during authoritative delivery collection, with idempotent replay returning the
+  same result;
+- level thresholds and level-up resolution owned by the backend;
+- delivery and collection UI that explains the XP awarded without promising a rare reward;
+- a deliberately small, explicit cap for any future situational affinity;
+- affinity conditions tied to route context, such as urban, long-distance, night, coastal, or
+  social correspondence, rather than a permanent species multiplier;
+- the option for an affinity to affect discovery or travel behavior instead of XP when that better
+  preserves equal progression.
+
+Does not include:
+
+- a permanent `+XP%` bonus by species or archetype;
+- paid XP, Crystal-to-XP conversion, stamina, or an energy meter;
+- equipment, fuel, or cosmetics that grant universal XP farming advantages;
+- skill-tree redesign or new mascot archetypes.
+
+Success criteria:
+
+- equivalent routes produce the same base XP regardless of mascot species;
+- route novelty and affinity are auditable, capped, and shown as contextual effects;
+- concurrent and repeated collection cannot award XP twice;
+- the choice of mascot remains expressive and strategic without making one mascot objectively
+  best for progression.
+
 ## Historical First Execution Order
 
 The following order records how the initial prototype was bootstrapped. It is complete and must
