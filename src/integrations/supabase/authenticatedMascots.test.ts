@@ -142,6 +142,32 @@ describe("authenticated mascot mappers", () => {
     expect(delivery.travelModifiers?.outboundSpeedMultiplier).toBe(1);
   });
 
+  it("accepts both legacy and current travel modifier snapshots", () => {
+    const currentDelivery = mapDeliveryRowToDelivery({
+      ...nuvemDeliveryRow,
+      travel_modifiers: {
+        version: 2, preparationMinutes: 5, outboundSpeedMultiplier: 1,
+        returnSpeedMultiplier: 1, discoveryRadiusMultiplier: 1,
+        rarityWeightMultiplier: 1, longRouteConsistency: 1, isLongRoute: false,
+      },
+    }, "mascot-nuvem");
+
+    expect(currentDelivery.travelModifiers).toMatchObject({ version: 2, preparationMinutes: 5 });
+  });
+
+  it("rejects an unknown travel modifier version instead of guessing its semantics", () => {
+    const delivery = mapDeliveryRowToDelivery({
+      ...nuvemDeliveryRow,
+      travel_modifiers: {
+        version: 3, preparationMinutes: 1, outboundSpeedMultiplier: 1,
+        returnSpeedMultiplier: 1, discoveryRadiusMultiplier: 1,
+        rarityWeightMultiplier: 1, longRouteConsistency: 1, isLongRoute: false,
+      },
+    }, "mascot-nuvem");
+
+    expect(delivery.travelModifiers).toBeUndefined();
+  });
+
   it("selects the latest non-completed delivery as current delivery", () => {
     const completedDelivery = {
       ...nuvemDeliveryRow,

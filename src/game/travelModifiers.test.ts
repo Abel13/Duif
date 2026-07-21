@@ -3,8 +3,10 @@ import { describe, expect, it } from "vitest";
 import { starterMascots } from "./mockData";
 import type { Mascot } from "./types";
 import {
+  BASE_PREPARATION_MINUTES,
   deriveMascotTravelModifiers,
   getDeliveryTravelModifiers,
+  MINIMUM_PREPARATION_MINUTES,
   NEUTRAL_TRAVEL_MODIFIERS,
 } from "./travelModifiers";
 
@@ -23,7 +25,8 @@ describe("deriveMascotTravelModifiers", () => {
     const modifiers = deriveMascotTravelModifiers(getMascot("mascot-trovao"), { distanceKm: 499.99 });
 
     expect(modifiers.isLongRoute).toBe(false);
-    expect(modifiers.preparationMinutes).toBe(25.5);
+    expect(modifiers.version).toBe(2);
+    expect(modifiers.preparationMinutes).toBe(4.25);
     expect(modifiers.returnSpeedMultiplier).toBe(1.1);
     expect(modifiers.discoveryRadiusMultiplier).toBe(1.12);
   });
@@ -56,6 +59,32 @@ describe("deriveMascotTravelModifiers", () => {
     expect(modifiers.outboundSpeedMultiplier).toBeGreaterThanOrEqual(0.85);
   });
 
+  it("keeps quick dispatch at five percent per level and reserves the three-minute floor", () => {
+    const trovao = getMascot("mascot-trovao");
+
+    expect(BASE_PREPARATION_MINUTES).toBe(5);
+    expect(MINIMUM_PREPARATION_MINUTES).toBe(3);
+
+    for (const [level, minutes] of [[0, 5], [1, 4.75], [2, 4.5], [3, 4.25], [4, 4]] as const) {
+      const mascot = {
+        ...trovao,
+        skills: trovao.skills.map((skill) => skill.id === "skill-trovao-quick-dispatch"
+          ? { ...skill, level }
+          : skill),
+      };
+
+      expect(deriveMascotTravelModifiers(mascot, { distanceKm: 100 }).preparationMinutes).toBe(minutes);
+    }
+
+    const maximumQuickDispatch = {
+      ...trovao,
+      skills: trovao.skills.map((skill) => skill.id === "skill-trovao-quick-dispatch"
+        ? { ...skill, level: 10 }
+        : skill),
+    };
+    expect(deriveMascotTravelModifiers(maximumQuickDispatch, { distanceKm: 100 }).preparationMinutes).toBe(4);
+  });
+
   it("returns a neutral fallback for deliveries created before snapshots", () => {
     expect(getDeliveryTravelModifiers(undefined)).toBe(NEUTRAL_TRAVEL_MODIFIERS);
   });
@@ -67,7 +96,7 @@ describe("deriveMascotTravelModifiers", () => {
     mascot.attributes.orientation = 0;
     mascot.skills[0]!.level = 0;
 
-    expect(snapshot.preparationMinutes).toBe(25.5);
+    expect(snapshot.preparationMinutes).toBe(4.25);
     expect(snapshot.discoveryRadiusMultiplier).toBe(1.12);
   });
 });
