@@ -274,7 +274,10 @@ export type TranslationDictionary = {
     composeTitle: string;
     contentPreview: string;
     contentInvalid: string;
+    availableLater: string;
     characterCount: string;
+    previewLetter: string;
+    closeLetterPreview: string;
     selectedStickers: string;
     letterPlaceholder: string;
     postcardPlaceholder: string;
@@ -1005,7 +1008,10 @@ export type TranslationKey =
   | "send.composeTitle"
   | "send.contentPreview"
   | "send.contentInvalid"
+  | "send.availableLater"
   | "send.characterCount"
+  | "send.previewLetter"
+  | "send.closeLetterPreview"
   | "send.selectedStickers"
   | "send.letterPlaceholder"
   | "send.postcardPlaceholder"

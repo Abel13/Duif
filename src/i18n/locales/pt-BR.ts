@@ -422,7 +422,10 @@ export const ptBR = {
     composeTitle: "Compor envio",
     contentPreview: "Prévia do conteúdo",
     contentInvalid: "Revise o conteúdo antes de despachar.",
+    availableLater: "Disponível em breve",
     characterCount: "Caracteres",
+    previewLetter: "Ver carta completa",
+    closeLetterPreview: "Fechar prévia",
     selectedStickers: "Adesivos selecionados",
     letterPlaceholder:
       "Escreva uma carta curta para atravessar a rota com calma.",

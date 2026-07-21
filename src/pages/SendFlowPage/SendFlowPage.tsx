@@ -1,5 +1,5 @@
 import { Link, useSearchParams } from "react-router-dom";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 
 import { MobileTopBar, PageShell } from "../../components/layout";
@@ -36,9 +36,11 @@ import {
 import { useSendFlowData } from "../../game/useSendFlowData";
 import { useTranslation } from "../../i18n";
 import { createAuthenticatedDeliveryFromSelection } from "../../integrations/supabase/authenticatedSendFlow";
+import { useAuth } from "../../integrations/supabase/AuthProvider";
 import styles from "./SendFlowPage.module.css";
 
 const defaultMascotId = "mascot-nuvem";
+const isMvpCorrespondence = (option: CorrespondenceOption) => option.type === "letter";
 
 type ConfirmedSend = {
   delivery: Delivery;
@@ -50,6 +52,7 @@ type ConfirmedSend = {
 
 export function SendFlowPage() {
   const { t } = useTranslation();
+  const { profile } = useAuth();
   const [searchParams] = useSearchParams();
   const requestedMascotId = searchParams.get("mascotId");
   const requestedFriendId = searchParams.get("friendId");
@@ -64,17 +67,17 @@ export function SendFlowPage() {
   const [selection, setSelection] = useState<SendFlowSelection>({
     friendId: initialFriendId,
     mascotId: initialMascotId,
-    correspondenceId: availableCorrespondence[0]?.id,
+    correspondenceId: availableCorrespondence.find(isMvpCorrespondence)?.id,
   });
   const [content, setContent] = useState<CorrespondenceContent>(() =>
-    createDefaultCorrespondenceContent(availableCorrespondence[0]?.type ?? "letter"),
+    createDefaultCorrespondenceContent(availableCorrespondence.find(isMvpCorrespondence)?.type ?? "letter"),
   );
   const [confirmedSend, setConfirmedSend] = useState<ConfirmedSend | undefined>();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasSubmitError, setHasSubmitError] = useState(false);
 
   useEffect(() => {
-    const nextCorrespondence = availableCorrespondence[0];
+    const nextCorrespondence = availableCorrespondence.find(isMvpCorrespondence);
 
     setSelection({
       correspondenceId: nextCorrespondence?.id,
@@ -133,6 +136,7 @@ export function SendFlowPage() {
   }
 
   function handleCorrespondenceSelect(option: CorrespondenceOption) {
+    if (!isMvpCorrespondence(option)) return;
     updateSelection({ correspondenceId: option.id });
     setContent(createDefaultCorrespondenceContent(option.type));
   }
@@ -267,11 +271,13 @@ export function SendFlowPage() {
                 <ItemCard
                   title={t(option.nameKey)}
                   description={t(option.descriptionKey)}
+                  meta={isMvpCorrespondence(option) ? undefined : t("send.availableLater")}
                   selected={option.id === selection.correspondenceId}
                 />
                 <button
                   aria-label={`${t("send.selectedCorrespondence")}: ${t(option.nameKey)}`}
                   className={styles.optionButton}
+                  disabled={!isMvpCorrespondence(option)}
                   type="button"
                   onClick={() => handleCorrespondenceSelect(option)}
                 />
@@ -280,7 +286,12 @@ export function SendFlowPage() {
           </ChoiceSection>
 
           <SketchPanel title={t("send.composeTitle")}>
-            <CorrespondenceComposer content={content} onChange={setContent} />
+            <CorrespondenceComposer
+              content={content}
+              onChange={setContent}
+              senderLocation={profile?.postal_base_city?.trim() || t("common.unavailable")}
+              senderName={profile?.display_name?.trim() || t("common.unavailable")}
+            />
           </SketchPanel>
 
           <SketchPanel
@@ -315,53 +326,12 @@ export function SendFlowPage() {
                     label={t("send.contentPreview")}
                     value={<CorrespondenceContentPreview content={content} />}
                   />
-                  <SummaryRow
-                    fallback={t("common.unavailable")}
-                    label={t("mascot.distance")}
-                    value={
-                      estimate ? `${estimate.distanceKm} ${t("units.kilometers")}` : undefined
-                    }
-                  />
-                  <SummaryRow
-                    fallback={t("common.unavailable")}
-                    label={t("send.preparationTime")}
-                    value={estimate ? formatMinutes(estimate.modifiers.preparationMinutes) : undefined}
-                  />
-                  <SummaryRow
-                    fallback={t("common.unavailable")}
-                    label={t("send.outboundDuration")}
-                    value={estimate ? formatDurationHours(estimate.outboundDurationHours) : undefined}
-                  />
-                  <SummaryRow
-                    fallback={t("common.unavailable")}
-                    label={t("send.returnDuration")}
-                    value={estimate ? formatDurationHours(estimate.returnDurationHours) : undefined}
-                  />
-                  <SummaryRow
-                    fallback={t("common.unavailable")}
-                    label={t("send.discoveryReach")}
-                    value={estimate ? formatMultiplierBonus(estimate.modifiers.discoveryRadiusMultiplier) : undefined}
-                  />
-                  <SummaryRow
-                    fallback={t("common.unavailable")}
-                    label={t("send.rarityPotential")}
-                    value={estimate ? formatMultiplierBonus(estimate.modifiers.rarityWeightMultiplier) : undefined}
-                  />
-                  <SummaryRow
-                    fallback={t("common.unavailable")}
-                    label={t("send.routeProfile")}
-                    value={
-                      estimate
-                        ? t(
-                            estimate.modifiers.isLongRoute
-                              ? estimate.modifiers.longRouteConsistency === 1
-                                ? "send.longRouteMitigated"
-                                : "send.longRoutePenalty"
-                              : "send.shortRoute",
-                          )
-                        : undefined
-                    }
-                  />
+                  {estimate ? <>
+                    <SummaryRow label={t("mascot.distance")} value={`${estimate.distanceKm} ${t("units.kilometers")}`} />
+                    <SummaryRow label={t("send.preparationTime")} value={formatMinutes(estimate.modifiers.preparationMinutes)} />
+                    <SummaryRow label={t("send.outboundDuration")} value={formatDurationHours(estimate.outboundDurationHours)} />
+                    <SummaryRow label={t("send.returnDuration")} value={formatDurationHours(estimate.returnDurationHours)} />
+                  </> : null}
                 </dl>
                 <StampButton
                   disabled={!isSelectionComplete || !isContentValid || isSubmitting || isSendFlowLoading}
@@ -406,11 +376,16 @@ function SummaryRow({
 function CorrespondenceComposer({
   content,
   onChange,
+  senderLocation,
+  senderName,
 }: {
   content: CorrespondenceContent;
   onChange: (content: CorrespondenceContent) => void;
+  senderLocation: string;
+  senderName: string;
 }) {
-  const { t } = useTranslation();
+  const { locale, t } = useTranslation();
+  const [isLetterPreviewOpen, setIsLetterPreviewOpen] = useState(false);
 
   if (content.type === "postcard") {
     return (
@@ -499,16 +474,109 @@ function CorrespondenceComposer({
 
   return (
     <div className={styles.composer}>
-      <TextComposerField
-        count={getCorrespondenceContentCount(content)}
-        label={t("send.content.letterLabel")}
-        maxLength={LETTER_MAX_CHARACTERS}
-        onChange={(value) => onChange({ ...content, letterText: value })}
-        placeholder={t("send.letterPlaceholder")}
-        required
-        value={content.letterText}
+      <div className={styles.letterPaper}>
+        <p className={styles.letterHeading}>
+          {senderLocation} · {new Intl.DateTimeFormat(locale, { dateStyle: "long" }).format(new Date())}
+        </p>
+        <textarea
+          aria-label={t("send.content.letterLabel")}
+          className={styles.letterBody}
+          maxLength={LETTER_MAX_CHARACTERS}
+          onChange={(event) => onChange({ ...content, letterText: event.currentTarget.value })}
+          placeholder={t("send.letterPlaceholder")}
+          required
+          value={content.letterText}
+        />
+        <p className={styles.letterSignature}>{senderName}</p>
+        <p className={styles.counter}>
+          {t("send.characterCount")}: {getCorrespondenceContentCount(content)}/{LETTER_MAX_CHARACTERS}
+        </p>
+        <StampButton
+          className={styles.previewButton}
+          variant="secondary"
+          onClick={() => setIsLetterPreviewOpen(true)}
+        >
+          {t("send.previewLetter")}
+        </StampButton>
+      </div>
+      <LetterPreviewDialog
+        dateLabel={new Intl.DateTimeFormat(locale, { dateStyle: "long" }).format(new Date())}
+        letterText={content.letterText}
+        onClose={() => {
+          setIsLetterPreviewOpen(false);
+        }}
+        open={isLetterPreviewOpen}
+        senderLocation={senderLocation}
+        senderName={senderName}
       />
     </div>
+  );
+}
+
+function LetterPreviewDialog({
+  dateLabel,
+  letterText,
+  onClose,
+  open,
+  senderLocation,
+  senderName,
+}: {
+  dateLabel: string;
+  letterText: string;
+  onClose: () => void;
+  open: boolean;
+  senderLocation: string;
+  senderName: string;
+}) {
+  const { t } = useTranslation();
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    if (open && !dialog.open) {
+      dialog.showModal();
+      requestAnimationFrame(() => dialog.querySelector<HTMLButtonElement>("button")?.focus());
+    }
+    if (!open && dialog.open) dialog.close();
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return undefined;
+
+    const bodyOverflow = document.body.style.overflow;
+    const documentOverflow = document.documentElement.style.overflow;
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = bodyOverflow;
+      document.documentElement.style.overflow = documentOverflow;
+    };
+  }, [open]);
+
+  return (
+    <dialog
+      aria-labelledby="letter-preview-title"
+      className={styles.letterPreviewDialog}
+      ref={dialogRef}
+      onCancel={(event) => { event.preventDefault(); onClose(); }}
+      onClick={(event) => { if (event.target === event.currentTarget) onClose(); }}
+    >
+      <div className={styles.letterPreviewBody}>
+        <button className={styles.letterPreviewClose} type="button" onClick={onClose}>
+          {t("send.closeLetterPreview")}
+        </button>
+        <article className={styles.letterPreviewPaper}>
+          <header>
+            <p>{senderLocation} · {dateLabel}</p>
+            <h2 className={styles.visuallyHidden} id="letter-preview-title">{t("send.previewLetter")}</h2>
+          </header>
+          <p className={styles.letterPreviewText}>{letterText || t("send.content.emptyPreview")}</p>
+          <footer>{senderName}</footer>
+        </article>
+      </div>
+    </dialog>
   );
 }
 
