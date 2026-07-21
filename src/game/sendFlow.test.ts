@@ -42,9 +42,9 @@ describe("createMockDeliveryFromSelection", () => {
     expect(result?.delivery.receiverId).toBe("friend-curitiba");
     expect(result?.delivery.mascotId).toBe("mascot-pipoca");
     expect(result?.delivery.distanceKm).toBeGreaterThan(300);
-    expect(result?.delivery.outboundStartAt).toBe("2026-07-08T12:30:00.000Z");
+    expect(result?.delivery.outboundStartAt).toBe("2026-07-08T12:05:00.000Z");
     expect(result?.delivery.travelModifiers).toMatchObject({
-      version: 1,
+      version: 2,
       discoveryRadiusMultiplier: 1.24,
       outboundSpeedMultiplier: 0.98,
     });

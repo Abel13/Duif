@@ -1,7 +1,8 @@
 import type { Mascot, MascotTravelModifiers } from "./types";
 
 export const LONG_ROUTE_THRESHOLD_KM = 500;
-export const BASE_PREPARATION_MINUTES = 30;
+export const BASE_PREPARATION_MINUTES = 5;
+export const MINIMUM_PREPARATION_MINUTES = 3;
 export const NEUTRAL_TRAVEL_MODIFIERS: MascotTravelModifiers = {
   version: 1,
   preparationMinutes: 0,
@@ -52,8 +53,11 @@ export function deriveMascotTravelModifiers(
   const rarityWeightMultiplier = clamp(1 + luck * 0.02 + shinyThingLevel * 0.03, 1, 1.3);
 
   return {
-    version: 1,
-    preparationMinutes: round(BASE_PREPARATION_MINUTES * (1 - preparationReduction), 2),
+    version: 2,
+    preparationMinutes: round(
+      Math.max(MINIMUM_PREPARATION_MINUTES, BASE_PREPARATION_MINUTES * (1 - preparationReduction)),
+      2,
+    ),
     outboundSpeedMultiplier: round(outboundSpeedMultiplier, 4),
     returnSpeedMultiplier: round(returnSpeedMultiplier, 4),
     discoveryRadiusMultiplier: round(discoveryRadiusMultiplier, 4),
@@ -66,7 +70,9 @@ export function deriveMascotTravelModifiers(
 export function getDeliveryTravelModifiers(
   modifiers: MascotTravelModifiers | undefined,
 ): MascotTravelModifiers {
-  return modifiers?.version === 1 ? modifiers : NEUTRAL_TRAVEL_MODIFIERS;
+  return modifiers?.version === 1 || modifiers?.version === 2
+    ? modifiers
+    : NEUTRAL_TRAVEL_MODIFIERS;
 }
 
 function getSkillLevel(mascot: Mascot, skillId: string) {

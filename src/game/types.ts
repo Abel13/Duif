@@ -86,7 +86,7 @@ export type DeliveryStatus =
   | "completed";
 
 export type MascotTravelModifiers = {
-  version: 1;
+  version: 1 | 2;
   preparationMinutes: number;
   outboundSpeedMultiplier: number;
   returnSpeedMultiplier: number;

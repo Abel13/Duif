@@ -127,6 +127,7 @@ export {
   deriveMascotTravelModifiers,
   getDeliveryTravelModifiers,
   LONG_ROUTE_THRESHOLD_KM,
+  MINIMUM_PREPARATION_MINUTES,
   NEUTRAL_TRAVEL_MODIFIERS,
 } from "./travelModifiers";
 export type {

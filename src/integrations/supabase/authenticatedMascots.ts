@@ -82,7 +82,7 @@ function mapTravelModifiers(value: DeliveryRow["travel_modifiers"]): MascotTrave
   ] as const;
 
   if (
-    candidate.version !== 1 ||
+    (candidate.version !== 1 && candidate.version !== 2) ||
     typeof candidate.isLongRoute !== "boolean" ||
     numericKeys.some((key) => typeof candidate[key] !== "number" || !Number.isFinite(candidate[key]))
   ) {
