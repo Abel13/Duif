@@ -15,6 +15,9 @@ export const assetKeys = {
     blueRouteScarf: "equipment.icon.blueRouteScarf",
     flightGoggles: "equipment.icon.flightGoggles",
     urgentBadge: "equipment.icon.urgentBadge",
+    travelCap: "equipment.icon.travelCap",
+    featherCharm: "equipment.icon.featherCharm",
+    smallSatchel: "equipment.icon.smallSatchel",
   },
   activeItems: {
     firstJourneyBoost: "activeItem.firstJourneyBoost",

@@ -187,6 +187,7 @@ export const starterMascots: Mascot[] = [
         rarity: "common",
         equipped: false,
         descriptionKey: "equipment.travelCap.description",
+        iconAssetKey: assetKeys.equipment.travelCap,
       },
     ],
     skills: [
@@ -238,6 +239,7 @@ export const starterMascots: Mascot[] = [
         rarity: "rare",
         equipped: true,
         descriptionKey: "equipment.featherCharm.description",
+        iconAssetKey: assetKeys.equipment.featherCharm,
       },
       {
         id: "equipment-pipoca-small-satchel",
@@ -246,6 +248,7 @@ export const starterMascots: Mascot[] = [
         rarity: "common",
         equipped: true,
         descriptionKey: "equipment.smallSatchel.description",
+        iconAssetKey: assetKeys.equipment.smallSatchel,
       },
     ],
     skills: [
