@@ -115,12 +115,16 @@ export function TravelMapPage() {
     void getMyNestCityLabel().then((label) => { if (active) setHomeCityLabel(label); }).catch(() => { if (active) setHomeCityLabel(null); });
     return () => { active = false; };
   }, [profile?.home_city_geoname_id]);
-  const originLabel = delivery.id === "idle-nest" && homeCityLabel
-    ? homeCityLabel
+  const ownCityLabel = homeCityLabel ?? getNonEmptyLabel(profile?.postal_base_city);
+  const recipientCityLabel = connections.accepted.find(
+    (friend) => friend.profileId === delivery.receiverId,
+  )?.city ?? undefined;
+  const originLabel = delivery.senderId === profile?.id && ownCityLabel
+    ? ownCityLabel
     : t(delivery.origin.labelKey);
-  const destinationLabel = delivery.id === "idle-nest" && homeCityLabel
-    ? homeCityLabel
-    : t(delivery.destination.labelKey);
+  const destinationLabel = delivery.id === "idle-nest" && ownCityLabel
+    ? ownCityLabel
+    : getNonEmptyLabel(recipientCityLabel) ?? t(delivery.destination.labelKey);
   const displayMascot = mascots.find((mascot) => mascot.id === delivery.mascotId)
     ?? getMascotById(delivery.mascotId)
     ?? activeMascot
@@ -1229,6 +1233,11 @@ function selectMapMascot(mascots: Mascot[], now: Date) {
     mascots.find((mascot) => hasActiveMapDelivery(mascot, now)) ??
     mascots.find((mascot) => mascot.id === defaultMascotId)
   );
+}
+
+function getNonEmptyLabel(value: string | null | undefined) {
+  const label = value?.trim();
+  return label || undefined;
 }
 
 function createIdleNestDelivery(
