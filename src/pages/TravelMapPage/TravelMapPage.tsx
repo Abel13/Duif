@@ -3,7 +3,7 @@ import { Link, useSearchParams } from "react-router-dom";
 
 import { AppBottomNav } from "../../components/layout";
 import { TravelMap } from "../../components/map/TravelMap";
-import { AssetImage, ItemCard, SketchPanel } from "../../components/ui";
+import { AssetImage, ItemCard, SketchPanel, TravelStatusLabel } from "../../components/ui";
 import {
   assetKeys,
   formatRemainingTime,
@@ -412,6 +412,14 @@ export function TravelMapPage() {
           />
         </div>
 
+        {journeyPhase === "traveling" && displayMascot ? (
+          <TravelStatusLabel
+            className={styles.mapTravelStatus}
+            mascotName={displayMascot.name}
+            statusLabel={t(`delivery.status.${status}`)}
+          />
+        ) : null}
+
         {discoveryToast ? (
           <div className={styles.discoveryToast} role="status">
             <strong>{discoveryToast.length === 1 ? t("map.discoveryToastSingle") : t("map.discoveryToastMultiple")}</strong>
@@ -807,12 +815,13 @@ function MascotMapSelector({
     0,
     availableMascots.findIndex((mascot) => mascot.id === selectedMascotId),
   );
-  if (availableMascots.length === 0) return null;
 
   useEffect(() => () => {
     if (rotationTimerRef.current) window.clearTimeout(rotationTimerRef.current);
     if (inspectTimerRef.current) window.clearTimeout(inspectTimerRef.current);
   }, []);
+
+  if (availableMascots.length === 0) return null;
 
   function beginRotation(direction: "next" | "previous") {
     if (rotationTimerRef.current) window.clearTimeout(rotationTimerRef.current);

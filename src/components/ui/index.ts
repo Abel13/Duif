@@ -8,6 +8,8 @@ export { SketchPanel } from "./SketchPanel";
 export type { SketchPanelProps } from "./SketchPanel";
 export { StampButton } from "./StampButton";
 export type { StampButtonProps } from "./StampButton";
+export { TravelStatusLabel } from "./TravelStatusLabel";
+export type { TravelStatusLabelProps } from "./TravelStatusLabel";
 export { InauguralPostcard, InauguralPostcardDialog, formatInauguralPostmark } from "./InauguralPostcard";
 export { PostcardDialog, PostcardViewer } from "./PostcardViewer";
 export type { PostcardContent } from "./PostcardViewer";

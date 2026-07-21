@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { TravelMap } from "../../components/map/TravelMap";
-import { AssetImage, InauguralPostcardDialog, StampButton } from "../../components/ui";
+import { AssetImage, InauguralPostcardDialog, StampButton, TravelStatusLabel } from "../../components/ui";
 import { assetKeys, getDeliveryStatus, getPetMapPosition, interpolateCoordinates, type MapFocusTarget, type MapMotionPreference, type OfficialAssetKey, type RouteRewardDiscovery } from "../../game";
 import { useMascotCatalog } from "../../game/useMascotCatalog";
 import { useTranslation, type TranslationKey } from "../../i18n";
@@ -60,10 +60,11 @@ export function TutorialDeliveryPage() {
     <div aria-label={t("tutorial.boost.badge")} className={styles.activeItem} role="img" title={t("tutorial.boost.badge")}>
       <AssetImage alt="" assetKey={assetKeys.activeItems.firstJourneyBoost} className={styles.activeItemArtwork} loading="eager"><i /></AssetImage>
     </div>
-    <p className={styles.travelStatus} role="status">
-      <strong>{mascot?.name}</strong>
-      <span>{t(`delivery.status.${deliveryStatus}` as TranslationKey)}</span>
-    </p>
+    <TravelStatusLabel
+      className={styles.travelStatus}
+      mascotName={mascot?.name ?? ""}
+      statusLabel={t(`delivery.status.${deliveryStatus}` as TranslationKey)}
+    />
     <div className={styles.map}>
       <TravelMap delivery={delivery} deliveryCompleted={false} destinationLabel={t("tutorial.locations.station")} destinationTitle={t("mascot.destination")} fallbackLabel={t("map.unavailable")} focusTarget={mapFocus} followMascot={followMascot} motionPreference={motionPreference} originLabel={t("tutorial.locations.nest")} originTitle={t("mascot.origin")} petLabel={mascot?.name??""} petPortraitAssetKey={mascot?.appearance.portraitAssetKey} petPosition={position!.coordinates} placeLabels={[]} postalTraffic={[]} rewardLabels={reward?{[reward.id]:t(reward.titleKey)}:{}} rewardStates={reward?{[reward.id]:reward.discovered?"carried":"future"}:{}} rewards={reward?[reward]:[]} selection={null} showRouteLabels onFollowChange={setFollowMascot} onPetSelect={()=>undefined} onRewardDiscoveries={()=>undefined} onRewardSelect={()=>undefined} onTrafficSelect={()=>undefined} onViewportChange={()=>undefined}/>
     </div>

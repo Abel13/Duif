@@ -1,0 +1,29 @@
+.label {
+  display: grid;
+  gap: 0.08rem;
+  margin: 0;
+  padding: 0.48rem 0.72rem;
+  border: 2px solid rgba(139, 94, 60, 0.72);
+  border-radius: 0.3rem 0.58rem 0.34rem 0.48rem;
+  color: var(--color-ink);
+  background: var(--color-postal-label);
+  box-shadow: 0.14rem 0.18rem 0 rgba(46, 42, 36, 0.16);
+  line-height: 1.15;
+  text-align: center;
+}
+
+.label strong {
+  overflow: hidden;
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.label span {
+  color: var(--color-postal-brown);
+  font-size: 0.66rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
