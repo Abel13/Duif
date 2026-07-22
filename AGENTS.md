@@ -49,6 +49,7 @@ Use:
 - CSS Modules
 - React Router
 - Framer Motion, only when animation adds value
+- Phosphor Icons (`@phosphor-icons/react`) for interface iconography
 
 Do not introduce new dependencies without explaining why.
 
@@ -180,6 +181,10 @@ Prefer:
 - Small reusable image assets.
 - WebP or AVIF later for painted illustrations.
 - Transform and opacity for animations.
+
+Use Phosphor Icons for conventional interface affordances such as navigation, settings,
+close, status, and actions. Keep illustrated postal assets for game-world objects and do not
+replace them with generic icons.
 
 ## Accessibility Rules
 
