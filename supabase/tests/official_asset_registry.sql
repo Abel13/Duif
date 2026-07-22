@@ -12,6 +12,29 @@ begin
   if (select count(*) from public.official_asset_versions version
       join public.official_assets asset on asset.id = version.asset_id
       where asset.asset_key in (
+        'nest.artwork.profileNook',
+        'nest.artwork.mascotRoost',
+        'nest.artwork.mailbox'
+      ) and asset.asset_type = 'nestArtwork' and version.status = 'active'
+        and version.packaged_path like '/assets/nest/%'
+        and version.is_decorative) <> 3 then
+    raise exception 'Expected three active decorative Ninho hub artwork versions';
+  end if;
+  if not exists (
+    select 1 from public.official_asset_versions version
+    join public.official_assets asset on asset.id = version.asset_id
+    where asset.asset_key = 'profile.avatar.defaultSilhouette'
+      and asset.asset_type = 'nestArtwork'
+      and version.status = 'active'
+      and version.packaged_path = '/assets/profile/default-silhouette.webp'
+      and version.alt_text_key = 'nestHub.defaultAvatar'
+      and not version.is_decorative
+  ) then
+    raise exception 'Expected active default profile silhouette asset';
+  end if;
+  if (select count(*) from public.official_asset_versions version
+      join public.official_assets asset on asset.id = version.asset_id
+      where asset.asset_key in (
         'equipment.icon.featherCharm',
         'equipment.icon.smallSatchel',
         'equipment.icon.travelCap'

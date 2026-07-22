@@ -45,6 +45,43 @@ describe("official asset manifest", () => {
     expect(resolveOfficialAssetPath(manifest,assetKeys.postcards.inauguralFront)).toContain("inaugural-front.webp");
   });
 
+  it("parses each decorative Ninho hub artwork by its official key", () => {
+    const artwork = [
+      [assetKeys.nest.profileNook, "/assets/nest/profile-nook.webp", 51464],
+      [assetKeys.nest.mascotRoost, "/assets/nest/mascot-roost.webp", 57304],
+      [assetKeys.nest.mailbox, "/assets/nest/mailbox.webp", 45744],
+    ] as const;
+    const manifest = parseOfficialAssetManifest(artwork.map(([key, packaged_path, byte_size]) => ({
+      ...row,
+      packaged_path,
+      width: 480,
+      height: 640,
+      byte_size,
+      alt_text_key: null,
+      is_decorative: true,
+      official_assets: { asset_key: key, asset_type: "nestArtwork" },
+    })));
+
+    artwork.forEach(([key, path]) => {
+      expect(resolveOfficialAssetPath(manifest, key)).toBe(path);
+    });
+  });
+
+  it("resolves the official default profile silhouette", () => {
+    const manifest = parseOfficialAssetManifest([{
+      ...row,
+      packaged_path: "/assets/profile/default-silhouette.webp",
+      width: 256,
+      height: 256,
+      byte_size: 6546,
+      alt_text_key: "nestHub.defaultAvatar",
+      official_assets: { asset_key: assetKeys.profile.defaultSilhouette, asset_type: "nestArtwork" },
+    }]);
+
+    expect(resolveOfficialAssetPath(manifest, assetKeys.profile.defaultSilhouette))
+      .toBe("/assets/profile/default-silhouette.webp");
+  });
+
   it("resolves the three registered starter equipment icons", () => {
     const equipment = [
       [assetKeys.equipment.featherCharm, "/assets/equipment/icons/feather-charm.webp"],
