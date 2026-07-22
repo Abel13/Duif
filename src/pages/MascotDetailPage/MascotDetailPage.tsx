@@ -125,6 +125,7 @@ export function MascotDetailPage() {
               />
               <div className={styles.heroActions}>
                 <StampButton onClick={handleDeliveryAction}>{deliveryActionLabel}</StampButton>
+                <StampButton onClick={() => navigate("/mailbox")} variant="secondary">{t("mailbox.open")}</StampButton>
               </div>
             </SketchPanel>
           </div>

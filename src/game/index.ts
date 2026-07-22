@@ -136,6 +136,7 @@ export type {
   CorrespondenceOption,
   CorrespondenceType,
   Delivery,
+  ReceivedLetter,
   DeliveryStatus,
   EquipmentItem,
   EquipmentRarity,

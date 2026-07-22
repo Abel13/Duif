@@ -1158,6 +1158,17 @@ export type Database = {
       collect_delivery_reward: { Args: { delivery_id: string }; Returns: Json }
       complete_nest_setup: { Args: { selected_latitude: number; selected_longitude: number; selected_city_geoname_id: number }; Returns: Json }
       get_my_nest_city: { Args: never; Returns: { label: string }[] }
+      list_received_letters: {
+        Args: never
+        Returns: {
+          arrived_at: string
+          delivery_id: string
+          letter_text: string
+          origin_label: string
+          sender_name: string
+          sender_profile_id: string
+        }[]
+      }
       search_nest_cities: {
         Args: { search_query: string }
         Returns: { id: string; label: string; latitude: number; longitude: number }[]
@@ -1315,6 +1326,7 @@ export type Database = {
         | "texture"
         | "postalMark"
         | "postcardArtwork"
+        | "nestArtwork"
       reward_rarity: "common" | "uncommon" | "rare"
       tutorial_instruction_step: "preparing" | "outbound" | "discovery" | "destination" | "returning" | "returned" | "collection"
     }
@@ -1472,6 +1484,8 @@ export const Constants = {
         "shopArtwork",
         "texture",
         "postalMark",
+        "postcardArtwork",
+        "nestArtwork",
       ],
       onboarding_stage: [
         "welcome",

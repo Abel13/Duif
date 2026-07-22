@@ -235,6 +235,28 @@ export type TranslationDictionary = {
     bottomNav: string;
     loadingCatalog: string;
   };
+  nestHub: {
+    eyebrow: string; title: string; tagline: string; currencySummary: string; stamps: string; crystals: string; settingsSoon: string; defaultAvatar: string; profileName: string; nestName: string; nestOf: string; location: string; levelZero: string; xpZero: string; sections: string; profileTitle: string; profileDescription: string; mascotTitle: string; mascotDescription: string; mailboxTitle: string; mailboxDescription: string; atNest: string; traveling: string; newCorrespondence: string; travelingTitle: string; noTravelTitle: string; noTravelDescription: string;
+  };
+  profile: { eyebrow: string; email: string; location: string; joined: string; level: string; xp: string; stamps: string; crystals: string; readOnlyNotice: string; };
+  mailbox: {
+    eyebrow: string;
+    title: string;
+    description: string;
+    open: string;
+    loading: string;
+    error: string;
+    retry: string;
+    emptyTitle: string;
+    emptyDescription: string;
+    letterList: string;
+    from: string;
+    openLetter: string;
+    closeLetter: string;
+    letterTitle: string;
+    emptyLetter: string;
+    reply: string;
+  };
   send: {
     startAction: string;
     eyebrow: string;
@@ -759,6 +781,24 @@ export type TranslationDictionary = {
 };
 
 export type TranslationKey =
+  | "nestHub.eyebrow" | "nestHub.title" | "nestHub.tagline" | "nestHub.currencySummary" | "nestHub.stamps" | "nestHub.crystals" | "nestHub.settingsSoon" | "nestHub.defaultAvatar" | "nestHub.profileName" | "nestHub.nestName" | "nestHub.nestOf" | "nestHub.location" | "nestHub.levelZero" | "nestHub.xpZero" | "nestHub.sections" | "nestHub.profileTitle" | "nestHub.profileDescription" | "nestHub.mascotTitle" | "nestHub.mascotDescription" | "nestHub.mailboxTitle" | "nestHub.mailboxDescription" | "nestHub.atNest" | "nestHub.traveling" | "nestHub.newCorrespondence" | "nestHub.travelingTitle" | "nestHub.noTravelTitle" | "nestHub.noTravelDescription"
+  | "profile.eyebrow" | "profile.email" | "profile.location" | "profile.joined" | "profile.level" | "profile.xp" | "profile.stamps" | "profile.crystals" | "profile.readOnlyNotice"
+  | "mailbox.eyebrow"
+  | "mailbox.title"
+  | "mailbox.description"
+  | "mailbox.open"
+  | "mailbox.loading"
+  | "mailbox.error"
+  | "mailbox.retry"
+  | "mailbox.emptyTitle"
+  | "mailbox.emptyDescription"
+  | "mailbox.letterList"
+  | "mailbox.from"
+  | "mailbox.openLetter"
+  | "mailbox.closeLetter"
+  | "mailbox.letterTitle"
+  | "mailbox.emptyLetter"
+  | "mailbox.reply"
   | "foundation.eyebrow"
   | "foundation.retry"
   | "foundation.loading.title"

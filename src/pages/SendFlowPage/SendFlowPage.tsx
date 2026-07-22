@@ -1,10 +1,10 @@
 import { Link, useSearchParams } from "react-router-dom";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 
 import { MobileTopBar, PageShell } from "../../components/layout";
 import { RoutePreview } from "../../components/map/RoutePreview";
-import { ItemCard, SketchPanel, StampButton } from "../../components/ui";
+import { ItemCard, LetterDialog, SketchPanel, StampButton } from "../../components/ui";
 import {
   createMockDeliveryFromSelection,
   createDefaultCorrespondenceContent,
@@ -502,8 +502,10 @@ function CorrespondenceComposer({
           {t("send.previewLetter")}
         </StampButton>
       </div>
-      <LetterPreviewDialog
+      <LetterDialog
+        closeLabel={t("send.closeLetterPreview")}
         dateLabel={new Intl.DateTimeFormat(locale, { dateStyle: "long" }).format(new Date())}
+        emptyLabel={t("send.content.emptyPreview")}
         letterText={content.letterText}
         onClose={() => {
           setIsLetterPreviewOpen(false);
@@ -511,75 +513,9 @@ function CorrespondenceComposer({
         open={isLetterPreviewOpen}
         senderLocation={senderLocation}
         senderName={senderName}
+        title={t("send.previewLetter")}
       />
     </div>
-  );
-}
-
-function LetterPreviewDialog({
-  dateLabel,
-  letterText,
-  onClose,
-  open,
-  senderLocation,
-  senderName,
-}: {
-  dateLabel: string;
-  letterText: string;
-  onClose: () => void;
-  open: boolean;
-  senderLocation: string;
-  senderName: string;
-}) {
-  const { t } = useTranslation();
-  const dialogRef = useRef<HTMLDialogElement>(null);
-
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    if (!dialog) return;
-    if (open && !dialog.open) {
-      dialog.showModal();
-      requestAnimationFrame(() => dialog.querySelector<HTMLButtonElement>("button")?.focus());
-    }
-    if (!open && dialog.open) dialog.close();
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) return undefined;
-
-    const bodyOverflow = document.body.style.overflow;
-    const documentOverflow = document.documentElement.style.overflow;
-    document.body.style.overflow = "hidden";
-    document.documentElement.style.overflow = "hidden";
-
-    return () => {
-      document.body.style.overflow = bodyOverflow;
-      document.documentElement.style.overflow = documentOverflow;
-    };
-  }, [open]);
-
-  return (
-    <dialog
-      aria-labelledby="letter-preview-title"
-      className={styles.letterPreviewDialog}
-      ref={dialogRef}
-      onCancel={(event) => { event.preventDefault(); onClose(); }}
-      onClick={(event) => { if (event.target === event.currentTarget) onClose(); }}
-    >
-      <div className={styles.letterPreviewBody}>
-        <button className={styles.letterPreviewClose} type="button" onClick={onClose}>
-          {t("send.closeLetterPreview")}
-        </button>
-        <article className={styles.letterPreviewPaper}>
-          <header>
-            <p>{senderLocation} · {dateLabel}</p>
-            <h2 className={styles.visuallyHidden} id="letter-preview-title">{t("send.previewLetter")}</h2>
-          </header>
-          <p className={styles.letterPreviewText}>{letterText || t("send.content.emptyPreview")}</p>
-          <footer>{senderName}</footer>
-        </article>
-      </div>
-    </dialog>
   );
 }
 

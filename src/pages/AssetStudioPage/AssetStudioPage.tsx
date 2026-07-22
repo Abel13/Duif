@@ -5,7 +5,7 @@ import { useTranslation } from "../../i18n";
 import { activateAssetVersion, archiveAssetVersion, createAssetUpload, listStudioAssets, publishAssetDraft, type AssetStudioAsset } from "../../integrations/supabase/assetStudio";
 import styles from "./AssetStudioPage.module.css";
 
-const types = ["mascotPortrait","equipmentIcon","rewardThumbnail","collectibleThumbnail","navigationIcon","mapControl","mapPin","currencyIcon","shopArtwork","texture","postalMark","postcardArtwork"];
+const types = ["mascotPortrait","equipmentIcon","rewardThumbnail","collectibleThumbnail","navigationIcon","mapControl","mapPin","currencyIcon","shopArtwork","texture","postalMark","postcardArtwork","nestArtwork"];
 
 export function AssetStudioPage() {
   const { t } = useTranslation(); const [assets,setAssets]=useState<AssetStudioAsset[]>([]); const [filter,setFilter]=useState("all"); const [status,setStatus]=useState<"loading"|"ready"|"error">("loading"); const [busy,setBusy]=useState(false); const [message,setMessage]=useState("");

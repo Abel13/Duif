@@ -1,0 +1,314 @@
+.shell {
+  display: grid;
+  gap: var(--space-3);
+  width: min(100%, 48rem);
+  margin: auto;
+  padding: clamp(0.75rem, 4vw, 2rem);
+  padding-bottom: calc(7rem + env(safe-area-inset-bottom));
+}
+.header,
+.hubCard,
+.travelSection,
+.emptyTravel {
+  border: var(--border-dashed-ink);
+  background: rgba(247, 241, 227, 0.9);
+  box-shadow: var(--shadow-paper);
+}
+.header {
+  padding: var(--space-3);
+  border-radius: 1rem 0.42rem 0.9rem 0.35rem;
+}
+.currencyRow {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.45rem;
+}
+.currency {
+  display: flex;
+  align-items: center;
+  gap: 0.28rem;
+  min-height: 2.2rem;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid rgba(139, 94, 60, 0.5);
+  border-radius: 0.3rem;
+  background: var(--color-paper-light);
+  font-size: 0.78rem;
+}
+.currency img {
+  width: 1.45rem;
+  height: 1.45rem;
+}
+.currency small {
+  color: var(--color-ink-soft);
+  font-weight: 800;
+}
+.settings {
+  display: grid;
+  width: 2.2rem;
+  place-items: center;
+  border: 1px dashed rgba(46, 42, 36, 0.4);
+  border-radius: 0.3rem;
+  color: var(--color-ink-soft);
+}
+.settingsMark {
+  position: relative;
+  width: 0.9rem;
+  height: 0.9rem;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+}
+.settingsMark:before,
+.settingsMark:after {
+  position: absolute;
+  inset: -0.3rem;
+  content: "";
+  border: 2px solid currentColor;
+  border-radius: 0.16rem;
+  transform: rotate(45deg);
+}
+.settingsMark:after {
+  inset: 0.2rem;
+  border: 0;
+  background: var(--color-paper-light);
+  border-radius: 50%;
+}
+.identity {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-2);
+  align-items: center;
+  margin-top: var(--space-3);
+}
+.avatar {
+  display: grid;
+  width: 5.3rem;
+  aspect-ratio: 1;
+  place-items: end center;
+  overflow: hidden;
+  border: 3px solid rgba(139, 94, 60, 0.6);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 50% 25%,
+    #f8eed8 0 25%,
+    #a99b86 26% 100%
+  );
+  box-shadow: inset 0 0 0 0.25rem rgba(255, 248, 232, 0.7);
+}
+.avatar span {
+  width: 57%;
+  height: 76%;
+  border-radius: 48% 48% 20% 20%;
+  background: #685e53;
+  clip-path: polygon(28% 0, 72% 0, 88% 32%, 100% 100%, 0 100%, 12% 32%);
+}
+.eyebrow {
+  margin: 0;
+  color: var(--color-postal-red);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+.identity h1 {
+  margin: 0.08rem 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.3rem, 11vw, 3.6rem);
+}
+.tagline {
+  margin: 0;
+  color: var(--color-ink-soft);
+  font-weight: 700;
+}
+.identityDetails {
+  grid-column: 1/-1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.45rem;
+  margin: var(--space-1) 0 0;
+}
+.identityDetails div {
+  min-width: 0;
+  padding: 0.45rem;
+  border-top: 1px dashed rgba(139, 94, 60, 0.35);
+}
+.identityDetails dt {
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-postal-brown);
+}
+.identityDetails dd {
+  margin: 0.12rem 0 0;
+  font-size: 0.75rem;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+.level {
+  grid-column: 1/-1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.55rem 0.7rem;
+  border-radius: 0.35rem;
+  background: rgba(122, 143, 104, 0.13);
+  color: #526944;
+}
+.level span {
+  font-size: 0.77rem;
+  font-weight: 800;
+}
+.cards {
+  display: grid;
+  gap: var(--space-2);
+}
+.hubCard {
+  display: grid;
+  grid-template-columns: minmax(6.7rem, 35%) 1fr auto;
+  gap: var(--space-2);
+  align-items: stretch;
+  width: 100%;
+  min-height: 9.2rem;
+  padding: 0.45rem;
+  border-radius: 0.7rem 0.25rem 0.65rem 0.38rem;
+  color: var(--color-ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.cardArt {
+  min-height: 8.2rem;
+  overflow: hidden;
+  border-radius: 0.48rem 0.18rem 0.48rem 0.18rem;
+  background: var(--color-paper-dark);
+}
+.cardArt img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.artFallback {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--color-paper-dark);
+}
+.cardContent {
+  display: grid;
+  align-content: center;
+  gap: 0.45rem;
+  min-width: 0;
+}
+.cardContent strong {
+  font-family: var(--font-display);
+  font-size: clamp(1.45rem, 6vw, 2rem);
+}
+.cardContent > span {
+  line-height: 1.35;
+  color: var(--color-ink-soft);
+  font-weight: 700;
+}
+.cardContent em {
+  width: fit-content;
+  max-width: 100%;
+  padding: 0.3rem 0.48rem;
+  border-radius: 1rem;
+  background: rgba(122, 143, 104, 0.16);
+  color: #526944;
+  font-size: 0.7rem;
+  font-style: normal;
+  font-weight: 900;
+}
+.arrow {
+  align-self: center;
+  font-size: 2.2rem;
+  color: var(--color-postal-brown);
+}
+.travelSection,
+.emptyTravel {
+  padding: var(--space-3);
+  border-radius: 0.65rem 0.25rem;
+}
+.travelSection h2,
+.emptyTravel h2 {
+  margin: 0 0 var(--space-2);
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+}
+.emptyTravel p {
+  margin: 0;
+  color: var(--color-ink-soft);
+  font-weight: 700;
+}
+.travelList {
+  display: grid;
+  gap: 0.5rem;
+}
+.travelRow {
+  display: grid;
+  grid-template-columns: 2.8rem 1fr auto;
+  gap: 0.65rem;
+  align-items: center;
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px dashed rgba(139, 94, 60, 0.38);
+  background: var(--color-paper-light);
+  color: var(--color-ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.travelPortrait {
+  width: 2.8rem;
+  height: 2.8rem;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--color-paper-dark);
+}
+.travelPortrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.travelRow small {
+  display: block;
+  margin-top: 0.15rem;
+  color: var(--color-postal-brown);
+  font-weight: 800;
+}
+.hubCard:focus-visible,
+.travelRow:focus-visible {
+  outline: 3px solid var(--color-postal-blue);
+  outline-offset: 3px;
+}
+@media (min-width: 700px) {
+  .header {
+    padding: var(--space-4);
+  }
+  .cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .hubCard {
+    grid-template-columns: 1fr;
+    grid-template-rows: 11rem auto auto;
+    min-height: 0;
+  }
+  .cardArt {
+    min-height: 0;
+  }
+  .arrow {
+    display: none;
+  }
+  .identity {
+    grid-template-columns: auto 1fr auto;
+  }
+  .identityDetails {
+    grid-column: 2/-1;
+  }
+  .level {
+    grid-column: 2/-1;
+  }
+}
+.avatar img {
+  object-fit: cover;
+}

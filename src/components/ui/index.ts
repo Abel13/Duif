@@ -13,3 +13,5 @@ export type { TravelStatusLabelProps } from "./TravelStatusLabel";
 export { InauguralPostcard, InauguralPostcardDialog, formatInauguralPostmark } from "./InauguralPostcard";
 export { PostcardDialog, PostcardViewer } from "./PostcardViewer";
 export type { PostcardContent } from "./PostcardViewer";
+export { LetterDialog } from "./LetterDialog";
+export type { LetterDialogProps } from "./LetterDialog";

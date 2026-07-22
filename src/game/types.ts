@@ -129,6 +129,15 @@ export type Delivery = {
   correspondenceType?: CorrespondenceType;
 };
 
+export type ReceivedLetter = {
+  arrivedAt: string;
+  deliveryId: string;
+  letterText: string;
+  originLabel: string;
+  senderName: string;
+  senderProfileId: string;
+};
+
 export type RewardItem = {
   id: string;
   nameKey: TranslationKey;

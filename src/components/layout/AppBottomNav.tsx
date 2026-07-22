@@ -12,14 +12,14 @@ export function AppBottomNav() {
   const isFriendsActive = location.pathname.startsWith("/friends");
   const isInventoryActive = location.pathname.startsWith("/inventory");
   const isMapActive = location.pathname.startsWith("/map");
-  const isNestActive = location.pathname.startsWith("/mascots");
+  const isNestActive = location.pathname.startsWith("/nest") || location.pathname.startsWith("/profile") || location.pathname.startsWith("/mascots");
   const isShopActive = location.pathname.startsWith("/shop");
   const items = [
     {
       active: isNestActive,
       icon: assetKeys.navigation.nest,
       label: t("navigation.nest"),
-      onClick: () => navigate("/mascots"),
+      onClick: () => navigate("/nest"),
     },
     {
       active: isInventoryActive,

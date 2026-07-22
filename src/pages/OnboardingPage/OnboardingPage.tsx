@@ -1,5 +1,6 @@
 import { FormEvent, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { CaretLeft, CaretRight } from "@phosphor-icons/react";
 
 import { AssetImage, StampButton } from "../../components/ui";
 import { useMobileKeyboardViewportRecovery } from "../../components/ui/useMobileKeyboardViewportRecovery";
@@ -213,12 +214,12 @@ function MascotChoice() {
         {mode === "choice" ? <div className={styles.carousel} onTouchStart={(event) => { touchStart.current = event.touches[0]?.clientX ?? null; }} onTouchEnd={(event) => {
           const end = event.changedTouches[0]?.clientX; if (touchStart.current !== null && end !== undefined && Math.abs(end - touchStart.current) > 44) rotate(end > touchStart.current ? -1 : 1); touchStart.current = null;
         }}>
-          <button aria-label={t("onboarding.mascotChoice.previous")} className={styles.carouselArrow} onClick={() => rotate(-1)} type="button">‹</button>
+          <button aria-label={t("onboarding.mascotChoice.previous")} className={styles.carouselArrow} onClick={() => rotate(-1)} type="button"><CaretLeft aria-hidden="true" size={26} weight="bold" /></button>
           {[-1, 0, 1].map((offset) => {
             const item = archetypes[(selectedIndex + offset + archetypes.length) % archetypes.length];
             return item && <AssetImage alt={t(item.speciesKey)} assetKey={item.appearance.portraitAssetKey} className={offset === 0 ? styles.selectedPortrait : styles.sidePortrait} key={`${item.id}-${offset}`}><span className={styles.fallbackMark} /></AssetImage>;
           })}
-          <button aria-label={t("onboarding.mascotChoice.nextMascot")} className={styles.carouselArrow} onClick={() => rotate(1)} type="button">›</button>
+          <button aria-label={t("onboarding.mascotChoice.nextMascot")} className={styles.carouselArrow} onClick={() => rotate(1)} type="button"><CaretRight aria-hidden="true" size={26} weight="bold" /></button>
         </div> : <AssetImage alt={t(selected.speciesKey)} assetKey={selected.appearance.portraitAssetKey} className={styles.reviewPortrait}><span className={styles.fallbackMark} /></AssetImage>}
         {mode !== "choice" && <strong className={styles.chosenName}>{onboarding?.mascot_name ?? name}</strong>}
         <strong className={styles.species}>{t(selected.speciesKey)}</strong>

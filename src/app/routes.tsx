@@ -14,8 +14,11 @@ const TutorialDeliveryPage=lazy(()=>import("../pages/TutorialDeliveryPage/Tutori
 const NestSetupPage=lazy(()=>import("../pages/NestSetupPage/NestSetupPage").then(module=>({default:module.NestSetupPage})));
 const TravelMapPage=lazy(()=>import("../pages/TravelMapPage/TravelMapPage").then(module=>({default:module.TravelMapPage})));
 const MascotDetailPage=lazy(()=>import("../pages/MascotDetailPage/MascotDetailPage").then(module=>({default:module.MascotDetailPage})));
+const NestHubPage=lazy(()=>import("../pages/NestHubPage/NestHubPage").then(module=>({default:module.NestHubPage})));
+const ProfilePage=lazy(()=>import("../pages/ProfilePage/ProfilePage").then(module=>({default:module.ProfilePage})));
 const InventoryAlbumPage=lazy(()=>import("../pages/InventoryAlbumPage/InventoryAlbumPage").then(module=>({default:module.InventoryAlbumPage})));
 const FriendsPage=lazy(()=>import("../pages/FriendsPage/FriendsPage").then(module=>({default:module.FriendsPage})));
+const MailboxPage=lazy(()=>import("../pages/MailboxPage/MailboxPage").then(module=>({default:module.MailboxPage})));
 const ShopPage=lazy(()=>import("../pages/ShopPage/ShopPage").then(module=>({default:module.ShopPage})));
 const SendFlowPage=lazy(()=>import("../pages/SendFlowPage/SendFlowPage").then(module=>({default:module.SendFlowPage})));
 const RewardCollectionPage=lazy(()=>import("../pages/RewardCollectionPage/RewardCollectionPage").then(module=>({default:module.RewardCollectionPage})));
@@ -31,10 +34,13 @@ export function AppRoutes() {
       <Route path="/onboarding/tutorial" element={<ProtectedTutorialRoute />} />
       <Route path="/onboarding/nest" element={<ProtectedNestRoute />} />
       <Route path="/map" element={<ProtectedGameRoute><TravelMapPage/></ProtectedGameRoute>} />
+      <Route path="/nest" element={<ProtectedGameRoute><NestHubPage/></ProtectedGameRoute>} />
+      <Route path="/profile" element={<ProtectedGameRoute><ProfilePage/></ProtectedGameRoute>} />
       <Route path="/mascots" element={<ProtectedGameRoute><MascotDetailPage/></ProtectedGameRoute>} />
       <Route path="/mascots/:mascotId" element={<ProtectedGameRoute><MascotDetailPage/></ProtectedGameRoute>} />
       <Route path="/inventory" element={<ProtectedGameRoute><InventoryAlbumPage/></ProtectedGameRoute>} />
       <Route path="/friends" element={<ProtectedGameRoute><FriendsPage/></ProtectedGameRoute>} />
+      <Route path="/mailbox" element={<ProtectedGameRoute><MailboxPage/></ProtectedGameRoute>} />
       <Route path="/shop" element={<ProtectedGameRoute><ShopPage/></ProtectedGameRoute>} />
       <Route path="/send" element={<ProtectedGameRoute><SendFlowPage/></ProtectedGameRoute>} />
       <Route path="/rewards/:deliveryId" element={<ProtectedGameRoute><RewardCollectionPage/></ProtectedGameRoute>} />

@@ -50,6 +50,12 @@ export const assetKeys = {
     brassNestPlaque: "shop.thumbnail.brassNestPlaque",
     airmailProfileRibbon: "shop.thumbnail.airmailProfileRibbon",
   },
+  nest: {
+    profileNook: "nest.artwork.profileNook",
+    mascotRoost: "nest.artwork.mascotRoost",
+    mailbox: "nest.artwork.mailbox",
+  },
+  profile: { defaultSilhouette: "profile.avatar.defaultSilhouette" },
   textures: { postalPaperWash: "texture.postalPaperWash" },
   postalMarks: { postalCancel: "postalMark.postalCancel", routeDoodle: "postalMark.routeDoodle" },
 } as const;
@@ -60,7 +66,7 @@ export type OfficialAssetKey = string;
 export type OfficialAssetType =
   | "mascotPortrait" | "equipmentIcon" | "rewardThumbnail" | "collectibleThumbnail"
   | "navigationIcon" | "mapControl" | "mapPin" | "currencyIcon" | "shopArtwork"
-  | "texture" | "postalMark" | "postcardArtwork";
+  | "texture" | "postalMark" | "postcardArtwork" | "nestArtwork";
 
 export type OfficialAssetVersion = {
   key: OfficialAssetKey;
@@ -87,7 +93,7 @@ export type OfficialAssetManifestRow = {
 
 const assetTypes = new Set<OfficialAssetType>([
   "mascotPortrait", "equipmentIcon", "rewardThumbnail", "collectibleThumbnail",
-  "navigationIcon", "mapControl", "mapPin", "currencyIcon", "shopArtwork", "texture", "postalMark", "postcardArtwork",
+  "navigationIcon", "mapControl", "mapPin", "currencyIcon", "shopArtwork", "texture", "postalMark", "postcardArtwork", "nestArtwork",
 ]);
 const assetKeyPattern = /^[a-z][a-zA-Z0-9]*(\.[a-zA-Z0-9]+)+$/;
 
