@@ -45,10 +45,29 @@ Use stable public paths under `public/assets/`:
 - `stamps/` for reusable postal marks, cancellation marks, and collectible stamp art.
 - `tutorial/postcards/` for the larger, inspectable tutorial postcard artwork.
 - `tutorial/stamps/` for tutorial-only collectible seals.
+- `nest/` for modular Ninho hub artwork.
 
 Keep asset names lowercase and hyphenated, such as `nuvem.webp` or `worn-route-stamp.webp`.
 
 Keep large source files outside `public/` so they are not copied into the production build. Source-only app icons currently live under `assets-source/icons/`, while optimized runtime icons live under `public/assets/icons/`.
+
+## Ninho Hub Artwork
+
+Milestone 51 adds three decorative, modular `480×640` WebP illustrations under
+`public/assets/nest/`:
+
+- `profile-nook.webp` for the personal profile entry;
+- `mascot-roost.webp` for the mascot entry;
+- `mailbox.webp` for the mailbox entry.
+
+They are registered as active `nestArtwork` assets at version 1, are intentionally decorative
+(`alt=""`), and retain the CSS paper fallback if the official manifest or file is unavailable.
+Their respective optimized sizes are 51 KB, 57 KB, and 45 KB, within the 80 KB `nestArtwork`
+budget.
+
+`public/assets/profile/default-silhouette.webp` is the official neutral default avatar. It is a
+`256×256`, 6.5 KB WebP registered as `profile.avatar.defaultSilhouette`; it has localized alt
+text and is used by the Ninho and the owner-only Profile page.
 
 The current PWA icon family is derived from `assets-source/icons/duif-icon-transparent.png`:
 

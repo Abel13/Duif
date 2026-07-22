@@ -2027,6 +2027,49 @@ Success criteria:
 - the choice of mascot remains expressive and strategic without making one mascot objectively
   best for progression.
 
+## Milestone 50: Mailbox and Received Letters
+
+Status: Implemented locally.
+
+Goal:
+
+Let players read the letters their friends sent after the outbound trip reaches its destination.
+
+Includes:
+
+- a private, recipient-only authenticated mailbox query for delivered MVP letters;
+- a Ninho CTA to the mailbox without adding a sixth mobile navigation tab;
+- reusable full-letter paper viewer with accessible dialog behavior;
+- a received-letter list ordered by delivery arrival and a direct reply action to the sender.
+
+Does not include:
+
+- postcards, stickers, gifts, sent-mail UI, read/unread state, threads, notifications, or push.
+
+## Milestone 51: Ninho as Personal Hub
+
+Status: Implemented locally.
+
+Goal:
+
+Make `/nest` the clear personal home for a player, with real entry points to Profile, Mascots,
+and Caixa Postal rather than treating the Ninho as a mascot-detail route.
+
+Includes:
+
+- a read-only identity header with neutral silhouette, nickname, nest label, city/country, and
+  deliberately neutral zero values for Selos, Cristais, level, and XP;
+- three registered, modular `nestArtwork` entries for Profile, Mascots, and Caixa Postal;
+- data-backed mascot availability, in-progress journey rows, and received-letter counts;
+- owner-only `/profile` read-only view, with no edit, achievement, avatar-upload, or privacy UI;
+- canonical `/nest` bottom-navigation behavior while `/mascots` remains the mascot list/detail
+  area.
+
+Does not include:
+
+- economy, account progression, achievements, editable profile data, user avatars, nest
+  personalization, visitor profiles, or ambient animations.
+
 ## Historical First Execution Order
 
 The following order records how the initial prototype was bootstrapped. It is complete and must

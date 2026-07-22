@@ -446,9 +446,20 @@ Rules:
 
 - Received correspondence should use the product metaphor "Caixa Postal" instead of a
   generic inventory label.
-- The current bottom-nav entry should use "Coleção" for discovered items, not "Caixa
-  Postal", until a dedicated received-correspondence mailbox exists.
+- The bottom-nav entry remains "Coleção" for discovered items. The dedicated received-
+  correspondence mailbox is accessed from the Ninho, keeping the primary mobile navigation
+  focused on the five game surfaces.
 - The mailbox is part of owned content, but it is not the same thing as the collection.
+- Ninho is the player-owned hub for their read-only personal identity, mascot area, and mailbox.
+  It is not a mascot profile: individual mascot details remain in the mascot area.
+- Until their systems exist, Selos, Cristais, account level, and account XP may be displayed as
+  explicitly neutral zero values. The Ninho must not imply a purchasable balance, earned
+  progression, achievements, editable profile, or user-uploaded avatar.
+- The default player avatar is a neutral silhouette. Player profile data stays owner-only until a
+  separately approved visitor-profile and privacy model exists.
+- A received letter becomes readable only by its recipient when its delivery reaches the
+  destination. It remains private to the delivery participants; the sender does not receive an
+  inbox entry for their own letter.
 - The album can remain a UI metaphor inside collection, but avoid using "album categories"
   as visible copy; use filter language such as "Filtrar coleção" for category controls.
 - Functional items, consumables, cosmetics, postcards, stickers, rewards, and materials may
