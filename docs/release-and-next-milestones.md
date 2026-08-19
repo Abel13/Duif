@@ -52,9 +52,10 @@ rules. Exclude user uploads, gifts, trading, payment, and randomized paid reward
 
 ### Proposed Milestone 52A — Personal Postal Finishing
 
-Let players use their owned official collection stamps and postal marks on sent correspondence.
-Selections remain optional visual cosmetics, are validated and snapshotted by the backend, and do
-not consume stamps or change the currency/economy model.
+Make one official stamp and one postmark mandatory on every outgoing correspondence. Every player
+starts with a reusable default pair and may replace either with an owned personalized cosmetic.
+Personalized stamps and marks may later come from collection, received correspondence, or the
+shop; none are consumed or change the currency/economy model in this milestone.
 
 ### Proposed Milestone 53 — Quiet Delivery Notices
 

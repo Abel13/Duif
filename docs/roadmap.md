@@ -2109,15 +2109,17 @@ Status: Planned.
 
 Goal:
 
-Let a player apply owned official collection stamps and postal marks to correspondence before
-sending it, so a letter, postcard, or sticker delivery carries a personal postal presentation.
+Make postal finishing mandatory on sent correspondence: every letter, postcard, or sticker
+delivery carries one sender-selected official stamp and one official postmark.
 
 Includes:
 
-- catalog-backed, account-owned postage-stamp and postmark cosmetics obtained from collection,
-  shop ownership, or received correspondence;
-- a compact send-composer step to choose one owned stamp and one compatible official postmark,
-  with clear empty states when the player has none;
+- one permanent default stamp and one permanent default postmark for every player, ensuring no
+  correspondence can be sent without the complete postal presentation;
+- catalog-backed personalized stamp and postmark cosmetics obtainable from collection, received
+  correspondence, and a future shop ownership flow;
+- a compact mandatory send-composer step that selects one owned stamp and one compatible owned
+  postmark, prefilled with the defaults and never offering an empty state;
 - authoritative ownership validation and immutable delivery snapshots of the selected stamp and
   mark, so the recipient sees exactly what was sent even if the catalog changes later;
 - decorative stamp and postmark placement in the sender preview and recipient mailbox viewer;
@@ -2126,19 +2128,22 @@ Includes:
 
 Does not include:
 
-- consuming, trading, gifting, or converting stamps; a selected cosmetic remains owned;
+- consuming, trading, gifting, or converting stamps or postmarks; defaults and personalized
+  cosmetics remain reusable after selection;
 - player-created/uploaded art, freehand drawing, text on stamps, public galleries, or moderation;
-- changing currency Stamps, pricing, payment, delivery rewards, travel duration, or cargo;
+- implementing prices, payment, currency spending, or the shop purchase flow itself;
+- changing currency Stamps, delivery rewards, travel duration, or cargo;
 - multiple stamps/marks per item, automated geographic tracking marks, or real-world postal
   claims.
 
 Success criteria:
 
-- only a sender who owns an eligible item can apply it;
+- every supported outgoing correspondence has exactly one persisted stamp and one postmark;
+- only a sender who owns an eligible personalized cosmetic can replace a default;
 - retries and concurrent sends cannot attach an unowned or substituted cosmetic;
 - recipient and sender render the same persisted presentation without exposing extra location
   precision;
-- a player without owned postal cosmetics can still send every supported correspondence type.
+- the default stamp and postmark keep sending available for every player.
 
 ## Historical First Execution Order
 

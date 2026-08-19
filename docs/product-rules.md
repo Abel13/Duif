@@ -480,11 +480,15 @@ Rules:
 
 ### Postal finishing for sent correspondence
 
+- Every sent correspondence item requires exactly one official stamp and one compatible official
+  postmark. Every account owns the reusable default pair from the start.
 - Collection stamps and postal marks are visual correspondence cosmetics, distinct from the
   Stamps currency and from route-reward album stamps.
-- A player may apply at most one owned official collection stamp and one compatible official
-  postmark to a sent item. The selection is optional and does not consume, transfer, or alter the
-  owned item.
+- A player may replace either default with one owned official personalized cosmetic. Selections
+  are mandatory but neither default nor personalized cosmetics are consumed, transferred, or
+  altered by a send.
+- Personalized stamps and postmarks may later be earned, received, or sold through the approved
+  shop model; their acquisition, price, and payment rules remain a separate milestone.
 - The backend validates ownership at send time and snapshots the chosen official identities on the
   delivery. Sender and recipient render that snapshot rather than a mutable current selection.
 - Postal marks may use the delivery's already-safe city/country label and delivery dates, but must
