@@ -1,6 +1,6 @@
 # Sistema de XP
 
-Status: definição de produto aprovada. A persistência, as concessões e as telas autoritativas serão implementadas no Milestone 49.
+Status: contrato e coleta autoritativa implementados localmente no Milestone 49; migration remota pendente de deployment.
 
 ## Princípio
 

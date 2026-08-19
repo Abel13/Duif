@@ -11,6 +11,7 @@ import {
   mapCollectRewardPayload,
   mapDeliveryRewardRowToReward,
   mapPersistedRouteDiscovery,
+  mapProgressionPayload,
   mapRewardItemRowToRewardItem,
 } from "./authenticatedRewards";
 import type { DeliveryRow } from "./authenticatedMascots";
@@ -163,6 +164,23 @@ describe("authenticated reward mappers", () => {
       regionLabel: "locations.londrina",
       routeProgress: 0,
     });
+  });
+
+  it("maps only versioned, server-resolved progression awards", () => {
+    expect(mapProgressionPayload({
+      formula_version: 1,
+      reputation_xp: 35,
+      mascot_xp: 92,
+      inputs: { affinity: "longDistance" },
+      skill_awards: [{ skillId: "skill-nuvem-long-route", xp: 10, level: 1, currentXp: 10, nextLevelXp: 60 }],
+    })).toMatchObject({
+      formulaVersion: 1,
+      reputationXp: 35,
+      mascotXp: 92,
+      affinity: "longDistance",
+      skillAwards: [{ skillId: "skill-nuvem-long-route", xp: 10 }],
+    });
+    expect(mapProgressionPayload({ formula_version: 2 })).toBeUndefined();
   });
 
   it("composes collected authenticated reward state", () => {

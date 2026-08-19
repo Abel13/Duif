@@ -9,7 +9,7 @@ import {
 } from "../integrations/supabase/authenticatedRewards";
 import type { TranslationKey } from "../i18n";
 import type { RouteRewardDiscovery } from "./mapTravel";
-import type { Delivery, DeliveryReward } from "./types";
+import type { Delivery, DeliveryProgressionAward, DeliveryReward } from "./types";
 
 type RewardCollectionState = {
   canCollect: boolean;
@@ -21,6 +21,7 @@ type RewardCollectionState = {
   isLoading: boolean;
   isMutating: boolean;
   reward?: DeliveryReward;
+  progression?: DeliveryProgressionAward;
   routeDiscoveries: RouteRewardDiscovery[];
 };
 
@@ -44,6 +45,7 @@ function mapState(data: AuthenticatedRewardCollection, profileId: string): Rewar
     isLoading: false,
     isMutating: false,
     reward: data.reward,
+    progression: data.progression,
     routeDiscoveries: data.routeDiscoveries,
   };
 }
@@ -81,6 +83,7 @@ export function useRewardCollectionData(deliveryId?: string) {
         isCollected: true,
         isMutating: false,
         reward: result.reward,
+        progression: result.progression,
       }));
     } catch {
       setState((current) => ({ ...current, error: "rewards.collectError", isMutating: false }));

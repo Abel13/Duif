@@ -1,5 +1,6 @@
 import {
   type Delivery,
+  type DeliveryProgressionAward,
   type DeliveryReward,
   type InventoryItem,
   type RewardItem,
@@ -27,6 +28,7 @@ export type AuthenticatedRewardCollection = {
   isCollected: boolean;
   reward?: DeliveryReward;
   routeDiscoveries: RouteRewardDiscovery[];
+  progression?: DeliveryProgressionAward;
 };
 
 export type CollectedRewardResult = {
@@ -34,6 +36,7 @@ export type CollectedRewardResult = {
   inventoryItem: InventoryItem;
   reward: DeliveryReward;
   routeInventoryItems: InventoryItem[];
+  progression?: DeliveryProgressionAward;
 };
 
 type CollectionRpcPayload = {
@@ -42,6 +45,14 @@ type CollectionRpcPayload = {
   reward: DeliveryRewardRow;
   rewardItem: RewardItemRow;
   routeInventoryItems?: InventoryItemRow[];
+};
+
+type ProgressionPayload = {
+  formula_version: number;
+  reputation_xp: number;
+  mascot_xp: number;
+  skill_awards: unknown[];
+  inputs: Record<string, unknown>;
 };
 
 function isObject(value: unknown): value is Record<string, unknown> {
@@ -65,6 +76,25 @@ function isUuid(value: string) {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
     value,
   );
+}
+
+export function mapProgressionPayload(value: unknown): DeliveryProgressionAward | undefined {
+  if (!isObject(value) || value.formula_version !== 1 || typeof value.reputation_xp !== "number"
+    || typeof value.mascot_xp !== "number" || !Array.isArray(value.skill_awards) || !isObject(value.inputs)) return undefined;
+  const source = value as ProgressionPayload;
+  const affinity = isObject(source.inputs) ? source.inputs.affinity : undefined;
+  const skillAwards = source.skill_awards.flatMap((award) => isObject(award)
+    && typeof award.skillId === "string" && typeof award.xp === "number" && typeof award.level === "number"
+    && typeof award.currentXp === "number" && typeof award.nextLevelXp === "number"
+      ? [{ skillId: award.skillId, xp: award.xp, level: award.level, currentXp: award.currentXp, nextLevelXp: award.nextLevelXp }]
+      : []);
+  return {
+    formulaVersion: 1,
+    reputationXp: source.reputation_xp,
+    mascotXp: source.mascot_xp,
+    affinity: affinity === "longDistance" || affinity === "urban" || affinity === "discovery" ? affinity : undefined,
+    skillAwards,
+  };
 }
 
 export function mapRewardItemRowToRewardItem(row: RewardItemRow): RewardItem {
@@ -123,12 +153,14 @@ export function composeAuthenticatedRewardCollection({
   rewardItemRow,
   rewardRow,
   routeDiscoveries = [],
+  progression,
 }: {
   delivery: Delivery;
   inventoryCount: number;
   rewardItemRow?: RewardItemRow;
   rewardRow?: DeliveryRewardRow;
   routeDiscoveries?: RouteRewardDiscovery[];
+  progression?: DeliveryProgressionAward;
 }): AuthenticatedRewardCollection {
   const persistedReward =
     rewardRow && rewardItemRow
@@ -141,6 +173,7 @@ export function composeAuthenticatedRewardCollection({
     isCollected: Boolean(rewardRow?.collected_at),
     reward: persistedReward,
     routeDiscoveries,
+    progression,
   };
 }
 
@@ -164,6 +197,7 @@ export function mapCollectRewardPayload(
     routeInventoryItems: Array.isArray(payload.routeInventoryItems)
       ? payload.routeInventoryItems.map(mapInventoryItemRow)
       : [],
+    progression: undefined,
   };
 }
 
@@ -267,7 +301,7 @@ export async function fetchAuthenticatedRewardCollection(
   if (!mascotPublicId) return undefined;
   const delivery = mapDeliveryRowToDelivery(deliveryRow, mascotPublicId);
 
-  const [{ data: rewardRow }, { count: inventoryCount }, routeDiscoveries] = await Promise.all([
+  const [{ data: rewardRow }, { count: inventoryCount }, routeDiscoveries, { data: progressionData }] = await Promise.all([
     supabase
       .from("delivery_rewards")
       .select("*")
@@ -280,6 +314,7 @@ export async function fetchAuthenticatedRewardCollection(
     delivery.routeDiscoveryVersion
       ? fetchPersistedRouteDiscoveries(deliveryRow.id)
       : Promise.resolve([]),
+    supabase.rpc("get_delivery_progression_award", { delivery_id: deliveryRow.id }),
   ]);
 
   const rewardItemRow = rewardRow
@@ -297,6 +332,7 @@ export async function fetchAuthenticatedRewardCollection(
     rewardItemRow,
     rewardRow: rewardRow ?? undefined,
     routeDiscoveries,
+    progression: mapProgressionPayload(progressionData),
   });
 }
 
@@ -321,5 +357,10 @@ export async function collectAuthenticatedReward({
     throw error ?? new Error("Reward was not collected.");
   }
 
-  return mapCollectRewardPayload(data, mascotId);
+  const collected = mapCollectRewardPayload(data, mascotId);
+  if (!collected) return undefined;
+  const { data: progressionData } = await supabase.rpc("get_delivery_progression_award", {
+    delivery_id: deliveryId,
+  });
+  return { ...collected, progression: mapProgressionPayload(progressionData) };
 }

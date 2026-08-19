@@ -153,6 +153,20 @@ export type DeliveryReward = {
   item: RewardItem;
 };
 
+export type DeliveryProgressionAward = {
+  formulaVersion: 1;
+  reputationXp: number;
+  mascotXp: number;
+  affinity?: "longDistance" | "urban" | "discovery";
+  skillAwards: Array<{
+    skillId: string;
+    xp: number;
+    level: number;
+    currentXp: number;
+    nextLevelXp: number;
+  }>;
+};
+
 export type InventoryItem = RewardItem & {
   category: Exclude<InventoryCategory, "all">;
   collectedAt: string;

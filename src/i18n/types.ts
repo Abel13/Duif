@@ -583,6 +583,14 @@ export type TranslationDictionary = {
     inventory: string;
     collected: string;
     rarity: string;
+    progressionTitle: string;
+    reputationXp: string;
+    mascotFlightXp: string;
+    skillXp: string;
+    affinity: string;
+    affinityLongDistance: string;
+    affinityUrban: string;
+    affinityDiscovery: string;
     items: {
       wornRouteStamp: {
         name: string;
@@ -1247,6 +1255,14 @@ export type TranslationKey =
   | "rewards.inventory"
   | "rewards.collected"
   | "rewards.rarity"
+  | "rewards.progressionTitle"
+  | "rewards.reputationXp"
+  | "rewards.mascotFlightXp"
+  | "rewards.skillXp"
+  | "rewards.affinity"
+  | "rewards.affinityLongDistance"
+  | "rewards.affinityUrban"
+  | "rewards.affinityDiscovery"
   | "rewards.items.wornRouteStamp.name"
   | "rewards.items.wornRouteStamp.description"
   | "rewards.items.blueAirmailLabel.name"

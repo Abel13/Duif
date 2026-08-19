@@ -63,6 +63,11 @@
   margin: 0;
 }
 
+.progression {
+  border-top: 1px dashed var(--color-postal-brown);
+  padding-top: 0.9rem;
+}
+
 .summary div,
 .rewardDetails div {
   min-width: 0;

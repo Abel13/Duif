@@ -159,6 +159,7 @@ export type {
   PostcardContent,
   PostcardVariant,
   DeliveryReward,
+  DeliveryProgressionAward,
   RewardItem,
   RewardRarity,
   ReceivedCorrespondencePreview,

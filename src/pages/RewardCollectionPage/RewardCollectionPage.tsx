@@ -11,6 +11,7 @@ import {
   resolveDeliveryPlaceLabel,
   useRewardCollectionData,
   type Delivery,
+  type DeliveryProgressionAward,
   type DeliveryReward,
 } from "../../game";
 import { useMascotCatalog } from "../../game/useMascotCatalog";
@@ -30,6 +31,7 @@ export function RewardCollectionPage() {
     isLoading,
     isMutating,
     reward,
+    progression,
     routeDiscoveries,
   } = useRewardCollectionData(deliveryId);
   const { mascots } = useMascotCatalog();
@@ -103,6 +105,7 @@ export function RewardCollectionPage() {
               deliveryId={delivery.id}
               onCollect={collectReward}
               reward={displayReward}
+              progression={progression}
               routeDiscoveries={routeDiscoveries}
             />
           ) : (
@@ -123,6 +126,7 @@ function RewardPanel({
   deliveryId,
   onCollect,
   reward,
+  progression,
   routeDiscoveries,
 }: {
   canCollect: boolean;
@@ -133,6 +137,7 @@ function RewardPanel({
   deliveryId: string;
   onCollect: () => void;
   reward?: DeliveryReward;
+  progression?: DeliveryProgressionAward;
   routeDiscoveries: ReturnType<typeof useRewardCollectionData>["routeDiscoveries"];
 }) {
   const { t } = useTranslation();
@@ -183,6 +188,19 @@ function RewardPanel({
             />
             <SummaryRow label={t("rewards.inventory")} value={`${inventoryCount}`} />
           </dl>
+        ) : null}
+        {progression ? (
+          <section className={styles.progression} aria-labelledby="progression-title">
+            <h3 className={styles.cargoTitle} id="progression-title">{t("rewards.progressionTitle")}</h3>
+            <dl className={styles.rewardDetails}>
+              <SummaryRow label={t("rewards.reputationXp")} value={`+${progression.reputationXp} XP`} />
+              <SummaryRow label={t("rewards.mascotFlightXp")} value={`+${progression.mascotXp} XP`} />
+              {progression.affinity ? <SummaryRow label={t("rewards.affinity")} value={t(`rewards.affinity${progression.affinity[0].toUpperCase()}${progression.affinity.slice(1)}` as TranslationKey)} /> : null}
+              {progression.skillAwards.map((award) => (
+                <SummaryRow key={award.skillId} label={t("rewards.skillXp")} value={`+${award.xp} XP`} />
+              ))}
+            </dl>
+          </section>
         ) : null}
         {isCollected ? (
           <Link className={styles.returnLink} to={`/map?deliveryId=${encodeURIComponent(deliveryId)}`}>

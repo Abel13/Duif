@@ -748,6 +748,14 @@ export const ptBR = {
     inventory: "Itens na coleção",
     collected: "Coletado",
     rarity: "Raridade",
+    progressionTitle: "Progresso da rota",
+    reputationXp: "Reputação Postal",
+    mascotFlightXp: "XP de voo",
+    skillXp: "XP de habilidade",
+    affinity: "Afinidade de rota",
+    affinityLongDistance: "Rota longa",
+    affinityUrban: "Rota urbana",
+    affinityDiscovery: "Descoberta no caminho",
     items: {
       wornRouteStamp: {
         name: "Selo de rota gasto",

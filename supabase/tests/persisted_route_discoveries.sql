@@ -39,6 +39,15 @@ begin
 end;
 $$;
 
+insert into public.player_mascots (
+  id, owner_profile_id, template_id, name, level, xp, next_level_xp,
+  attributes, trait, equipment, skills, appearance
+)
+select '00000000-0000-4000-8000-000000000205', '00000000-0000-4000-8000-000000000001',
+  id, 'Second player mascot', base_level, base_xp, next_level_xp,
+  attributes, trait, equipment, skills, appearance
+from public.mascot_templates where catalog_key = 'mascot-nuvem';
+
 insert into public.deliveries (
   id, sender_profile_id, receiver_profile_id, mascot_id,
   correspondence_option_id, origin_latitude, origin_longitude, origin_label_key,
@@ -49,7 +58,7 @@ insert into public.deliveries (
   '00000000-0000-4000-8000-000000009502',
   '00000000-0000-4000-8000-000000000001',
   '00000000-0000-4000-8000-000000000101',
-  '00000000-0000-4000-8000-000000000203',
+  '00000000-0000-4000-8000-000000000205',
   '00000000-0000-4000-8000-000000000401',
   -77, 166, 'locations.londrina', -77.5, 167, 'locations.maringa', 50, 62,
   now(), now() + interval '1 hour', now() + interval '2 hours',
@@ -109,6 +118,9 @@ declare
   first_result jsonb;
   repeated_result jsonb;
   route_inventory_count integer;
+  progression_award_count integer;
+  awarded_mascot_xp integer;
+  awarded_reputation_xp integer;
 begin
   first_result := public.collect_delivery_reward('00000000-0000-4000-8000-000000009501');
   repeated_result := public.collect_delivery_reward('00000000-0000-4000-8000-000000009501');
@@ -121,18 +133,36 @@ begin
 
   select count(*) into route_inventory_count
   from public.inventory_items
-  where id in (select inventory_item_id from public.delivery_route_discoveries);
+  where id in (
+    select inventory_item_id from public.delivery_route_discoveries
+    where delivery_id = '00000000-0000-4000-8000-000000009501'
+  );
 
   if route_inventory_count <> 6 then
     raise exception 'Expected six unique route inventory items, got %', route_inventory_count;
   end if;
 
+  select count(*), max(mascot_xp), max(reputation_xp)
+    into progression_award_count, awarded_mascot_xp, awarded_reputation_xp
+    from public.delivery_progression_awards
+    where delivery_id = '00000000-0000-4000-8000-000000009501';
+  if progression_award_count <> 1 or awarded_mascot_xp <= 0 or awarded_reputation_xp <= 0 then
+    raise exception 'Collection must grant one positive, idempotent progression award';
+  end if;
+
+  if not exists (
+    select 1 from public.profile_postal_progression
+    where profile_id = '00000000-0000-4000-8000-000000000001' and (xp > 0 or level > 1)
+  ) then
+    raise exception 'Collection did not update Postal Reputation';
+  end if;
+
   if not exists (
     select 1 from public.inventory_items
-    where id in (select inventory_item_id from public.delivery_route_discoveries) and category = 'stamps'
+    where id in (select inventory_item_id from public.delivery_route_discoveries where delivery_id = '00000000-0000-4000-8000-000000009501') and category = 'stamps'
   ) or not exists (
     select 1 from public.inventory_items
-    where id in (select inventory_item_id from public.delivery_route_discoveries) and category = 'routeMarks'
+    where id in (select inventory_item_id from public.delivery_route_discoveries where delivery_id = '00000000-0000-4000-8000-000000009501') and category = 'routeMarks'
   ) then
     raise exception 'Route inventory category mapping is incomplete';
   end if;

@@ -1156,6 +1156,7 @@ export type Database = {
         }
       }
       collect_delivery_reward: { Args: { delivery_id: string }; Returns: Json }
+      get_delivery_progression_award: { Args: { delivery_id: string }; Returns: Json }
       complete_nest_setup: { Args: { selected_latitude: number; selected_longitude: number; selected_city_geoname_id: number }; Returns: Json }
       get_my_nest_city: { Args: never; Returns: { label: string }[] }
       list_received_letters: {

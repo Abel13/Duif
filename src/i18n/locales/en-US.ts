@@ -670,6 +670,14 @@ export const enUS = {
     inventory: "Collection items",
     collected: "Collected",
     rarity: "Rarity",
+    progressionTitle: "Route progress",
+    reputationXp: "Postal Reputation",
+    mascotFlightXp: "Flight XP",
+    skillXp: "Skill XP",
+    affinity: "Route affinity",
+    affinityLongDistance: "Long-distance route",
+    affinityUrban: "Urban route",
+    affinityDiscovery: "Route discovery",
     items: {
       wornRouteStamp: {
         name: "Worn route stamp",
