@@ -15,6 +15,16 @@ No Supabase Dashboard, abra **Authentication → Users → [usuário] → App me
 Depois, a pessoa precisa sair e entrar novamente (ou renovar a sessão) para obter um JWT novo.
 Não use `user_metadata` para esse papel e não o defina pelo navegador.
 
+Em um ambiente onde você tenha a URL direta do banco, há também o script administrativo versionado:
+
+```sh
+psql "$DATABASE_URL" -v admin_email='maintainer@example.com' \
+  -f supabase/admin/grant_admin_role.sql
+```
+
+Ele preserva outros valores de `app_metadata` e retorna o usuário alterado. O comando deve retornar
+exatamente uma linha; caso retorne zero, confira o e-mail antes de tentar novamente.
+
 ## Publicação
 
 1. Abra o ateliê e crie um rascunho com uma chave estável, tipo, arquivo e autoria.
