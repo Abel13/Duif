@@ -30,6 +30,7 @@ import {
 } from "./onboarding";
 import { acknowledgeInauguralPostcardHint as acknowledgeInauguralPostcardHintRequest, acknowledgeTutorialInstruction as acknowledgeTutorialInstructionRequest, collectTutorialDelivery as collectTutorialDeliveryRequest, startOrResumeTutorialDelivery as startOrResumeTutorialDeliveryRequest, type TutorialDeliveryState, type TutorialInstructionStep } from "./tutorial";
 import { completeNestSetup as completeNestSetupRequest } from "./nest";
+import { captureReferralInvitation, referralTokenStorageKey } from "./referrals";
 import type { NestCoordinate } from "../../game/nest";
 
 const pendingEmailStorageKey = "duif.auth.pendingVerificationEmail";
@@ -125,6 +126,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
         setPendingVerificationEmail(null);
         window.sessionStorage.removeItem(pendingEmailStorageKey);
+        const referralToken = window.sessionStorage.getItem(referralTokenStorageKey);
+        if (referralToken) {
+          try {
+            const outcome = await captureReferralInvitation(referralToken);
+            if (["captured", "already_attributed", "not_new_account", "self_referral", "invalid"].includes(outcome)) {
+              window.sessionStorage.removeItem(referralTokenStorageKey);
+            }
+          } catch {
+            // Keep the signed invitation briefly; a temporary function outage must not lose attribution.
+          }
+        }
         const [nextProfile, nextOnboarding] = await Promise.all([
           fetchProfile(nextSession.user.id),
           beginOrResumeOnboarding(),
@@ -179,6 +191,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const supabase = getSupabaseClient();
     if (!supabase) return { ok: false, code: "serviceUnavailable" };
     const normalizedEmail = email.trim();
+    const referralToken = typeof window === "undefined" ? null : window.sessionStorage.getItem(referralTokenStorageKey);
 
     try {
       const { data, error } = await supabase.auth.signUp({
@@ -186,6 +199,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         password,
         options: {
           emailRedirectTo: authRedirect(`/auth/callback?next=${encodeURIComponent(sanitizeIntendedRoute(intendedRoute ?? null))}`),
+          data: referralToken ? { duif_referral_token: referralToken } : undefined,
         },
       });
       const result = resolveSignUpResponse({ error, hasUser: Boolean(data.user) });

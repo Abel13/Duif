@@ -461,12 +461,14 @@ export type TranslationDictionary = {
     carrierPigeon: string;
     messengerFalcon: string;
     mailDuck: string;
+    postalOwl: string;
   };
   archetypes: {
     suggestedNames: {
       nuvem: string;
       trovao: string;
       pipoca: string;
+      owl: string;
     };
   };
   traits: {
@@ -482,6 +484,7 @@ export type TranslationDictionary = {
       name: string;
       description: string;
     };
+    nightRoute: { name: string; description: string; };
   };
   equipment: {
     rarity: {
@@ -543,6 +546,7 @@ export type TranslationDictionary = {
       name: string;
       description: string;
     };
+    owlNightWatch: { name: string; description: string; };
   };
   delivery: {
     progress: string;
@@ -759,6 +763,10 @@ export type TranslationDictionary = {
       };
     };
   };
+  referrals: {
+    invitationEyebrow: string; invitationLoading: string; invitationTitle: string; invitationDescription: string; acceptInvitation: string; invalidInvitationTitle: string; invalidInvitationDescription: string;
+    tab: string; title: string; description: string; share: string; copy: string; copied: string; regenerate: string; regenerateConfirm: string; progress: string; pendingTitle: string; pendingDescription: string; owlName: string; claimOwl: string; claimed: string; unavailable: string; claimError: string;
+  };
   correspondence: {
     letter: {
       name: string;
@@ -787,6 +795,7 @@ export type TranslationDictionary = {
     friendAtlasPortrait: string;
     friendLumaPortrait: string;
     friendMaplePortrait: string;
+    owlPortrait: string;
   };
 };
 
@@ -1416,6 +1425,9 @@ export type TranslationKey =
   | "appearance.friendAtlasPortrait"
   | "appearance.friendLumaPortrait"
   | "appearance.friendMaplePortrait"
+  | "appearance.owlPortrait"
+  | "referrals.invitationEyebrow" | "referrals.invitationLoading" | "referrals.invitationTitle" | "referrals.invitationDescription" | "referrals.acceptInvitation" | "referrals.invalidInvitationTitle" | "referrals.invalidInvitationDescription"
+  | "referrals.tab" | "referrals.title" | "referrals.description" | "referrals.share" | "referrals.copy" | "referrals.copied" | "referrals.regenerate" | "referrals.regenerateConfirm" | "referrals.progress" | "referrals.pendingTitle" | "referrals.pendingDescription" | "referrals.owlName" | "referrals.claimOwl" | "referrals.claimed" | "referrals.unavailable" | "referrals.claimError"
   | "tutorial.postcard.open"
   | "tutorial.postcard.close"
   | "tutorial.postcard.flip"

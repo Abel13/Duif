@@ -542,12 +542,14 @@ export const enUS = {
     carrierPigeon: "Carrier pigeon",
     messengerFalcon: "Messenger falcon",
     mailDuck: "Mail duck",
+    postalOwl: "Postal owl",
   },
   archetypes: {
     suggestedNames: {
       nuvem: "Cloud",
       trovao: "Thunder",
       pipoca: "Popcorn",
+      owl: "Owl",
     },
   },
   traits: {
@@ -565,6 +567,7 @@ export const enUS = {
       description:
         "Increases the chance of finding souvenirs and rare items en route.",
     },
+    nightRoute: { name: "Night Route", description: "Finds signs and events even when a route grows quiet." },
   },
   equipment: {
     rarity: {
@@ -626,6 +629,7 @@ export const enUS = {
       name: "Happy Detour",
       description: "Turns small delays into a chance for discovery.",
     },
+    owlNightWatch: { name: "Night Watch", description: "Keeps orientation when a route crosses the night." },
   },
   delivery: {
     progress: "Progress",
@@ -885,6 +889,10 @@ export const enUS = {
       },
     },
   },
+  referrals: {
+    invitationEyebrow: "Postal invitation", invitationLoading: "Checking the invitation...", invitationTitle: "{name} invited you to DUIF", invitationDescription: "Create your account to begin your own postal adventure. Friendship always remains your choice.", acceptInvitation: "Accept invitation", invalidInvitationTitle: "Invitation unavailable", invalidInvitationDescription: "This invitation is no longer active. You can still create your account normally.",
+    tab: "Invite", title: "Postal invitations", description: "Invite new people to discover DUIF. Five completed journeys unlock an Owl.", share: "Share invitation", copy: "Copy link", copied: "Link copied", regenerate: "Generate new link", regenerateConfirm: "Generate another link? The previous one will stop working.", progress: "{current} of {target} qualified invitations", pendingTitle: "An Owl has arrived", pendingDescription: "Five invitees completed their first journey. Give your new messenger a name.", owlName: "Owl name", claimOwl: "Claim Owl", claimed: "Your Owl already lives in the nest.", unavailable: "Your invitation could not be prepared right now.", claimError: "The Owl could not be claimed right now.",
+  },
   correspondence: {
     letter: {
       name: "Letter",
@@ -913,5 +921,6 @@ export const enUS = {
     friendAtlasPortrait: "Temporary portrait of Atlas",
     friendLumaPortrait: "Temporary portrait of Luma",
     friendMaplePortrait: "Portrait of Maple",
+    owlPortrait: "Temporary Owl portrait",
   },
 } satisfies TranslationDictionary;

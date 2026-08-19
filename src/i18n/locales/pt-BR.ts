@@ -619,12 +619,14 @@ export const ptBR = {
     carrierPigeon: "Pombo-correio",
     messengerFalcon: "Falcão-mensageiro",
     mailDuck: "Pato-correio",
+    postalOwl: "Coruja-postal",
   },
   archetypes: {
     suggestedNames: {
       nuvem: "Nuvem",
       trovao: "Trovão",
       pipoca: "Pipoca",
+      owl: "Coruja",
     },
   },
   traits: {
@@ -643,6 +645,7 @@ export const ptBR = {
       description:
         "Aumenta a chance de encontrar lembranças e itens raros pelo caminho.",
     },
+    nightRoute: { name: "Rota Noturna", description: "Enxerga sinais e eventos mesmo quando a rota fica silenciosa." },
   },
   equipment: {
     rarity: {
@@ -704,6 +707,7 @@ export const ptBR = {
       name: "Desvio Alegre",
       description: "Transforma pequenos atrasos em chance de descoberta.",
     },
+    owlNightWatch: { name: "Vigília Noturna", description: "Mantém a orientação quando a rota atravessa a noite." },
   },
   delivery: {
     progress: "Progresso",
@@ -968,6 +972,10 @@ export const ptBR = {
       },
     },
   },
+  referrals: {
+    invitationEyebrow: "Convite postal", invitationLoading: "Conferindo o convite...", invitationTitle: "{name} convidou você para o DUIF", invitationDescription: "Crie sua conta para começar sua própria aventura postal. A amizade continua sendo sempre uma escolha sua.", acceptInvitation: "Aceitar convite", invalidInvitationTitle: "Convite indisponível", invalidInvitationDescription: "Este convite não está mais ativo. Você ainda pode criar sua conta normalmente.",
+    tab: "Indicar", title: "Convites postais", description: "Convide novas pessoas para conhecer o DUIF. Cinco jornadas completas liberam uma Coruja.", share: "Compartilhar convite", copy: "Copiar link", copied: "Link copiado", regenerate: "Gerar novo link", regenerateConfirm: "Gerar outro link? O anterior deixará de funcionar.", progress: "{current} de {target} indicações qualificadas", pendingTitle: "Uma Coruja chegou", pendingDescription: "Cinco convidados concluíram a primeira jornada. Dê um nome à sua nova mensageira.", owlName: "Nome da Coruja", claimOwl: "Resgatar Coruja", claimed: "Sua Coruja já mora no ninho.", unavailable: "Não foi possível preparar seu convite agora.", claimError: "Não foi possível resgatar a Coruja agora.",
+  },
   correspondence: {
     letter: {
       name: "Carta",
@@ -996,5 +1004,6 @@ export const ptBR = {
     friendAtlasPortrait: "Retrato temporário de Atlas",
     friendLumaPortrait: "Retrato temporário de Luma",
     friendMaplePortrait: "Retrato de Maple",
+    owlPortrait: "Retrato temporário de Coruja",
   },
 } satisfies TranslationDictionary;

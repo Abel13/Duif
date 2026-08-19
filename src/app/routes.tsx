@@ -5,6 +5,7 @@ import { FoundationStatusPage } from "../pages/FoundationStatusPage/FoundationSt
 import { AuthPage } from "../pages/AuthPage/AuthPage";
 import { AuthCallbackPage } from "../pages/AuthCallbackPage/AuthCallbackPage";
 import { ResetPasswordPage } from "../pages/ResetPasswordPage/ResetPasswordPage";
+import { InvitationPage } from "../pages/InvitationPage/InvitationPage";
 import { OnboardingPage } from "../pages/OnboardingPage/OnboardingPage";
 import { sanitizeIntendedRoute } from "../integrations/supabase/authContracts";
 import { useAuth } from "../integrations/supabase/AuthProvider";
@@ -30,6 +31,7 @@ export function AppRoutes() {
       <Route path="/auth" element={<PublicAuthRoute />} />
       <Route path="/auth/callback" element={<AuthCallbackPage />} />
       <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
+      <Route path="/invite/:token" element={<InvitationPage />} />
       <Route path="/onboarding" element={<ProtectedOnboardingRoute />} />
       <Route path="/onboarding/tutorial" element={<ProtectedTutorialRoute />} />
       <Route path="/onboarding/nest" element={<ProtectedNestRoute />} />
