@@ -198,7 +198,7 @@ function MascotChoice() {
       setState("ready");
     } catch { setState("error"); }
   }
-  function beginTutorial(){navigate("/onboarding/tutorial");}
+  function beginTutorial(){navigate("/onboarding/nest");}
 
   return <OnboardingShell locale={locale} onLocaleChange={setLocale} onSignOut={signOut}>
     <section className={`${styles.card} ${styles.mascotCard}`}>
