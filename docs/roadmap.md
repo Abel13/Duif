@@ -1984,6 +1984,39 @@ Success criteria:
 - only the request recipient can accept or decline;
 - a first accepted friend can be selected in the existing real send flow.
 
+## Milestone 48A: Traceable Invitations And Owl Reward
+
+Status: Planned.
+
+Goal:
+
+Allow a player to invite people who do not yet use DUIF, while keeping postal friendship and
+referral attribution as separate, private systems.
+
+Includes:
+
+- one regenerable, signed invitation link per player, with no public profile or location data;
+- attribution captured only when a new account first opens the link, then frozen to that inviter;
+- an invitation becomes qualified only when the invited account confirms its email and completes
+  onboarding; registration or a click alone never counts;
+- idempotent, backend-authoritative qualified-invite counting with rate limits and audit records;
+- a localized invitation surface in Friends with copy/share actions and qualification progress;
+- one account-bound Owl mascot granted exactly once when five distinct qualified invitees exist;
+- a dedicated, non-starter owl archetype and explicit reward collection/notification.
+
+Does not include:
+
+- automatic friendship, public invitee lists, contact uploads, address books, leaderboard,
+  cash, premium currency, paid acquisition, or rewards for unqualified registrations;
+- self-referral, changing an inviter after attribution, multiple inviters, or repeated owl grants.
+
+Success criteria:
+
+- a link alone reveals no player identity beyond the optional invitation presentation;
+- only five distinct, completed new accounts qualify;
+- retries and concurrent completion cannot over-count referrals or duplicate the owl;
+- the invited player may independently choose whether to create a postal friendship.
+
 ## Milestone 49: Authoritative Postal Progression and Situational Affinity
 
 Status: Implemented locally; remote migration pending deployment.

@@ -188,12 +188,12 @@ Reward impact:
 
 ## Social and Friends Rules
 
-Friends are real users connected by invite or code.
+ Friends are real users connected by a postal code. Referral invitations are a separate,
+ opt-in acquisition mechanism and never create friendship automatically.
 
 Rules:
 
-- A player can invite another player by code or link.
-- The invite only allows a friendship request.
+- A postal code only allows a friendship request.
 - The invite does not reveal location details.
 - Sending correspondence requires an accepted friendship.
 - Users who are not accepted friends cannot send to each other.
@@ -208,6 +208,18 @@ Rules:
   player-search results.
 - The recipient sees visible received content based on what was sent: letter, postcard,
   sticker, gift, or future correspondence type.
+
+### Traceable invitations
+
+- An invitation link is signed, regenerable, and records at most one inviter for a newly created
+  account; it is not a login credential or a friendship request.
+- A referral qualifies only after email confirmation and completed onboarding. Clicks, duplicate
+  accounts, incomplete registrations, self-referrals, and an already-attributed account do not
+  count.
+- The backend owns attribution, rate limits, qualification, counting, and the immutable audit
+  record. The inviter sees aggregate progress only, never invitee email or private location data.
+- Five distinct qualified referrals grant one account-bound Owl mascot exactly once. It is a
+  non-starter mascot and cannot be traded, sold, or duplicated by retries.
 
 Friend location visibility:
 
@@ -611,7 +623,7 @@ The following topics still need explicit product decisions before deep implement
 - final map tile provider and map visual art direction.
 ## Private nest activation
 
-The real nest is selected after the mandatory tutorial. City search uses the imported GeoNames
+The real nest is selected after the player chooses their starter mascot and before the mandatory tutorial. City search uses the imported GeoNames
 catalog only to position the OpenStreetMap view; the search text is not retained. The player then
 chooses an area manually. The server rounds that point to an approximately 2 km cell before
 storing it for route calculations and keeps the selected GeoNames city as the route's postal city.

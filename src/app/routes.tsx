@@ -110,8 +110,9 @@ function ProtectedOnboardingRoute() {
   if ((journeyState === "onboardingRequired" || journeyState === "tutorialActive") && !onboarding) {
     return <FoundationStatusPage state="loading" />;
   }
-  if (journeyState !== "onboardingRequired" && journeyState !== "tutorialActive") {
-    return <FoundationStatusPage state="onboardingPending" />;
-  }
+  if(journeyState==="tutorialActive") return <Navigate replace to="/onboarding/tutorial"/>;
+  if(journeyState==="nestSetupRequired") return <Navigate replace to="/onboarding/nest"/>;
+  if(journeyState==="ready") return <Navigate replace to="/map"/>;
+  if(journeyState!=="onboardingRequired") return <Navigate replace to="/auth"/>;
   return <OnboardingPage />;
 }
