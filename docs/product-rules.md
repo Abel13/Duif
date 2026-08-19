@@ -483,6 +483,9 @@ Category defaults:
 - duplicate postcards, badges, and collection stamps convert into collection progress;
 - duplicate conversion rates, quantities, and any overflow reward remain balancing
   decisions for a later milestone.
+- Until that conversion system exists, the Collection may group repeat non-equipment items
+  visually and show their quantity. This is presentation only: every acquired inventory record
+  remains intact and no duplicate is deleted, converted, or awarded currency.
 
 ## Reward Rules
 

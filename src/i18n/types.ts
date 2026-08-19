@@ -603,7 +603,8 @@ export type TranslationDictionary = {
     title: string;
     subtitle: string;
     categoriesLabel: string;
-    collectedTotal: string;
+    distinctTotal: string;
+    acquiredTotal: string;
     equippedTotal: string;
     raritySummary: string;
     emptySlotTitle: string;
@@ -1256,7 +1257,8 @@ export type TranslationKey =
   | "inventory.title"
   | "inventory.subtitle"
   | "inventory.categoriesLabel"
-  | "inventory.collectedTotal"
+  | "inventory.distinctTotal"
+  | "inventory.acquiredTotal"
   | "inventory.equippedTotal"
   | "inventory.raritySummary"
   | "inventory.emptySlotTitle"

@@ -157,6 +157,8 @@ export type InventoryItem = RewardItem & {
   category: Exclude<InventoryCategory, "all">;
   collectedAt: string;
   equipped: boolean;
+  /** Official reward identity used to present repeated collection items together. */
+  rewardItemId?: string;
   sourceKey?: TranslationKey;
   thumbnailAssetKey?: OfficialAssetKey;
 };

@@ -141,6 +141,7 @@ describe("authenticated reward mappers", () => {
     expect(mapInventoryItemRow(inventoryItemRow)).toMatchObject({
       category: "keepsakes",
       id: inventoryItemRow.id,
+      rewardItemId: inventoryItemRow.reward_item_id,
       sourceKey: "inventory.sources.routeReward",
     });
   });

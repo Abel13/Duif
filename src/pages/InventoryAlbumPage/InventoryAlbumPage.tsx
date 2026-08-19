@@ -6,10 +6,11 @@ import {
   filterInventoryItemsByCategory,
   getInventoryCategoryCounts,
   getInventorySummary,
+  groupInventoryItems,
   inventoryCategories,
   useInventoryData,
   type InventoryCategory,
-  type InventoryItem,
+  type GroupedInventoryItem,
 } from "../../game";
 import { assetKeys } from "../../game";
 import { useMascotCatalog } from "../../game/useMascotCatalog";
@@ -27,9 +28,10 @@ export function InventoryAlbumPage() {
   const [selectedCategory, setSelectedCategory] = useState<InventoryCategory>("all");
   const [postcardOpen, setPostcardOpen] = useState(false); const [completionAt,setCompletionAt]=useState<string | null>();
   const { items: inventoryItems } = useInventoryData();
+  const groupedItems = useMemo(() => groupInventoryItems(inventoryItems), [inventoryItems]);
   const items = useMemo(
-    () => filterInventoryItemsByCategory(inventoryItems, selectedCategory),
-    [inventoryItems, selectedCategory],
+    () => filterInventoryItemsByCategory(groupedItems, selectedCategory),
+    [groupedItems, selectedCategory],
   );
   const categoryCounts = useMemo(
     () => getInventoryCategoryCounts(inventoryItems),
@@ -74,7 +76,8 @@ export function InventoryAlbumPage() {
 
             <SketchPanel title={t("inventory.raritySummary")}>
               <dl className={styles.summary}>
-                <SummaryRow label={t("inventory.collectedTotal")} value={`${summary.total}`} />
+                <SummaryRow label={t("inventory.distinctTotal")} value={`${summary.distinctTotal}`} />
+                <SummaryRow label={t("inventory.acquiredTotal")} value={`${summary.acquiredTotal}`} />
                 <SummaryRow label={t("inventory.equippedTotal")} value={`${summary.equipped}`} />
                 <SummaryRow
                   label={t("equipment.rarity.common")}
@@ -94,7 +97,7 @@ export function InventoryAlbumPage() {
 
           <section className={styles.album} aria-label={t("inventory.title")}>
             {items.map((item) => (
-              <InventoryCard item={item} key={item.id} onOpenPostcard={()=>setPostcardOpen(true)} />
+              <InventoryCard item={item} key={item.groupKey} onOpenPostcard={()=>setPostcardOpen(true)} />
             ))}
             {Array.from({ length: emptySlotCount }, (_, index) => (
               <EmptySlot key={`empty-slot-${index}`} />
@@ -108,7 +111,7 @@ export function InventoryAlbumPage() {
   );
 }
 
-function InventoryCard({ item, onOpenPostcard }: { item: InventoryItem; onOpenPostcard: () => void }) {
+function InventoryCard({ item, onOpenPostcard }: { item: GroupedInventoryItem; onOpenPostcard: () => void }) {
   const { t } = useTranslation();
   const metaParts = [
     t(`inventory.categories.${item.category}`),
@@ -124,6 +127,7 @@ function InventoryCard({ item, onOpenPostcard }: { item: InventoryItem; onOpenPo
       meta={metaParts.join(" / ")}
       selected={item.equipped}
     >
+      <div className={styles.assetWrap}>
       {isInaugural ? <button aria-label={t("tutorial.postcard.open")} className={styles.postcardButton} onClick={onOpenPostcard} type="button"><AssetImage
         alt={t(item.nameKey)}
         className={`${styles.assetFrame} ${styles.postcardFrame}`}
@@ -138,6 +142,8 @@ function InventoryCard({ item, onOpenPostcard }: { item: InventoryItem; onOpenPo
       </AssetImage></button> : <AssetImage
         alt={t(item.nameKey)} className={styles.assetFrame} height={192} assetKey={item.thumbnailAssetKey} width={192}
       ><div className={styles.itemStamp} data-rarity={item.rarity}><span>{t("inventory.source")}</span><strong>{item.sourceKey ? t(item.sourceKey) : t("common.unavailable")}</strong></div></AssetImage>}
+      {item.quantity > 1 ? <span className={styles.quantityBadge}>{`×${item.quantity}`}</span> : null}
+      </div>
     </ItemCard>
   );
 }

@@ -1,6 +1,11 @@
 import type { InventoryCategory, InventoryItem, RewardRarity } from "./types";
 import { assetKeys } from "./assets";
 
+export type GroupedInventoryItem = InventoryItem & {
+  groupKey: string;
+  quantity: number;
+};
+
 export const inventoryCategories: InventoryCategory[] = [
   "all",
   "equipment",
@@ -67,12 +72,12 @@ export const mockInventoryItems: InventoryItem[] = [
   },
 ];
 
-export function filterInventoryItemsByCategory(
-  items: InventoryItem[],
+export function filterInventoryItemsByCategory<T extends InventoryItem>(
+  items: readonly T[],
   category: InventoryCategory,
-) {
+): T[] {
   if (category === "all") {
-    return items;
+    return [...items];
   }
 
   if (!inventoryCategories.includes(category)) {
@@ -80,6 +85,43 @@ export function filterInventoryItemsByCategory(
   }
 
   return items.filter((item) => item.category === category);
+}
+
+function getCollectedAtTime(item: InventoryItem) {
+  const timestamp = Date.parse(item.collectedAt);
+
+  return Number.isFinite(timestamp) ? timestamp : Number.NEGATIVE_INFINITY;
+}
+
+/**
+ * Keeps every inventory record intact while presenting repeat collection rewards as one box.
+ * Equipment is deliberately instance-based and is never combined.
+ */
+export function groupInventoryItems(items: readonly InventoryItem[]): GroupedInventoryItem[] {
+  const groups = new Map<string, GroupedInventoryItem>();
+
+  for (const item of items) {
+    const groupKey =
+      item.category === "equipment" || !item.rewardItemId
+        ? `inventory:${item.id}`
+        : `reward:${item.rewardItemId}`;
+    const existing = groups.get(groupKey);
+
+    if (!existing) {
+      groups.set(groupKey, { ...item, groupKey, quantity: 1 });
+      continue;
+    }
+
+    existing.quantity += 1;
+
+    if (getCollectedAtTime(item) > getCollectedAtTime(existing)) {
+      groups.set(groupKey, { ...item, groupKey, quantity: existing.quantity });
+    }
+  }
+
+  return [...groups.values()].sort(
+    (left, right) => getCollectedAtTime(right) - getCollectedAtTime(left),
+  );
 }
 
 export function getInventoryItemsByCategory(
@@ -90,30 +132,34 @@ export function getInventoryItemsByCategory(
 }
 
 export function getInventoryCategoryCounts(items: InventoryItem[]) {
+  const groupedItems = groupInventoryItems(items);
+
   return inventoryCategories.reduce(
     (counts, category) => ({
       ...counts,
-      [category]: filterInventoryItemsByCategory(items, category).length,
+      [category]: filterInventoryItemsByCategory(groupedItems, category).length,
     }),
     {} as Record<InventoryCategory, number>,
   );
 }
 
-export function getInventorySummary(items: InventoryItem[]) {
+export function getInventorySummary(items: readonly GroupedInventoryItem[]) {
   return items.reduce(
     (summary, item) => {
-      summary.total += 1;
+      summary.acquiredTotal += item.quantity;
+      summary.distinctTotal += 1;
 
       if (item.equipped) {
-        summary.equipped += 1;
+        summary.equipped += item.quantity;
       }
 
-      summary.rarityCounts[item.rarity] += 1;
+      summary.rarityCounts[item.rarity] += item.quantity;
 
       return summary;
     },
     {
-      total: 0,
+      acquiredTotal: 0,
+      distinctTotal: 0,
       equipped: 0,
       rarityCounts: {
         common: 0,

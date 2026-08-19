@@ -5,6 +5,7 @@ import {
   getInventoryCategoryCounts,
   getInventoryItemsByCategory,
   getInventorySummary,
+  groupInventoryItems,
   mockInventoryItems,
 } from "./inventory";
 import type { InventoryCategory } from "./types";
@@ -44,12 +45,79 @@ describe("inventory helpers", () => {
     expect(counts.routeMarks).toBe(1);
   });
 
-  it("summarizes total, equipped items, and rarity counts", () => {
-    const summary = getInventorySummary(mockInventoryItems);
+  it("groups repeat collection rewards while keeping equipment as separate instances", () => {
+    const repeatedStamp = {
+      ...mockInventoryItems[2],
+      id: "inventory-worn-route-stamp-newer",
+      collectedAt: "2026-07-06T12:00:00.000Z",
+      rewardItemId: "reward-worn-route-stamp",
+    };
+    const originalStamp = {
+      ...mockInventoryItems[2],
+      rewardItemId: "reward-worn-route-stamp",
+    };
+    const repeatedEquipment = {
+      ...mockInventoryItems[0],
+      id: "inventory-canvas-postal-bag-second",
+      rewardItemId: "equipment-canvas-postal-bag",
+    };
 
-    expect(summary.total).toBe(mockInventoryItems.length);
+    const grouped = groupInventoryItems([
+      originalStamp,
+      repeatedStamp,
+      mockInventoryItems[0],
+      repeatedEquipment,
+    ]);
+
+    expect(grouped).toHaveLength(3);
+    expect(grouped.find((item) => item.rewardItemId === "reward-worn-route-stamp")).toMatchObject({
+      id: repeatedStamp.id,
+      quantity: 2,
+    });
+    expect(grouped.filter((item) => item.category === "equipment")).toHaveLength(2);
+  });
+
+  it("keeps legacy records without a reward identity in separate collection boxes", () => {
+    const [first] = mockInventoryItems;
+    const grouped = groupInventoryItems([
+      { ...first, id: "legacy-one", category: "stamps", equipped: false },
+      { ...first, id: "legacy-two", category: "stamps", equipped: false },
+    ]);
+
+    expect(grouped).toHaveLength(2);
+    expect(grouped.every((item) => item.quantity === 1)).toBe(true);
+  });
+
+  it("counts grouped boxes by category and summarizes distinct and acquired items", () => {
+    const items = groupInventoryItems([
+      ...mockInventoryItems.map((item) =>
+        item.category === "stamps" ? { ...item, rewardItemId: "reward-worn-route-stamp" } : item,
+      ),
+      {
+        ...mockInventoryItems[2],
+        id: "inventory-worn-route-stamp-second",
+        collectedAt: "2026-07-08T12:00:00.000Z",
+        rewardItemId: "reward-worn-route-stamp",
+      },
+    ]);
+    const counts = getInventoryCategoryCounts([
+      ...mockInventoryItems.map((item) =>
+        item.category === "stamps" ? { ...item, rewardItemId: "reward-worn-route-stamp" } : item,
+      ),
+      {
+        ...mockInventoryItems[2],
+        id: "inventory-worn-route-stamp-second",
+        rewardItemId: "reward-worn-route-stamp",
+      },
+    ]);
+    const summary = getInventorySummary(items);
+
+    expect(counts.all).toBe(mockInventoryItems.length);
+    expect(counts.stamps).toBe(1);
+    expect(summary.distinctTotal).toBe(mockInventoryItems.length);
+    expect(summary.acquiredTotal).toBe(mockInventoryItems.length + 1);
     expect(summary.equipped).toBe(2);
-    expect(summary.rarityCounts.common).toBe(2);
+    expect(summary.rarityCounts.common).toBe(3);
     expect(summary.rarityCounts.uncommon).toBe(2);
     expect(summary.rarityCounts.rare).toBe(1);
   });

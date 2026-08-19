@@ -71,6 +71,7 @@ describe("authenticated inventory reads", () => {
       expect.objectContaining({
         category: "keepsakes",
         id: inventoryItemRow.id,
+        rewardItemId: inventoryItemRow.reward_item_id,
         sourceKey: "inventory.sources.routeReward",
       }),
     ]);

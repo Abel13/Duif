@@ -772,7 +772,8 @@ export const ptBR = {
     subtitle:
       "Selos, lembranças, marcas de viagem e equipamentos descobertos pelos pets nas rotas.",
     categoriesLabel: "Filtrar coleção",
-    collectedTotal: "Itens coletados",
+    distinctTotal: "Itens distintos",
+    acquiredTotal: "Exemplares obtidos",
     equippedTotal: "Equipados",
     raritySummary: "Raridades",
     emptySlotTitle: "Espaço por descobrir",

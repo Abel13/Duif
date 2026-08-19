@@ -15,6 +15,7 @@ export function mapInventoryItemRow(row: InventoryItemRow): InventoryItem {
     id: row.id,
     nameKey: requireTranslationKey(row.name_key, "inventory name key"),
     rarity: row.rarity,
+    rewardItemId: row.reward_item_id ?? undefined,
     sourceKey: row.source_key ? (row.source_key as TranslationKey) : undefined,
     thumbnailAssetKey: isOfficialAssetKey(row.thumbnail_asset_key) ? row.thumbnail_asset_key : undefined,
   };

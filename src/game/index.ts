@@ -13,9 +13,11 @@ export {
   getInventoryCategoryCounts,
   getInventoryItemsByCategory,
   getInventorySummary,
+  groupInventoryItems,
   inventoryCategories,
   mockInventoryItems,
 } from "./inventory";
+export type { GroupedInventoryItem } from "./inventory";
 export { currentPlayer, getDeliveryById, getMascotById, nuvemDelivery, starterMascots } from "./mockData";
 export { formatPostalLocationLabel, resolveDeliveryPlaceLabel, type PostalLocationParts } from "./locationLabels";
 export { getMockDeliveryHistory } from "./mockRewardCollection";

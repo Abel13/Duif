@@ -691,7 +691,8 @@ export const enUS = {
     subtitle:
       "Stamps, keepsakes, travel marks, and equipment discovered by pets on routes.",
     categoriesLabel: "Filter collection",
-    collectedTotal: "Collected items",
+    distinctTotal: "Distinct items",
+    acquiredTotal: "Items obtained",
     equippedTotal: "Equipped",
     raritySummary: "Rarities",
     emptySlotTitle: "Undiscovered space",
