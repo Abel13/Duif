@@ -164,6 +164,7 @@ export type TranslationDictionary = {
   };
   nest: { eyebrow: string; title: string; description: string; searchLabel: string; searchPlaceholder: string; searchAction: string; mapLabel: string; privacyNote: string; selectedCity: string; selectionReady: string; confirmAction: string };
   assetStudio: { eyebrow: string; title: string; description: string; newAsset: string; uploadTitle: string; key: string; type: string; file: string; altKey: string; decorative: string; author: string; saveDraft: string; draftSaved: string; publish: string; published: string; archive: string; archived: string; restore: string; restored: string; usage: string; filters: string; all: string; loading: string; error: string };
+  geonamesAdmin: { eyebrow: string; title: string; description: string; activeCities: string; latestSuccess: string; noSuccess: string; refresh: string; confirm: string; cancel: string; confirmTitle: string; confirmDescription: string; history: string; status: string; processed: string; imported: string; updated: string; archived: string; running: string; failed: string; succeeded: string; queued: string; refreshStarted: string };
   units: {
     kilometers: string;
   };
@@ -1458,4 +1459,26 @@ export type TranslationKey =
   | "assetStudio.filters"
   | "assetStudio.all"
   | "assetStudio.loading"
-  | "assetStudio.error";
+  | "assetStudio.error"
+  | "geonamesAdmin.eyebrow"
+  | "geonamesAdmin.title"
+  | "geonamesAdmin.description"
+  | "geonamesAdmin.activeCities"
+  | "geonamesAdmin.latestSuccess"
+  | "geonamesAdmin.noSuccess"
+  | "geonamesAdmin.refresh"
+  | "geonamesAdmin.confirm"
+  | "geonamesAdmin.cancel"
+  | "geonamesAdmin.confirmTitle"
+  | "geonamesAdmin.confirmDescription"
+  | "geonamesAdmin.history"
+  | "geonamesAdmin.status"
+  | "geonamesAdmin.processed"
+  | "geonamesAdmin.imported"
+  | "geonamesAdmin.updated"
+  | "geonamesAdmin.archived"
+  | "geonamesAdmin.running"
+  | "geonamesAdmin.failed"
+  | "geonamesAdmin.succeeded"
+  | "geonamesAdmin.queued"
+  | "geonamesAdmin.refreshStarted";

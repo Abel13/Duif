@@ -33,6 +33,21 @@ export async function publishAssetDraft(versionId: string) { return invokeStudio
 export async function archiveAssetVersion(versionId: string) { return invokeStudioAction("archive", { versionId }); }
 export async function activateAssetVersion(versionId: string, publicObjectPath: string) { return invokeStudioAction("activate", { versionId, publicObjectPath }); }
 
+export type GeoNamesRefreshSummary = { activeCityCount: number; latestSuccess: GeoNamesRefreshJob | null; jobs: GeoNamesRefreshJob[] };
+export type GeoNamesRefreshJob = { id: string; status: "queued" | "running" | "succeeded" | "failed"; processed_city_count: number; imported_city_count: number; updated_city_count: number; archived_city_count: number; safe_error_code: string | null; created_at: string; completed_at: string | null };
+export async function listGeoNamesRefreshes(): Promise<GeoNamesRefreshSummary> {
+  const supabase = getSupabaseClient(); if (!supabase) throw new Error("Supabase is not configured");
+  const { data, error } = await supabase.rpc("admin_list_geonames_refreshes");
+  if (error || !data || typeof data !== "object" || Array.isArray(data)) throw error ?? new Error("GeoNames history unavailable");
+  const value = data as { activeCityCount?: unknown; latestSuccess?: unknown; jobs?: unknown };
+  return { activeCityCount: typeof value.activeCityCount === "number" ? value.activeCityCount : 0, latestSuccess: isGeoNamesJob(value.latestSuccess) ? value.latestSuccess : null, jobs: Array.isArray(value.jobs) ? value.jobs.filter(isGeoNamesJob) : [] };
+}
+export async function startGeoNamesRefresh() {
+  const supabase = getSupabaseClient(); if (!supabase) throw new Error("Supabase is not configured");
+  const { data, error } = await supabase.functions.invoke("geonames-refresh", { body: {} });
+  if (error || !data?.jobId) throw error ?? new Error("GeoNames refresh failed"); return data as { jobId: string; importedCityCount: number };
+}
+
 async function invokeStudioAction(action: string, value: Record<string, unknown>) {
   const supabase = getSupabaseClient(); if (!supabase) throw new Error("Supabase is not configured");
   const { data, error } = await supabase.functions.invoke("asset-studio", { body: { action, ...value } });
@@ -42,6 +57,7 @@ async function invokeStudioAction(action: string, value: Record<string, unknown>
 function isAsset(value: unknown): value is AssetStudioAsset {
   return typeof value === "object" && value !== null && typeof (value as AssetStudioAsset).id === "string" && typeof (value as AssetStudioAsset).key === "string" && Array.isArray((value as AssetStudioAsset).versions);
 }
+function isGeoNamesJob(value: unknown): value is GeoNamesRefreshJob { return typeof value === "object" && value !== null && typeof (value as GeoNamesRefreshJob).id === "string" && typeof (value as GeoNamesRefreshJob).status === "string"; }
 
 async function getImageDimensions(file: File) {
   if (file.type === "image/svg+xml") {

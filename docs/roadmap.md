@@ -1885,7 +1885,7 @@ Success criteria:
 
 ## Milestone 46A: Administrative GeoNames Catalog Refresh
 
-Status: Planned.
+Status: Implemented.
 
 Goal:
 
