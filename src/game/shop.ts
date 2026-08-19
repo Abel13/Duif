@@ -9,7 +9,7 @@ export const shopCategories: ShopCategory[] = [
   "decorations",
 ];
 
-export const mockShopCatalog: ShopCatalogItem[] = [
+export const shopCatalog: ShopCatalogItem[] = [
   {
     id: "shop-crimson-courier-scarf",
     category: "cosmetics",

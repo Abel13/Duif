@@ -18,9 +18,7 @@ export {
   mockInventoryItems,
 } from "./inventory";
 export type { GroupedInventoryItem } from "./inventory";
-export { currentPlayer, getDeliveryById, getMascotById, nuvemDelivery, starterMascots } from "./mockData";
 export { formatPostalLocationLabel, resolveDeliveryPlaceLabel, type PostalLocationParts } from "./locationLabels";
-export { getMockDeliveryHistory } from "./mockRewardCollection";
 export {
   createMapPlaceLabelsGeoJson,
   createDeliveryRouteGeoJson,
@@ -79,7 +77,6 @@ export {
   type PostalTrafficVisualPhase,
   POSTAL_TRAFFIC_REFRESH_MS,
 } from "./postalTraffic";
-export { createMockRewardFromDelivery, initialMockInventory } from "./rewards";
 export {
   nestMascotStorageKey,
   getNestMascotNeighbors,
@@ -95,14 +92,13 @@ export {
 } from "./mascotDeliveryAction";
 export {
   filterShopItemsByCategory,
-  mockShopCatalog,
+  shopCatalog,
   shopCategories,
 } from "./shop";
 export { useInventoryData } from "./useInventoryData";
 export { useRewardCollectionData } from "./useRewardCollectionData";
 export {
   correspondenceOptions,
-  createMockDeliveryFromSelection,
   createDefaultCorrespondenceContent,
   estimateMascotSpeedKmh,
   getCorrespondenceById,
@@ -110,8 +106,8 @@ export {
   getFriendCoordinates,
   isCorrespondenceContentValid,
   LETTER_MAX_CHARACTERS,
-  mockPostcardOptions,
-  mockStickerOptions,
+  postcardVariants,
+  stickerOptions,
   POSTCARD_MAX_CHARACTERS,
   STICKER_MAX_SELECTION,
 } from "./sendFlow";

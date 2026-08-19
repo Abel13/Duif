@@ -5,7 +5,7 @@ import { AssetImage, SketchPanel, StampButton } from "../../components/ui";
 import {
   assetKeys,
   filterShopItemsByCategory,
-  mockShopCatalog,
+  shopCatalog,
   shopCategories,
   type ShopCatalogItem,
   type ShopCategory,
@@ -19,7 +19,7 @@ export function ShopPage() {
   const [selectedItem, setSelectedItem] = useState<ShopCatalogItem | null>(null);
   const lastTriggerRef = useRef<HTMLButtonElement | null>(null);
   const items = useMemo(
-    () => filterShopItemsByCategory(mockShopCatalog, selectedCategory),
+    () => filterShopItemsByCategory(shopCatalog, selectedCategory),
     [selectedCategory],
   );
 

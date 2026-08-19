@@ -6,9 +6,7 @@ import { MobileTopBar, PageShell } from "../../components/layout";
 import { RoutePreview } from "../../components/map/RoutePreview";
 import { ItemCard, LetterDialog, SketchPanel, StampButton } from "../../components/ui";
 import {
-  createMockDeliveryFromSelection,
   createDefaultCorrespondenceContent,
-  currentPlayer,
   deriveMascotTravelModifiers,
   estimateMascotSpeedKmh,
   estimateTravelDurationHours,
@@ -23,8 +21,8 @@ import {
   haversineDistanceKm,
   isCorrespondenceContentValid,
   LETTER_MAX_CHARACTERS,
-  mockPostcardOptions,
-  mockStickerOptions,
+  postcardVariants,
+  stickerOptions,
   POSTCARD_MAX_CHARACTERS,
   STICKER_MAX_SELECTION,
   type CorrespondenceContent,
@@ -59,7 +57,6 @@ export function SendFlowPage() {
   const requestedFriendId = searchParams.get("friendId");
   const {
     data: sendFlowData,
-    isAuthenticatedSource,
     isLoading: isSendFlowLoading,
   } = useSendFlowData();
   const { friends, mascots, correspondenceOptions: availableCorrespondence } = sendFlowData;
@@ -109,7 +106,8 @@ export function SendFlowPage() {
       return undefined;
     }
 
-    const distanceKm = haversineDistanceKm(currentPlayer.homeBase, selectedFriendCoordinates);
+    if (!profile || !Number.isFinite(profile.home_latitude) || !Number.isFinite(profile.home_longitude)) return undefined;
+    const distanceKm = haversineDistanceKm({ latitude: profile.home_latitude, longitude: profile.home_longitude }, selectedFriendCoordinates);
     const speedKmh = estimateMascotSpeedKmh(selectedMascot);
     const modifiers = deriveMascotTravelModifiers(selectedMascot, { distanceKm });
 
@@ -151,31 +149,13 @@ export function SendFlowPage() {
     setIsSubmitting(true);
 
     try {
-      if (isAuthenticatedSource) {
-        const delivery = await createAuthenticatedDeliveryFromSelection({
-          correspondence: selectedCorrespondence,
-          content,
-          friend: selectedFriend,
-          mascot: selectedMascot,
-        });
-
-        if (delivery) {
-          setConfirmedSend({
-            correspondence: selectedCorrespondence,
-            content,
-            delivery,
-            friend: selectedFriend,
-            mascot: selectedMascot,
-          });
-        }
-        return;
-      }
-
-      const result = createMockDeliveryFromSelection(selection, content);
-
-      if (result) {
-        setConfirmedSend(result);
-      }
+      const delivery = await createAuthenticatedDeliveryFromSelection({
+        correspondence: selectedCorrespondence,
+        content,
+        friend: selectedFriend,
+        mascot: selectedMascot,
+      });
+      if (delivery) setConfirmedSend({ correspondence: selectedCorrespondence, content, delivery, friend: selectedFriend, mascot: selectedMascot });
     } catch {
       setHasSubmitError(true);
     } finally {
@@ -241,7 +221,7 @@ export function SendFlowPage() {
                     mascot,
                     selectedFriend
                       ? deriveMascotTravelModifiers(mascot, {
-                          distanceKm: getRouteDistance(selectedFriend),
+                          distanceKm: getRouteDistance(selectedFriend, profile?.home_latitude, profile?.home_longitude),
                         })
                       : undefined,
                     t,
@@ -396,7 +376,7 @@ function CorrespondenceComposer({
         <fieldset className={styles.fieldset}>
           <legend>{t("send.content.postcardVariantLabel")}</legend>
           <div className={styles.segmented}>
-            {mockPostcardOptions.map((option) => (
+            {postcardVariants.map((option) => (
               <button
                 className={styles.segment}
                 data-active={content.postcardVariant === option.id || undefined}
@@ -427,7 +407,7 @@ function CorrespondenceComposer({
         <fieldset className={styles.fieldset}>
           <legend>{t("send.content.stickerLabel")}</legend>
           <div className={styles.segmented}>
-            {mockStickerOptions.map((option) => {
+            {stickerOptions.map((option) => {
               const isSelected = content.stickerIds.includes(option.id);
 
               return (
@@ -559,7 +539,7 @@ function CorrespondenceContentPreview({ content }: { content: CorrespondenceCont
   const { t } = useTranslation();
 
   if (content.type === "postcard") {
-    const variant = mockPostcardOptions.find((option) => option.id === content.postcardVariant);
+    const variant = postcardVariants.find((option) => option.id === content.postcardVariant);
     return (
       <span>
         {variant ? t(variant.nameKey) : t("correspondence.postcard.name")}
@@ -570,8 +550,8 @@ function CorrespondenceContentPreview({ content }: { content: CorrespondenceCont
 
   if (content.type === "sticker") {
     const stickerNames = content.stickerIds
-      .map((stickerId) => mockStickerOptions.find((option) => option.id === stickerId))
-      .filter((option): option is (typeof mockStickerOptions)[number] => Boolean(option))
+      .map((stickerId) => stickerOptions.find((option) => option.id === stickerId))
+      .filter((option): option is (typeof stickerOptions)[number] => Boolean(option))
       .map((option) => t(option.nameKey));
 
     return <span>{stickerNames.join(" / ") || t("send.content.emptyPreview")}</span>;
@@ -653,9 +633,11 @@ function formatMultiplierBonus(multiplier: number) {
   return `+${Math.round((multiplier - 1) * 100)}%`;
 }
 
-function getRouteDistance(friend: FriendProfile) {
+function getRouteDistance(friend: FriendProfile, originLatitude?: number, originLongitude?: number) {
   const coordinates = getFriendCoordinates(friend);
-  return coordinates ? haversineDistanceKm(currentPlayer.homeBase, coordinates) : 0;
+  return coordinates && Number.isFinite(originLatitude) && Number.isFinite(originLongitude)
+    ? haversineDistanceKm({ latitude: originLatitude!, longitude: originLongitude! }, coordinates)
+    : 0;
 }
 
 function getMascotRouteEffect(

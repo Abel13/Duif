@@ -6,7 +6,6 @@ import { ItemCard, SketchPanel, StampButton } from "../../components/ui";
 import {
   formatRemainingTime,
   getDeliveryStatus,
-  getMascotById,
   getTravelProgress,
   resolveDeliveryPlaceLabel,
   useRewardCollectionData,
@@ -53,8 +52,7 @@ export function RewardCollectionPage() {
     return <Navigate replace to="/mascots" />;
   }
 
-  const mascot = mascots.find((candidate) => candidate.id === delivery.mascotId)
-    ?? getMascotById(delivery.mascotId);
+  const mascot = mascots.find((candidate) => candidate.id === delivery.mascotId);
   const status = isCollected ? "completed" : getDeliveryStatus(delivery);
   const isReady = status === "returned";
   const displayReward = reward;

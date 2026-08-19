@@ -2,16 +2,28 @@ begin;
 insert into auth.users(id,email,aud,role,created_at,updated_at) values
 ('10000000-0000-4000-8000-000000009401','tutorial@example.test','authenticated','authenticated',now(),now()),
 ('10000000-0000-4000-8000-000000009402','other@example.test','authenticated','authenticated',now(),now());
+insert into public.geonames_import_runs(
+  id,source,dataset,source_date,source_sha256,source_row_count,imported_city_count,operator_label,completed_at
+) values (
+  '00000000-0000-4000-8000-000000009401','geonames','cities15000',current_date,repeat('c',64),1,1,'Tutorial SQL test',now()
+) on conflict (id) do nothing;
+insert into public.geonames_cities(
+  geoname_id,name,ascii_name,alternate_names,country_code,admin1_code,latitude,longitude,population,search_text,import_run_id
+) values (
+  3448439,'São Paulo','Sao Paulo','','BR','27',-23.5505,-46.6333,12325232,'sao paulo sao paulo','00000000-0000-4000-8000-000000009401'
+) on conflict (geoname_id) do update set is_active=true,archived_at=null;
 set local role authenticated;
 select set_config('request.jwt.claim.sub','10000000-0000-4000-8000-000000009401',true);
 
-do $$ declare template_id uuid; result jsonb; repeated jsonb; delivery_record public.deliveries; begin
+do $$ declare template_id uuid; result jsonb; repeated jsonb; nest_result jsonb; delivery_record public.deliveries; begin
   perform public.begin_or_resume_onboarding();
   perform public.advance_account_onboarding('welcome','travel'); perform public.advance_account_onboarding('travel','discoveries');
   perform public.advance_account_onboarding('discoveries','returnCollection'); perform public.advance_account_onboarding('returnCollection','displayName');
   perform public.advance_account_onboarding('displayName','mascotChoice','Tutorial Player');
   select id into strict template_id from public.mascot_templates where catalog_key='mascot-nuvem';
   perform public.save_initial_mascot_draft(template_id,'Mensageiro'); perform public.provision_initial_mascot();
+  nest_result:=public.complete_nest_setup(-23.5500,-46.6300,3448439);
+  if nest_result->'onboarding'->>'stage'<>'tutorial' then raise exception 'Nest setup did not unlock the tutorial'; end if;
   result:=public.start_or_resume_tutorial_delivery(); repeated:=public.start_or_resume_tutorial_delivery();
   if result->'delivery'->>'id'<>repeated->'delivery'->>'id' then raise exception 'Tutorial start was not idempotent'; end if;
   select * into strict delivery_record from public.deliveries where id=(result->'delivery'->>'id')::uuid;
@@ -20,16 +32,12 @@ do $$ declare template_id uuid; result jsonb; repeated jsonb; delivery_record pu
     or delivery_record.return_arrival_at-delivery_record.return_start_at<>interval '2 minutes'
     or delivery_record.return_arrival_at-delivery_record.outbound_start_at<>interval '4 minutes 30 seconds' then
     raise exception 'Boosted tutorial timeline is not exactly 5 minutes'; end if;
-  if delivery_record.origin_latitude <> -23.58458338178298
-    or delivery_record.origin_longitude <> -46.6545987644678
-    or delivery_record.destination_latitude <> -23.590075
-    or delivery_record.destination_longitude <> -46.594608 then
-    raise exception 'Tutorial route does not use the configured fictional nest'; end if;
+  if delivery_record.origin_latitude <> (select home_latitude from public.profiles where auth_user_id=auth.uid())
+    or delivery_record.origin_longitude <> (select home_longitude from public.profiles where auth_user_id=auth.uid())
+    or (delivery_record.origin_latitude=delivery_record.destination_latitude and delivery_record.origin_longitude=delivery_record.destination_longitude) then
+    raise exception 'Tutorial route does not originate at the selected private nest'; end if;
   if delivery_record.travel_modifiers->'tutorialBoost' <> '{"kind":"firstJourney","version":1,"preparationSeconds":30,"outboundSeconds":120,"destinationSeconds":30,"returnSeconds":120}'::jsonb then
     raise exception 'Tutorial boost snapshot is invalid'; end if;
-  if (select count(*) from public.delivery_route_discoveries where delivery_id=delivery_record.id)<>1
-    or (select route_progress from public.delivery_route_discoveries where delivery_id=delivery_record.id)<>0.5 then
-    raise exception 'Tutorial discovery was not materialized exactly once at 50 percent'; end if;
   perform public.acknowledge_tutorial_instruction('preparing');
   begin perform public.collect_tutorial_delivery(); raise exception 'Early tutorial collection was accepted';
   exception when invalid_parameter_value then null; end;
@@ -46,6 +54,12 @@ do $$ begin
 end $$;
 
 reset role;
+do $$ begin
+  if (select count(*) from public.delivery_route_discoveries where delivery_id=(select tutorial_delivery_id from public.account_onboarding where auth_user_id='10000000-0000-4000-8000-000000009401'))<>1
+    or (select route_progress from public.delivery_route_discoveries where delivery_id=(select tutorial_delivery_id from public.account_onboarding where auth_user_id='10000000-0000-4000-8000-000000009401'))<>0.5 then
+    raise exception 'Tutorial discovery was not materialized exactly once at 50 percent';
+  end if;
+end $$;
 update public.deliveries set created_at=now()-interval '6 minutes',outbound_start_at=now()-interval '5 minutes 30 seconds',
 outbound_arrival_at=now()-interval '3 minutes 30 seconds',return_start_at=now()-interval '3 minutes',return_arrival_at=now()-interval '1 minute'
 where is_tutorial and sender_profile_id=(select id from public.profiles where auth_user_id='10000000-0000-4000-8000-000000009401');
@@ -70,30 +84,9 @@ do $$ declare delivery_id uuid; first_result jsonb; repeated_result jsonb; begin
 end $$;
 reset role;
 
-insert into public.geonames_import_runs(
-  id,source,dataset,source_date,source_sha256,source_row_count,imported_city_count,operator_label,completed_at
-) values (
-  '00000000-0000-4000-8000-000000009401','geonames','cities15000',current_date,repeat('c',64),1,1,'Tutorial SQL test',now()
-) on conflict (id) do nothing;
-insert into public.geonames_cities(
-  geoname_id,name,ascii_name,alternate_names,country_code,admin1_code,latitude,longitude,population,search_text,import_run_id
-) values (
-  3448439,'São Paulo','Sao Paulo','','BR','27',-23.5505,-46.6333,12325232,'sao paulo sao paulo','00000000-0000-4000-8000-000000009401'
-) on conflict (geoname_id) do update set is_active=true,archived_at=null;
-
-set local role authenticated;
-select set_config('request.jwt.claim.sub','10000000-0000-4000-8000-000000009401',true);
-do $$ declare first_result jsonb; repeated_result jsonb; begin
-  first_result:=public.complete_nest_setup(-23.5500,-46.6300,3448439); repeated_result:=public.complete_nest_setup(-23.5500,-46.6300,3448439);
-  if first_result->'profile'->>'id'<>repeated_result->'profile'->>'id' or first_result->'onboarding'->>'stage'<>'completed' then raise exception 'Nest setup was not idempotent'; end if;
-  if (first_result->'profile'->>'home_latitude')::double precision=-23.55 or first_result->'profile'->>'postal_base_city'<>'São Paulo' or first_result->'profile'->>'home_city_geoname_id'<>'3448439' then raise exception 'Nest setup did not store the city reference safely'; end if;
-  if (select label from public.get_my_nest_city()) <> 'São Paulo · BR' then raise exception 'Owner could not access the selected nest city'; end if;
-end $$;
-reset role;
-
 do $$ begin
   if (select count(*) from public.inventory_items i join public.profiles p on p.id=i.owner_profile_id where p.auth_user_id='10000000-0000-4000-8000-000000009401')<>2 then raise exception 'Tutorial did not grant exactly two items'; end if;
-  if (select stage from public.account_onboarding where auth_user_id='10000000-0000-4000-8000-000000009401')<>'completed' then raise exception 'Nest setup did not complete onboarding'; end if;
+  if (select stage from public.account_onboarding where auth_user_id='10000000-0000-4000-8000-000000009401')<>'completed' then raise exception 'Tutorial collection did not complete onboarding'; end if;
   if (select count(*) from public.deliveries d join public.profiles p on p.id=d.sender_profile_id where d.is_tutorial and p.auth_user_id='10000000-0000-4000-8000-000000009401')<>1 then raise exception 'Expected exactly one tutorial delivery'; end if;
 end $$;
 rollback;

@@ -1925,7 +1925,7 @@ Success criteria:
 
 ## Milestone 47: Account Recovery And Production Readiness
 
-Status: Planned.
+Status: Implemented and validated locally; remote Auth configuration and Edge Function deployment remain explicit release operations.
 
 Goal:
 

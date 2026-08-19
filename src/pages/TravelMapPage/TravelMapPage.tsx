@@ -8,7 +8,6 @@ import {
   assetKeys,
   formatRemainingTime,
   getDeliveryStatus,
-  getMascotById,
   getMapJourneyPhase,
   getPostalTrafficSnapshotPosition,
   isPostalTrafficJourneyVisible,
@@ -21,7 +20,6 @@ import {
   resolveRequestedTravelMascotId,
   resolvePostalTrafficSelection,
   resolveActiveOfficialAssetPath,
-  nuvemDelivery,
   type Delivery,
   type DeliveryReward,
   type DeliveryStatus,
@@ -42,7 +40,6 @@ import { usePostalTraffic } from "../../game/usePostalTraffic";
 import { useRewardCollectionData } from "../../game/useRewardCollectionData";
 import { useMascotCatalog } from "../../game/useMascotCatalog";
 import { useAuth } from "../../integrations/supabase/AuthProvider";
-import { isSupabaseCatalogEnabled } from "../../integrations/supabase/config";
 import { usePostalFriends } from "../../integrations/supabase/usePostalFriends";
 import { type TranslationKey, useTranslation } from "../../i18n";
 import styles from "./TravelMapPage.module.css";
@@ -87,7 +84,6 @@ export function TravelMapPage() {
       ? selectedMascot
       : selectMapMascot(mascots, now);
   }, [mascots, now, selectedMascotId]);
-  const authenticatedSource = isSupabaseCatalogEnabled();
   const activeDeliveryCandidate = activeMascot?.currentDelivery;
   const activeDelivery = activeDeliveryCandidate
     && getDeliveryStatus(activeDeliveryCandidate, now) !== "returned"
@@ -102,8 +98,7 @@ export function TravelMapPage() {
     [mascots, now],
   );
   const requestedDeliveryId = searchParams.get("deliveryId")
-    ?? activeDelivery?.id
-    ?? (!authenticatedSource && !activeMascot ? nuvemDelivery.id : undefined);
+    ?? activeDelivery?.id;
   const collectionState = useRewardCollectionData(requestedDeliveryId);
   const collectionDelivery = collectionState.delivery?.id === requestedDeliveryId
     ? collectionState.delivery
@@ -113,10 +108,7 @@ export function TravelMapPage() {
     ?? createIdleNestDelivery(profile, activeMascot);
   const originLabel = resolveDeliveryPlaceLabel(delivery, "origin", t);
   const destinationLabel = resolveDeliveryPlaceLabel(delivery, "destination", t);
-  const displayMascot = mascots.find((mascot) => mascot.id === delivery.mascotId)
-    ?? getMascotById(delivery.mascotId)
-    ?? activeMascot
-    ?? getMascotById(defaultMascotId);
+  const displayMascot = mascots.find((mascot) => mascot.id === delivery.mascotId) ?? activeMascot;
   const petPosition = useMemo(() => getPetMapPosition(delivery, now), [delivery, now]);
   const baseRewards = useMemo(
     () => delivery.routeDiscoveryVersion
@@ -1244,11 +1236,11 @@ function createIdleNestDelivery(
         longitude: profile.home_longitude,
         labelKey: profile.home_label_key as TranslationKey,
       }
-    : nuvemDelivery.origin;
+    : { latitude: 0, longitude: 0, labelKey: "onboarding.tutorialNestLabel" as TranslationKey };
   return {
     id: "idle-nest",
-    senderId: profile?.id ?? "player-current",
-    receiverId: profile?.id ?? "player-current",
+    senderId: profile?.id ?? "idle-nest",
+    receiverId: profile?.id ?? "idle-nest",
     mascotId: mascot?.id ?? defaultMascotId,
     origin,
     destination: origin,

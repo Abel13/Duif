@@ -32,11 +32,11 @@ do $$ declare target_code text := current_setting('test.postal_one_code'); resul
 end $$;
 
 select set_config('request.jwt.claim.sub','10000000-0000-4000-8000-000000009801',true);
-do $$ declare request_record public.friendships; listed jsonb; result record; begin
-  select * into strict request_record from public.friendships where requester_profile_id='20000000-0000-4000-8000-000000009802';
+do $$ declare request_id uuid; listed jsonb; result record; begin
   listed := public.list_my_postal_connections();
   if jsonb_array_length(listed->'incoming') <> 1 or listed->'incoming'->0 ? 'city' then raise exception 'Pending request exposed data or was not listed'; end if;
-  select * into result from public.respond_to_postal_friend_request(request_record.id,true);
+  request_id := (listed->'incoming'->0->>'id')::uuid;
+  select * into result from public.respond_to_postal_friend_request(request_id,true);
   if not result.accepted then raise exception 'Friend request was not accepted'; end if;
   listed := public.list_my_postal_connections();
   if jsonb_array_length(listed->'accepted') <> 1 then raise exception 'Accepted friendship was not listed'; end if;

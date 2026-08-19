@@ -20,15 +20,15 @@ insert into public.geonames_cities(
   geoname_id, name, ascii_name, alternate_names, country_code, admin1_code,
   latitude, longitude, population, search_text, import_run_id
 ) values
-  (990000001, 'São Paulo Test', 'Sao Paulo Test', 'Sampa Test', 'BR', '27', -23.5505, -46.6333, 12325232, 'sao paulo test sao paulo test sampa test', '00000000-0000-4000-8000-000000009501'),
-  (990000002, 'São Carlos Test', 'Sao Carlos Test', '', 'BR', '27', -22.0174, -47.8909, 254857, 'sao carlos test sao carlos test', '00000000-0000-4000-8000-000000009501'),
-  (990000003, 'Munich Test', 'Munich Test', 'Muenchen Test,München Test', 'DE', '02', 48.1374, 11.5755, 1487708, 'munich test munich test muenchen test munchen test', '00000000-0000-4000-8000-000000009501');
+  (990000001, 'São Paulo Test', 'Sao Paulo Test', 'Sampa Test', 'BR', 'T47BR', -23.5505, -46.6333, 12325232, 'sao paulo test sao paulo test sampa test', '00000000-0000-4000-8000-000000009501'),
+  (990000002, 'São Carlos Test', 'Sao Carlos Test', '', 'BR', 'T47BR', -22.0174, -47.8909, 254857, 'sao carlos test sao carlos test', '00000000-0000-4000-8000-000000009501'),
+  (990000003, 'Munich Test', 'Munich Test', 'Muenchen Test,München Test', 'DE', 'T47DE', 48.1374, 11.5755, 1487708, 'munich test munich test muenchen test munchen test', '00000000-0000-4000-8000-000000009501');
 
 insert into public.geonames_admin1_regions(
   country_code, admin1_code, name, ascii_name, import_run_id
 ) values
-  ('BR', '27', 'São Paulo', 'Sao Paulo', '00000000-0000-4000-8000-000000009501'),
-  ('DE', '02', 'Bavaria', 'Bavaria', '00000000-0000-4000-8000-000000009501');
+  ('BR', 'T47BR', 'São Paulo', 'Sao Paulo', '00000000-0000-4000-8000-000000009501'),
+  ('DE', 'T47DE', 'Bavaria', 'Bavaria', '00000000-0000-4000-8000-000000009501');
 
 set local role authenticated;
 select set_config('request.jwt.claim.sub', '10000000-0000-4000-8000-000000009501', true);

@@ -7,7 +7,6 @@ import type {
 } from "./authenticatedSendFlow";
 import {
   createCorrespondenceContentPayload,
-  createLocalDeliveryPreview,
   getDefaultSendFlowSelection,
   mapCorrespondenceContentRow,
   mapCorrespondenceOptionRow,
@@ -136,40 +135,4 @@ describe("authenticated send flow mappers", () => {
     });
   });
 
-  it("creates a local route estimate for preview", () => {
-    const estimate = createLocalDeliveryPreview({
-      friend: {
-        exchangeCount: 18,
-        friendshipLevel: 4,
-        id: "friend-lisbon",
-        location: {
-          city: "Lisboa",
-          country: "Portugal",
-          labelKey: "locations.lisbon",
-          latitude: 38.7223,
-          longitude: -9.1393,
-          state: "Lisboa",
-        },
-        mascotIds: [],
-        name: "Lia",
-        receivedCorrespondence: [],
-      },
-      mascot: starterMascots[0],
-    });
-
-    expect(estimate.distanceKm).toBeGreaterThan(7900);
-    expect(estimate.durationHours).toBeGreaterThan(100);
-  });
-
-  it("returns an empty preview estimate when sanitized friends omit coordinates", () => {
-    const estimate = createLocalDeliveryPreview({
-      friend: mapSanitizedFriendProfileRow(sanitizedFriendRow),
-      mascot: starterMascots[0],
-    });
-
-    expect(estimate).toEqual({
-      distanceKm: 0,
-      durationHours: 0,
-    });
-  });
 });

@@ -50,8 +50,8 @@ begin
     or provisioned->'profile'->>'id' <> repeated->'profile'->>'id' then
     raise exception 'Repeated provisioning did not return the same records';
   end if;
-  if (provisioned->'onboarding'->>'stage') <> 'tutorial' then
-    raise exception 'Provisioning did not advance onboarding to tutorial';
+  if (provisioned->'onboarding'->>'stage') <> 'nestSetup' then
+    raise exception 'Provisioning did not advance onboarding to private nest setup';
   end if;
 end;
 $$;

@@ -1,9 +1,4 @@
 import {
-  currentPlayer,
-  estimateMascotSpeedKmh,
-  deriveMascotTravelModifiers,
-  estimateTravelDurationHours,
-  haversineDistanceKm,
   type CorrespondenceOption,
   type CorrespondenceContent,
   type Delivery,
@@ -157,40 +152,6 @@ export function getDefaultSendFlowSelection({
     correspondenceId: availableCorrespondence[0]?.id,
     friendId,
     mascotId,
-  };
-}
-
-export function createLocalDeliveryPreview({
-  friend,
-  mascot,
-}: {
-  friend: FriendProfile;
-  mascot: Mascot;
-}) {
-  const friendCoordinates = getFriendCoordinates(friend);
-
-  if (!friendCoordinates) {
-    return {
-      distanceKm: 0,
-      durationHours: 0,
-    };
-  }
-
-  const distanceKm = haversineDistanceKm(currentPlayer.homeBase, friendCoordinates);
-  const speedKmh = estimateMascotSpeedKmh(mascot);
-  const modifiers = deriveMascotTravelModifiers(mascot, { distanceKm });
-
-  return {
-    distanceKm,
-    durationHours: estimateTravelDurationHours(
-      distanceKm,
-      speedKmh * modifiers.outboundSpeedMultiplier,
-    ),
-    modifiers,
-    returnDurationHours: estimateTravelDurationHours(
-      distanceKm,
-      speedKmh * modifiers.returnSpeedMultiplier,
-    ),
   };
 }
 
