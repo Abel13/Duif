@@ -6,12 +6,13 @@ Players own animals that carry letters, cards, stickers, and collectible objects
 
 The first version should focus on making the player care about their mascots and enjoy the act of sending something to another player.
 
-As of July 2026, the implemented prototype validates the complete send-travel-return-collect
-loop, authenticated persistence with mock fallbacks, multi-mascot map travel, deterministic
-route discoveries, inventory, friends, regional postal traffic, and a read-only shop preview.
-Milestones 37 through 47 are planned to replace the prototype account bridge with secure
-registration, one user-named starter mascot, mandatory installed-mobile onboarding, a persisted
-16-minute tutorial route, privacy-safe nest activation, and an administrative asset studio.
+As of August 2026, the local implementation validates the complete authenticated
+send-travel-return-collect loop, deterministic route discoveries, inventory, friends, regional
+postal traffic, mailbox, personal nest, and a read-only shop preview. Runtime player-owned flows
+do not fall back to prototype users or mock deliveries. Milestones 37 through 51 establish secure
+registration, one user-named starter mascot, mandatory installed-mobile onboarding, a five-minute
+tutorial from a private nest, privacy-safe nest activation, administrative catalogs, and production
+readiness checks. The next product slice is traceable invitations and the Owl reward (48A).
 
 Detailed product rules for travel, slow social, privacy, map rewards, inventory, progression,
 and shop direction live in:
