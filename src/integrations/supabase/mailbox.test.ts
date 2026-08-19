@@ -9,6 +9,9 @@ const receivedLetter: ReceivedLetterRow = {
   origin_label: "Londrina, Paraná • BR",
   sender_name: "Lia",
   sender_profile_id: "00000000-0000-4000-8000-000000000101",
+  stamp_kind: "default",
+  stamp_name_key: null,
+  postmark_key: "postalMark.postalCancel",
 };
 
 describe("received letters", () => {
@@ -20,6 +23,9 @@ describe("received letters", () => {
       originLabel: receivedLetter.origin_label,
       senderName: receivedLetter.sender_name,
       senderProfileId: receivedLetter.sender_profile_id,
+      stampKind: "default",
+      stampNameKey: undefined,
+      postmarkKey: "postalMark.postalCancel",
     });
   });
 

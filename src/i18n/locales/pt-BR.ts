@@ -455,6 +455,13 @@ export const ptBR = {
     giftPendingTitle: "Presentes ainda estão em definição",
     giftPendingDescription:
       "Nesta versão, o presente leva apenas uma nota mockada.",
+    postalFinishing: {
+      title: "Acabamento postal",
+      description: "Toda carta parte com um selo e um carimbo. Os itens padrão podem ser usados sempre.",
+      defaultStamp: "Selo padrão DUIF",
+      defaultPostmark: "Carimbo postal padrão",
+      summaryLabel: "Selo e carimbo",
+    },
     content: {
       letterLabel: "Texto da carta",
       postcardLabel: "Verso do cartão",

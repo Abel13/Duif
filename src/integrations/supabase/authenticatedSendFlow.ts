@@ -32,6 +32,7 @@ export type AuthenticatedSendFlowData = {
   correspondenceOptions: CorrespondenceOption[];
   friends: FriendProfile[];
   mascots: Mascot[];
+  postalStamps: { id: string; nameKey: TranslationKey }[];
 };
 
 export type ConfirmedAuthenticatedSend = {
@@ -164,9 +165,10 @@ export async function fetchAuthenticatedSendFlowData(
     return undefined;
   }
 
-  const [{ data: friends }, { data: options }, mascots] = await Promise.all([
+  const [{ data: friends }, { data: options }, { data: stamps }, mascots] = await Promise.all([
     supabase.rpc("get_accepted_friend_profiles"),
     supabase.from("correspondence_options").select("*").eq("status", "active").order("sort_order"),
+    supabase.from("inventory_items").select("id, name_key").eq("owner_profile_id", profileId).eq("category", "stamps"),
     fetchAuthenticatedMascots(profileId),
   ]);
 
@@ -178,6 +180,7 @@ export async function fetchAuthenticatedSendFlowData(
     correspondenceOptions: options.map(mapCorrespondenceOptionRow),
     friends: (friends as SanitizedFriendProfileRow[]).map(mapSanitizedFriendProfileRow),
     mascots,
+    postalStamps: (stamps ?? []).flatMap((stamp) => stamp.name_key ? [{ id: stamp.id, nameKey: stamp.name_key as TranslationKey }] : []),
   };
 }
 
@@ -186,11 +189,13 @@ export async function createAuthenticatedDeliveryFromSelection({
   content,
   friend,
   mascot,
+  stampInventoryItemId,
 }: {
   correspondence: CorrespondenceOption;
   content: CorrespondenceContent;
   friend: FriendProfile;
   mascot: Mascot;
+  stampInventoryItemId?: string;
 }): Promise<Delivery | undefined> {
   const supabase = getSupabaseClient();
 
@@ -200,7 +205,7 @@ export async function createAuthenticatedDeliveryFromSelection({
 
   const { data, error } = await supabase.rpc("create_delivery_from_selection", {
     correspondence_catalog_key: correspondence.id,
-    content_payload: createCorrespondenceContentPayload(content),
+    content_payload: { ...createCorrespondenceContentPayload(content), postalFinishing: { stampInventoryItemId: stampInventoryItemId ?? null, postmarkKey: "postalMark.postalCancel" } },
     friend_profile_id: friend.id,
     mascot_id: mascot.id,
   });

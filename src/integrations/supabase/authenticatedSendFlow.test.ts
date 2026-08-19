@@ -105,6 +105,7 @@ describe("authenticated send flow mappers", () => {
   it("uses requested ids when they exist in available send flow data", () => {
     const selection = getDefaultSendFlowSelection({
       correspondenceOptions: [mapCorrespondenceOptionRow(correspondenceOptionRow)],
+      postalStamps: [],
       friends: [
         {
           exchangeCount: 18,

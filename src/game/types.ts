@@ -136,6 +136,9 @@ export type ReceivedLetter = {
   originLabel: string;
   senderName: string;
   senderProfileId: string;
+  stampKind: "default" | "inventory";
+  stampNameKey?: TranslationKey;
+  postmarkKey: string;
 };
 
 export type RewardItem = {

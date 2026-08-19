@@ -43,6 +43,7 @@ export function MailboxPage() {
         {!isLoading && !hasError && letters.length > 0 ? <section aria-label={t("mailbox.letterList")} className={styles.list}>
           {letters.map((letter) => <button className={styles.letterCard} key={letter.deliveryId} type="button" onClick={() => setSelectedDeliveryId(letter.deliveryId)}>
             <span className={styles.postmark}>{t("mailbox.from")} {letter.senderName}</span>
+            <span className={styles.stamp}>{letter.stampNameKey ? t(letter.stampNameKey) : t("send.postalFinishing.defaultStamp")}</span>
             <strong>{letter.senderName}</strong>
             <span>{letter.originLabel} · {formatDate(letter.arrivedAt)}</span>
             <p>{letter.letterText}</p>

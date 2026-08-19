@@ -59,7 +59,7 @@ export function SendFlowPage() {
     data: sendFlowData,
     isLoading: isSendFlowLoading,
   } = useSendFlowData();
-  const { friends, mascots, correspondenceOptions: availableCorrespondence } = sendFlowData;
+  const { friends, mascots, postalStamps, correspondenceOptions: availableCorrespondence } = sendFlowData;
   const initialMascotId = getInitialMascotId(mascots, requestedMascotId);
   const initialFriendId = getInitialFriendId(friends, requestedFriendId);
   const [selection, setSelection] = useState<SendFlowSelection>({
@@ -73,6 +73,7 @@ export function SendFlowPage() {
   const [confirmedSend, setConfirmedSend] = useState<ConfirmedSend | undefined>();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasSubmitError, setHasSubmitError] = useState(false);
+  const [stampInventoryItemId, setStampInventoryItemId] = useState<string>();
 
   useEffect(() => {
     const nextCorrespondence = availableCorrespondence.find(isMvpCorrespondence);
@@ -154,6 +155,7 @@ export function SendFlowPage() {
         content,
         friend: selectedFriend,
         mascot: selectedMascot,
+        stampInventoryItemId,
       });
       if (delivery) setConfirmedSend({ correspondence: selectedCorrespondence, content, delivery, friend: selectedFriend, mascot: selectedMascot });
     } catch {
@@ -277,6 +279,13 @@ export function SendFlowPage() {
             />
           </SketchPanel>
 
+          <ChoiceSection title={t("send.postalFinishing.title")}>
+            <p className={styles.hint}>{t("send.postalFinishing.description")}</p>
+            <button className={styles.segment} data-active={!stampInventoryItemId || undefined} onClick={() => setStampInventoryItemId(undefined)} type="button">{t("send.postalFinishing.defaultStamp")}</button>
+            {postalStamps.map((stamp) => <button className={styles.segment} data-active={stamp.id === stampInventoryItemId || undefined} key={stamp.id} onClick={() => setStampInventoryItemId(stamp.id)} type="button">{t(stamp.nameKey)}</button>)}
+            <p className={styles.counter}>{t("send.postalFinishing.defaultPostmark")}</p>
+          </ChoiceSection>
+
           <SketchPanel
             className={styles.summaryPanel}
             title={confirmedSend ? t("send.confirmationTitle") : t("send.summary")}
@@ -309,6 +318,7 @@ export function SendFlowPage() {
                     label={t("send.contentPreview")}
                     value={<CorrespondenceContentPreview content={content} />}
                   />
+                  <SummaryRow label={t("send.postalFinishing.summaryLabel")} value={stampInventoryItemId ? t(postalStamps.find((stamp) => stamp.id === stampInventoryItemId)?.nameKey ?? "send.postalFinishing.defaultStamp") : t("send.postalFinishing.defaultStamp")} />
                   {estimate ? <>
                     <SummaryRow label={t("mascot.distance")} value={`${estimate.distanceKm} ${t("units.kilometers")}`} />
                     <SummaryRow label={t("send.preparationTime")} value={formatMinutes(estimate.modifiers.preparationMinutes)} />

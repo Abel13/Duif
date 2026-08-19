@@ -307,6 +307,13 @@ export type TranslationDictionary = {
     giftPlaceholder: string;
     giftPendingTitle: string;
     giftPendingDescription: string;
+    postalFinishing: {
+      title: string;
+      description: string;
+      defaultStamp: string;
+      defaultPostmark: string;
+      summaryLabel: string;
+    };
     content: {
       letterLabel: string;
       postcardLabel: string;
@@ -1077,6 +1084,11 @@ export type TranslationKey =
   | "send.giftPlaceholder"
   | "send.giftPendingTitle"
   | "send.giftPendingDescription"
+  | "send.postalFinishing.title"
+  | "send.postalFinishing.description"
+  | "send.postalFinishing.defaultStamp"
+  | "send.postalFinishing.defaultPostmark"
+  | "send.postalFinishing.summaryLabel"
   | "send.content.letterLabel"
   | "send.content.postcardLabel"
   | "send.content.postcardVariantLabel"

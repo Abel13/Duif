@@ -378,6 +378,13 @@ export const enUS = {
     giftPendingTitle: "Gifts are still being defined",
     giftPendingDescription:
       "In this version, the gift carries only a mocked note.",
+    postalFinishing: {
+      title: "Postal finishing",
+      description: "Every letter leaves with one stamp and one postmark. The standard items can always be reused.",
+      defaultStamp: "DUIF standard stamp",
+      defaultPostmark: "Standard postal postmark",
+      summaryLabel: "Stamp and postmark",
+    },
     content: {
       letterLabel: "Letter text",
       postcardLabel: "Postcard back",
