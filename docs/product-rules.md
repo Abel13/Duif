@@ -478,6 +478,20 @@ Rules:
   all live in inventory.
 - Collection should highlight progress and discoveries.
 
+### Postal finishing for sent correspondence
+
+- Collection stamps and postal marks are visual correspondence cosmetics, distinct from the
+  Stamps currency and from route-reward album stamps.
+- A player may apply at most one owned official collection stamp and one compatible official
+  postmark to a sent item. The selection is optional and does not consume, transfer, or alter the
+  owned item.
+- The backend validates ownership at send time and snapshots the chosen official identities on the
+  delivery. Sender and recipient render that snapshot rather than a mutable current selection.
+- Postal marks may use the delivery's already-safe city/country label and delivery dates, but must
+  never reveal street, neighborhood, nest coordinates, or a live location.
+- User-created marks, uploads, freehand art, public galleries, and stamp trading remain out of
+  scope until a separate moderation and trading design is approved.
+
 Duplicate item policies:
 
 - Unique: one copy only.

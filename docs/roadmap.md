@@ -2103,6 +2103,43 @@ Does not include:
 - economy, account progression, achievements, editable profile data, user avatars, nest
   personalization, visitor profiles, or ambient animations.
 
+## Milestone 52A: Personal Postal Finishing
+
+Status: Planned.
+
+Goal:
+
+Let a player apply owned official collection stamps and postal marks to correspondence before
+sending it, so a letter, postcard, or sticker delivery carries a personal postal presentation.
+
+Includes:
+
+- catalog-backed, account-owned postage-stamp and postmark cosmetics obtained from collection,
+  shop ownership, or received correspondence;
+- a compact send-composer step to choose one owned stamp and one compatible official postmark,
+  with clear empty states when the player has none;
+- authoritative ownership validation and immutable delivery snapshots of the selected stamp and
+  mark, so the recipient sees exactly what was sent even if the catalog changes later;
+- decorative stamp and postmark placement in the sender preview and recipient mailbox viewer;
+- localized names, descriptions, accessibility labels, and a safe mock fallback that follows the
+  same correspondence contract.
+
+Does not include:
+
+- consuming, trading, gifting, or converting stamps; a selected cosmetic remains owned;
+- player-created/uploaded art, freehand drawing, text on stamps, public galleries, or moderation;
+- changing currency Stamps, pricing, payment, delivery rewards, travel duration, or cargo;
+- multiple stamps/marks per item, automated geographic tracking marks, or real-world postal
+  claims.
+
+Success criteria:
+
+- only a sender who owns an eligible item can apply it;
+- retries and concurrent sends cannot attach an unowned or substituted cosmetic;
+- recipient and sender render the same persisted presentation without exposing extra location
+  precision;
+- a player without owned postal cosmetics can still send every supported correspondence type.
+
 ## Historical First Execution Order
 
 The following order records how the initial prototype was bootstrapped. It is complete and must

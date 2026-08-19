@@ -50,6 +50,12 @@ Expand the real correspondence path from MVP letters to official, catalog-backed
 sticker variants. Include backend validation, recipient mailbox rendering, and inventory ownership
 rules. Exclude user uploads, gifts, trading, payment, and randomized paid rewards.
 
+### Proposed Milestone 52A — Personal Postal Finishing
+
+Let players use their owned official collection stamps and postal marks on sent correspondence.
+Selections remain optional visual cosmetics, are validated and snapshotted by the backend, and do
+not consume stamps or change the currency/economy model.
+
 ### Proposed Milestone 53 — Quiet Delivery Notices
 
 Add private in-app notices for delivered correspondence and returned mascots, with idempotent read
