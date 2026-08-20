@@ -41,6 +41,14 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ["**/*.{js,css,html,ico,svg,webp,png,json}"],
+        // VitePWA adds manifest icons to the precache itself. Excluding them
+        // here prevents Workbox from receiving the same URL both with and
+        // without a revision, which otherwise aborts service-worker install.
+        globIgnores: [
+          "assets/icons/icon-192.png",
+          "assets/icons/icon-512.png",
+          "assets/icons/icon-maskable-512.png",
+        ],
         runtimeCaching: [
           {
             urlPattern: /\/assets\/.*/,
