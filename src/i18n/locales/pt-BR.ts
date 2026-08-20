@@ -350,6 +350,7 @@ export const ptBR = {
     friends: "Amigos",
     shop: "Loja",
     shopUnavailable: "Loja ainda indisponível",
+    referralRewardAvailable: "Coruja disponível para resgate",
   },
   mascot: {
     myMascots: "Meus Mascotes",

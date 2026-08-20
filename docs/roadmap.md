@@ -1988,7 +1988,7 @@ Success criteria:
 
 ## Milestone 48A: Traceable Invitations And Lume Reward
 
-Status: Planned.
+Status: Implemented locally; remote migration and function deployment pending.
 
 Goal:
 
@@ -2015,15 +2015,18 @@ Does not include:
   cash, premium currency, paid acquisition, or rewards for unqualified registrations;
 - self-referral, changing an inviter after attribution, multiple inviters, or repeated Lume grants.
 
-Still unresolved before implementation:
+Resolved rules:
 
-- invitation token lifetime, regeneration invalidation, deferred deep-link persistence, and the
-  attribution window between first open and account creation;
-- the operational definition and detection of distinct legitimate invitees beyond unique account
-  ids, including abuse review and false-positive handling;
-- Lume's official portraits/animations, reward-notification copy, and whether the grant appears
-  automatically or requires an explicit collection action;
-- aggregate progress presentation when a qualified account is later deleted or sanctioned.
+- invitation links remain valid until regenerated; accepting one is remembered for seven days,
+  and attribution frozen at signup survives later link regeneration;
+- an invite qualifies only after confirmed email and collection of the first tutorial route;
+- qualified progress survives ordinary account deletion and is anonymized; an individually
+  audited admin invalidation for confirmed fraud is the only operation that removes it;
+- an unclaimed reward is suspended if valid progress falls below five, while a claimed Lume is
+  permanent;
+- Lume requires explicit collection and naming, with a persistent Friends navigation indicator;
+- the milestone ships Lume's official static portrait; animations remain part of later mascot
+  presentation work.
 
 Success criteria:
 

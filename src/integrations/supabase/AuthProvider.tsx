@@ -30,7 +30,7 @@ import {
 } from "./onboarding";
 import { acknowledgeInauguralPostcardHint as acknowledgeInauguralPostcardHintRequest, acknowledgeTutorialInstruction as acknowledgeTutorialInstructionRequest, collectTutorialDelivery as collectTutorialDeliveryRequest, startOrResumeTutorialDelivery as startOrResumeTutorialDeliveryRequest, type TutorialDeliveryState, type TutorialInstructionStep } from "./tutorial";
 import { completeNestSetup as completeNestSetupRequest } from "./nest";
-import { captureReferralInvitation, referralTokenStorageKey } from "./referrals";
+import { captureReferralInvitation, clearStoredReferralInvitation, getStoredReferralInvitation } from "./referrals";
 import type { NestCoordinate } from "../../game/nest";
 
 const pendingEmailStorageKey = "duif.auth.pendingVerificationEmail";
@@ -126,12 +126,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
         setPendingVerificationEmail(null);
         window.sessionStorage.removeItem(pendingEmailStorageKey);
-        const referralToken = window.sessionStorage.getItem(referralTokenStorageKey);
+        const referralToken = getStoredReferralInvitation();
         if (referralToken) {
           try {
             const outcome = await captureReferralInvitation(referralToken);
             if (["captured", "already_attributed", "not_new_account", "self_referral", "invalid"].includes(outcome)) {
-              window.sessionStorage.removeItem(referralTokenStorageKey);
+              clearStoredReferralInvitation();
             }
           } catch {
             // Keep the signed invitation briefly; a temporary function outage must not lose attribution.
@@ -191,7 +191,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const supabase = getSupabaseClient();
     if (!supabase) return { ok: false, code: "serviceUnavailable" };
     const normalizedEmail = email.trim();
-    const referralToken = typeof window === "undefined" ? null : window.sessionStorage.getItem(referralTokenStorageKey);
+    const referralToken = typeof window === "undefined" ? null : getStoredReferralInvitation();
 
     try {
       const { data, error } = await supabase.auth.signUp({
@@ -208,6 +208,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         reportAuthFailure("signUp", error ?? { code: "missing_user" });
         return result;
       }
+
+      clearStoredReferralInvitation();
 
       if (!data.session) {
         setPendingVerificationEmail(normalizedEmail);

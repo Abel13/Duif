@@ -276,6 +276,7 @@ export const enUS = {
     friends: "Friends",
     shop: "Shop",
     shopUnavailable: "Shop is not available yet",
+    referralRewardAvailable: "Owl ready to claim",
   },
   mascot: {
     myMascots: "My Mascots",

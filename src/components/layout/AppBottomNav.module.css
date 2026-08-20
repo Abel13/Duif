@@ -54,6 +54,7 @@
 }
 
 .iconFrame {
+  position: relative;
   display: grid;
   width: clamp(2.15rem, 9vw, 2.85rem);
   aspect-ratio: 1;
@@ -66,6 +67,18 @@
     border-color 160ms ease,
     box-shadow 160ms ease,
     transform 160ms ease;
+}
+
+.attention {
+  position: absolute;
+  top: -0.28rem;
+  right: -0.28rem;
+  width: 0.78rem;
+  aspect-ratio: 1;
+  border: 2px solid var(--color-paper);
+  border-radius: 50%;
+  background: var(--color-postal-red);
+  box-shadow: 0 0 0 1px rgba(46, 42, 36, 0.38), 0 0.12rem 0 rgba(46, 42, 36, 0.18);
 }
 
 .icon {

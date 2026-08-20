@@ -5,6 +5,7 @@ export const assetKeys = {
     nuvem: "mascot.portrait.nuvem",
     trovao: "mascot.portrait.trovao",
     pipoca: "mascot.portrait.pipoca",
+    lume: "mascot.portrait.lume",
     aurora: "mascot.portrait.aurora",
     maple: "mascot.portrait.maple",
     bento: "mascot.portrait.bento",

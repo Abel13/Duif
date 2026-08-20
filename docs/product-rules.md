@@ -239,6 +239,11 @@ Rules:
   record. The inviter sees aggregate progress only, never invitee email or private location data.
 - Five distinct qualified referrals grant one account-bound mascot, **Lume the Owl**, exactly once.
   It is a non-starter night-route specialist and cannot be traded, sold, or duplicated by retries.
+- Invitation links remain valid until regenerated. An accepted invitation is retained for seven
+  days, and an attribution frozen during signup is not changed by later regeneration.
+- Qualification requires confirmed email and collection of the first tutorial route. Ordinary
+  account deletion preserves anonymized qualified progress; only an audited admin fraud
+  invalidation removes it. A Lume already collected is never revoked.
 
 Friend location visibility:
 

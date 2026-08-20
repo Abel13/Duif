@@ -1,5 +1,5 @@
-import { useRef, useState, type FormEvent } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useRef, useState, type FormEvent } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 
 import { AppBottomNav, PageShell } from "../../components/layout";
 import { ItemCard, SketchPanel, StampButton } from "../../components/ui";
@@ -13,6 +13,7 @@ import styles from "./FriendsPage.module.css";
 
 export function FriendsPage() {
   const { t } = useTranslation();
+  const [searchParams] = useSearchParams();
   const { code, connections, isLoading, refresh, setCode } = usePostalFriends();
   const { progress: referralProgress, isLoading: referralsLoading, refresh: refreshReferrals } = useReferrals();
   const [submittedCode, setSubmittedCode] = useState("");
@@ -25,6 +26,10 @@ export function FriendsPage() {
   const [owlName, setOwlName] = useState("");
   const connectionTitleRef = useRef<HTMLHeadingElement>(null);
   const hasFriends = connections.accepted.length > 0;
+
+  useEffect(() => {
+    if (searchParams.get("mode") === "invite") setConnectionMode("invite");
+  }, [searchParams]);
 
   async function copyCode() {
     if (!code) return;

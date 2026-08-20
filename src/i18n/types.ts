@@ -205,6 +205,7 @@ export type TranslationDictionary = {
     friends: string;
     shop: string;
     shopUnavailable: string;
+    referralRewardAvailable: string;
   };
   mascot: {
     myMascots: string;
@@ -1034,6 +1035,7 @@ export type TranslationKey =
   | "navigation.friends"
   | "navigation.shop"
   | "navigation.shopUnavailable"
+  | "navigation.referralRewardAvailable"
   | "mascot.myMascots"
   | "mascot.level"
   | "mascot.xp"

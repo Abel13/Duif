@@ -1119,6 +1119,7 @@ export type Database = {
     }
     Functions: {
       admin_list_official_assets: { Args: never; Returns: Json }
+      admin_invalidate_referral: { Args: { attribution_id: string; reason: string }; Returns: Json }
       advance_account_onboarding: {
         Args: {
           expected_stage: Database["public"]["Enums"]["onboarding_stage"]
@@ -1171,6 +1172,8 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      claim_referral_owl: { Args: { requested_name: string }; Returns: Json }
+      get_my_referral_progress: { Args: never; Returns: Json }
       provision_initial_mascot: { Args: never; Returns: Json }
       save_initial_mascot_draft: {
         Args: { requested_mascot_name: string; template_id: string }
