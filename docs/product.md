@@ -6,18 +6,9 @@ Players own animals that carry letters, cards, stickers, and collectible objects
 
 The first version should focus on making the player care about their mascots and enjoy the act of sending something to another player.
 
-As of August 2026, the local implementation validates the complete authenticated
-send-travel-return-collect loop, deterministic route discoveries, inventory, friends, regional
-postal traffic, mailbox, personal nest, and a read-only shop preview. Runtime player-owned flows
-do not fall back to prototype users or mock deliveries. Milestones 37 through 51 establish secure
-registration, one user-named starter mascot, mandatory installed-mobile onboarding, a five-minute
-tutorial from a private nest, privacy-safe nest activation, administrative catalogs, and production
-readiness checks. The next product slice is traceable invitations and the Owl reward (48A).
-
-Detailed product rules for travel, slow social, privacy, map rewards, inventory, progression,
-and shop direction live in:
-
-`docs/product-rules.md`
+This document deliberately describes the durable product vision, not implementation status. For
+current and planned work, use the [roadmap](./roadmap.md). For the binding rules that govern that
+vision, use [product-rules.md](./product-rules.md).
 
 ## Core Concept
 
@@ -283,7 +274,7 @@ Rewards should make travel feel meaningful.
 Possible rewards:
 
 - experience;
-- currency Stamps;
+- currency Seeds;
 - collectible stamps;
 - stickers;
 - equipment;
@@ -341,14 +332,14 @@ Cosmetics should not be required for early gameplay, but they should give player
 
 ## Economy
 
-The first prototype should not include a complex economy. The product uses **Stamps** as the
+The first prototype should not include a complex economy. The product uses **Seeds** as the
 common currency earned through play and **Crystals** as the future premium currency limited
-to cosmetics and social expression. Currency Stamps are separate from collectible stamps
-stored in the collection. Prices are not defined yet.
+to cosmetics and social expression. Postal stamps remain separate collectible and finishing
+items stored in the collection. Prices are not defined yet.
 
 A later version may include:
 
-- Stamps from deliveries;
+- Seeds from deliveries;
 - cosmetic shop;
 - seasonal items;
 - limited-time collections;
@@ -357,7 +348,7 @@ A later version may include:
 
 The full send-travel-return-collect loop remains free. Premium purchases cannot grant XP,
 attributes, route rewards, cargo capacity, exclusive gameplay access, or required travel
-speed. Paid loot boxes and Crystal-to-Stamp conversion are not allowed. Detailed
+speed. Paid loot boxes and Crystal-to-Seed conversion are not allowed. Detailed
 economy rules live in `docs/product-rules.md`.
 
 ## Events

@@ -1,4 +1,7 @@
-# Backend Decision
+# Backend Decision (historical)
+
+> This records the original Milestone 16 choice. The current architecture and operational rules
+> live in [technical-decisions.md](./technical-decisions.md) and [backend-schema.md](./backend-schema.md).
 
 This document records the Milestone 16 backend decision for DUIF.
 

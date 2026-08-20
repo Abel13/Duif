@@ -46,7 +46,7 @@ export type InventoryCategory = "all" | "equipment" | "stamps" | "keepsakes" | "
 
 export type ShopCategory = "all" | "cosmetics" | "stickers" | "postcards" | "decorations";
 
-export type ShopCurrency = "free" | "premium";
+export type ShopCurrency = "seeds" | "crystals";
 
 export type ShopCatalogItem = {
   id: string;

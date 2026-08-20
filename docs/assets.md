@@ -249,7 +249,7 @@ and accessible interactions remain in HTML and translated copy. Every thumbnail 
 
 The currency naming pass adds two code-native balance marks:
 
-- `public/assets/currency/stamp.svg` for common-currency Selos/Stamps;
+- `public/assets/currency/seed.svg` for common-currency Sementes/Seeds;
 - `public/assets/currency/crystal.svg` for premium-currency Cristais/Crystals.
 
 Both marks follow the visual rules in `docs/visual-direction.md`. They are decorative beside

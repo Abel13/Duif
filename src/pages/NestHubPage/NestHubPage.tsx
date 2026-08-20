@@ -59,8 +59,8 @@ export function NestHubPage() {
             aria-label={t("nestHub.currencySummary")}
           >
             <Currency
-              assetKey={assetKeys.currency.stamp}
-              label={t("nestHub.stamps")}
+              assetKey={assetKeys.currency.seed}
+              label={t("nestHub.seeds")}
             />
             <Currency
               assetKey={assetKeys.currency.crystal}

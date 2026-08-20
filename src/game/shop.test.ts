@@ -15,7 +15,7 @@ describe("shop catalog", () => {
       new Set(["cosmetics", "stickers", "postcards", "decorations"]),
     );
     expect(new Set(shopCatalog.map((item) => item.currency))).toEqual(
-      new Set(["free", "premium"]),
+      new Set(["seeds", "crystals"]),
     );
   });
 

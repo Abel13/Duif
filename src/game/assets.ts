@@ -34,7 +34,7 @@ export const assetKeys = {
     nest: "navigation.icon.nest", collection: "navigation.icon.collection",
     map: "navigation.icon.map", friends: "navigation.icon.friends", shop: "navigation.icon.shop",
   },
-  currency: { stamp: "currency.icon.stamp", crystal: "currency.icon.crystal" },
+  currency: { seed: "currency.icon.seed", crystal: "currency.icon.crystal" },
   mapControls: {
     overview: "map.control.overview", mascot: "map.control.mascot",
     origin: "map.control.origin", destination: "map.control.destination",

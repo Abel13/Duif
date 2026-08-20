@@ -13,7 +13,7 @@ export const shopCatalog: ShopCatalogItem[] = [
   {
     id: "shop-crimson-courier-scarf",
     category: "cosmetics",
-    currency: "premium",
+    currency: "crystals",
     price: 45,
     nameKey: "shop.items.crimsonCourierScarf.name",
     descriptionKey: "shop.items.crimsonCourierScarf.description",
@@ -23,7 +23,7 @@ export const shopCatalog: ShopCatalogItem[] = [
   {
     id: "shop-meadow-post-cap",
     category: "cosmetics",
-    currency: "free",
+    currency: "seeds",
     price: 180,
     nameKey: "shop.items.meadowPostCap.name",
     descriptionKey: "shop.items.meadowPostCap.description",
@@ -33,7 +33,7 @@ export const shopCatalog: ShopCatalogItem[] = [
   {
     id: "shop-sunny-route-sticker",
     category: "stickers",
-    currency: "free",
+    currency: "seeds",
     price: 35,
     nameKey: "shop.items.sunnyRouteSticker.name",
     descriptionKey: "shop.items.sunnyRouteSticker.description",
@@ -43,7 +43,7 @@ export const shopCatalog: ShopCatalogItem[] = [
   {
     id: "shop-blue-envelope-sticker",
     category: "stickers",
-    currency: "premium",
+    currency: "crystals",
     price: 12,
     nameKey: "shop.items.blueEnvelopeSticker.name",
     descriptionKey: "shop.items.blueEnvelopeSticker.description",
@@ -53,7 +53,7 @@ export const shopCatalog: ShopCatalogItem[] = [
   {
     id: "shop-coastal-town-postcard",
     category: "postcards",
-    currency: "free",
+    currency: "seeds",
     price: 60,
     nameKey: "shop.items.coastalTownPostcard.name",
     descriptionKey: "shop.items.coastalTownPostcard.description",
@@ -63,7 +63,7 @@ export const shopCatalog: ShopCatalogItem[] = [
   {
     id: "shop-lantern-festival-postcard",
     category: "postcards",
-    currency: "premium",
+    currency: "crystals",
     price: 20,
     nameKey: "shop.items.lanternFestivalPostcard.name",
     descriptionKey: "shop.items.lanternFestivalPostcard.description",
@@ -73,7 +73,7 @@ export const shopCatalog: ShopCatalogItem[] = [
   {
     id: "shop-brass-nest-plaque",
     category: "decorations",
-    currency: "premium",
+    currency: "crystals",
     price: 30,
     nameKey: "shop.items.brassNestPlaque.name",
     descriptionKey: "shop.items.brassNestPlaque.description",
@@ -83,7 +83,7 @@ export const shopCatalog: ShopCatalogItem[] = [
   {
     id: "shop-airmail-profile-ribbon",
     category: "decorations",
-    currency: "free",
+    currency: "seeds",
     price: 90,
     nameKey: "shop.items.airmailProfileRibbon.name",
     descriptionKey: "shop.items.airmailProfileRibbon.description",

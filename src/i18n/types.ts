@@ -237,9 +237,9 @@ export type TranslationDictionary = {
     loadingCatalog: string;
   };
   nestHub: {
-    eyebrow: string; title: string; tagline: string; currencySummary: string; stamps: string; crystals: string; settingsSoon: string; defaultAvatar: string; profileName: string; nestName: string; nestOf: string; location: string; levelZero: string; xpZero: string; sections: string; profileTitle: string; profileDescription: string; mascotTitle: string; mascotDescription: string; mailboxTitle: string; mailboxDescription: string; atNest: string; traveling: string; newCorrespondence: string; travelingTitle: string; noTravelTitle: string; noTravelDescription: string;
+    eyebrow: string; title: string; tagline: string; currencySummary: string; seeds: string; crystals: string; settingsSoon: string; defaultAvatar: string; profileName: string; nestName: string; nestOf: string; location: string; levelZero: string; xpZero: string; sections: string; profileTitle: string; profileDescription: string; mascotTitle: string; mascotDescription: string; mailboxTitle: string; mailboxDescription: string; atNest: string; traveling: string; newCorrespondence: string; travelingTitle: string; noTravelTitle: string; noTravelDescription: string;
   };
-  profile: { eyebrow: string; email: string; location: string; joined: string; level: string; xp: string; stamps: string; crystals: string; readOnlyNotice: string; };
+  profile: { eyebrow: string; email: string; location: string; joined: string; level: string; xp: string; seeds: string; crystals: string; readOnlyNotice: string; };
   mailbox: {
     eyebrow: string;
     title: string;
@@ -666,8 +666,8 @@ export type TranslationDictionary = {
       decorations: string;
     };
     currencies: {
-      free: string;
-      premium: string;
+      seeds: string;
+      crystals: string;
     };
     items: {
       crimsonCourierScarf: { name: string; description: string };
@@ -807,8 +807,8 @@ export type TranslationDictionary = {
 };
 
 export type TranslationKey =
-  | "nestHub.eyebrow" | "nestHub.title" | "nestHub.tagline" | "nestHub.currencySummary" | "nestHub.stamps" | "nestHub.crystals" | "nestHub.settingsSoon" | "nestHub.defaultAvatar" | "nestHub.profileName" | "nestHub.nestName" | "nestHub.nestOf" | "nestHub.location" | "nestHub.levelZero" | "nestHub.xpZero" | "nestHub.sections" | "nestHub.profileTitle" | "nestHub.profileDescription" | "nestHub.mascotTitle" | "nestHub.mascotDescription" | "nestHub.mailboxTitle" | "nestHub.mailboxDescription" | "nestHub.atNest" | "nestHub.traveling" | "nestHub.newCorrespondence" | "nestHub.travelingTitle" | "nestHub.noTravelTitle" | "nestHub.noTravelDescription"
-  | "profile.eyebrow" | "profile.email" | "profile.location" | "profile.joined" | "profile.level" | "profile.xp" | "profile.stamps" | "profile.crystals" | "profile.readOnlyNotice"
+  | "nestHub.eyebrow" | "nestHub.title" | "nestHub.tagline" | "nestHub.currencySummary" | "nestHub.seeds" | "nestHub.crystals" | "nestHub.settingsSoon" | "nestHub.defaultAvatar" | "nestHub.profileName" | "nestHub.nestName" | "nestHub.nestOf" | "nestHub.location" | "nestHub.levelZero" | "nestHub.xpZero" | "nestHub.sections" | "nestHub.profileTitle" | "nestHub.profileDescription" | "nestHub.mascotTitle" | "nestHub.mascotDescription" | "nestHub.mailboxTitle" | "nestHub.mailboxDescription" | "nestHub.atNest" | "nestHub.traveling" | "nestHub.newCorrespondence" | "nestHub.travelingTitle" | "nestHub.noTravelTitle" | "nestHub.noTravelDescription"
+  | "profile.eyebrow" | "profile.email" | "profile.location" | "profile.joined" | "profile.level" | "profile.xp" | "profile.seeds" | "profile.crystals" | "profile.readOnlyNotice"
   | "mailbox.eyebrow"
   | "mailbox.title"
   | "mailbox.description"
@@ -1329,8 +1329,8 @@ export type TranslationKey =
   | "shop.categories.stickers"
   | "shop.categories.postcards"
   | "shop.categories.decorations"
-  | "shop.currencies.free"
-  | "shop.currencies.premium"
+  | "shop.currencies.seeds"
+  | "shop.currencies.crystals"
   | "shop.items.crimsonCourierScarf.name"
   | "shop.items.crimsonCourierScarf.description"
   | "shop.items.meadowPostCap.name"

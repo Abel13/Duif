@@ -225,7 +225,7 @@ function CurrencyIcon({ currency }: { currency: ShopCatalogItem["currency"] }) {
         alt=""
         className={styles.currencyIcon}
         height={32}
-        assetKey={currency === "free" ? assetKeys.currency.stamp : assetKeys.currency.crystal}
+        assetKey={currency === "seeds" ? assetKeys.currency.seed : assetKeys.currency.crystal}
         width={32}
       >
         <span className={styles.currencyFallback} aria-hidden="true" />

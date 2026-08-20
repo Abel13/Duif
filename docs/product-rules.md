@@ -2,6 +2,9 @@
 
 This document records product decisions for DUIF after the first playable backend loop.
 
+For the authoritative item taxonomy, consumption, ownership, acquisition, and transfer rules, see
+[items.md](./items.md).
+
 It should be treated as the source of truth for gameplay, privacy, social behavior, map
 mechanics, rewards, inventory, and monetization direction until a more formal game design
 document exists.
@@ -464,7 +467,7 @@ Rules:
 - The mailbox is part of owned content, but it is not the same thing as the collection.
 - Ninho is the player-owned hub for their read-only personal identity, mascot area, and mailbox.
   It is not a mascot profile: individual mascot details remain in the mascot area.
-- Until their systems exist, Selos, Cristais, account level, and account XP may be displayed as
+- Until their systems exist, Sementes, Cristais, account level, and account XP may be displayed as
   explicitly neutral zero values. The Ninho must not imply a purchasable balance, earned
   progression, achievements, editable profile, or user-uploaded avatar.
 - The default player avatar is a neutral silhouette. Player profile data stays owner-only until a
@@ -483,7 +486,7 @@ Rules:
 - Every sent correspondence item requires exactly one official stamp and one compatible official
   postmark. Every account owns the reusable default pair from the start.
 - Collection stamps and postal marks are visual correspondence cosmetics, distinct from the
-  Stamps currency and from route-reward album stamps.
+  Seeds currency and from route-reward album stamps.
 - A player may replace either default with one owned official personalized cosmetic. Selections
   are mandatory but neither default nor personalized cosmetics are consumed, transferred, or
   altered by a send.
@@ -501,7 +504,7 @@ Duplicate item policies:
 - Unique: one copy only.
 - Stackable: repeated items increase quantity.
 - Duplicate allowed: multiple copies can exist, possibly with different stats.
-- Convert on duplicate: repeat drops convert into fragments, Stamps, or upgrade
+- Convert on duplicate: repeat drops convert into fragments, Seeds, or upgrade
   progress.
 
 Category defaults:
@@ -544,7 +547,7 @@ Possible reward types:
 - equipment;
 - fuel;
 - materials;
-- currency Stamps;
+- currency Seeds;
 - route discoveries;
 - event collectibles.
 
@@ -569,7 +572,7 @@ backend when the delivery is created:
   the recipient may view the shared delivery and its discoveries;
 - repeated collection returns the same inventory records and never duplicates cargo;
 - route stamps are collectible inventory items and remain distinct from the spendable common
-  currency named Stamps.
+  currency named Seeds.
 
 Deliveries created before this version keep `route_discovery_version = null`. They receive no
 backfill and continue using the local visual fallback, preserving their historical outcome.
@@ -577,20 +580,19 @@ backfill and continue using the local visual fallback, preserving their historic
 ## Shop and Monetization Rules
 
 The shop may eventually include cosmetics, social content, optional boosts, fuel, and two
-currencies: **Stamps** as the common currency and **Crystals** as the premium currency.
+currencies: **Seeds** as the common currency and **Crystals** as the premium currency.
 
 Currency boundaries:
 
-- Stamps are earned from deliveries, route rewards, collection progress, and events.
-- Currency Stamps are standardized balance tokens. They are not the collectible route and
-  album stamps stored as inventory items.
+- Seeds are earned from deliveries, route rewards, collection progress, and events.
+- Seeds are standardized balance tokens. They are not collectible route or album items.
 - Crystals may eventually be purchased, but are restricted to visual expression
   and social content.
 - Crystals may buy cosmetics, stickers, postcards, and profile or equipment
   decoration.
 - Crystals cannot directly buy mascot or player XP, attributes, route rewards,
   cargo capacity, required travel-time reductions, or exclusive gameplay access.
-- Crystals cannot be converted into Stamps or transferred between players.
+- Crystals cannot be converted into Seeds or transferred between players.
 - Earning curves, prices, purchase limits, and regional pricing remain deferred until
   balance and payment milestones.
 
@@ -613,7 +615,7 @@ Paid-economy guardrails:
 - Do not sell XP, attributes, route discoveries, cargo capacity, exclusive functional
   equipment, or access to friends and destinations.
 - Do not add paid loot boxes, randomized paid rewards, anonymous gifts, player trading, or
-  Crystal-to-Stamp conversion.
+  Crystal-to-Seed conversion.
 - Account-bound premium items cannot be gifted.
 - No purchase, balance, entitlement, or consumption behavior should be implied before a
   backend-authoritative ledger and purchase-validation design exists.

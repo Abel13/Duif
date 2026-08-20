@@ -393,21 +393,19 @@ Avoid importing a generic icon set without customization.
 
 ## Currency Visual Language
 
-The official player-facing currency names are **Stamps** for common currency and
-**Crystals** for premium currency. The technical values may remain `free` and `premium`, but
-those words should not appear as currency names in player-facing UI.
+The official player-facing currency names are **Seeds** for common currency and
+**Crystals** for premium currency. Technical identifiers use `seeds` and `crystals` so obsolete
+economic labels do not leak into product contracts.
 
-Stamps:
+Seeds:
 
-- Use a small horizontal perforated postage-stamp shape with a warm paper center.
-- Add one simple ink mark such as a wing, envelope, or short route line; never use readable
-  denominations inside the icon.
-- Use postal brown as the main ink, postal red as a restrained accent, and paper colors for
-  the body.
-- Keep the silhouette rectangular and visibly different from collectible route stamps,
-  which may use unique art, rarity borders, locations, and event marks.
-- Currency Stamps always use the same generic icon because they represent a balance, not an
-  inventory collectible.
+- Use one compact hand-drawn seed with a small leaf or sprout gesture.
+- Use postal brown and rare gold for the seed, muted green for the sprout, and dark ink for
+  the outline.
+- Keep the silhouette organic and immediately distinct from postage stamps, route marks, and
+  inventory collectibles.
+- Currency Seeds always use the same generic icon because they represent a balance, not an
+  inventory item.
 
 Crystals:
 
@@ -422,7 +420,7 @@ Shared presentation rules:
 
 - Show the icon together with the localized name or an accessible label; never communicate
   currency using color alone.
-- Display amounts as `120 Stamps` and `45 Crystals` in English, and `120 Selos` and
+- Display amounts as `120 Seeds` and `45 Crystals` in English, and `120 Sementes` and
   `45 Cristais` in Portuguese. Use singular forms for an amount of one when pluralization is
   implemented.
 - Do not introduce standalone currency symbols. The names are the authoritative labels.

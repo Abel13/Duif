@@ -307,8 +307,8 @@ export const enUS = {
     bottomNav: "Main navigation",
     loadingCatalog: "Updating notebook",
   },
-  nestHub: { eyebrow: "Your postal space", title: "Nest", tagline: "Your home, your stories.", currencySummary: "Postal balances", stamps: "Stamps", crystals: "Crystals", settingsSoon: "Settings coming soon", defaultAvatar: "Profile silhouette", profileName: "Profile", nestName: "Nest", nestOf: "Nest of", location: "Location", levelZero: "Level 0", xpZero: "0 XP", sections: "Nest areas", profileTitle: "Profile", profileDescription: "Your postal identity and personal details.", mascotTitle: "Mascots", mascotDescription: "See who is in the nest or traveling.", mailboxTitle: "Mailbox", mailboxDescription: "Read the correspondence that has arrived.", atNest: "at the nest", traveling: "traveling", newCorrespondence: "new correspondence", travelingTitle: "Trips in progress", noTravelTitle: "No trips in progress", noTravelDescription: "When a messenger leaves, its tracking will appear here." },
-  profile: { eyebrow: "Postal profile", email: "Email", location: "Location", joined: "On DUIF since", level: "Level", xp: "Experience", stamps: "Stamps", crystals: "Crystals", readOnlyNotice: "Profile editing will arrive in a future postal update." },
+  nestHub: { eyebrow: "Your postal space", title: "Nest", tagline: "Your home, your stories.", currencySummary: "Postal balances", seeds: "Seeds", crystals: "Crystals", settingsSoon: "Settings coming soon", defaultAvatar: "Profile silhouette", profileName: "Profile", nestName: "Nest", nestOf: "Nest of", location: "Location", levelZero: "Level 0", xpZero: "0 XP", sections: "Nest areas", profileTitle: "Profile", profileDescription: "Your postal identity and personal details.", mascotTitle: "Mascots", mascotDescription: "See who is in the nest or traveling.", mailboxTitle: "Mailbox", mailboxDescription: "Read the correspondence that has arrived.", atNest: "at the nest", traveling: "traveling", newCorrespondence: "new correspondence", travelingTitle: "Trips in progress", noTravelTitle: "No trips in progress", noTravelDescription: "When a messenger leaves, its tracking will appear here." },
+  profile: { eyebrow: "Postal profile", email: "Email", location: "Location", joined: "On DUIF since", level: "Level", xp: "Experience", seeds: "Seeds", crystals: "Crystals", readOnlyNotice: "Profile editing will arrive in a future postal update." },
   mailbox: {
     eyebrow: "Received correspondence",
     title: "Mailbox",
@@ -758,8 +758,8 @@ export const enUS = {
       decorations: "Decorations",
     },
     currencies: {
-      free: "Stamps",
-      premium: "Crystals",
+      seeds: "Seeds",
+      crystals: "Crystals",
     },
     items: {
       crimsonCourierScarf: {

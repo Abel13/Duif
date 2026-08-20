@@ -37,7 +37,7 @@ The first prototype does not need:
 - remote translation loading;
 - translation CMS integration;
 - machine translation;
-- pluralization for currency names (`1 Selo`/`2 Selos`, `1 Cristal`/`2 Cristais` and the
+- pluralization for currency names (`1 Semente`/`2 Sementes`, `1 Cristal`/`2 Cristais` and the
   equivalent English forms);
 - right-to-left language support;
 - date, currency, or number localization beyond simple formatting helpers.

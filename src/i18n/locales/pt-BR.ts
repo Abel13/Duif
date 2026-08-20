@@ -382,8 +382,8 @@ export const ptBR = {
     bottomNav: "Navegação principal",
     loadingCatalog: "Atualizando caderno",
   },
-  nestHub: { eyebrow: "Seu espaço postal", title: "Ninho", tagline: "Seu lar, suas histórias.", currencySummary: "Saldos postais", stamps: "Selos", crystals: "Cristais", settingsSoon: "Configurações em breve", defaultAvatar: "Silhueta de perfil", profileName: "Perfil", nestName: "Ninho", nestOf: "Ninho de", location: "Localização", levelZero: "Nível 0", xpZero: "0 XP", sections: "Áreas do Ninho", profileTitle: "Perfil", profileDescription: "Sua identidade postal e informações pessoais.", mascotTitle: "Mascotes", mascotDescription: "Veja quem está no ninho ou viajando.", mailboxTitle: "Caixa Postal", mailboxDescription: "Leia as correspondências que chegaram.", atNest: "no ninho", traveling: "viajando", newCorrespondence: "novas correspondências", travelingTitle: "Viagens em andamento", noTravelTitle: "Nenhuma viagem em andamento", noTravelDescription: "Quando um mensageiro sair, o acompanhamento aparecerá aqui." },
-  profile: { eyebrow: "Perfil postal", email: "E-mail", location: "Localização", joined: "No DUIF desde", level: "Nível", xp: "Experiência", stamps: "Selos", crystals: "Cristais", readOnlyNotice: "A edição do perfil será disponibilizada em uma futura atualização postal." },
+  nestHub: { eyebrow: "Seu espaço postal", title: "Ninho", tagline: "Seu lar, suas histórias.", currencySummary: "Saldos postais", seeds: "Sementes", crystals: "Cristais", settingsSoon: "Configurações em breve", defaultAvatar: "Silhueta de perfil", profileName: "Perfil", nestName: "Ninho", nestOf: "Ninho de", location: "Localização", levelZero: "Nível 0", xpZero: "0 XP", sections: "Áreas do Ninho", profileTitle: "Perfil", profileDescription: "Sua identidade postal e informações pessoais.", mascotTitle: "Mascotes", mascotDescription: "Veja quem está no ninho ou viajando.", mailboxTitle: "Caixa Postal", mailboxDescription: "Leia as correspondências que chegaram.", atNest: "no ninho", traveling: "viajando", newCorrespondence: "novas correspondências", travelingTitle: "Viagens em andamento", noTravelTitle: "Nenhuma viagem em andamento", noTravelDescription: "Quando um mensageiro sair, o acompanhamento aparecerá aqui." },
+  profile: { eyebrow: "Perfil postal", email: "E-mail", location: "Localização", joined: "No DUIF desde", level: "Nível", xp: "Experiência", seeds: "Sementes", crystals: "Cristais", readOnlyNotice: "A edição do perfil será disponibilizada em uma futura atualização postal." },
   mailbox: {
     eyebrow: "Correspondências recebidas",
     title: "Caixa Postal",
@@ -839,8 +839,8 @@ export const ptBR = {
       decorations: "Decorações",
     },
     currencies: {
-      free: "Selos",
-      premium: "Cristais",
+      seeds: "Sementes",
+      crystals: "Cristais",
     },
     items: {
       crimsonCourierScarf: {

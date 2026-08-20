@@ -1,5 +1,7 @@
 # Roadmap
 
+> Fonte única para estado, escopo e sequência das milestones. Consulte o [índice da documentação](./README.md) para regras, arquitetura e operação.
+
 This roadmap defines the initial execution plan for DUIF.
 
 DUIF should be built in small, testable milestones. Each milestone should produce a working result that can be reviewed before moving to the next step.
@@ -1171,12 +1173,12 @@ Status: Completed.
 Goal:
 
 Define the first safe economy rules before implementing a shop with cosmetics, useful
-items, boosts, fuel, stickers, postcards, gifts, Stamps, and Crystals.
+items, boosts, fuel, stickers, postcards, gifts, Seeds, and Crystals.
 
 Includes:
 
 - item categories for shop inventory;
-- Stamp vs Crystal currency boundaries;
+- Seed vs Crystal currency boundaries;
 - paid-item guardrails;
 - fuel/recharge direction;
 - gift contents and restrictions;
@@ -1201,7 +1203,7 @@ Success criteria:
 
 Decision outcome:
 
-- Stamps are the common currency earned through play, while Crystals are the future premium
+- Seeds are the common currency earned through play, while Crystals are the future premium
   currency limited to cosmetics and social expression;
 - normal deliveries never require fuel, and fuel applies only to optional boost equipment;
 - first-scope gifts contain only transferable stickers, postcards, or simple cosmetics;
@@ -1360,7 +1362,7 @@ Does not include:
 - a second collection implementation inside the map;
 - early inventory insertion;
 - changes to reward authorization or database schema;
-- duplicate conversion into Stamps.
+- duplicate conversion into Seeds.
 
 Success criteria:
 
@@ -1441,7 +1443,7 @@ Does not include:
 - client-authoritative discovery creation;
 - backfilling deliveries created before this milestone;
 - using rarity weight to remove or reroll one of the fixed regional discoveries;
-- duplicate conversion into Stamps;
+- duplicate conversion into Seeds;
 - economy balancing or collection-conversion formulas;
 - removal or renaming of existing RPC response fields.
 
@@ -2091,7 +2093,7 @@ and Caixa Postal rather than treating the Ninho as a mascot-detail route.
 Includes:
 
 - a read-only identity header with neutral silhouette, nickname, nest label, city/country, and
-  deliberately neutral zero values for Selos, Cristais, level, and XP;
+  deliberately neutral zero values for Sementes, Cristais, level, and XP;
 - three registered, modular `nestArtwork` entries for Profile, Mascots, and Caixa Postal;
 - data-backed mascot availability, in-progress journey rows, and received-letter counts;
 - owner-only `/profile` read-only view, with no edit, achievement, avatar-upload, or privacy UI;
@@ -2103,9 +2105,19 @@ Does not include:
 - economy, account progression, achievements, editable profile data, user avatars, nest
   personalization, visitor profiles, or ambient animations.
 
-## Milestone 52A: Personal Postal Finishing
+## Milestone 52: Official Postcards and Stickers
 
 Status: Planned.
+
+Goal:
+
+Expand the real correspondence path from MVP letters to official, catalog-backed postcard and sticker variants.
+
+Includes backend validation, mailbox rendering, and inventory-ownership rules. Excludes user uploads, gifts, trading, payments, and randomized paid rewards.
+
+## Milestone 52A: Personal Postal Finishing
+
+Status: Implemented locally and published in commit `9ddb2b1`.
 
 Goal:
 
@@ -2116,13 +2128,13 @@ Includes:
 
 - one permanent default stamp and one permanent default postmark for every player, ensuring no
   correspondence can be sent without the complete postal presentation;
-- catalog-backed personalized stamp and postmark cosmetics obtainable from collection, received
-  correspondence, and a future shop ownership flow;
+- an owned personalized stamp can be selected from inventory; future personalized stamps and
+  postmarks may come from collection, received correspondence, or a shop ownership flow;
 - a compact mandatory send-composer step that selects one owned stamp and one compatible owned
   postmark, prefilled with the defaults and never offering an empty state;
 - authoritative ownership validation and immutable delivery snapshots of the selected stamp and
   mark, so the recipient sees exactly what was sent even if the catalog changes later;
-- decorative stamp and postmark placement in the sender preview and recipient mailbox viewer;
+- decorative stamp placement in the recipient mailbox viewer;
 - localized names, descriptions, accessibility labels, and a safe mock fallback that follows the
   same correspondence contract.
 
@@ -2132,7 +2144,7 @@ Does not include:
   cosmetics remain reusable after selection;
 - player-created/uploaded art, freehand drawing, text on stamps, public galleries, or moderation;
 - implementing prices, payment, currency spending, or the shop purchase flow itself;
-- changing currency Stamps, delivery rewards, travel duration, or cargo;
+- changing currency Seeds, delivery rewards, travel duration, or cargo;
 - multiple stamps/marks per item, automated geographic tracking marks, or real-world postal
   claims.
 

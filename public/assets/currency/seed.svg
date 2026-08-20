@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">Semente</title>
+  <path fill="#e8ddc7" stroke="#2e2a24" stroke-width="2.5" stroke-linejoin="round" d="M33 55C18 49 14 36 22 24c7-10 19-14 29-14 1 11-2 25-10 35-3 4-5 7-8 10Z"/>
+  <path fill="#c49a4a" stroke="#8b5e3c" stroke-width="2" stroke-linejoin="round" d="M31 49c-7-6-8-14-3-22 4-6 11-9 17-11 0 8-2 16-7 23-2 4-4 7-7 10Z"/>
+  <path fill="none" stroke="#7a8f68" stroke-width="3" stroke-linecap="round" d="M31 49c3-10 7-19 14-27"/>
+  <path fill="#7a8f68" stroke="#2e2a24" stroke-width="2" stroke-linejoin="round" d="M35 25c-7 0-12-3-14-9 7-1 13 1 17 6l-3 3Zm8-8c2-6 6-10 12-11 0 7-3 12-10 15l-2-4Z"/>
+</svg>
