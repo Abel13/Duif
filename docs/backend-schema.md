@@ -247,6 +247,12 @@ camera center. Its response contains deterministic quarter-degree route geometry
 labels; exact endpoints, addresses, city labels, and non-friend owner identity never leave the
 database. The browser interpolates these public snapshots between five-minute refreshes.
 
+That RPC records the Milestone 36A schema and is planned for replacement in Milestone 60. The
+approved future contract accepts no arbitrary camera viewport as an authorization source: other
+players' mascots are eligible only relative to a server-resolved anchor belonging to the viewer
+(nest or current mascot). The migration shape, anchor priority, radius, refresh cadence, and legacy
+RPC retirement remain explicitly unresolved in the roadmap.
+
 ## Official asset registry
 
 `official_assets` provides stable typed identities for gameplay and illustrated UI art.

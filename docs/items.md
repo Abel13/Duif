@@ -20,12 +20,16 @@
 | Sementes | Saldo da conta | Sim, ao gastar | Não | Entregas, descobertas, coleções e eventos | Economia da conta |
 | Cristais | Saldo premium da conta | Sim, ao gastar | Não | Compra futura e concessões explícitas | Economia da conta |
 | Carta | Não é inventário | Não | Sim | Compositor do usuário | Caixa postal do destinatário |
-| Cartão oficial | Catálogo, sem quantidade | Não | Sim | Catálogo oficial e eventos | Caixa postal; permanece disponível ao remetente |
+| Cartão oficial desbloqueável | Catálogo desbloqueado, sem quantidade | Não | Sim | Base permanente, passagem por cidade e missões de evento | Caixa postal; permanece disponível ao remetente |
+| Cartão de arte paga | Inventário por cópia | Sim, ao enviar | Sim | Pacotes futuros da loja | Caixa postal do destinatário |
 | Adesivo | Inventário por cópia | Sim, ao enviar | Sim, de 1 a 3 cópias | Descobertas, eventos, loja futura, correspondência recebida | Inventário do destinatário e registro da correspondência |
 | Selo padrão | Concedido a todos | Não | Aplicado, não transferido | Conta inicial | Snapshot visual na correspondência |
 | Selo personalizado | Cosmético de propriedade | Não | Aplicado, não transferido | Descobertas, eventos, loja futura, correspondência recebida | Snapshot visual na correspondência |
 | Carimbo padrão | Concedido a todos | Não | Aplicado, não transferido | Conta inicial | Snapshot visual na correspondência |
 | Carimbo personalizado | Cosmético de propriedade | Não | Aplicado, não transferido | Descobertas, eventos, loja futura, correspondência recebida | Snapshot visual na correspondência |
+| Mochila funcional | Instância reservável | Não | Não | Progressão, missão ou compra futura com Sementes | Equipamento do dono |
+| Equipamento com durabilidade | Instância e usos próprios | Sim, ao ativar sua proteção | Não | Progressão, missão ou compra futura com Sementes | Equipamento do dono |
+| Lanche Revigorante | Inventário por quantidade | Sim, ao confirmar partida | Não | Rotas, trabalhos postais e compra futura com Sementes | Modificador da viagem; não ocupa slot |
 | Lembrança / souvenir | Inventário por cópia | Regra futura | Não por enquanto | Descobertas e eventos | Coleção do dono |
 | Material | Inventário por quantidade | Regra futura | Não por enquanto | Descobertas | Coleção do dono |
 | Insígnia | Conquista de conta | Não | Não | Marcos e eventos | Perfil / álbum |
@@ -34,14 +38,17 @@
 
 ### Moedas
 
-Sementes são a moeda comum obtida ao jogar e poderão recompensar trabalhos postais. Cristais são
-a moeda premium futura, restrita à expressão visual e social. Nenhuma das duas pode ser enviada
-entre jogadores, comprar XP ou melhorar atributos, alcance, carga, descobertas ou velocidade.
+Sementes são a moeda comum obtida ao jogar e poderão recompensar trabalhos postais. Elas podem
+comprar consumíveis e equipamento funcional básico aprovados, sempre mantendo o loop completo
+viável sem compra. Cristais são a moeda premium futura, restrita à expressão visual e social.
+Nenhuma moeda pode ser enviada entre jogadores ou comprar XP; Cristais nunca compram atributos,
+alcance, carga, descobertas ou velocidade.
 
 ### Caminho e descobertas
 
-Rotas podem conceder adesivos, lembranças, materiais e itens sazonais. A concessão precisa ser
-determinística e autoritativa; a coleta é idempotente. Itens de rota nunca dependem de pagamento.
+Rotas podem conceder adesivos, lembranças, materiais, Lanches Revigorantes e itens sazonais. A
+concessão precisa ser determinística e autoritativa; o achado permanece pendente até o retorno e a
+coleta é idempotente. Itens de rota nunca dependem de pagamento.
 
 ### Eventos
 
@@ -57,8 +64,9 @@ persistida da carta: não transferem propriedade.
 ### Loja futura
 
 A loja poderá vender itens cosméticos oficiais, incluindo selos e carimbos personalizados, e
-eventualmente coleções de adesivos. Ela não venderá cartas, cartões necessários para envio,
-vantagem de rota, XP, drops aleatórios pagos ou acesso social.
+eventualmente coleções de adesivos e pacotes de cartões de arte paga. A economia gratuita poderá
+oferecer com Sementes equipamento funcional básico e Lanches Revigorantes depois do balanceamento.
+Cristais não venderão vantagem de rota, XP, drops aleatórios pagos ou acesso social.
 
 Preços, moedas, pagamento e limites de compra permanecem fora de escopo até uma milestone de
 economia aprovada.
@@ -72,9 +80,11 @@ propriedades elegíveis do remetente, com os padrões como fallback permanente.
 
 ### Cartão oficial
 
-Um cartão usa uma variante oficial do catálogo e pode receber mensagem curta no verso. Não
-consome o cartão nem cria uma unidade nova no inventário; o destinatário recebe a peça na caixa
-postal.
+Um cartão desbloqueável usa uma variante oficial do catálogo e pode receber mensagem curta no
+verso. O cartão-base é permanente para todos; cartões de cidade são desbloqueados quando um
+mascote passa pela cidade e cartões de evento por sua missão. Eles não são consumidos. Uma futura
+arte de cartão paga é uma categoria diferente, comprada em cópias finitas (por exemplo, pacotes),
+e consome uma cópia ao enviar. Quantidade, preço e tamanho dos pacotes ainda não estão aprovados.
 
 ### Adesivos
 
@@ -100,4 +110,6 @@ operação.
 - Sem troca direta entre jogadores fora da correspondência.
 - Sem presentes, conversão de duplicatas, crafting, mercado secundário ou reembolso.
 - Sem arte, texto ou imagens criadas por jogadores.
-- Sem itens que alterem velocidade, probabilidade de descoberta, XP ou acesso a rotas.
+- Sem itens pagos com Cristais que alterem velocidade, probabilidade de descoberta, XP, carga ou
+  acesso a rotas. Consumíveis e equipamentos funcionais obtidos no jogo ou com Sementes obedecem
+  às Milestones 56 e 59.

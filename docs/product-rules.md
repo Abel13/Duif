@@ -48,8 +48,9 @@ Rules:
 - Collection completes and archives the delivery. It leaves the mascot's current-delivery slot
   but remains available to delivery-history consumers.
 - After collection, the map becomes an idle nest view: the player's traveling mascot, route,
-  destination, discoveries, and return summary disappear. Regional postal traffic remains visible
-  around the camera; only the nest camera remains available for the player's journey;
+  destination, discoveries, and return summary disappear. Eligible local mascot encounters may
+  remain visible only in relation to the player's nest or current mascot; only the nest camera
+  remains available for the player's journey;
   route overview, mascot, and destination camera actions are disabled.
 - The frontend may animate progress in real time from timestamps, route, and speed.
 - The backend remains the authority for route, timestamps, effective speed, and granted
@@ -65,15 +66,18 @@ Equipment changes:
 
 Boosts:
 
-- Speed boosts should come from items or equipment, not a global time multiplier.
-- Example: a jet backpack with a limited autonomy in kilometers.
-- Fuel and recharge apply only to optional boost equipment.
-- Normal deliveries never consume fuel and the send-travel-return-collect loop remains
-  available without a boost.
-- Boosts may shorten travel time, but they must not unlock routes, rewards, or social
-  content that free players cannot reach.
-- Fuel capacity, recharge rates, boost strength, and acquisition rates remain balancing
-  decisions for a later milestone.
+- Speed boosts come from explicit items, equipment, skills, or versioned tutorial rules, never a
+  hidden global time multiplier.
+- `Lanche Revigorante` is a future pre-dispatch consumable. It occupies no travel slot because it
+  is consumed at confirmed departure; one may affect the complete outbound/return cycle.
+- A found snack remains a pending route reward and enters inventory only through final collection.
+- The tutorial's First Journey Boost is separate: automatic, tutorial-only, never inventory, and
+  never reusable even when its acceleration visual language resembles the snack.
+- Normal deliveries remain available without a boost. Boosts shorten time but never unlock
+  otherwise inaccessible routes, rewards, or social content.
+- Approved initial snack values are `+5%` for the common version and `+10%` for the improved
+  version, always within the global effective-speed cap; acquisition rates and Seed prices remain
+  unresolved in Milestone 59.
 
 ## Account Onboarding Rules
 
@@ -116,30 +120,24 @@ Route rewards:
 - The final reward collection remains tied to the pet returning home.
 - The backend is authoritative for which map rewards are materialized and granted.
 
-Nearby pets:
+Local mascot encounters:
 
-- The map shows sanitized postal traffic near the currently queried camera region.
-- Postal traffic is part of the default map experience while remaining visually secondary to
-  the player's selected route.
-- Nearby pets should be treated as postal traffic, not as a real-time chat or MMO layer.
-- Mascot identity is public in the interactive prototype: name, species, official portrait,
-  integer trip progress, and state/province plus country at each route end may be shown.
-- Player identity remains private for non-friends. Friends may show the known owner's name and
-  link to an already accessible friend profile; public non-friend mascots expose neither.
-- Visibility is selected authoritatively from the camera viewport plus a 25% margin and limited
-  to the 10 closest results. The viewport is sampled on entry and every five minutes, not on
-  every pan or zoom.
-- The backend may use complete private coordinates for eligibility and ordering. The client only
-  receives deterministic regionalized route endpoints and positions calculated on that same
-  public geometry, never exact private addresses or residential endpoints.
-- The backend decides which pets are eligible to appear based on privacy, friendship,
-  visibility rules, viewport proximity, and current active deliveries.
-- Returned or completed traffic disappears from the map. A delivery without a valid scheduled
-  return must not remain indefinitely at its destination.
-- The frontend can animate visible pets from route snapshots, timestamps, and speed instead
-  of receiving live position updates every second.
-- Leaving the visible range removes the mascot from the map and list. An already open detail
-  panel may retain only the last public snapshot and must label it as out of range.
+- The shipped regional-viewport traffic model is superseded by Milestone 60. It must not become a
+  way to browse mascots flying anywhere in the world.
+- Another player's mascot may be eligible only in relation to an authorized local anchor: the
+  viewing player's nest or current mascot. Panning, zooming, or searching another region never
+  changes that authorization boundary.
+- The backend resolves eligibility around the anchor from private geometry. The client receives
+  only the minimum sanitized encounter data and never a global delivery set, exact nest, precise
+  distance, private endpoint, or reusable live trail.
+- Encounter visibility starts enabled and can be disabled in profile privacy settings. A player
+  who opts out does not appear through local discovery.
+- A local mascot can open a deliberately small public profile and friendship-request action under
+  the reporting, blocking, cooldown, and surprise rules defined for Milestone 60.
+- Accepted friendship does not authorize advance tracking of an incoming surprise delivery. The
+  approaching mascot and sender remain hidden from the recipient until correspondence is opened.
+- Exact encounter radius, anchor priority, refresh cadence, and result limit are unresolved and
+  must be fixed before Milestone 60 implementation.
 
 Technical direction:
 
@@ -221,8 +219,8 @@ Rules:
   count.
 - The backend owns attribution, rate limits, qualification, counting, and the immutable audit
   record. The inviter sees aggregate progress only, never invitee email or private location data.
-- Five distinct qualified referrals grant one account-bound Owl mascot exactly once. It is a
-  non-starter mascot and cannot be traded, sold, or duplicated by retries.
+- Five distinct qualified referrals grant one account-bound mascot, **Lume the Owl**, exactly once.
+  It is a non-starter night-route specialist and cannot be traded, sold, or duplicated by retries.
 
 Friend location visibility:
 
@@ -334,37 +332,18 @@ Attribute direction:
 - Attribute and skill bonuses must use explicit caps so later progression cannot create
   unbounded speed, discovery, or rarity advantages.
 
-Starter mascot identities:
+Approved mascot identities for the Milestone 57 redesign:
 
-- Nuvem is the safe long-route specialist. `Rota Segura` mitigates half of the long-route
-  penalty, while the current level of `Rota Longa` mitigates the remainder.
-- Trovão is the direct-flight specialist. `Voo Direto` increases effective return speed by
-  `10%`, without moving outbound discovery thresholds.
-- Pipoca is the exploration specialist. `Achador Curioso` adds `15` percentage points to
-  the route-discovery corridor.
-
-Future species direction:
-
-- A balanced carrier can offer predictable travel without an XP advantage.
-- A fast carrier can complete more deliveries in the same real time, but earns the same base XP
-  for an equivalent route.
-- A night-oriented carrier can receive a small night-route affinity or a night discovery effect.
-- A coastal carrier can receive a small coastal-route affinity or coastal discovery effect.
-- A social carrier can influence correspondence- or friendship-related discoveries rather than
-  receiving a universal XP multiplier.
-
-Skill direction:
-
-- `Rota Longa` mitigates `25%` of the long-route penalty per level, capped at `50%`.
-- `Pouso Suave` favors safe completion or later duplicate-preservation rules.
-- `Despacho Rápido` reduces the base `5` minute preparation by `5%` per level, capped at
-  `20%`. It therefore reaches `4` minutes at the cap. The system reserves an absolute `3`
-  minute floor for future optional dispatch accelerators; no such item exists yet.
-- `Instinto de Vento Cruzado` expands discovery reach by `2%` per level.
-- `Coisa Brilhante` adds `3%` of rarity weight per level.
-- `Desvio Feliz` expands discovery reach by `3%` per level and reduces effective travel
-  speed by `2%` per level.
-- Skill level scales an existing effect; it should not introduce hidden unrelated bonuses.
+- Nuvem specializes in safety, load, and long/familiar routes.
+- Trovão specializes in speed, dispatch, and direct flight.
+- Pipoca specializes in exploration, a wider discovery corridor, and improved rarity weight.
+- Lume is the referral-unlocked owl specializing in night travel.
+- Every mascot has one non-leveling innate trait, two fixed skills, and one individual skill chosen
+  at mascot level 5. Skills level only through contextual use, never manual or paid training.
+- Pipoca improves the efficiency of collection but never owns species-exclusive discoveries;
+  every discovery remains obtainable with any mascot.
+- Complete skill names, individual choices, approved maxima, and explicitly unresolved triggers
+  are recorded in Milestone 57 and [XP System](./xp-system.md).
 
 Preparation snapshot compatibility:
 
@@ -385,18 +364,15 @@ Determinism and authority:
   discoveries are persisted.
 - Paid cosmetics and Crystals never improve these modifiers.
 
-Initial implementation boundary:
+Modifier boundary:
 
-- Discovery-radius and rarity multipliers are capped at `1.30`; outbound speed is bounded
-  between `0.85` and `1.15`, and return speed between `0.75` and `1.25`.
-- The rarity multiplier is snapshotted now but only becomes authoritative input for reward
-  selection when persisted route discoveries are introduced.
-- `Pouso Suave`, duplicate preservation, cargo effects, and equipment synergies remain
-  deferred because no safe-completion or cargo mechanic consumes them yet.
-- These coefficients are provisional balancing values. Changing them affects only future
-  deliveries because every dispatched delivery stores a versioned immutable snapshot.
-- Legacy deliveries without a snapshot preserve their stored timestamps and use neutral
-  discovery and rarity multipliers.
+- The future unified effective-speed result is clamped between `0.60` and `1.25` of base speed.
+- Current version-2 delivery snapshots keep their historical outbound/return bounds and effects;
+  they are not silently recalculated. Milestones 55–57 require a new explicit modifier version.
+- Rarity changes multiply the underlying rarity weight; they never add direct percentage points or
+  guarantee a rare result.
+- Every changed coefficient affects only future deliveries because dispatched snapshots are
+  immutable. Legacy deliveries preserve their stored timestamps and versioned behavior.
 
 Possible level unlocks:
 
@@ -430,21 +406,24 @@ Cosmetics:
 
 Cargo:
 
-- There is no hard general inventory limit in v1.
-- The important limit is pet cargo capacity during a delivery.
-- Cargo capacity depends on pet attributes, level, equipment, boosts, and item category.
-- Cosmetics do not consume cargo.
-- Materials and fuel may stack.
-- Items found during travel belong to delivery/cargo state until the pet returns and the
-  player collects them.
+- There is no hard general inventory limit. The meaningful limit is travel slots.
+- Natural travel capacity grows from 3 slots at level 1 to 7 at level 20 according to the table in
+  [XP System](./xp-system.md).
+- Outgoing correspondence, mission cargo, gifts, and functional carried equipment consume their
+  defined slots. Cosmetics and route discoveries do not.
+- Backpacks use a dedicated worn position and add slots without occupying one: small `+1/-5%`
+  speed, medium `+2/-10%`, and large `+3/-15%`. They are permanent and have no durability.
+- Equipment with condition-based durability consumes at most one use per journey, and only when
+  it actually mitigates the resolved condition. Different physical copies remain separate
+  inventory instances and cannot be reserved by two mascots simultaneously.
+- Items found during travel remain in delivery reward state until return collection; they do not
+  retroactively compete with dispatched cargo capacity.
+- Detailed slot validation, return bundles, equipment acquisition, and unresolved catalog values
+  belong to Milestones 53 and 56.
 
-Open balancing question:
+## Inventory, Collection, Journal, and Mailbox Rules
 
-- Exact cargo units, item weights, and equipment slot counts are not defined yet.
-
-## Inventory and Album Rules
-
-Inventory, collection, album, and mailbox are related but not identical.
+Inventory, collection, the mascot's travel journal, and mailbox are related but not identical.
 
 Definitions:
 
@@ -453,8 +432,8 @@ Definitions:
   progress.
 - Mailbox, or "Caixa Postal" in pt-BR UI, is the received-correspondence inventory:
   letters, postcards, stickers, gifts, and visible received items from friends.
-- Album is a visual metaphor inside collection for pages, empty slots, rarity, and
-  completion progress. It is not the whole inventory system.
+- `Diário de Viagem` is a permanent discovery record inside each mascot profile. It replaces the
+  proposal for a separate primary Album surface and is not inventory.
 - Cargo is the pet's delivery-specific carrying limit.
 
 Rules:
@@ -475,8 +454,8 @@ Rules:
 - A received letter becomes readable only by its recipient when its delivery reaches the
   destination. It remains private to the delivery participants; the sender does not receive an
   inbox entry for their own letter.
-- The album can remain a UI metaphor inside collection, but avoid using "album categories"
-  as visible copy; use filter language such as "Filtrar coleção" for category controls.
+- The collection may retain notebook-page styling, but discovery records belong to the mascot's
+  `Diário de Viagem`; visible collection controls use filter language such as `Filtrar coleção`.
 - Functional items, consumables, cosmetics, postcards, stickers, rewards, and materials may
   all live in inventory.
 - Collection should highlight progress and discoveries.
@@ -486,7 +465,7 @@ Rules:
 - Every sent correspondence item requires exactly one official stamp and one compatible official
   postmark. Every account owns the reusable default pair from the start.
 - Collection stamps and postal marks are visual correspondence cosmetics, distinct from the
-  Seeds currency and from route-reward album stamps.
+  Seeds currency and from permanent route-discovery journal records.
 - A player may replace either default with one owned official personalized cosmetic. Selections
   are mandatory but neither default nor personalized cosmetics are consumed, transferred, or
   altered by a send.
@@ -509,7 +488,7 @@ Duplicate item policies:
 
 Category defaults:
 
-- fuel and materials are stackable;
+- stackable supplies and materials use quantities;
 - equipment with stats allows separate copies because instances may later have different
   stats or upgrade state;
 - simple cosmetics are unique, and the shop must prevent purchasing a second owned copy;
@@ -631,15 +610,15 @@ First prototype boundary:
 
 The following topics still need explicit product decisions before deep implementation:
 
-- level unlock cadence;
-- reward formulas and rarity tables;
-- mascot modifier coefficients, caps, long-route thresholds, and skill-level curves;
-- Stamp and Crystal earning curves, prices, and purchase limits;
-- fuel capacity, recharge rates, boost strength, and acquisition rates;
-- cargo units and item weights;
+- non-capacity level unlocks from mascot level 1–20 and Reputação Postal unlock cadence;
+- reward formulas, discovery taxonomy, regional content, and rarity/drop tables;
+- remaining skill coefficients, contextual XP triggers, and anti-farming rules;
+- Seeds and Crystal earning curves, prices, purchase limits, and paid-card pack size;
+- equipment durability, repair prices, launch catalog, and Lanche Revigorante acquisition rates;
+- slot costs for future gift/content subtypes;
 - duplicate conversion rates, quantities, and overflow rewards;
-- moderation implementation and operations for user-written letters and future photo
-  postcards;
+- encounter radius/anchor priority and moderation implementation/operations;
+- weather provider, coefficients, cache/scheduler operations, and fallback monitoring;
 - final map tile provider and map visual art direction.
 ## Private nest activation
 

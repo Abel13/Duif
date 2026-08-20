@@ -1986,7 +1986,7 @@ Success criteria:
 - only the request recipient can accept or decline;
 - a first accepted friend can be selected in the existing real send flow.
 
-## Milestone 48A: Traceable Invitations And Owl Reward
+## Milestone 48A: Traceable Invitations And Lume Reward
 
 Status: Planned.
 
@@ -2003,20 +2003,33 @@ Includes:
   onboarding; registration or a click alone never counts;
 - idempotent, backend-authoritative qualified-invite counting with rate limits and audit records;
 - a localized invitation surface in Friends with copy/share actions and qualification progress;
-- one account-bound Owl mascot granted exactly once when five distinct qualified invitees exist;
-- a dedicated, non-starter owl archetype and explicit reward collection/notification.
+- one account-bound mascot, **Lume the Owl**, granted exactly once when five distinct qualified
+  invitees exist;
+- a dedicated, non-starter owl archetype and explicit reward collection/notification;
+- Lume's catalog identity is the night-route specialist. Its progression and mechanical skills
+  are implemented only in the later mascot-skills milestone, not as part of referral attribution.
 
 Does not include:
 
 - automatic friendship, public invitee lists, contact uploads, address books, leaderboard,
   cash, premium currency, paid acquisition, or rewards for unqualified registrations;
-- self-referral, changing an inviter after attribution, multiple inviters, or repeated owl grants.
+- self-referral, changing an inviter after attribution, multiple inviters, or repeated Lume grants.
+
+Still unresolved before implementation:
+
+- invitation token lifetime, regeneration invalidation, deferred deep-link persistence, and the
+  attribution window between first open and account creation;
+- the operational definition and detection of distinct legitimate invitees beyond unique account
+  ids, including abuse review and false-positive handling;
+- Lume's official portraits/animations, reward-notification copy, and whether the grant appears
+  automatically or requires an explicit collection action;
+- aggregate progress presentation when a qualified account is later deleted or sanctioned.
 
 Success criteria:
 
 - a link alone reveals no player identity beyond the optional invitation presentation;
 - only five distinct, completed new accounts qualify;
-- retries and concurrent completion cannot over-count referrals or duplicate the owl;
+- retries and concurrent completion cannot over-count referrals or duplicate Lume;
 - the invited player may independently choose whether to create a postal friendship.
 
 ## Milestone 49: Authoritative Postal Progression and Situational Affinity
@@ -2107,13 +2120,46 @@ Does not include:
 
 ## Milestone 52: Official Postcards and Stickers
 
-Status: Planned.
+Status: Planned; ownership and sending rules approved, catalog content and paid-pack balance
+unresolved.
 
 Goal:
 
-Expand the real correspondence path from MVP letters to official, catalog-backed postcard and sticker variants.
+Expand the real correspondence path from MVP letters to official, catalog-backed postcards and
+transferable stickers.
 
-Includes backend validation, mailbox rendering, and inventory-ownership rules. Excludes user uploads, gifts, trading, payments, and randomized paid rewards.
+Includes:
+
+- one permanent, simple base postcard available to every account;
+- permanent city postcards unlocked when one of the player's mascots passes through that city;
+- permanent event postcards unlocked by completing the corresponding event mission;
+- official paid-art postcards modeled as finite consumable copies in a future purchase flow,
+  without changing the permanent unlocked categories;
+- selecting and sending one to three owned sticker copies, consumed atomically from the sender and
+  granted to the recipient;
+- authoritative ownership/quantity validation, immutable correspondence snapshots, mailbox
+  rendering, localization, and accessible official assets.
+
+Does not include:
+
+- user uploads, photo postcards, gifts, trading, payment processing, randomized paid rewards, or
+  consuming the permanent base/city/event postcards;
+- the route-journal discovery model and city-passage resolver, which belong to Milestone 59.
+
+Still unresolved before implementation:
+
+- the first official city/event postcard catalog and art-production plan;
+- paid-card pack size and price (the discussed pack of 50 is an example, not an approved value);
+- whether multiple copies of the same sticker may fill all three selections and how received
+  sticker duplicates are presented;
+- exact postcard message composition and preview layout on narrow mobile screens.
+
+Success criteria:
+
+- a permanent unlocked postcard is never decremented by sending;
+- a paid-art postcard or sticker copy is never sent without sufficient authoritative quantity;
+- one-to-three sticker transfers and retries cannot lose or duplicate inventory;
+- recipient rendering preserves the exact official versions sent.
 
 ## Milestone 52A: Personal Postal Finishing
 
@@ -2156,6 +2202,399 @@ Success criteria:
 - recipient and sender render the same persisted presentation without exposing extra location
   precision;
 - the default stamp and postmark keep sending available for every player.
+
+## Milestone 53: Delivery Capacity And Return Correspondence
+
+Status: Planned; product contract approved, with balance questions listed below.
+
+Goal:
+
+Make travel capacity a meaningful loadout decision and allow a recipient to send a private reply
+bundle back with a visiting friend's mascot.
+
+Includes:
+
+- travel slots, separate from the unlimited account inventory;
+- natural slot capacity by mascot level: levels 1–4 have 3 slots, 5–9 have 4, 10–14 have 5,
+  15–19 have 6, and level 20 onward has 7;
+- outgoing letters, postcards, stickers, gifts, mission cargo, and functional carried equipment
+  consuming slots according to their catalog definition;
+- discoveries and journey rewards never consuming travel slots;
+- destination unloading before return preparation, so the recipient may use the newly freed slots;
+- a private reply bundle loaded onto a friend's mascot without allowing the recipient to change or
+  remove that mascot's equipment;
+- a 30-minute minimum rest and 60-minute maximum reply window: confirmation before minute 30
+  schedules departure at minute 30, confirmation afterward departs immediately, and no reply
+  departs automatically at minute 60;
+- definitive reply confirmation, private contents during return, idempotent loading, and a
+  notification that communicates remaining preparation time without revealing the sender early.
+
+Does not include:
+
+- an account inventory capacity, paid slots, changing another player's loadout, editing a confirmed
+  reply, or exposing its contents before collection;
+- the shorter NPC-job destination behavior, which belongs to Milestone 54.
+
+Still unresolved before implementation:
+
+- the slot cost of each gift and future content subtype beyond the approved one-item/one-slot
+  baseline;
+- the maximum number of different correspondence pieces in one bundle beyond the slot limit;
+- notification transport: in-app only versus push when push infrastructure exists.
+
+Success criteria:
+
+- the backend rejects any outbound or reply load above the mascot's effective capacity;
+- unloading, reply confirmation, departure, delivery, and collection remain atomic and idempotent;
+- neither participant can inspect information the surprise-delivery rules keep private.
+
+## Milestone 54: Dynamic Postal Jobs And Story Routes
+
+Status: Planned; core flow approved, content catalog and reward coefficients unresolved.
+
+Goal:
+
+Add repeatable fictional postal work that gives every mascot a realizable mission generated from
+its own nest, level, range, capacity, and recent route history.
+
+Includes:
+
+- predefined, localized job templates with fictional senders, recipients, cargo, and narrative;
+- runtime origin at the selected mascot's nest and a dynamically chosen destination at a compatible
+  distance, without requiring another city;
+- one currently realizable offer per mascot, never a locked preview;
+- one initial offer plus at most three free replacements per completion cycle, with no repeat in
+  that cycle and the third replacement remaining final;
+- independent offers and active jobs for different mascots;
+- mission cargo of 1–4 slots that exists only for the job, consumes no player-owned inventory, and
+  disappears after authoritative delivery;
+- guaranteed Seeds shown before acceptance, based on planned effort rather than later weather;
+- independent mascot XP, discoveries, and official-card unlocks;
+- both single jobs and future 3–5 chapter story arcs, with the next chapter unlocked only after
+  collection;
+- no mascot lock when merely viewing or accepting an offer; the lock starts at confirmed departure;
+- a shorter NPC handoff/preparation phase than the social reply window.
+
+Does not include:
+
+- missions involving unidentified real players, player-authored mission text, procedural narrative
+  generation, paid offer rerolls, or consuming the player's correspondence inventory.
+
+Still unresolved before implementation:
+
+- the initial template count, characters, cargo catalog, story arcs, and repetition cooldown;
+- the Seeds formula, minimum/maximum rewards, and exact distance bands by mascot level;
+- the exact NPC handoff duration and whether a chapter may branch;
+- which job templates unlock event postcards or other catalog rewards.
+
+Success criteria:
+
+- every offered destination is reachable by the selected mascot at offer and dispatch time;
+- template variation never changes the approved cargo, reward, privacy, or capacity contract;
+- reconnects, replacements, and concurrent requests cannot duplicate rewards or bypass the
+  three-replacement limit.
+
+## Milestone 55: Segmented Travel, Weather, And Automatic Adversities
+
+Status: Planned; behavioral model approved, provider and coefficients unresolved.
+
+Goal:
+
+Make long travel react to time, season, route familiarity, and real weather without requiring the
+player to be online or make time-sensitive decisions.
+
+Includes:
+
+- backend-owned route segments and immutable completed-segment history;
+- rolling forecast windows of up to 72 hours for longer trips, updating only future segments;
+- a cached external-weather adapter with coarse regional queries, backend-only credentials, and a
+  deterministic virtual-weather fallback;
+- percentage speed modifiers for weather and route conditions instead of fixed delay minutes;
+- automatic resolution with no cargo damage, route cancellation, or mandatory online prompt;
+- effective speed composed from base speed, weather, time/season, skills, equipment, backpack, and
+  familiarity, clamped globally between 60% and 125% of base speed;
+- stable map colors based on the real calendar season at the nest, with hemispheres inverted;
+- only a compact current-weather symbol beside the traveling mascot; no forecast of upcoming
+  segments on the travel map;
+- dispatch preview and loadout comparison without exposing exact private location or requiring
+  continuously refreshed forecasts.
+
+Does not include:
+
+- real-time GPS, player decisions during hazards, cargo loss, injury, failure, climate-specific pet
+  animation sets, or map recoloring for every traversed region.
+
+Still unresolved before implementation:
+
+- final provider and commercial plan; WeatherAPI is the current candidate, not an approved
+  dependency or contract;
+- cache cell size, refresh schedule, seasonal boundary dates, weather categories, and every
+  modifier coefficient;
+- scheduler/Edge Function operations, provider attribution, outage monitoring, and forecast data
+  retention;
+- how historical trips are displayed after a provider or modifier-version change.
+
+Success criteria:
+
+- the same versioned segment snapshot resolves identically after reconnect;
+- provider failure never blocks the core travel loop;
+- no client receives precise nest coordinates or a reusable trail of another player.
+
+## Milestone 56: Functional Equipment, Backpacks, And Loadout Preview
+
+Status: Planned; equipment principles approved, catalog economy unresolved.
+
+Goal:
+
+Introduce manually selected functional equipment with understandable tradeoffs and no premium
+gameplay advantage.
+
+Includes:
+
+- physical inventory instances for equipment whose durability or reservation state can differ;
+- one copy reserved by at most one traveling mascot at a time;
+- manually equipped loadouts and a compact `Atual` versus `Com alteração` graph for speed,
+  protection, and slots; simulation never consumes uses;
+- strongest-only resolution when multiple items mitigate the same condition, with no same-category
+  stacking;
+- condition-based durability: at most one use per journey and only when the selected item actually
+  reduces a penalty;
+- zero-use equipment remaining owned but inactive, with manual full repair using Seeds for less
+  than replacement cost;
+- permanent backpacks with no durability and a dedicated worn position: small `+1 slot/-5%`,
+  medium `+2/-10%`, and large `+3/-15%`;
+- backpack cosmetics that may later cost Crystals without changing capacity or speed;
+- basic functional equipment bought with Seeds, improved functional variants earned through play,
+  and visual variants available through progression, events, or the future cosmetic shop;
+- equipment activating only when it improves the resolved outcome; for example, a lantern is not
+  consumed when Lume's night ability already provides the stronger applicable effect.
+
+Does not include:
+
+- automatic loadout selection, Crystal-purchased functional advantage, repair timers, equipment
+  trading, stat rerolls, or stacking several mitigators for the same condition.
+
+Still unresolved before implementation:
+
+- the launch equipment catalog beyond backpacks and the conceptual raincoat/lantern examples;
+- durability per item, Seed prices, repair prices, unlock sources, and inventory presentation for
+  many instances;
+- equipment positions other than the dedicated backpack position and the exact meaning of the
+  preview's protection scale.
+
+Success criteria:
+
+- ownership, reservation, activation, durability, and repair are backend-authoritative;
+- the preview matches the dispatched modifier snapshot;
+- every route remains possible without purchasing or equipping an optional item.
+
+## Milestone 57: Mascot Skill Identities And Contextual Mastery
+
+Status: Planned; identities and progression framework approved, some coefficients and triggers
+remain unresolved.
+
+Goal:
+
+Give Nuvem, Trovão, Pipoca, and Lume distinct travel identities through one innate trait, two fixed
+skills, and one player-chosen individual skill per mascot.
+
+Includes:
+
+- traits that are permanent and do not level;
+- fixed and individual skills with levels 1–10 and accumulated thresholds
+  `0, 40, 100, 190, 320, 500, 740, 1050, 1450, 1950` XP;
+- XP only when the skill's condition actually participates in a completed journey, generally 8–20
+  XP according to duration/intensity, with multiple genuinely activated skills allowed to train;
+- individual-skill choice at mascot level 5 from three visible options and a modifier graph;
+- one free individual-skill change before mascot level 10, then a permanent choice with no Crystal
+  respec;
+- **Nuvem**, safe long-route carrier: `Rota Segura`, `Rota Longa`, `Memória Postal`; individual
+  options `Carga Equilibrada`, `Correio de Volta`, or `Olhar Cartográfico`;
+- **Trovão**, fast direct-flight carrier: `Voo Direto`, `Despacho Rápido`, `Instinto de Vento
+  Cruzado`; individual options `Asa Solar`, `Arrancada Urbana`, or `Carga Aerodinâmica`;
+- **Pipoca**, explorer and collector: `Achador Curioso` gives a 15% wider discovery corridor,
+  `Coisa Brilhante` improves rarity weight, and `Desvio Feliz` widens the corridor further with a
+  small speed tradeoff; individual options `Plumas Impermeáveis`, `Caminho d'Água`, or `Primeiro
+  Passeio`;
+- **Lume**, referral-unlocked night specialist: `Olhos da Noite`, `Vigília Noturna`, and `Voo
+  Silencioso`; individual options `Memória Lunar`, `Carga Noturna`, or `Guardiã da Madrugada`;
+- linear, visible effect growth to each skill's explicit maximum, never a permanent species XP
+  multiplier.
+
+Does not include:
+
+- manual training, random skill rolls, paid skills, paid respec, hidden bonuses, damage/failure
+  mechanics, or species-exclusive collection content.
+
+Still unresolved before implementation:
+
+- exact XP awarded for every trigger and anti-farming rules for repeated trivial routes;
+- final coefficients for several fixed and individual skills, including every climate threshold;
+- whether `Desvio Feliz` changes path geometry or only the discovery corridor and calculated time;
+- localized copy, icons, animation cues, and migration behavior for existing mascot skills.
+
+Success criteria:
+
+- each mascot has a recognizable advantage without becoming universally optimal;
+- skill XP and effects are auditable, snapshotted, capped, and explained in the trip result;
+- every discovery remains obtainable with any mascot even when Pipoca obtains it more efficiently.
+
+## Milestone 58: Flight Levels, Familiar Routes, And Prestige Borders
+
+Status: Planned; primary curves and unlock table approved, account-level unlocks unresolved.
+
+Goal:
+
+Connect each mascot's flight level to distance, natural capacity, familiar-route efficiency, and
+long-term visual prestige without introducing a hard progression cap.
+
+Includes:
+
+- the existing flight XP formula `ceil(100 × level^1.35)` for every next level, continuing above
+  level 20;
+- functional unlocks ending at level 20 while numeric progression continues indefinitely;
+- approved maximum one-way distance and natural slots:
+  `L1 25km/3`, `L2 50/3`, `L3 100/3`, `L4 180/3`, `L5 300/4`, `L6 500/4`,
+  `L7 800/4`, `L8 1200/4`, `L9 1800/4`, `L10 2500/5`, `L11 3500/5`,
+  `L12 4500/5`, `L13 6000/5`, `L14 7500/5`, `L15 9000/6`, `L16 11000/6`,
+  `L17 13000/6`, `L18 15500/6`, `L19 18000/6`, `L20 20050/7`;
+- level 20 reaching the full practical world range without requiring equipment;
+- per-mascot familiarity keyed by persistent origin/destination identities, not fragile decimal
+  coordinate equality; both directions share the same pair history;
+- familiarity counted only after completion: New `0–2`, Known `3–7`, Familiar `8–19`, Mastered
+  `20+`, granting `0%`, `+2%`, `+4%`, and `+6%` speed respectively;
+- no familiarity decay;
+- visual level borders every ten levels after functional progression, with initial art coverage at
+  levels 20, 30, 40, and 50; higher mascots retain the highest available border until new assets
+  are published, then resolve them retroactively by minimum level.
+
+Does not include:
+
+- functional unlocks above level 20, an actual level cap, paid level acceleration, equipment that
+  unlocks otherwise unreachable world routes, or familiarity shared across all mascots.
+
+Still unresolved before implementation:
+
+- exact non-capacity unlocks at each level from 1–20 and their relationship to Reputação Postal;
+- border art, titles, accessibility presentation, and whether border selection is automatic or
+  player-selectable after unlock;
+- route-identity migration for existing destinations and dynamically generated job locations.
+
+Success criteria:
+
+- all route-range, slot, familiarity, XP, and border resolution is backend-authoritative and
+  versioned;
+- progression beyond available border art never blocks travel or leveling;
+- a coordinate refresh cannot silently erase familiarity with a persistent destination.
+
+## Milestone 59: Travel Journal, Discoveries, And Consumable Boosts
+
+Status: Planned; collection roles approved, content catalog and drop tables unresolved.
+
+Goal:
+
+Turn route findings into a permanent per-mascot travel journal and a controlled source of useful
+consumables without confusing discoveries with inventory items or official postcards.
+
+Includes:
+
+- `Diário de Viagem` inside each mascot profile rather than a new primary Album surface;
+- permanent discovery records containing official illustration, localized description, approximate
+  region, mascot, date, and rarity;
+- initial rarities Common, Uncommon, and Rare; `Special` describes event/mission origin rather than
+  a fourth superior rarity;
+- discoveries never occupying travel slots and never being consumed;
+- a discovery optionally unlocking a related permanent official postcard while remaining a
+  distinct journal record;
+- the permanent simple base postcard, city postcards unlocked when a mascot passes through that
+  city, and event postcards unlocked by their mission;
+- paid postcard art modeled as finite consumable copies in future packs, while unlocked official
+  postcards remain permanent;
+- `Lanche Revigorante` found on routes, granted by jobs, and later purchasable with Seeds: common
+  `+5%` and uncommon/special `+10%`, one per journey, selected and consumed at confirmed dispatch,
+  occupying no slot and affecting outbound and return within the global speed cap;
+- found snacks remaining pending delivery rewards and entering inventory only at final collection;
+- the tutorial's `Impulso da Primeira Viagem` remaining a separate automatic, non-inventory
+  modifier despite using related acceleration visual language.
+
+Does not include:
+
+- player-uploaded journal art, exclusive discoveries obtainable only by Pipoca, Crystal-purchased
+  route power, consuming unlocked city/event postcards, or activating found items before return.
+
+Still unresolved before implementation:
+
+- discovery taxonomy, launch illustrations/text, regional coverage, duplicate behavior, and exact
+  rarity/drop tables;
+- how city passage is determined for long route segments and how retroactive city unlocks work;
+- snack stack limits, Seed prices, job quantities, event variants, and whether the `+10%` version
+  should be named `Especial` or receive a different product name;
+- the precise visual distinction between a snack modifier and the tutorial-only boost.
+
+Success criteria:
+
+- journal records, postcard unlocks, pending findings, inventory grants, and snack consumption are
+  separate and idempotent backend operations;
+- collection cannot grant a found snack or other reward twice;
+- the UI never implies that a permanent discovery record occupies inventory or travel capacity.
+
+## Milestone 60: Local Mascot Encounters, Friendship Safety, And Moderation
+
+Status: Planned; discovery and privacy rules approved, moderation operations unresolved.
+
+Goal:
+
+Replace world-wide postal-traffic tracking with bounded local encounters that can lead to safe,
+intentional friendship requests.
+
+Includes:
+
+- other players' mascots visible only in relation to the viewing player's current mascot or nest;
+- local eligibility resolved by the backend around that anchor, never by an arbitrary world-map
+  viewport, camera pan, searched city, or guessed coordinate;
+- removal of the ability to browse or follow other players' mascots flying anywhere in the world;
+- encounter visibility enabled by default, with an explained profile privacy toggle to opt out;
+- a sanitized public profile opened from a locally encountered mascot: nickname, mascot and level,
+  approximate city/country, Postal Reputation, and player-selected official showcase only;
+- friendship requests without a daily product limit, while retaining idempotency, one pending
+  request per pair, and technical burst protection;
+- a seven-day retry cooldown after refusal;
+- separate report and block actions: blocking immediately hides both players and prevents requests,
+  while reporting alone does not hide or punish automatically;
+- individual human/admin review of every report, using controlled categories, optional explanation,
+  a snapshot of the public profile, encounter context, and prior decisions without revealing the
+  reporter;
+- no free-text public biography initially;
+- five friendship levels based mainly on reciprocal correspondence cycles, without decay, purchase,
+  or gameplay rewards: New Correspondents, Frequent Correspondents, Postal Friends, Route
+  Companions, and Lasting Bond;
+- unfriending preserves private history locally but a later re-add starts friendship level 1;
+  blocking hides history and level from the blocked player;
+- surprise protection: an accepted friend's approaching mascot and sender identity remain hidden
+  from the recipient until correspondence is opened.
+
+Does not include:
+
+- global traffic browsing, exact distance, exact coordinates, live trails, chat, public bios,
+  automatic friendship, friend rewards, report-count auto-punishment, or automatic suspension.
+
+Still unresolved before implementation:
+
+- the encounter radius/frequency, result limit, refresh cadence, and behavior when the player's own
+  mascot is traveling far from its nest;
+- whether the anchor is the selected mascot, every owned mascot, the nest, or a priority order when
+  several are simultaneously eligible;
+- report categories, evidence retention, moderator roles, service targets, appeals, policy text,
+  notification copy, and legal/operational requirements;
+- exact reciprocal-cycle thresholds for each friendship level and treatment of legacy friends.
+
+Success criteria:
+
+- moving or searching the camera cannot enumerate mascots outside the authorized local anchor;
+- clients never receive global active-delivery datasets, exact nests, or reusable private route
+  endpoints;
+- report and block remain independent, auditable operations with no punishment based only on report
+  volume.
 
 ## Historical First Execution Order
 

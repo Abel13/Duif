@@ -240,7 +240,9 @@ Possible statuses:
 The server should not need to update the animal’s position every second.
 
 The map is a core mechanic. It shows selectable player mascots moving along their routes,
-outbound/return state, regional discoveries, return cargo, and privacy-safe postal traffic.
+outbound/return state, regional discoveries, and return cargo. Encounters with other players'
+mascots are limited to proximity relative to the viewing player's nest or current mascot; the map
+must not support browsing or following mascots flying elsewhere in the world.
 
 ## Location and Privacy
 

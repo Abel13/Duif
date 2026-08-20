@@ -35,7 +35,7 @@ Reputação Postal é a progressão geral da conta. Ela desbloqueia sistemas e e
 | Concluir rota especial | 50 |
 | Participar de evento sazonal | 40 |
 
-A curva recomendada é `XP para o próximo nível = 150 × nível^1,45`. Referências: nível 1, 150 XP; 5, 1.545 XP; 10, 4.230 XP; 20, 11.520 XP; 50, 43.650 XP.
+A curva recomendada é `XP para o próximo nível = 150 × nível^1,45`. Referências: nível 1, 150 XP; 5, 1.545 XP; 10, 4.230 XP; 20, 11.520 XP; 50, 43.650 XP. O objetivo de produto é que um jogador recorrente leve aproximadamente seis meses para alcançar o nível 20 de Reputação Postal; frequência esperada, XP diário e telemetria de calibração ainda precisam ser definidos antes de tratar essa duração como comprovada.
 
 ## XP de voo do mascote
 
@@ -59,13 +59,39 @@ Os bônus são situacionais e acumulam multiplicativamente quando aplicáveis: p
 
 `XP final do mascote = XP base × multiplicadores aplicáveis`
 
-A curva recomendada é `XP para o próximo nível = 100 × nível^1,35`. Referências: nível 1, 100 XP; 5, 880 XP; 10, 2.240 XP; 20, 5.700 XP; 50, 19.700 XP.
+A curva aprovada é `XP para o próximo nível = ceil(100 × nível^1,35)`. Ela continua crescendo
+depois do nível 20; não existe hard cap. São necessários aproximadamente 45.752 XP acumulados para
+chegar ao nível 20. A progressão funcional termina nesse nível e, acima dele, o número continua
+subindo para conceder apenas bordas visuais publicadas a cada dez níveis.
 
-### Alcance de Voo
+### Alcance de Voo e capacidade natural
 
-`Alcance de Voo = 5 × nível^2 km`
+| Nível | Distância máxima de ida | Slots naturais |
+| ---: | ---: | ---: |
+| 1 | 25 km | 3 |
+| 2 | 50 km | 3 |
+| 3 | 100 km | 3 |
+| 4 | 180 km | 3 |
+| 5 | 300 km | 4 |
+| 6 | 500 km | 4 |
+| 7 | 800 km | 4 |
+| 8 | 1.200 km | 4 |
+| 9 | 1.800 km | 4 |
+| 10 | 2.500 km | 5 |
+| 11 | 3.500 km | 5 |
+| 12 | 4.500 km | 5 |
+| 13 | 6.000 km | 5 |
+| 14 | 7.500 km | 5 |
+| 15 | 9.000 km | 6 |
+| 16 | 11.000 km | 6 |
+| 17 | 13.000 km | 6 |
+| 18 | 15.500 km | 6 |
+| 19 | 18.000 km | 6 |
+| 20 | 20.050 km | 7 |
 
-Referências: nível 1, 5 km; 5, 125 km; 10, 500 km; 20, 2.000 km; 40, 8.000 km. Quando uma rota exceder o alcance, o jogo orienta o jogador a fazer viagens menores para fortalecê-lo.
+No nível 20, qualquer destino prático do mundo já deve estar acessível sem equipamento. Mochilas
+podem aumentar slots com penalidade de velocidade, mas nenhum equipamento desbloqueia uma região
+que a progressão normal torne inacessível.
 
 ## Espécie e afinidade
 
@@ -73,22 +99,56 @@ Espécie, arquétipo, traços e skills nunca recebem um multiplicador permanente
 
 Cada afinidade aplicável vale `×1,10`: urbana (mesma cidade), longa distância (acima de 50 km), noturna, costeira ou social (carta para amigo). As regras de coexistência serão resolvidas no Milestone 49 para impedir que afinidades virem um bônus permanente esperado. Quando a mesma identidade puder ser expressa por tempo de viagem ou descoberta, essa alternativa é preferível a XP adicional.
 
-Pombo, andorinha, coruja, gaivota e papagaio são direções de identidade futuras: equilibrado, rápido, cuidadoso, costeiro e social. Os arquétipos atuais preservam seus próprios traços e modificadores de viagem; esta definição não altera seus efeitos já implementados.
+As identidades aprovadas são Nuvem para segurança/carga/rotas longas, Trovão para velocidade,
+Pipoca para exploração e Lume, a coruja de indicação, para viagens noturnas. Espécies futuras podem
+explorar identidades costeiras ou sociais sem conceder multiplicadores universais de XP. A adoção
+dos novos efeitos exige um novo snapshot de modificadores e não recalcula viagens antigas.
 
 ## XP de skills
 
-Uma skill só recebe XP quando a viagem ativa uma condição ligada a ela. Não há XP automático para todas as skills em toda viagem.
+Uma skill só recebe XP quando sua condição participa de uma viagem concluída. Não há treinamento
+manual nem XP automático para todas as skills. Uma viagem pode treinar mais de uma skill quando
+cada uma tiver sido realmente ativada.
 
-| Gatilho | XP de skill |
-| --- | ---: |
-| Condição leve | 5 |
-| Condição normal | 10 |
-| Condição forte | 20 |
-| Marco especial | 40 |
+| Nível da skill | XP acumulado |
+| ---: | ---: |
+| 1 | 0 |
+| 2 | 40 |
+| 3 | 100 |
+| 4 | 190 |
+| 5 | 320 |
+| 6 | 500 |
+| 7 | 740 |
+| 8 | 1.050 |
+| 9 | 1.450 |
+| 10 | 1.950 |
 
-Exemplos: Despacho Rápido em envio urgente ou curto; Instinto de Vento Cruzado em desvios; Encontrador de Lembranças ao encontrar uma lembrança; foco de rota longa, sentido noturno, deslize costeiro e trilha social nas respectivas condições. A curva é `XP para o próximo nível = 60 × nível^1,4`, limitada ao nível 10 no MVP.
+Uma ativação deve conceder aproximadamente 8–20 XP conforme duração e intensidade. O valor exato
+por gatilho e os controles contra repetição de rotas triviais permanecem pendentes na Milestone 57.
+Os efeitos crescem linearmente: um teto de 10% equivale normalmente a 1% por nível; 15%, a 1,5%;
+mitigação de 50%, a 5%; e redução de 20%, a 2%. Efeitos de raridade alteram o peso da chance-base,
+nunca pontos percentuais diretos nem garantia de recompensa rara.
 
-Cada espécie deverá começar com duas skills fixas e uma individual. A biblioteca de skills e os gatilhos exatos continuam uma etapa posterior de balanceamento. Em particular, os efeitos atuais de viagem não mudam: `Despacho Rápido` segue reduzindo preparo em 5% por nível, até 20%.
+Cada espécie possui um traço inato sem nível, duas skills fixas e uma skill individual escolhida no
+nível 5 do mascote. Há uma troca individual gratuita antes do nível 10 do mascote; depois disso a
+escolha é definitiva e não pode ser refeita com Cristais. A biblioteca aprovada e suas pendências
+estão na Milestone 57 do roadmap.
+
+## Familiaridade de rota
+
+Familiaridade pertence a cada mascote e usa identidades persistentes de origem e destino; não
+depende de coordenadas decimais exatamente iguais. Ida e volta do mesmo par compartilham histórico,
+e somente viagens concluídas contam.
+
+| Estado | Percursos concluídos | Bônus de velocidade |
+| --- | ---: | ---: |
+| Nova | 0–2 | 0% |
+| Conhecida | 3–7 | +2% |
+| Familiar | 8–19 | +4% |
+| Dominada | 20+ | +6% |
+
+A familiaridade não decai. Skills de memória podem ampliar contextualmente esse benefício sem
+ultrapassar o limite global de velocidade efetiva entre 60% e 125% da velocidade-base.
 
 ## Resultado da viagem e guardrails
 

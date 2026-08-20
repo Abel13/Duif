@@ -440,6 +440,13 @@ geometry. The frontend interpolates positions locally between five-minute refres
 non-friend snapshots omit owner data, streets, neighborhoods, private postal bases, and exact
 delivery endpoints.
 
+This describes the currently shipped implementation, not the approved long-term authorization
+boundary. Milestone 60 replaces viewport-authorized queries with server-authorized encounters
+anchored only to the viewing player's nest or current mascot. Camera movement and searched regions
+must no longer enumerate other players' flights anywhere in the world. The old RPC must be retired
+or narrowed as part of that migration; retaining sanitized geometry does not make global browsing
+acceptable.
+
 Open decisions:
 
 - production tile provider;
