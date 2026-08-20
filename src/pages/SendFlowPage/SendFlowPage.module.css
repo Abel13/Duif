@@ -1,15 +1,22 @@
-.page {
-  min-height: 100vh;
-  padding: clamp(0.75rem, 4vw, 3rem);
-  overflow-x: clip;
+.pageShell {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .shell {
   display: grid;
-  gap: var(--space-3);
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  gap: var(--space-2);
   width: min(100%, 1180px);
+  height: 100%;
+  min-height: 0;
   min-width: 0;
   margin-inline: auto;
+  padding-bottom: max(var(--space-2), env(safe-area-inset-bottom));
+  overflow: hidden;
 }
 
 .subtitle,
@@ -28,6 +35,115 @@
   display: grid;
   gap: var(--space-3);
   min-width: 0;
+}
+
+.stepViewport {
+  min-width: 0;
+  min-height: 0;
+  padding: 0.15rem 0.15rem var(--space-3);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+
+.postalProgress {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  min-width: 0;
+  margin: 0;
+  padding: var(--space-2) var(--space-1);
+  list-style: none;
+}
+
+.postalProgress::before {
+  content: "";
+  position: absolute;
+  top: calc(var(--space-2) + 1rem);
+  right: 10%;
+  left: 10%;
+  border-top: 2px dashed rgba(139, 94, 60, 0.48);
+}
+
+.postalProgress li {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 0.25rem;
+  justify-items: center;
+  min-width: 0;
+  color: var(--color-ink-soft);
+  text-align: center;
+}
+
+.postalProgress span {
+  display: grid;
+  width: 2rem;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 2px dashed var(--color-postal-brown);
+  border-radius: 50%;
+  background: var(--color-paper);
+  font-size: 0.78rem;
+  font-weight: 900;
+  transform: rotate(-3deg);
+}
+
+.postalProgress small {
+  max-width: 100%;
+  overflow: hidden;
+  font-size: clamp(0.58rem, 2.5vw, 0.72rem);
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.postalProgress li[data-complete="true"] span {
+  border-style: solid;
+  color: var(--color-paper);
+  background: var(--color-muted-green);
+}
+
+.postalProgress li[data-current="true"] {
+  color: var(--color-postal-red);
+}
+
+.postalProgress li[data-current="true"] span {
+  border-style: solid;
+  border-color: var(--color-postal-red);
+  color: var(--color-postal-red);
+  box-shadow: 0.15rem 0.18rem 0 rgba(46, 42, 36, 0.13);
+  transform: rotate(3deg) scale(1.08);
+}
+
+.stepActions {
+  display: grid;
+  grid-template-columns: minmax(7rem, 0.7fr) minmax(9rem, 1.3fr);
+  gap: var(--space-2);
+  padding-top: var(--space-1);
+  border-top: 1px dashed rgba(46, 42, 36, 0.25);
+}
+
+.backButton {
+  min-height: 2.75rem;
+  padding: 0.65rem 1rem;
+  border: 2px dashed var(--color-postal-brown);
+  border-radius: 0.25rem 0.55rem;
+  color: var(--color-postal-brown);
+  background: var(--color-paper-light);
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.backButton:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+
+.backButton:focus-visible {
+  outline: 3px solid rgba(111, 145, 168, 0.72);
+  outline-offset: 3px;
 }
 
 .options {
@@ -84,12 +200,203 @@
 .optionButton:disabled { cursor: not-allowed; }
 .optionFrame:has(.optionButton:disabled) { opacity: .48; filter: saturate(.55); }
 
+.mascotChoice {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.mascotChoiceDetails {
+  display: grid;
+  gap: var(--space-1);
+  justify-items: center;
+  padding: var(--space-2) var(--space-3);
+  color: var(--color-ink-soft);
+  text-align: center;
+}
+
+.mascotChoiceDetails > span {
+  color: var(--color-postal-brown);
+  font-size: 0.74rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.mascotChoiceDetails strong {
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 7vw, 2.15rem);
+}
+
+.mascotChoiceDetails small {
+  padding: 0.18rem 0.55rem;
+  border: 1px solid rgba(122, 143, 104, 0.38);
+  border-radius: 999px;
+  color: var(--color-muted-green);
+  background: rgba(122, 143, 104, 0.1);
+  font-weight: 900;
+}
+
+.mascotChoiceDetails p {
+  margin: 0;
+  line-height: 1.45;
+}
+
 .summary,
 .confirmation {
   display: grid;
   gap: var(--space-2);
   min-width: 0;
 }
+
+.reviewContent {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 2px solid rgba(139, 94, 60, .5);
+  border-radius: .45rem .18rem .6rem .3rem;
+  background: var(--color-paper-light);
+  box-shadow: .2rem .25rem 0 rgba(46, 42, 36, .09);
+}
+
+.reviewContent h3 {
+  margin: 0;
+  color: var(--color-postal-brown);
+  font-size: .76rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.reviewLetter {
+  min-height: 15rem;
+  margin: 0;
+  padding: 3.5rem var(--space-3) var(--space-3);
+  color: var(--color-ink);
+  background: repeating-linear-gradient(transparent 0 1.75rem, rgba(111, 145, 168, .2) 1.75rem calc(1.75rem + 1px));
+  font-size: 1.05rem;
+  line-height: 1.75rem;
+  white-space: pre-wrap;
+}
+
+.reviewItem { position: relative; min-height: 15rem; overflow: hidden; }
+.reviewLetterSheet { background: var(--color-paper); }
+
+.reviewLetterExperience { display: grid; min-height: 15rem; }
+
+.reviewEnvelope {
+  position: relative;
+  width: min(100%, 38rem);
+  aspect-ratio: 3 / 2;
+  margin-inline: auto;
+  padding: 0;
+  overflow: hidden;
+  border: .62rem solid var(--color-postal-blue);
+  border-image: repeating-linear-gradient(45deg, #354b75 0 .55rem, var(--color-paper) .55rem 1.1rem, var(--color-postal-red) 1.1rem 1.65rem, var(--color-paper) 1.65rem 2.2rem) 12;
+  border-radius: .2rem;
+  color: var(--color-ink);
+  background: var(--color-paper);
+  box-shadow: .3rem .38rem 0 rgba(46,42,36,.13);
+  cursor: pointer;
+  text-align: left;
+}
+
+.reviewEnvelope:focus-visible { outline: 3px solid var(--color-postal-blue); outline-offset: 4px; }
+
+.reviewEnvelope .reviewFinishing { position: absolute; inset: 0; display: block; width: auto; max-width: none; }
+.reviewEnvelope .reviewStamp { position: absolute; bottom: 8%; left: 7%; width: 3.75rem; height: 4.9rem; }
+.reviewEnvelope .reviewPostmark { position: absolute; top: 7%; right: 7%; width: 7.5rem; margin: 0; }
+
+.reviewEnvelopeRecipient,
+.reviewEnvelopeSender {
+  position: absolute;
+  z-index: 2;
+  display: grid;
+  width: 45%;
+  gap: .2rem;
+  padding-bottom: .35rem;
+  border-bottom: 1px solid rgba(139,94,60,.38);
+}
+.reviewEnvelopeRecipient { top: 10%; left: 7%; }
+.reviewEnvelopeSender { right: 7%; bottom: 10%; text-align: right; }
+.reviewEnvelopeRecipient small,
+.reviewEnvelopeSender small { color: var(--color-postal-brown); font-size: .58rem; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
+.reviewEnvelopeRecipient strong,
+.reviewEnvelopeSender strong { overflow: hidden; font-size: clamp(.72rem,2.5vw,1rem); text-overflow: ellipsis; white-space: nowrap; }
+.reviewEnvelopeSender strong { font-family: var(--font-postcard); font-weight: 400; }
+.reviewEnvelopeSender em { overflow: hidden; color: var(--color-ink-soft); font-family: var(--font-body); font-size: .65rem; font-style: normal; font-weight: 800; text-overflow: ellipsis; white-space: nowrap; }
+
+
+.reviewFinishing {
+  position: absolute;
+  z-index: 3;
+  top: var(--space-2);
+  right: var(--space-2);
+  display: flex;
+  align-items: start;
+  justify-content: end;
+  width: min(75%, 15rem);
+  pointer-events: none;
+}
+
+.reviewStamp {
+  z-index: 2;
+  flex: 0 0 2.8rem;
+  width: 2.8rem;
+  height: 3.7rem;
+  transform: rotate(3deg);
+}
+.reviewStamp img { object-fit: contain; }
+
+.reviewPostmark {
+  width: 7.2rem;
+  margin-top: .7rem;
+  margin-left: -1rem;
+  transform: rotate(-2deg);
+}
+.reviewPostmark .postmarkPreview { gap: 0; padding: 0; border: 0; background: transparent; }
+.reviewPostmark .postmarkPreview figcaption { display: none; }
+.reviewPostmark .postmarkImpression { width: 100%; }
+.reviewPostmark .postmarkImpression[data-model="wing"] { width: 100%; }
+.reviewPostmark .postmarkImpression[data-model="route"] { width: 100%; }
+
+.reviewPostcardCard {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  padding: 0;
+  border: 0;
+  color: var(--color-ink);
+  background: transparent;
+  cursor: pointer;
+  perspective: 1100px;
+}
+.reviewPostcardCard:focus-visible { outline: 3px solid var(--color-postal-blue); outline-offset: 4px; }
+.reviewPostcardInner { position: relative; display: block; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 500ms cubic-bezier(.25,.85,.25,1); }
+.reviewPostcardBackVisible { transform: rotateY(180deg); }
+.reviewPostcardFace { position: absolute; inset: 0; display: block; overflow: hidden; border: 3px double var(--color-postal-brown); border-radius: .45rem .85rem .55rem .7rem; backface-visibility: hidden; box-shadow: .25rem .32rem 0 rgba(46,42,36,.14); }
+.reviewPostcardFront { background: var(--color-paper-dark); }
+.reviewPostcardFront > div { width: 100%; height: 100%; }
+.reviewPostcardFront img { object-fit: cover; }
+.reviewPostcardBack { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: var(--space-3); padding: var(--space-3); background: var(--color-paper); transform: rotateY(180deg); text-align: left; }
+.reviewPostcardMessage { display: grid; align-content: center; padding: var(--space-2); font-family: var(--font-postcard); font-size: clamp(.82rem, 2.7vw, 1.2rem); font-weight: 400; line-height: 1.5; white-space: pre-wrap; }
+.reviewPostcardDetails { position: relative; display: grid; gap: .3rem; align-content: end; min-width: 0; padding: 6.8rem 0 0 var(--space-3); border-left: 2px dashed rgba(139,94,60,.38); }
+.reviewPostcardDetails > strong { color: var(--color-postal-red); font-family: var(--font-postcard); font-size: clamp(.85rem,2.4vw,1.15rem); }
+.reviewPostcardDetails > span { font-size: .68rem; font-weight: 800; }
+.reviewPostcardDetails dl { display: grid; gap: .35rem; margin: .35rem 0 0; }
+.reviewPostcardDetails dl div { display: grid; gap: .05rem; padding-bottom: .25rem; border-bottom: 1px solid rgba(139,94,60,.3); }
+.reviewPostcardDetails dt { color: var(--color-postal-brown); font-size: .58rem; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
+.reviewPostcardDetails dd { margin: 0; overflow: hidden; font-size: .65rem; font-weight: 800; text-overflow: ellipsis; white-space: nowrap; }
+.reviewPostcardBack .reviewFinishing { top: .35rem; right: 0; left: var(--space-3); width: auto; max-width: none; align-items: start; justify-content: space-between; }
+.reviewPostcardBack .reviewPostmark { order: 1; margin: .55rem 0 0; }
+.reviewPostcardBack .reviewStamp { order: 2; }
+
+@media (prefers-reduced-motion: reduce) { .reviewPostcardInner { transition: none; } }
+
+.reviewStickerSheet { padding: 8rem var(--space-2) var(--space-2); background: var(--color-paper); }
+.reviewStickers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-2); }
+.reviewStickers figure { display: grid; gap: var(--space-1); justify-items: center; margin: 0; text-align: center; }
+.reviewStickers figure > div { width: min(100%, 6rem); aspect-ratio: 1; }
+.reviewStickers img { object-fit: contain; }
+.reviewStickers figcaption { font-size: .75rem; font-weight: 800; }
 
 .error {
   margin: 0;
@@ -128,6 +435,24 @@
   overflow-wrap: anywhere;
 }
 
+.summary > .summaryList {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .25rem var(--space-3);
+}
+
+.summary > .summaryList div {
+  grid-template-columns: 1fr;
+  gap: .05rem;
+  padding: .25rem 0;
+}
+
+.summary > .summaryList dt { font-size: .62rem; }
+.summary > .summaryList dd { font-size: .76rem; line-height: 1.2; }
+
+@media (max-width: 420px) {
+  .summary > .summaryList { grid-template-columns: 1fr; }
+}
+
 .summaryPanel h2 { font-size: clamp(1.4rem, 7vw, 2.25rem); }
 
 @media (max-width: 420px) {
@@ -149,6 +474,386 @@
   gap: var(--space-3);
   min-width: 0;
 }
+
+.postcardPreview {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-2);
+  border: 1px dashed rgba(46, 42, 36, 0.34);
+  border-radius: 0.45rem 0.18rem 0.55rem 0.28rem;
+  background: rgba(255, 248, 232, 0.56);
+}
+
+.postcardPreviewArt {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  border: 2px solid rgba(46, 42, 36, 0.58);
+  border-radius: 0.32rem 0.12rem 0.4rem 0.2rem;
+  background: var(--color-paper-dark);
+  box-shadow: 0.22rem 0.28rem 0 rgba(46, 42, 36, 0.13);
+  transform: rotate(-0.4deg);
+}
+
+.postcardPreviewArt img {
+  object-fit: cover;
+}
+
+.postcardPreviewFallback {
+  width: 4rem;
+  height: 2.6rem;
+  border: 2px solid var(--color-postal-brown);
+  background:
+    linear-gradient(35deg, transparent 48%, var(--color-postal-brown) 49% 51%, transparent 52%),
+    var(--color-paper-light);
+}
+
+.postcardPreview figcaption {
+  display: grid;
+  gap: 0.15rem;
+  padding-inline: var(--space-1);
+}
+
+.postcardPreview figcaption strong {
+  color: var(--color-ink);
+}
+
+.postcardPreview figcaption span {
+  color: var(--color-ink-soft);
+  font-size: 0.84rem;
+  line-height: 1.4;
+}
+
+.stampList {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.stampChoice {
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr);
+  gap: var(--space-2) var(--space-3);
+  align-items: center;
+  padding: var(--space-2);
+  border: 2px dashed rgba(46, 42, 36, 0.36);
+  border-radius: 0.4rem 0.18rem 0.5rem 0.25rem;
+  background: var(--color-paper-light);
+}
+
+.stampChoice[data-selected="true"] {
+  border-style: solid;
+  border-color: var(--color-postal-red);
+  box-shadow: inset 0 0 0 2px rgba(164, 74, 63, 0.12);
+}
+
+.stampChoiceArt {
+  grid-row: span 2;
+  width: 4rem;
+  height: 5rem;
+}
+
+.stampChoiceArt img { object-fit: contain; }
+
+.stampChoice > strong { color: var(--color-ink); }
+
+.stampChoice > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.stampChoice button,
+.dialogClose {
+  min-height: 2.35rem;
+  padding: 0.45rem 0.7rem;
+  border: 2px dashed var(--color-postal-brown);
+  border-radius: 0.25rem 0.5rem;
+  color: var(--color-postal-brown);
+  background: var(--color-paper);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.stampChoice button[aria-pressed="true"] {
+  border-style: solid;
+  color: var(--color-paper);
+  background: var(--color-postal-red);
+}
+
+.postmarkPreview {
+  --postmark-color: var(--color-postal-brown);
+  display: grid;
+  gap: var(--space-2);
+  justify-items: center;
+  margin: 0;
+  padding: var(--space-3);
+  border: 2px dashed rgba(46, 42, 36, 0.34);
+  background: var(--color-paper-light);
+}
+
+.postmarkCustomizer {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.postmarkPreview figcaption { color: var(--color-postal-brown); font-weight: 900; }
+
+.postmarkLevel {
+  justify-self: start;
+  padding: .35rem .7rem;
+  border: 1px solid rgba(122, 143, 104, .5);
+  border-radius: 999px;
+  color: var(--color-muted-green);
+  background: rgba(122, 143, 104, .1);
+  font-size: .78rem;
+  font-weight: 900;
+}
+
+.postmarkImpression {
+  position: relative;
+  display: grid;
+  width: min(100%, 12rem);
+  aspect-ratio: 1;
+  place-content: center;
+  border-radius: 50%;
+  color: var(--postmark-color);
+  text-align: center;
+  transform: rotate(-5deg);
+  opacity: .86;
+}
+
+.postmarkImpression::after {
+  content: "";
+  position: absolute;
+  inset: -.4rem;
+  z-index: 2;
+  border-radius: inherit;
+  background:
+    radial-gradient(circle at 14% 22%, var(--color-paper-light) 0 .07rem, transparent .11rem),
+    radial-gradient(ellipse at 31% 68%, var(--color-paper-light) 0 .12rem, transparent .17rem),
+    radial-gradient(circle at 48% 34%, var(--color-paper-light) 0 .06rem, transparent .1rem),
+    radial-gradient(ellipse at 63% 76%, var(--color-paper-light) 0 .15rem, transparent .2rem),
+    radial-gradient(circle at 79% 27%, var(--color-paper-light) 0 .09rem, transparent .14rem),
+    radial-gradient(ellipse at 91% 59%, var(--color-paper-light) 0 .11rem, transparent .16rem);
+  background-size: 3.1rem 2.7rem, 4.3rem 3.8rem, 3.7rem 4.1rem, 5.2rem 3.3rem, 4.6rem 4.8rem, 3.4rem 3.9rem;
+  pointer-events: none;
+  transform: rotate(3deg);
+}
+
+.postmarkImpression[data-model="route"] { width: min(100%, 13rem); transform: rotate(2deg); }
+.postmarkImpression[data-model="wing"] { width: min(100%, 16rem); aspect-ratio: 11 / 9; border-radius: .25rem; transform: rotate(-2deg); }
+
+.postmarkSeal {
+  display: block;
+  width: 100%;
+  overflow: visible;
+  color: var(--postmark-color);
+}
+
+.postmarkSeal circle,
+.postmarkDateRule {
+  fill: none;
+  stroke: currentColor;
+}
+
+.postmarkSeal circle:first-of-type { stroke-width: 5; }
+.postmarkSeal circle:nth-of-type(2) { stroke-width: 1.8; }
+.postmarkSeal circle:nth-of-type(3) { stroke-width: 2.4; }
+
+.postmarkArcText {
+  fill: currentColor;
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+.postmarkCityText { letter-spacing: 1.5px; }
+
+.postmarkDateRule { stroke-width: 2.2; }
+
+.postmarkDateText {
+  fill: currentColor;
+  font-size: 17px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  text-anchor: middle;
+}
+
+.routePostmarkSeal use,
+.routePostmarkRule {
+  stroke: currentColor;
+}
+
+.routePostmarkOuter,
+.routePostmarkInner,
+.routePostmarkRule {
+  fill: none;
+  stroke-linejoin: round;
+}
+
+.routePostmarkOuter { stroke-width: 5; }
+.routePostmarkInner { stroke-width: 2.4; }
+.routePostmarkRule { stroke-width: 2.4; }
+.routePostmarkMainStar,
+.routePostmarkSmallStar { fill: currentColor; stroke: none !important; }
+
+.routePostmarkDate,
+.routePostmarkCity,
+.routePostmarkCountry {
+  fill: currentColor;
+  font-weight: 900;
+  letter-spacing: 1.8px;
+  text-anchor: middle;
+}
+
+.routePostmarkDate { font-size: 13px; }
+.routePostmarkCountry { font-weight: 800; letter-spacing: 3px; }
+
+.wingPostmarkPerforation,
+.wingPostmarkFrame,
+.wingPostmarkRule {
+  fill: none;
+  stroke: currentColor;
+}
+
+.wingPostmarkPerforation {
+  stroke-dasharray: 1 7;
+  stroke-linecap: round;
+  stroke-width: 8;
+}
+
+.wingPostmarkFrame { stroke-width: 2.5; }
+.wingPostmarkRule { stroke-width: 3; }
+.wingPostmarkStar { fill: currentColor; stroke: none !important; }
+
+.wingPostmarkCity,
+.wingPostmarkCountry,
+.wingPostmarkDate,
+.wingPostmarkLabel {
+  fill: currentColor;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-anchor: middle;
+}
+
+.wingPostmarkCountry { letter-spacing: 2.5px; }
+.wingPostmarkDate { font-size: 14px; letter-spacing: 2.5px; }
+.wingPostmarkLabel { font-size: 17px; letter-spacing: 2.5px; }
+
+.postmarkWaves {
+  position: absolute;
+  right: -25%;
+  top: 50%;
+  width: 58%;
+  overflow: visible;
+  transform: rotate(-4deg);
+  translate: 0 -50%;
+}
+
+.postmarkWaves path {
+  fill: none;
+  stroke: var(--postmark-color);
+  stroke-linecap: round;
+  stroke-width: 3.4;
+}
+
+.postmarkWaves path:nth-child(1) { stroke-dasharray: 31 2 17 1 42 3; }
+.postmarkWaves path:nth-child(2) { stroke-dasharray: 13 1 38 3 24 2; opacity: .9; }
+.postmarkWaves path:nth-child(3) { stroke-dasharray: 27 3 9 1 35 2; opacity: .82; }
+
+.postmarkOptions {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.postmarkOptions legend {
+  margin-bottom: var(--space-2);
+  color: var(--color-ink);
+  font-weight: 900;
+}
+
+.postmarkModelGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-2); }
+.postmarkModelGrid button {
+  display: grid;
+  gap: .35rem;
+  min-height: 4.2rem;
+  padding: .55rem;
+  border: 2px dashed var(--color-postal-brown);
+  border-radius: .35rem .6rem;
+  color: var(--color-postal-brown);
+  background: var(--color-paper);
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+}
+.postmarkModelGrid button[aria-pressed="true"] { border-style: solid; color: var(--color-paper); background: var(--color-postal-red); }
+.postmarkModelGrid button:disabled { color: var(--color-ink-soft); border-color: rgba(46,42,36,.32); cursor: not-allowed; opacity: .62; }
+.postmarkModelGrid small { display: flex; gap: .25rem; align-items: center; justify-content: center; font-size: .66rem; }
+
+.postmarkColorGrid { display: grid; grid-template-columns: repeat(8, minmax(2.25rem, 1fr)); gap: var(--space-1); }
+.postmarkColorGrid button {
+  position: relative;
+  display: grid;
+  min-height: 2.8rem;
+  padding: .3rem;
+  place-items: center;
+  border: 2px dashed transparent;
+  border-radius: 50%;
+  color: var(--color-ink);
+  background: transparent;
+  cursor: pointer;
+}
+.postmarkColorGrid button[aria-pressed="true"] { border-color: var(--color-ink); }
+.postmarkColorGrid button:disabled { cursor: not-allowed; opacity: .42; }
+.postmarkColorGrid button span { width: 1.75rem; aspect-ratio: 1; border: 2px solid var(--color-paper); border-radius: 50%; background: var(--postmark-swatch); box-shadow: 0 0 0 1px rgba(46,42,36,.35); }
+.postmarkColorGrid button svg { position: absolute; color: var(--color-paper); filter: drop-shadow(0 1px 1px var(--color-ink)); }
+
+@media (max-width: 420px) {
+  .postmarkModelGrid { grid-template-columns: 1fr; }
+  .postmarkColorGrid { grid-template-columns: repeat(4, 1fr); }
+}
+
+.stampDialog {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  width: 100vw;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: var(--space-3);
+  border: 0;
+  background: rgba(46, 42, 36, 0.84);
+}
+
+.stampDialogPaper {
+  display: grid;
+  gap: var(--space-3);
+  align-content: center;
+  justify-items: center;
+  width: min(100%, 34rem);
+  height: 100%;
+  margin-inline: auto;
+  padding: var(--space-4);
+  color: var(--color-ink);
+  background: var(--color-paper);
+  box-shadow: var(--shadow-paper);
+}
+
+.stampDialogArt {
+  width: min(70vw, 22rem);
+  height: min(68dvh, 32rem);
+}
+
+.stampDialogArt img { object-fit: contain; }
 
 .letterPaper {
   display: grid;
@@ -183,7 +888,9 @@
   border: 0;
   color: var(--color-ink);
   background: transparent;
-  font: inherit;
+  font-family: var(--font-postcard);
+  font-size: clamp(1.05rem, 4vw, 1.3rem);
+  font-weight: 400;
   line-height: 2rem;
   resize: vertical;
 }
@@ -431,6 +1138,11 @@
   box-shadow: 0.14rem 0.16rem 0 rgba(46, 42, 36, 0.1);
 }
 
+.stickerChoice {
+  display: grid;
+  gap: var(--space-1);
+}
+
 .segment[data-active="true"] {
   border-color: var(--color-postal-red);
   color: var(--color-ink);
@@ -492,10 +1204,7 @@
 }
 
 @media (min-width: 680px) {
-  .shell,
-  .flowGrid {
-    gap: var(--space-5);
-  }
+  .shell { gap: var(--space-3); }
 
   .options {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -506,15 +1215,7 @@
 
 @media (min-width: 980px) {
   .flowGrid {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    align-items: start;
-  }
-
-  .flowGrid > :last-child {
-    position: sticky;
-    z-index: 2;
-    top: var(--space-5);
-    bottom: auto;
-    box-shadow: 0 0.9rem 2rem rgba(46, 42, 36, 0.2);
+    width: min(100%, 48rem);
+    margin-inline: auto;
   }
 }

@@ -5,22 +5,13 @@ import type {
   CorrespondenceType,
   FriendProfile,
   Mascot,
-  PostcardVariant,
+  OwnedPostcard,
+  OwnedSticker,
 } from "./types";
 import type { TranslationKey } from "../i18n";
 export const LETTER_MAX_CHARACTERS = 500;
 export const POSTCARD_MAX_CHARACTERS = 180;
 export const STICKER_MAX_SELECTION = 3;
-
-export type StickerOption = {
-  id: string;
-  nameKey: TranslationKey;
-};
-
-export type PostcardOption = {
-  id: PostcardVariant;
-  nameKey: TranslationKey;
-};
 
 export const correspondenceOptions: CorrespondenceOption[] = [
   {
@@ -49,18 +40,6 @@ export const correspondenceOptions: CorrespondenceOption[] = [
   },
 ];
 
-export const stickerOptions: StickerOption[] = [
-  { id: "sticker-sun-stamp", nameKey: "send.content.stickers.sunStamp" },
-  { id: "sticker-blue-envelope", nameKey: "send.content.stickers.blueEnvelope" },
-  { id: "sticker-route-spark", nameKey: "send.content.stickers.routeSpark" },
-];
-
-export const postcardVariants: PostcardOption[] = [
-  { id: "city", nameKey: "send.content.postcardVariants.city" },
-  { id: "event", nameKey: "send.content.postcardVariants.event" },
-  { id: "photo", nameKey: "send.content.postcardVariants.photo" },
-];
-
 export function getCorrespondenceById(correspondenceId: string) {
   return correspondenceOptions.find((option) => option.id === correspondenceId);
 }
@@ -87,18 +66,20 @@ export function getFriendCoordinates(friend: FriendProfile | undefined): Coordin
 
 export function createDefaultCorrespondenceContent(
   correspondenceType: CorrespondenceType,
+  postcards: OwnedPostcard[] = [],
+  stickers: OwnedSticker[] = [],
 ): CorrespondenceContent {
   if (correspondenceType === "postcard") {
     return {
       postcardMessage: "",
-      postcardVariant: "city",
+      postcardCatalogKey: postcards[0]?.catalogKey ?? "",
       type: "postcard",
     };
   }
 
   if (correspondenceType === "sticker") {
     return {
-      stickerIds: [stickerOptions[0].id],
+      stickerIds: stickers[0]?.quantity ? [stickers[0].catalogKey] : [],
       type: "sticker",
     };
   }
@@ -124,7 +105,7 @@ export function isCorrespondenceContentValid(content: CorrespondenceContent) {
 
   if (content.type === "postcard") {
     return (
-      postcardVariants.some((option) => option.id === content.postcardVariant) &&
+      content.postcardCatalogKey.length > 0 &&
       content.postcardMessage.length <= POSTCARD_MAX_CHARACTERS
     );
   }

@@ -4,6 +4,8 @@ export type TranslationDictionary = {
   app: {
     title: string;
   };
+  officialPostcards: { base: { name: string; description: string } };
+  officialStickers: { sunStamp: { description: string }; blueEnvelope: { description: string }; routeSpark: { description: string } };
   pwaInstall: {
     eyebrow: string;
     title: string;
@@ -257,8 +259,19 @@ export type TranslationDictionary = {
     letterTitle: string;
     emptyLetter: string;
     reply: string;
+    surpriseSender: string;
+    surpriseTitle: string;
+    surpriseDescription: string;
+    postcardWithoutMessage: string;
+    returnReplyLabel: string;
+    returnReplyDeadline: string;
+    returnReplyConfirmed: string;
+    sendReturnReply: string;
+    replying: string;
+    returnWindowRemaining: string;
   };
   send: {
+    steps: { friend: string; mascot: string; correspondence: string; finishing: string; stamp: string; postmark: string; review: string; navigation: string; back: string; next: string };
     startAction: string;
     eyebrow: string;
     title: string;
@@ -302,6 +315,7 @@ export type TranslationDictionary = {
     previewLetter: string;
     closeLetterPreview: string;
     selectedStickers: string;
+    removeSticker: string;
     letterPlaceholder: string;
     postcardPlaceholder: string;
     giftPlaceholder: string;
@@ -310,8 +324,22 @@ export type TranslationDictionary = {
     postalFinishing: {
       title: string;
       description: string;
+      stampTitle: string;
+      stampDescription: string;
+      postmarkTitle: string;
+      postmarkDescription: string;
       defaultStamp: string;
       defaultPostmark: string;
+      reputationLevel: string;
+      modelLabel: string;
+      colorLabel: string;
+      unlockLevel: string;
+      airMail: string;
+      models: { classic: string; route: string; wing: string };
+      colors: { brown: string; blue: string; red: string; green: string; gold: string; plum: string; charcoal: string; teal: string };
+      chooseStamp: string;
+      previewStamp: string;
+      closeStampPreview: string;
       summaryLabel: string;
     };
     content: {
@@ -1040,6 +1068,16 @@ export type TranslationKey =
   | "send.eyebrow"
   | "send.title"
   | "send.subtitle"
+  | "send.steps.friend"
+  | "send.steps.mascot"
+  | "send.steps.correspondence"
+  | "send.steps.finishing"
+  | "send.steps.stamp"
+  | "send.steps.postmark"
+  | "send.steps.review"
+  | "send.steps.navigation"
+  | "send.steps.back"
+  | "send.steps.next"
   | "send.chooseFriend"
   | "send.chooseMascot"
   | "send.chooseCorrespondence"
@@ -1086,8 +1124,31 @@ export type TranslationKey =
   | "send.giftPendingDescription"
   | "send.postalFinishing.title"
   | "send.postalFinishing.description"
+  | "send.postalFinishing.stampTitle"
+  | "send.postalFinishing.stampDescription"
+  | "send.postalFinishing.postmarkTitle"
+  | "send.postalFinishing.postmarkDescription"
   | "send.postalFinishing.defaultStamp"
   | "send.postalFinishing.defaultPostmark"
+  | "send.postalFinishing.reputationLevel"
+  | "send.postalFinishing.modelLabel"
+  | "send.postalFinishing.colorLabel"
+  | "send.postalFinishing.unlockLevel"
+  | "send.postalFinishing.airMail"
+  | "send.postalFinishing.models.classic"
+  | "send.postalFinishing.models.route"
+  | "send.postalFinishing.models.wing"
+  | "send.postalFinishing.colors.brown"
+  | "send.postalFinishing.colors.blue"
+  | "send.postalFinishing.colors.red"
+  | "send.postalFinishing.colors.green"
+  | "send.postalFinishing.colors.gold"
+  | "send.postalFinishing.colors.plum"
+  | "send.postalFinishing.colors.charcoal"
+  | "send.postalFinishing.colors.teal"
+  | "send.postalFinishing.chooseStamp"
+  | "send.postalFinishing.previewStamp"
+  | "send.postalFinishing.closeStampPreview"
   | "send.postalFinishing.summaryLabel"
   | "send.content.letterLabel"
   | "send.content.postcardLabel"
@@ -1505,4 +1566,20 @@ export type TranslationKey =
   | "geonamesAdmin.failed"
   | "geonamesAdmin.succeeded"
   | "geonamesAdmin.queued"
-  | "geonamesAdmin.refreshStarted";
+  | "geonamesAdmin.refreshStarted"
+  | "officialPostcards.base.name"
+  | "officialPostcards.base.description"
+  | "officialStickers.sunStamp.description"
+  | "officialStickers.blueEnvelope.description"
+  | "officialStickers.routeSpark.description"
+  | "mailbox.surpriseSender"
+  | "mailbox.surpriseTitle"
+  | "mailbox.surpriseDescription"
+  | "mailbox.postcardWithoutMessage"
+  | "mailbox.returnReplyLabel"
+  | "mailbox.returnReplyDeadline"
+  | "mailbox.returnReplyConfirmed"
+  | "mailbox.sendReturnReply"
+  | "mailbox.replying"
+  | "mailbox.returnWindowRemaining"
+  | "send.removeSticker";

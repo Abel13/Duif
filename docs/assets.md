@@ -218,6 +218,15 @@ Milestone 44 adds the interactive tutorial collection slice:
 - `public/assets/tutorial/stamps/first-journey.webp` (`256x256`, about `16KB`), a transparent
   Selo de Primeira Viagem reused on both sides of the card.
 
+Milestone 52 adds `public/assets/postcards/duif-base.webp` (`900x600`, about `153KB`), the
+permanent simple DUIF base postcard registered as `postcard.base.front`. City postcard art is
+intentionally deferred to its dedicated production plan.
+
+The permanent default postal stamp uses `public/assets/stamps/duif-default.webp` (`172x256`, about
+`23KB`), registered as `stamp.default.front`. Its traditional perforated-paper silhouette and
+watercolor messenger illustration match the correspondence composer and are not based on a real
+postal operator's issued stamp.
+
 Milestone 27.8 adds the first graphic navigation slice:
 
 - `public/assets/navigation/nest.webp`;

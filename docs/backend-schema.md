@@ -253,6 +253,24 @@ players' mascots are eligible only relative to a server-resolved anchor belongin
 (nest or current mascot). The migration shape, anchor priority, radius, refresh cadence, and legacy
 RPC retirement remain explicitly unresolved in the roadmap.
 
+## Official correspondence and return replies
+
+Milestones 52 and 53 add `official_postcards`, `official_stickers`, per-profile unlock/balance
+tables, sticker-transfer escrow, finite paid-postcard balances, mailbox-open records, and one
+`delivery_return_replies` row per social delivery. `create_delivery_from_selection` accepts active
+letters, owned postcards, and one-to-three owned sticker copies, snapshots official presentation,
+consumes finite inventory atomically, and stores natural slot capacity plus used slots.
+
+`list_received_correspondence` settles arrived sticker transfers and hides sender/content until
+`open_received_correspondence` records an authorized opening. `confirm_delivery_return_reply`
+allows only the original recipient to persist one definitive letter during the 60-minute window and
+materializes departure no earlier than minute 30. Existing `list_received_letters` remains as a
+legacy-compatible read contract while current clients move to the generic mailbox RPC.
+
+City postcard catalogs and assets are intentionally absent until the dedicated art plan exists.
+The `city` availability mode is schema preparation, not a claim that city art has shipped. Paid
+postcard balances support finite-copy consumption but no purchase, price, or payment operation.
+
 ## Official asset registry
 
 `official_assets` provides stable typed identities for gameplay and illustrated UI art.

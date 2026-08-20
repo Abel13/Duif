@@ -159,7 +159,12 @@ Letters:
 
 Postcards:
 
-- Can be app-sold cards based on cities, events, routes, or collections.
+- Every account can use the permanent base postcard. The inaugural postcard is available after its
+  tutorial inventory reward is collected.
+- City postcards remain catalog-backed but their city list and artwork belong to a later dedicated
+  art plan; Milestone 52 does not fabricate city art.
+- Permanent city/event cards and finite paid-art copies are different ownership modes. Sending a
+  permanent unlocked card never decrements it; sending a paid-art card consumes one granted copy.
 - User-uploaded photo postcards are excluded from the first commercial shop prototype.
 - May include a short written message on the back. The current prototype uses 180
   characters.
@@ -168,10 +173,23 @@ Postcards:
 
 Stickers:
 
-- Can be sold in the shop.
-- Can be sent as standalone correspondence.
-- Can be attached to letters/postcards if the later composition rules allow it.
-- The current prototype uses mock sticker ids and does not consume inventory.
+- One to three owned copies may be sent as sticker correspondence, including repeated copies of the
+  same design when quantity permits.
+- Dispatch atomically removes the sender's copies. They remain in delivery escrow and are added to
+  the recipient's balance only after outbound arrival.
+- Sticker copies do not add travel slots beyond the one slot used by the sticker correspondence.
+- Attaching stickers to letters/postcards remains a later composition extension.
+
+Return correspondence:
+
+- One correspondence uses one natural travel slot in the implemented Milestone 53 baseline.
+- Outbound content is unloaded at arrival. The recipient may confirm one return letter while the
+  mascot prepares, using one newly freed slot.
+- Return rest lasts at least 30 minutes and at most 60 minutes. A reply confirmed before minute 30
+  departs at minute 30; from minutes 30–60 it departs immediately; without a reply it departs at
+  minute 60.
+- Confirmation is definitive and idempotent. The returning letter remains hidden from the original
+  sender until the mascot arrives and the correspondence is opened.
 
 Gifts:
 

@@ -2120,8 +2120,8 @@ Does not include:
 
 ## Milestone 52: Official Postcards and Stickers
 
-Status: Planned; ownership and sending rules approved, catalog content and paid-pack balance
-unresolved.
+Status: Implemented and validated locally; remote migrations remain pending, while city artwork and
+purchase operations remain later work.
 
 Goal:
 
@@ -2131,7 +2131,8 @@ transferable stickers.
 Includes:
 
 - one permanent, simple base postcard available to every account;
-- permanent city postcards unlocked when one of the player's mascots passes through that city;
+- a catalog/unlock contract prepared for permanent city postcards, while city selection and art
+  remain explicitly assigned to the later art-production plan and Milestone 59 passage resolver;
 - permanent event postcards unlocked by completing the corresponding event mission;
 - official paid-art postcards modeled as finite consumable copies in a future purchase flow,
   without changing the permanent unlocked categories;
@@ -2146,13 +2147,12 @@ Does not include:
   consuming the permanent base/city/event postcards;
 - the route-journal discovery model and city-passage resolver, which belong to Milestone 59.
 
-Still unresolved before implementation:
+Deferred after this implementation:
 
-- the first official city/event postcard catalog and art-production plan;
-- paid-card pack size and price (the discussed pack of 50 is an example, not an approved value);
-- whether multiple copies of the same sticker may fill all three selections and how received
-  sticker duplicates are presented;
-- exact postcard message composition and preview layout on narrow mobile screens.
+- the city/event catalog and city-card art-production plan;
+- paid-card pack size, price, purchase ledger, and checkout (the discussed pack of 50 remains only
+  an example); the implemented schema merely consumes finite copies already granted;
+- richer dedicated sticker artwork in received-correspondence rendering.
 
 Success criteria:
 
@@ -2174,12 +2174,18 @@ Includes:
 
 - one permanent default stamp and one permanent default postmark for every player, ensuring no
   correspondence can be sent without the complete postal presentation;
+- a dynamic reusable postmark configurator driven by Reputação Postal, with three models and eight
+  ink colors shown from the start; locked choices remain visible with their required level;
+- initial unlocks: models Classic at L1, Postal Route at L5, and Mail Wings at L10; colors Postal
+  Brown L1, Airmail Blue L3, Letter Red L5, Forest Green L7, Gold L10, Plum L13, Charcoal L16,
+  and Sea Green L20;
 - an owned personalized stamp can be selected from inventory; future personalized stamps and
   postmarks may come from collection, received correspondence, or a shop ownership flow;
 - a compact mandatory send-composer step that selects one owned stamp and one compatible owned
   postmark, prefilled with the defaults and never offering an empty state;
 - authoritative ownership validation and immutable delivery snapshots of the selected stamp and
-  mark, so the recipient sees exactly what was sent even if the catalog changes later;
+  mark model/color, including the sender's reputation level at dispatch, so the recipient sees
+  exactly what was sent even if the catalog changes later;
 - decorative stamp placement in the recipient mailbox viewer;
 - localized names, descriptions, accessibility labels, and a safe mock fallback that follows the
   same correspondence contract.
@@ -2205,7 +2211,8 @@ Success criteria:
 
 ## Milestone 53: Delivery Capacity And Return Correspondence
 
-Status: Planned; product contract approved, with balance questions listed below.
+Status: Implemented and validated locally for one-piece sends and return letters; remote migrations
+remain pending, while richer bundles, push delivery, gifts, and equipment cargo remain later slices.
 
 Goal:
 
@@ -2235,12 +2242,13 @@ Does not include:
   reply, or exposing its contents before collection;
 - the shorter NPC-job destination behavior, which belongs to Milestone 54.
 
-Still unresolved before implementation:
+Deferred after this implementation:
 
-- the slot cost of each gift and future content subtype beyond the approved one-item/one-slot
-  baseline;
-- the maximum number of different correspondence pieces in one bundle beyond the slot limit;
-- notification transport: in-app only versus push when push infrastructure exists.
+- gifts and future content subtypes beyond the implemented one-correspondence/one-slot baseline;
+- multi-piece outbound and return bundles; sticker copies attached to one sticker correspondence do
+  not add slots;
+- push transport, now isolated in Milestone 61. The implemented notification surface is the Caixa
+  Postal and hides sender/content until opening.
 
 Success criteria:
 
@@ -2595,6 +2603,55 @@ Success criteria:
   endpoints;
 - report and block remain independent, auditable operations with no punishment based only on report
   volume.
+
+## Milestone 61: Push Notifications And Delivery Privacy
+
+Status: Planned; notification moments are approved, platform/provider operations unresolved.
+
+Goal:
+
+Notify players about meaningful asynchronous postal moments without revealing a surprise sender,
+private content, precise location, or route information on a device lock screen.
+
+Includes:
+
+- explicit notification permission education and opt-in after the player has experienced the core
+  loop, never as a blocking onboarding permission wall;
+- Web Push subscription registration per installation, revocation, expiry cleanup, and
+  backend-authoritative ownership;
+- localized notifications for correspondence arrival, remaining return-preparation time, confirmed
+  return departure, mascot return ready for collection, invitation qualification/reward, and
+  selected future event reminders;
+- arrival copy that says only that correspondence arrived and how long the mascot may prepare its
+  return; sender and contents remain hidden until the player opens the correspondence in DUIF;
+- deep links that restore the authenticated PWA and route to the authorized in-app surface without
+  embedding secrets or private content in the URL;
+- per-category preferences, quiet hours, duplicate suppression, retry/idempotency keys, invalid
+  subscription cleanup, and an auditable delivery log with limited retention;
+- an in-app fallback whenever push is unavailable, denied, expired, or fails.
+
+Does not include:
+
+- mandatory notification permission, SMS, WhatsApp, email marketing, notification ads, exact route
+  coordinates, sender names on surprise arrivals, correspondence text in payloads, or third-party
+  behavioral targeting.
+
+Still unresolved before implementation:
+
+- push provider versus direct VAPID Web Push, key custody/rotation, Edge Function or worker shape,
+  scheduler, quotas, and production domains;
+- exact trigger timing, quiet-hour defaults/time-zone changes, retry policy, log retention, and
+  notification preference taxonomy;
+- iOS installed-PWA support matrix, browser-specific UX, multi-device behavior, and whether opening
+  one device dismisses notifications on others;
+- consent copy, privacy-policy updates, observability, abuse limits, and production runbooks.
+
+Success criteria:
+
+- no push payload or lock-screen copy reveals the surprise sender, content, exact nest, or route;
+- retries cannot create duplicate user-visible notifications for the same event;
+- unsubscribed, denied, or invalid installations do not block gameplay or in-app notifications;
+- deep links re-check the authenticated user's authorization before showing any correspondence.
 
 ## Historical First Execution Order
 

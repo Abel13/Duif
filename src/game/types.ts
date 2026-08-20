@@ -141,6 +141,25 @@ export type ReceivedLetter = {
   postmarkKey: string;
 };
 
+export type ReceivedCorrespondence = {
+  arrivedAt: string;
+  correspondenceType: "letter" | "postcard" | "sticker";
+  deliveryId: string;
+  direction: "outbound" | "return";
+  isOpened: boolean;
+  senderName?: string;
+  senderProfileId?: string;
+  originLabel?: string;
+  letterText?: string;
+  postcardMessage?: string;
+  postcardCatalogKey?: string;
+  postcardNameKey?: TranslationKey;
+  postcardAssetKey?: OfficialAssetKey;
+  stickerIds: string[];
+  returnReplyDeadline?: string;
+  returnReplyConfirmed: boolean;
+};
+
 export type RewardItem = {
   id: string;
   nameKey: TranslationKey;
@@ -218,8 +237,6 @@ export type ReceivedCorrespondencePreview = {
 };
 
 export type CorrespondenceType = "letter" | "postcard" | "sticker" | "smallGift";
-export type PostcardVariant = "city" | "event" | "photo";
-
 export type LetterContent = {
   type: "letter";
   letterText: string;
@@ -228,7 +245,7 @@ export type LetterContent = {
 export type PostcardContent = {
   type: "postcard";
   postcardMessage: string;
-  postcardVariant: PostcardVariant;
+  postcardCatalogKey: string;
 };
 
 export type StickerContent = {
@@ -252,6 +269,23 @@ export type CorrespondenceOption = {
   type: CorrespondenceType;
   nameKey: TranslationKey;
   descriptionKey: TranslationKey;
+};
+
+export type OwnedPostcard = {
+  catalogKey: string;
+  nameKey: TranslationKey;
+  descriptionKey: TranslationKey;
+  artworkAssetKey: OfficialAssetKey;
+  availability: "base" | "tutorial" | "city" | "event" | "paid";
+  quantity?: number;
+};
+
+export type OwnedSticker = {
+  catalogKey: string;
+  nameKey: TranslationKey;
+  descriptionKey: TranslationKey;
+  artworkAssetKey: OfficialAssetKey;
+  quantity: number;
 };
 
 export type SendFlowSelection = {

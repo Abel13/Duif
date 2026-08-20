@@ -4,8 +4,12 @@ import {
   type Delivery,
   type FriendProfile,
   type Mascot,
+  type OwnedPostcard,
+  type OwnedSticker,
+  type OfficialAssetKey,
   type SendFlowSelection,
   getFriendCoordinates,
+  isOfficialAssetKey,
 } from "../../game";
 import type { TranslationKey } from "../../i18n";
 import { getSupabaseClient } from "./client";
@@ -19,6 +23,8 @@ export type DeliveryCorrespondenceContentRow =
 
 export type SanitizedFriendProfileRow = {
   display_name: string;
+  city_latitude: number | null;
+  city_longitude: number | null;
   exchange_count: number;
   favorite_note_key: string | null;
   friendship_level: number;
@@ -32,7 +38,10 @@ export type AuthenticatedSendFlowData = {
   correspondenceOptions: CorrespondenceOption[];
   friends: FriendProfile[];
   mascots: Mascot[];
-  postalStamps: { id: string; nameKey: TranslationKey }[];
+  postalStamps: { assetKey?: OfficialAssetKey; id: string; nameKey: TranslationKey }[];
+  postcards: OwnedPostcard[];
+  reputationLevel: number;
+  stickers: OwnedSticker[];
 };
 
 export type ConfirmedAuthenticatedSend = {
@@ -63,6 +72,8 @@ export function mapSanitizedFriendProfileRow(row: SanitizedFriendProfileRow): Fr
     location: {
       city: row.postal_base_city,
       country: row.postal_base_country,
+      latitude: row.city_latitude ?? undefined,
+      longitude: row.city_longitude ?? undefined,
       state: row.postal_base_state,
     },
     mascotIds: [],
@@ -77,8 +88,7 @@ export function mapCorrespondenceContentRow(
   if (row.correspondence_type === "postcard") {
     return {
       postcardMessage: row.postcard_message ?? "",
-      postcardVariant:
-        row.postcard_variant === "event" || row.postcard_variant === "photo" ? row.postcard_variant : "city",
+      postcardCatalogKey: row.postcard_catalog_key ?? "",
       type: "postcard",
     };
   }
@@ -107,7 +117,7 @@ export function createCorrespondenceContentPayload(content: CorrespondenceConten
   if (content.type === "postcard") {
     return {
       postcardMessage: content.postcardMessage,
-      postcardVariant: content.postcardVariant,
+      postcardCatalogKey: content.postcardCatalogKey,
       type: content.type,
     };
   }
@@ -165,22 +175,41 @@ export async function fetchAuthenticatedSendFlowData(
     return undefined;
   }
 
-  const [{ data: friends }, { data: options }, { data: stamps }, mascots] = await Promise.all([
+  const [friendsResult, optionsResult, stampsResult, postcardsResult, stickersResult, progressionResult, mascots] = await Promise.all([
     supabase.rpc("get_accepted_friend_profiles"),
     supabase.from("correspondence_options").select("*").eq("status", "active").order("sort_order"),
-    supabase.from("inventory_items").select("id, name_key").eq("owner_profile_id", profileId).eq("category", "stamps"),
+    supabase.from("inventory_items").select("id, name_key, thumbnail_asset_key").eq("owner_profile_id", profileId).eq("category", "stamps"),
+    supabase.rpc("list_owned_postcards"),
+    supabase.rpc("list_owned_stickers"),
+    supabase.from("profile_postal_progression").select("level").eq("profile_id", profileId).maybeSingle(),
     fetchAuthenticatedMascots(profileId),
   ]);
 
-  if (!friends || !options || mascots.length === 0) {
-    return undefined;
-  }
-
   return {
-    correspondenceOptions: options.map(mapCorrespondenceOptionRow),
-    friends: (friends as SanitizedFriendProfileRow[]).map(mapSanitizedFriendProfileRow),
+    correspondenceOptions: (optionsResult.data ?? []).map(mapCorrespondenceOptionRow),
+    friends: ((friendsResult.data as SanitizedFriendProfileRow[] | null) ?? []).map(mapSanitizedFriendProfileRow),
     mascots,
-    postalStamps: (stamps ?? []).flatMap((stamp) => stamp.name_key ? [{ id: stamp.id, nameKey: stamp.name_key as TranslationKey }] : []),
+    postalStamps: (stampsResult.data ?? []).flatMap((stamp) => stamp.name_key ? [{
+      assetKey: isOfficialAssetKey(stamp.thumbnail_asset_key) ? stamp.thumbnail_asset_key : undefined,
+      id: stamp.id,
+      nameKey: stamp.name_key as TranslationKey,
+    }] : []),
+    postcards: (postcardsResult.data ?? []).map((postcard) => ({
+      artworkAssetKey: postcard.artwork_asset_key as OwnedPostcard["artworkAssetKey"],
+      availability: postcard.availability as OwnedPostcard["availability"],
+      catalogKey: postcard.catalog_key,
+      descriptionKey: postcard.description_key as TranslationKey,
+      nameKey: postcard.name_key as TranslationKey,
+      quantity: postcard.quantity ?? undefined,
+    })),
+    reputationLevel: progressionResult.data?.level ?? 1,
+    stickers: (stickersResult.data ?? []).map((sticker) => ({
+      artworkAssetKey: sticker.artwork_asset_key as OwnedSticker["artworkAssetKey"],
+      catalogKey: sticker.catalog_key,
+      descriptionKey: sticker.description_key as TranslationKey,
+      nameKey: sticker.name_key as TranslationKey,
+      quantity: sticker.quantity,
+    })),
   };
 }
 
@@ -189,12 +218,14 @@ export async function createAuthenticatedDeliveryFromSelection({
   content,
   friend,
   mascot,
+  postmark,
   stampInventoryItemId,
 }: {
   correspondence: CorrespondenceOption;
   content: CorrespondenceContent;
   friend: FriendProfile;
   mascot: Mascot;
+  postmark: import("../../game").PostmarkCustomization;
   stampInventoryItemId?: string;
 }): Promise<Delivery | undefined> {
   const supabase = getSupabaseClient();
@@ -205,7 +236,7 @@ export async function createAuthenticatedDeliveryFromSelection({
 
   const { data, error } = await supabase.rpc("create_delivery_from_selection", {
     correspondence_catalog_key: correspondence.id,
-    content_payload: { ...createCorrespondenceContentPayload(content), postalFinishing: { stampInventoryItemId: stampInventoryItemId ?? null, postmarkKey: "postalMark.postalCancel" } },
+    content_payload: { ...createCorrespondenceContentPayload(content), postalFinishing: { stampInventoryItemId: stampInventoryItemId ?? null, postmarkKey: "postalMark.custom", postmarkModel: postmark.model, postmarkColor: postmark.color } },
     friend_profile_id: friend.id,
     mascot_id: mascot.id,
   });

@@ -35,14 +35,14 @@ describe("correspondence content validation", () => {
     expect(
       isCorrespondenceContentValid({
         postcardMessage: "Um verso pequeno.",
-        postcardVariant: "city",
+        postcardCatalogKey: "postcard-duif-base",
         type: "postcard",
       }),
     ).toBe(true);
     expect(
       isCorrespondenceContentValid({
         postcardMessage: "a".repeat(POSTCARD_MAX_CHARACTERS + 1),
-        postcardVariant: "event",
+        postcardCatalogKey: "postcard-duif-base",
         type: "postcard",
       }),
     ).toBe(false);

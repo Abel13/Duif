@@ -22,7 +22,8 @@ export const assetKeys = {
   activeItems: {
     firstJourneyBoost: "activeItem.firstJourneyBoost",
   },
-  postcards: { inauguralFront: "postcard.inaugural.front" },
+  postcards: { baseFront: "postcard.base.front", inauguralFront: "postcard.inaugural.front" },
+  stamps: { default: "stamp.default.front" },
   collectibles: { firstJourneyStamp: "collectible.firstJourneyStamp" },
   rewards: {
     wornRouteStamp: "reward.thumbnail.wornRouteStamp",

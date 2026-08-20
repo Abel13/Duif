@@ -8,12 +8,12 @@ import {
   assetKeys,
   getDeliveryStatus,
   type Mascot,
-  type ReceivedLetter,
+  type ReceivedCorrespondence,
 } from "../../game";
 import { useMascotCatalog } from "../../game/useMascotCatalog";
 import { useTranslation } from "../../i18n";
 import { useAuth } from "../../integrations/supabase/AuthProvider";
-import { fetchReceivedLetters } from "../../integrations/supabase/mailbox";
+import { fetchReceivedCorrespondence } from "../../integrations/supabase/mailbox";
 import { formatPostalLocationLabel } from "../../game/locationLabels";
 import styles from "./NestHubPage.module.css";
 
@@ -22,10 +22,10 @@ export function NestHubPage() {
   const { mascots, isLoading: isMascotsLoading } = useMascotCatalog();
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [letters, setLetters] = useState<ReceivedLetter[]>([]);
+  const [letters, setLetters] = useState<ReceivedCorrespondence[]>([]);
 
   useEffect(() => {
-    void fetchReceivedLetters()
+    void fetchReceivedCorrespondence()
       .then(setLetters)
       .catch(() => setLetters([]));
   }, []);

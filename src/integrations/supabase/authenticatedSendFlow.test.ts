@@ -17,6 +17,8 @@ import { starterMascots } from "../../game/mockData";
 const friendProfileId = "00000000-0000-4000-8000-000000000101";
 
 const sanitizedFriendRow: SanitizedFriendProfileRow = {
+  city_latitude: 38.7223,
+  city_longitude: -9.1393,
   display_name: "Lia",
   exchange_count: 18,
   favorite_note_key: "friends.lia.note",
@@ -46,6 +48,7 @@ const letterContentRow: DeliveryCorrespondenceContentRow = {
   letter_text: "Oi, Lia!",
   metadata: { prototype: true },
   postcard_message: null,
+  postcard_catalog_key: null,
   postcard_variant: null,
   sticker_ids: [],
 };
@@ -60,7 +63,7 @@ describe("authenticated send flow mappers", () => {
     });
   });
 
-  it("maps sanitized friend rows without private postal-base fields", () => {
+  it("maps the public city centroid without private postal-base fields", () => {
     const friend = mapSanitizedFriendProfileRow(sanitizedFriendRow);
 
     expect(friend).toMatchObject({
@@ -72,11 +75,11 @@ describe("authenticated send flow mappers", () => {
       location: {
         city: "Lisboa",
         country: "Portugal",
+        latitude: 38.7223,
+        longitude: -9.1393,
         state: "Lisboa",
       },
     });
-    expect(friend.location).not.toHaveProperty("latitude");
-    expect(friend.location).not.toHaveProperty("longitude");
     expect(friend.location).not.toHaveProperty("street");
     expect(friend.location).not.toHaveProperty("neighborhood");
   });
@@ -92,12 +95,12 @@ describe("authenticated send flow mappers", () => {
     expect(
       createCorrespondenceContentPayload({
         postcardMessage: "Saudades do caminho.",
-        postcardVariant: "event",
+        postcardCatalogKey: "postcard-duif-base",
         type: "postcard",
       }),
     ).toEqual({
       postcardMessage: "Saudades do caminho.",
-      postcardVariant: "event",
+      postcardCatalogKey: "postcard-duif-base",
       type: "postcard",
     });
   });
@@ -106,6 +109,9 @@ describe("authenticated send flow mappers", () => {
     const selection = getDefaultSendFlowSelection({
       correspondenceOptions: [mapCorrespondenceOptionRow(correspondenceOptionRow)],
       postalStamps: [],
+      postcards: [],
+      reputationLevel: 1,
+      stickers: [],
       friends: [
         {
           exchangeCount: 18,

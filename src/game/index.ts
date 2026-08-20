@@ -1,5 +1,7 @@
 export { assetKeys, isOfficialAssetKey, parseOfficialAssetManifest, resolveActiveOfficialAssetPath, resolveOfficialAssetPath } from "./assets";
 export type { OfficialAssetKey, OfficialAssetManifest, OfficialAssetType, OfficialAssetVersion } from "./assets";
+export { defaultPostmarkCustomization, isPostmarkCustomizationUnlocked, postmarkColors, postmarkModels } from "./postmarks";
+export type { PostmarkColorId, PostmarkCustomization, PostmarkModelId } from "./postmarks";
 export {
   friendMascots,
   getFriendById,
@@ -106,8 +108,6 @@ export {
   getFriendCoordinates,
   isCorrespondenceContentValid,
   LETTER_MAX_CHARACTERS,
-  postcardVariants,
-  stickerOptions,
   POSTCARD_MAX_CHARACTERS,
   STICKER_MAX_SELECTION,
 } from "./sendFlow";
@@ -135,6 +135,7 @@ export type {
   CorrespondenceType,
   Delivery,
   ReceivedLetter,
+  ReceivedCorrespondence,
   DeliveryStatus,
   EquipmentItem,
   EquipmentRarity,
@@ -153,7 +154,8 @@ export type {
   MascotTravelModifiers,
   Player,
   PostcardContent,
-  PostcardVariant,
+  OwnedPostcard,
+  OwnedSticker,
   DeliveryReward,
   DeliveryProgressionAward,
   RewardItem,

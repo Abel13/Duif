@@ -57,9 +57,9 @@ não devem exigir compras para permitir correspondência básica nem criar poder
 
 ### Correspondência recebida
 
-Quando a Milestone 52 estiver implementada, cada adesivo anexado a uma correspondência é
-transferido para o inventário do destinatário. Selos e carimbos aplicados são apenas apresentação
-persistida da carta: não transferem propriedade.
+Cada adesivo enviado é removido autoritativamente do saldo do remetente, fica em custódia durante o
+trecho de ida e entra no saldo do destinatário somente após a chegada. Selos e carimbos aplicados
+são apenas apresentação persistida da correspondência: não transferem propriedade.
 
 ### Loja futura
 
@@ -88,8 +88,10 @@ e consome uma cópia ao enviar. Quantidade, preço e tamanho dos pacotes ainda n
 
 ### Adesivos
 
-O remetente seleciona de uma a três cópias que possui. A operação deve validar saldo e consumir
-uma cópia de cada seleção de forma atômica; o destinatário recebe as mesmas cópias no inventário.
+O remetente seleciona de uma a três cópias que possui, podendo repetir um design. A operação valida
+e consome a quantidade agrupada de forma atômica; o destinatário recebe as mesmas cópias após a
+chegada. A correspondência de adesivos usa um slot, independentemente de conter uma, duas ou três
+cópias.
 O registro da correspondência preserva quais adesivos foram enviados mesmo após mudanças futuras
 no catálogo.
 

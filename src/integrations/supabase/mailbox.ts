@@ -1,4 +1,4 @@
-import type { ReceivedLetter } from "../../game";
+import type { ReceivedCorrespondence, ReceivedLetter } from "../../game";
 import type { TranslationKey } from "../../i18n";
 
 import { getSupabaseClient } from "./client";
@@ -46,4 +46,67 @@ export async function fetchReceivedLetters(): Promise<ReceivedLetter[]> {
   const { data, error } = await supabase.rpc("list_received_letters");
   if (error || !Array.isArray(data)) throw error ?? new Error("Invalid mailbox response");
   return parseReceivedLetterRows(data);
+}
+
+export type ReceivedCorrespondenceRow = {
+  arrived_at: string;
+  correspondence_type: string;
+  delivery_id: string;
+  direction: string;
+  is_opened: boolean;
+  letter_text: string | null;
+  origin_label: string | null;
+  postcard_asset_key: string | null;
+  postcard_catalog_key: string | null;
+  postcard_message: string | null;
+  postcard_name_key: string | null;
+  return_reply_confirmed: boolean;
+  return_reply_deadline: string | null;
+  sender_name: string | null;
+  sender_profile_id: string | null;
+  sticker_ids: string[];
+};
+
+export function mapReceivedCorrespondence(row: ReceivedCorrespondenceRow): ReceivedCorrespondence {
+  return {
+    arrivedAt: row.arrived_at,
+    correspondenceType: row.correspondence_type === "postcard" || row.correspondence_type === "sticker" ? row.correspondence_type : "letter",
+    deliveryId: row.delivery_id,
+    direction: row.direction === "return" ? "return" : "outbound",
+    isOpened: row.is_opened,
+    letterText: row.letter_text ?? undefined,
+    originLabel: row.origin_label ?? undefined,
+    postcardAssetKey: row.postcard_asset_key as ReceivedCorrespondence["postcardAssetKey"],
+    postcardCatalogKey: row.postcard_catalog_key ?? undefined,
+    postcardMessage: row.postcard_message ?? undefined,
+    postcardNameKey: row.postcard_name_key as ReceivedCorrespondence["postcardNameKey"],
+    returnReplyConfirmed: row.return_reply_confirmed,
+    returnReplyDeadline: row.return_reply_deadline ?? undefined,
+    senderName: row.sender_name ?? undefined,
+    senderProfileId: row.sender_profile_id ?? undefined,
+    stickerIds: row.sticker_ids,
+  };
+}
+
+export async function fetchReceivedCorrespondence(): Promise<ReceivedCorrespondence[]> {
+  const supabase = getSupabaseClient();
+  if (!supabase) throw new Error("Supabase unavailable");
+  const { data, error } = await supabase.rpc("list_received_correspondence");
+  if (error || !data) throw error ?? new Error("Invalid mailbox response");
+  return (data as ReceivedCorrespondenceRow[]).map(mapReceivedCorrespondence);
+}
+
+export async function openReceivedCorrespondence(deliveryId: string, direction: "outbound" | "return") {
+  const supabase = getSupabaseClient();
+  if (!supabase) throw new Error("Supabase unavailable");
+  const { data, error } = await supabase.rpc("open_received_correspondence", { target_delivery_id: deliveryId, target_direction: direction });
+  if (error || !data?.[0]) throw error ?? new Error("Correspondence unavailable");
+  return mapReceivedCorrespondence(data[0] as ReceivedCorrespondenceRow);
+}
+
+export async function confirmReturnReply(deliveryId: string, letterText: string) {
+  const supabase = getSupabaseClient();
+  if (!supabase) throw new Error("Supabase unavailable");
+  const { error } = await supabase.rpc("confirm_delivery_return_reply", { target_delivery_id: deliveryId, letter_text_value: letterText });
+  if (error) throw error;
 }

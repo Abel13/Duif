@@ -1,11 +1,15 @@
 import { Link, useSearchParams } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
+import { LockKey } from "@phosphor-icons/react";
 
 import { MobileTopBar, PageShell } from "../../components/layout";
 import { RoutePreview } from "../../components/map/RoutePreview";
-import { ItemCard, LetterDialog, SketchPanel, StampButton } from "../../components/ui";
+import { CityMapPreview } from "../../components/map/CityMapPreview";
+import { MascotPortraitNavigator } from "../../components/mascot/MascotPortraitNavigator";
+import { AssetImage, ItemCard, LetterDialog, SketchPanel, StampButton } from "../../components/ui";
 import {
+  assetKeys,
   createDefaultCorrespondenceContent,
   deriveMascotTravelModifiers,
   estimateMascotSpeedKmh,
@@ -20,10 +24,11 @@ import {
   resolveDeliveryPlaceLabel,
   haversineDistanceKm,
   isCorrespondenceContentValid,
+  defaultPostmarkCustomization,
   LETTER_MAX_CHARACTERS,
-  postcardVariants,
-  stickerOptions,
   POSTCARD_MAX_CHARACTERS,
+  postmarkColors,
+  postmarkModels,
   STICKER_MAX_SELECTION,
   type CorrespondenceContent,
   type CorrespondenceOption,
@@ -31,6 +36,9 @@ import {
   type FriendProfile,
   type Mascot,
   type MascotTravelModifiers,
+  type OwnedPostcard,
+  type OwnedSticker,
+  type PostmarkCustomization,
   type SendFlowSelection,
 } from "../../game";
 import { useSendFlowData } from "../../game/useSendFlowData";
@@ -39,7 +47,7 @@ import { createAuthenticatedDeliveryFromSelection } from "../../integrations/sup
 import { useAuth } from "../../integrations/supabase/AuthProvider";
 import styles from "./SendFlowPage.module.css";
 
-const isMvpCorrespondence = (option: CorrespondenceOption) => option.type === "letter";
+const isSupportedCorrespondence = (option: CorrespondenceOption) => option.type === "letter" || option.type === "postcard";
 
 type ConfirmedSend = {
   delivery: Delivery;
@@ -59,42 +67,49 @@ export function SendFlowPage() {
     data: sendFlowData,
     isLoading: isSendFlowLoading,
   } = useSendFlowData();
-  const { friends, mascots, postalStamps, correspondenceOptions: availableCorrespondence } = sendFlowData;
+  const { friends, mascots, postalStamps, postcards, reputationLevel, stickers, correspondenceOptions: availableCorrespondence } = sendFlowData;
   const initialMascotId = getInitialMascotId(mascots, requestedMascotId);
   const initialFriendId = getInitialFriendId(friends, requestedFriendId);
   const [selection, setSelection] = useState<SendFlowSelection>({
     friendId: initialFriendId,
     mascotId: initialMascotId,
-    correspondenceId: availableCorrespondence.find(isMvpCorrespondence)?.id,
+    correspondenceId: availableCorrespondence.find(isSupportedCorrespondence)?.id,
   });
   const [content, setContent] = useState<CorrespondenceContent>(() =>
-    createDefaultCorrespondenceContent(availableCorrespondence.find(isMvpCorrespondence)?.type ?? "letter"),
+    createDefaultCorrespondenceContent(availableCorrespondence.find(isSupportedCorrespondence)?.type ?? "letter", postcards, stickers),
   );
   const [confirmedSend, setConfirmedSend] = useState<ConfirmedSend | undefined>();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasSubmitError, setHasSubmitError] = useState(false);
   const [stampInventoryItemId, setStampInventoryItemId] = useState<string>();
+  const [previewStampId, setPreviewStampId] = useState<string>();
+  const [postmark, setPostmark] = useState<PostmarkCustomization>(defaultPostmarkCustomization);
+  const [currentStep, setCurrentStep] = useState(0);
 
   useEffect(() => {
-    const nextCorrespondence = availableCorrespondence.find(isMvpCorrespondence);
+    const nextCorrespondence = availableCorrespondence.find(isSupportedCorrespondence);
 
     setSelection({
       correspondenceId: nextCorrespondence?.id,
       friendId: getInitialFriendId(friends, requestedFriendId),
       mascotId: getInitialMascotId(mascots, requestedMascotId),
     });
-    setContent(createDefaultCorrespondenceContent(nextCorrespondence?.type ?? "letter"));
+    setContent(createDefaultCorrespondenceContent(nextCorrespondence?.type ?? "letter", postcards, stickers));
     setConfirmedSend(undefined);
     setHasSubmitError(false);
-  }, [availableCorrespondence, friends, mascots, requestedFriendId, requestedMascotId]);
+  }, [availableCorrespondence, friends, mascots, postcards, requestedFriendId, requestedMascotId, stickers]);
 
   const selectedFriend = friends.find((friend) => friend.id === selection.friendId);
   const selectedMascot = mascots.find((mascot) => mascot.id === selection.mascotId);
+  const selectedMascotIndex = selectedMascot ? mascots.findIndex((mascot) => mascot.id === selectedMascot.id) : -1;
   const selectedCorrespondence = availableCorrespondence.find(
     (option) => option.id === selection.correspondenceId,
   );
   const isSelectionComplete = Boolean(selectedFriend && selectedMascot && selectedCorrespondence);
   const isContentValid = isCorrespondenceContentValid(content);
+  const canAdvance = [Boolean(selectedFriend), Boolean(selectedMascot), Boolean(selectedCorrespondence && isContentValid), true, true, false][currentStep];
+  const selectedPostalStamp = postalStamps.find((stamp) => stamp.id === stampInventoryItemId);
+  const previewedPostalStamp = previewStampId === "default" ? undefined : postalStamps.find((stamp) => stamp.id === previewStampId);
 
   const estimate = useMemo(() => {
     if (!selectedFriend || !selectedMascot) {
@@ -136,9 +151,9 @@ export function SendFlowPage() {
   }
 
   function handleCorrespondenceSelect(option: CorrespondenceOption) {
-    if (!isMvpCorrespondence(option)) return;
+    if (!isSupportedCorrespondence(option)) return;
     updateSelection({ correspondenceId: option.id });
-    setContent(createDefaultCorrespondenceContent(option.type));
+    setContent(createDefaultCorrespondenceContent(option.type, postcards, stickers));
   }
 
   async function handleConfirmSend() {
@@ -155,6 +170,7 @@ export function SendFlowPage() {
         content,
         friend: selectedFriend,
         mascot: selectedMascot,
+        postmark,
         stampInventoryItemId,
       });
       if (delivery) setConfirmedSend({ correspondence: selectedCorrespondence, content, delivery, friend: selectedFriend, mascot: selectedMascot });
@@ -179,12 +195,26 @@ export function SendFlowPage() {
       : "/mascots";
 
   return (
-    <PageShell hasTopBar>
+    <PageShell className={styles.pageShell} hasTopBar>
       <MobileTopBar backTo={backTo} title={t("send.title")} />
       <div className={styles.shell}>
         <p className={styles.subtitle}>{t("send.subtitle")}</p>
 
+        <PostalProgress
+          currentStep={currentStep}
+          labels={[
+            t("send.steps.friend"),
+            t("send.steps.mascot"),
+            t("send.steps.correspondence"),
+            t("send.steps.stamp"),
+            t("send.steps.postmark"),
+            t("send.steps.review"),
+          ]}
+        />
+
+        <div className={styles.stepViewport}>
         <div className={styles.flowGrid}>
+          {currentStep === 0 ? (
           <ChoiceSection title={t("send.chooseFriend")}>
             {friends.map((friend) => (
               <div
@@ -193,11 +223,16 @@ export function SendFlowPage() {
                 key={friend.id}
               >
                 <ItemCard
-                  label={getFriendLocationLabel(friend.location, t)}
                   title={friend.name}
                   description={friend.favoriteNoteKey ? t(friend.favoriteNoteKey) : undefined}
                   selected={friend.id === selection.friendId}
-                />
+                >
+                  <CityMapPreview
+                    cityLabel={getFriendLocationLabel(friend.location, t)}
+                    latitude={friend.location.latitude}
+                    longitude={friend.location.longitude}
+                  />
+                </ItemCard>
                 <button
                   aria-label={`${t("send.selectedFriend")}: ${friend.name}`}
                   className={styles.optionButton}
@@ -207,39 +242,47 @@ export function SendFlowPage() {
               </div>
             ))}
           </ChoiceSection>
+          ) : null}
 
+          {currentStep === 1 ? (
           <ChoiceSection title={t("send.chooseMascot")}>
-            {mascots.map((mascot) => (
-              <div
-                className={styles.optionFrame}
-                data-selected={mascot.id === selection.mascotId || undefined}
-                key={mascot.id}
-              >
-                <ItemCard
-                  label={t(mascot.speciesKey)}
-                  title={mascot.name}
-                  meta={`${t("mascot.level")} ${mascot.level}`}
-                  description={getMascotRouteEffect(
-                    mascot,
+            {selectedMascot ? (
+              <div className={styles.mascotChoice}>
+                <MascotPortraitNavigator
+                  hasNext={selectedMascotIndex >= 0 && selectedMascotIndex < mascots.length - 1}
+                  hasPrevious={selectedMascotIndex > 0}
+                  mascot={selectedMascot}
+                  nextLabel={t("map.nextMascot")}
+                  previousLabel={t("map.previousMascot")}
+                  onNext={() => {
+                    const mascot = mascots[selectedMascotIndex + 1];
+                    if (mascot) updateSelection({ mascotId: mascot.id });
+                  }}
+                  onPrevious={() => {
+                    const mascot = mascots[selectedMascotIndex - 1];
+                    if (mascot) updateSelection({ mascotId: mascot.id });
+                  }}
+                />
+                <div className={styles.mascotChoiceDetails}>
+                  <span>{t(selectedMascot.speciesKey)}</span>
+                  <strong>{selectedMascot.name}</strong>
+                  <small>{t("mascot.level")} {selectedMascot.level}</small>
+                  <p>{getMascotRouteEffect(
+                    selectedMascot,
                     selectedFriend
-                      ? deriveMascotTravelModifiers(mascot, {
+                      ? deriveMascotTravelModifiers(selectedMascot, {
                           distanceKm: getRouteDistance(selectedFriend, profile?.home_latitude, profile?.home_longitude),
                         })
                       : undefined,
                     t,
-                  )}
-                  selected={mascot.id === selection.mascotId}
-                />
-                <button
-                  aria-label={`${t("send.selectedMascot")}: ${mascot.name}`}
-                  className={styles.optionButton}
-                  type="button"
-                  onClick={() => updateSelection({ mascotId: mascot.id })}
-                />
+                  )}</p>
+                </div>
               </div>
-            ))}
+            ) : <p className={styles.hint}>{t("send.loadingData")}</p>}
           </ChoiceSection>
+          ) : null}
 
+          {currentStep === 2 ? <>
           <ChoiceSection title={t("send.chooseCorrespondence")}>
             {availableCorrespondence.map((option) => (
               <div
@@ -250,13 +293,13 @@ export function SendFlowPage() {
                 <ItemCard
                   title={t(option.nameKey)}
                   description={t(option.descriptionKey)}
-                  meta={isMvpCorrespondence(option) ? undefined : t("send.availableLater")}
+                  meta={isSupportedCorrespondence(option) ? undefined : t("send.availableLater")}
                   selected={option.id === selection.correspondenceId}
                 />
                 <button
                   aria-label={`${t("send.selectedCorrespondence")}: ${t(option.nameKey)}`}
                   className={styles.optionButton}
-                  disabled={!isMvpCorrespondence(option)}
+                  disabled={!isSupportedCorrespondence(option)}
                   type="button"
                   onClick={() => handleCorrespondenceSelect(option)}
                 />
@@ -268,6 +311,8 @@ export function SendFlowPage() {
             <CorrespondenceComposer
               content={content}
               onChange={setContent}
+              postcards={postcards}
+              stickers={stickers}
               senderLocation={profile
                 ? formatPostalLocationLabel({
                     city: profile.postal_base_city,
@@ -278,25 +323,74 @@ export function SendFlowPage() {
               senderName={profile?.display_name?.trim() || t("common.unavailable")}
             />
           </SketchPanel>
+          </> : null}
 
-          <ChoiceSection title={t("send.postalFinishing.title")}>
-            <p className={styles.hint}>{t("send.postalFinishing.description")}</p>
-            <button className={styles.segment} data-active={!stampInventoryItemId || undefined} onClick={() => setStampInventoryItemId(undefined)} type="button">{t("send.postalFinishing.defaultStamp")}</button>
-            {postalStamps.map((stamp) => <button className={styles.segment} data-active={stamp.id === stampInventoryItemId || undefined} key={stamp.id} onClick={() => setStampInventoryItemId(stamp.id)} type="button">{t(stamp.nameKey)}</button>)}
-            <p className={styles.counter}>{t("send.postalFinishing.defaultPostmark")}</p>
+          {currentStep === 3 ? (
+          <ChoiceSection title={t("send.postalFinishing.stampTitle")}>
+            <p className={styles.hint}>{t("send.postalFinishing.stampDescription")}</p>
+            <div className={styles.stampList}>
+              <StampChoice
+                assetKey={assetKeys.stamps.default}
+                isSelected={!stampInventoryItemId}
+                label={t("send.postalFinishing.defaultStamp")}
+                onPreview={() => setPreviewStampId("default")}
+                onSelect={() => setStampInventoryItemId(undefined)}
+              />
+              {postalStamps.map((stamp) => (
+                <StampChoice
+                  assetKey={stamp.assetKey}
+                  isSelected={stamp.id === stampInventoryItemId}
+                  key={stamp.id}
+                  label={t(stamp.nameKey)}
+                  onPreview={() => setPreviewStampId(stamp.id)}
+                  onSelect={() => setStampInventoryItemId(stamp.id)}
+                />
+              ))}
+            </div>
           </ChoiceSection>
+          ) : null}
 
+          {currentStep === 4 ? (
+          <ChoiceSection title={t("send.postalFinishing.postmarkTitle")}>
+            <p className={styles.hint}>{t("send.postalFinishing.postmarkDescription")}</p>
+            <PostmarkCustomizer
+              city={profile?.postal_base_city || t("common.unavailable")}
+              country={profile?.postal_base_country || t("common.unavailable")}
+              customization={postmark}
+              level={reputationLevel}
+              onChange={setPostmark}
+            />
+          </ChoiceSection>
+          ) : null}
+
+          {currentStep === 5 ? (
           <SketchPanel
             className={styles.summaryPanel}
             title={confirmedSend ? t("send.confirmationTitle") : t("send.summary")}
             variant="note"
           >
             {confirmedSend ? (
-              <ConfirmationPanel confirmedSend={confirmedSend} />
+              <ConfirmationPanel confirmedSend={confirmedSend} postcards={postcards} stickers={stickers} />
             ) : (
               <div className={styles.summary}>
                 <p className={styles.hint}>{summaryHint}</p>
                 {hasSubmitError && <p className={styles.error}>{t("send.errorMessage")}</p>}
+                <section className={styles.reviewContent}>
+                  <h3>{t("send.contentPreview")}</h3>
+                  <ReviewContentPreview
+                    city={profile?.postal_base_city || t("common.unavailable")}
+                    content={content}
+                    country={profile?.postal_base_country || t("common.unavailable")}
+                    destinationLabel={selectedFriend ? getFriendLocationLabel(selectedFriend.location, t) : t("common.unavailable")}
+                    deliveredBy={selectedMascot?.name ?? t("common.unavailable")}
+                    originLabel={profile ? formatPostalLocationLabel({ city: profile.postal_base_city, state: profile.postal_base_state, country: profile.postal_base_country }) : t("common.unavailable")}
+                    postcards={postcards}
+                    postmark={postmark}
+                    senderName={profile?.display_name ?? t("common.unavailable")}
+                    stampAssetKey={selectedPostalStamp?.assetKey ?? assetKeys.stamps.default}
+                    stickers={stickers}
+                  />
+                </section>
                 <dl className={styles.summaryList}>
                   <SummaryRow
                     fallback={t("common.unavailable")}
@@ -313,12 +407,7 @@ export function SendFlowPage() {
                     label={t("send.selectedCorrespondence")}
                     value={selectedCorrespondence ? t(selectedCorrespondence.nameKey) : undefined}
                   />
-                  <SummaryRow
-                    fallback={t("send.content.emptyPreview")}
-                    label={t("send.contentPreview")}
-                    value={<CorrespondenceContentPreview content={content} />}
-                  />
-                  <SummaryRow label={t("send.postalFinishing.summaryLabel")} value={stampInventoryItemId ? t(postalStamps.find((stamp) => stamp.id === stampInventoryItemId)?.nameKey ?? "send.postalFinishing.defaultStamp") : t("send.postalFinishing.defaultStamp")} />
+                  <SummaryRow label={t("send.postalFinishing.summaryLabel")} value={`${stampInventoryItemId ? t(postalStamps.find((stamp) => stamp.id === stampInventoryItemId)?.nameKey ?? "send.postalFinishing.defaultStamp") : t("send.postalFinishing.defaultStamp")} · ${t(`send.postalFinishing.models.${postmark.model}`)} / ${t(`send.postalFinishing.colors.${postmark.color}`)}`} />
                   {estimate ? <>
                     <SummaryRow label={t("mascot.distance")} value={`${estimate.distanceKm} ${t("units.kilometers")}`} />
                     <SummaryRow label={t("send.preparationTime")} value={formatMinutes(estimate.modifiers.preparationMinutes)} />
@@ -335,9 +424,290 @@ export function SendFlowPage() {
               </div>
             )}
           </SketchPanel>
+          ) : null}
         </div>
+        </div>
+
+        {!confirmedSend ? (
+          <nav aria-label={t("send.steps.navigation")} className={styles.stepActions}>
+            <button
+              className={styles.backButton}
+              disabled={currentStep === 0}
+              onClick={() => setCurrentStep((step) => Math.max(0, step - 1))}
+              type="button"
+            >
+              {t("send.steps.back")}
+            </button>
+            {currentStep < 5 ? (
+              <StampButton
+                disabled={!canAdvance || isSendFlowLoading}
+                onClick={() => setCurrentStep((step) => Math.min(5, step + 1))}
+              >
+                {t("send.steps.next")}
+              </StampButton>
+            ) : null}
+          </nav>
+        ) : null}
       </div>
+      {previewStampId ? (
+        <dialog aria-label={t("send.postalFinishing.previewStamp")} className={styles.stampDialog} open>
+          <div className={styles.stampDialogPaper}>
+            <button className={styles.dialogClose} onClick={() => setPreviewStampId(undefined)} type="button">{t("send.postalFinishing.closeStampPreview")}</button>
+            <AssetImage
+              alt={previewedPostalStamp ? t(previewedPostalStamp.nameKey) : t("send.postalFinishing.defaultStamp")}
+              assetKey={previewedPostalStamp?.assetKey ?? assetKeys.stamps.default}
+              className={styles.stampDialogArt}
+              loading="eager"
+            ><span aria-hidden="true" /></AssetImage>
+            <strong>{previewedPostalStamp ? t(previewedPostalStamp.nameKey) : t("send.postalFinishing.defaultStamp")}</strong>
+          </div>
+        </dialog>
+      ) : null}
     </PageShell>
+  );
+}
+
+function ReviewContentPreview({ city, content, country, deliveredBy, destinationLabel, originLabel, postcards, postmark, senderName, stampAssetKey, stickers }: {
+  city: string;
+  content: CorrespondenceContent;
+  country: string;
+  deliveredBy: string;
+  destinationLabel: string;
+  originLabel: string;
+  postcards: OwnedPostcard[];
+  postmark: PostmarkCustomization;
+  senderName: string;
+  stampAssetKey: string;
+  stickers: OwnedSticker[];
+}) {
+  const { locale, t } = useTranslation();
+  const [isPostcardBackVisible, setIsPostcardBackVisible] = useState(false);
+  const [isLetterOpen, setIsLetterOpen] = useState(false);
+  const selectedColor = postmarkColors.find((color) => color.id === postmark.color) ?? postmarkColors[0];
+  const finishing = <div className={styles.reviewFinishing}>
+    <AssetImage alt={t("send.postalFinishing.defaultStamp")} assetKey={stampAssetKey} className={styles.reviewStamp}><span aria-hidden="true" /></AssetImage>
+    <div className={styles.reviewPostmark}><PostmarkPreview city={city} color={selectedColor.value} country={country} model={postmark.model} /></div>
+  </div>;
+
+  if (content.type === "postcard") {
+    const postcard = postcards.find((option) => option.catalogKey === content.postcardCatalogKey);
+    return <button
+      aria-label={t("tutorial.postcard.flip")}
+      aria-pressed={isPostcardBackVisible}
+      className={styles.reviewPostcardCard}
+      onClick={() => setIsPostcardBackVisible((visible) => !visible)}
+      type="button"
+    >
+      <span className={`${styles.reviewPostcardInner} ${isPostcardBackVisible ? styles.reviewPostcardBackVisible : ""}`}>
+        <span aria-label={t("tutorial.postcard.front")} className={`${styles.reviewPostcardFace} ${styles.reviewPostcardFront}`}>
+          {postcard ? <AssetImage alt={t(postcard.nameKey)} assetKey={postcard.artworkAssetKey}><span aria-hidden="true" /></AssetImage> : null}
+        </span>
+        <span aria-label={t("tutorial.postcard.back")} className={`${styles.reviewPostcardFace} ${styles.reviewPostcardBack}`}>
+          <span className={styles.reviewPostcardMessage}>{content.postcardMessage || t("send.content.emptyPreview")}</span>
+          <span className={styles.reviewPostcardDetails}>
+            {finishing}
+            <strong>{senderName}</strong>
+            <span>{t("tutorial.postcard.deliveredBy")} {deliveredBy}</span>
+            <dl>
+              <div><dt>{t("mascot.origin")}</dt><dd>{originLabel}</dd></div>
+              <div><dt>{t("mascot.destination")}</dt><dd>{destinationLabel}</dd></div>
+            </dl>
+          </span>
+        </span>
+      </span>
+    </button>;
+  }
+
+  if (content.type === "sticker") {
+    return <div className={`${styles.reviewItem} ${styles.reviewStickerSheet}`}>{finishing}<div className={styles.reviewStickers}>{content.stickerIds.map((stickerId, index) => {
+      const sticker = stickers.find((option) => option.catalogKey === stickerId);
+      return sticker ? <figure key={`${stickerId}-${index}`}>
+        <AssetImage alt={t(sticker.nameKey)} assetKey={sticker.artworkAssetKey}><span aria-hidden="true" /></AssetImage>
+        <figcaption>{t(sticker.nameKey)}</figcaption>
+      </figure> : null;
+    })}</div></div>;
+  }
+
+  const text = content.type === "letter" ? content.letterText : content.giftNote;
+  if (content.type === "letter") {
+    return <div className={styles.reviewLetterExperience}>
+      <button aria-label={t("send.previewLetter")} className={styles.reviewEnvelope} onClick={() => setIsLetterOpen(true)} type="button">
+        {finishing}
+        <span className={styles.reviewEnvelopeRecipient}>
+          <small>{t("mascot.destination")}</small>
+          <strong>{destinationLabel}</strong>
+        </span>
+        <span className={styles.reviewEnvelopeSender}>
+          <small>{t("mascot.origin")}</small>
+          <strong>{senderName}</strong>
+          <em>{originLabel}</em>
+        </span>
+      </button>
+      <LetterDialog
+        closeLabel={t("send.closeLetterPreview")}
+        dateLabel={new Intl.DateTimeFormat(locale, { dateStyle: "long" }).format(new Date())}
+        emptyLabel={t("send.content.emptyPreview")}
+        letterText={text}
+        onClose={() => setIsLetterOpen(false)}
+        open={isLetterOpen}
+        senderLocation={originLabel}
+        senderName={senderName}
+        title={t("send.previewLetter")}
+      />
+    </div>;
+  }
+
+  return <div className={`${styles.reviewItem} ${styles.reviewLetterSheet}`}><blockquote className={styles.reviewLetter}>{text || t("send.content.emptyPreview")}</blockquote></div>;
+}
+
+function PostmarkCustomizer({ city, country, customization, level, onChange }: {
+  city: string;
+  country: string;
+  customization: PostmarkCustomization;
+  level: number;
+  onChange: (value: PostmarkCustomization) => void;
+}) {
+  const { t } = useTranslation();
+  const selectedColor = postmarkColors.find((color) => color.id === customization.color) ?? postmarkColors[0];
+
+  return <div className={styles.postmarkCustomizer}>
+    <div className={styles.postmarkLevel}>{t("send.postalFinishing.reputationLevel").replace("{level}", String(level))}</div>
+    <PostmarkPreview city={city} color={selectedColor.value} country={country} model={customization.model} />
+    <fieldset className={styles.postmarkOptions}>
+      <legend>{t("send.postalFinishing.modelLabel")}</legend>
+      <div className={styles.postmarkModelGrid}>
+        {postmarkModels.map((model) => {
+          const locked = model.level > level;
+          return <button aria-pressed={customization.model === model.id} disabled={locked} key={model.id} onClick={() => onChange({ ...customization, model: model.id })} type="button">
+            <span>{t(`send.postalFinishing.models.${model.id}`)}</span>
+            {locked ? <small><LockKey aria-hidden="true" />{t("send.postalFinishing.unlockLevel").replace("{level}", String(model.level))}</small> : null}
+          </button>;
+        })}
+      </div>
+    </fieldset>
+    <fieldset className={styles.postmarkOptions}>
+      <legend>{t("send.postalFinishing.colorLabel")}</legend>
+      <div className={styles.postmarkColorGrid}>
+        {postmarkColors.map((color) => {
+          const locked = color.level > level;
+          return <button aria-label={locked ? `${t(`send.postalFinishing.colors.${color.id}`)} — ${t("send.postalFinishing.unlockLevel").replace("{level}", String(color.level))}` : t(`send.postalFinishing.colors.${color.id}`)} aria-pressed={customization.color === color.id} disabled={locked} key={color.id} onClick={() => onChange({ ...customization, color: color.id })} style={{ "--postmark-swatch": color.value } as CSSProperties} type="button">
+            <span aria-hidden="true" />
+            {locked ? <LockKey aria-hidden="true" /> : null}
+          </button>;
+        })}
+      </div>
+    </fieldset>
+  </div>;
+}
+
+function PostmarkPreview({ city, color, country, model }: { city: string; color: string; country: string; model: PostmarkCustomization["model"] }) {
+  const { locale, t } = useTranslation();
+  const now = new Date();
+  const classicDate = new Intl.DateTimeFormat(locale, { day: "2-digit", month: "2-digit", year: "2-digit" }).format(now);
+  const dateParts = new Intl.DateTimeFormat(locale, { day: "2-digit", month: "short" }).formatToParts(now);
+  const day = dateParts.find((part) => part.type === "day")?.value ?? "--";
+  const month = (dateParts.find((part) => part.type === "month")?.value ?? "---").replace(/\./g, "").toLocaleUpperCase(locale);
+  const routeDate = `${day} ${month}`;
+  const year = new Intl.DateTimeFormat(locale, { year: "numeric" }).format(now);
+  const wingDate = `${day} ${month} ${year}`;
+  const cityFontSize = Math.max(10.5, 16 - Math.max(0, city.length - 12) * 0.34);
+  const routeCityFontSize = Math.max(9.5, 14 - Math.max(0, city.length - 11) * 0.35);
+  const routeCountryFontSize = Math.max(14, 22 - Math.max(0, country.length - 8) * 0.68);
+  const wingCityFontSize = Math.max(16, 28 - Math.max(0, city.length - 9) * 0.9);
+  const wingCountryFontSize = Math.max(12, 19 - Math.max(0, country.length - 10) * 0.45);
+  return <figure className={styles.postmarkPreview} style={{ "--postmark-color": color } as CSSProperties}>
+    <div className={styles.postmarkImpression} data-model={model}>
+      {model === "route" ? (
+      <svg aria-label={`${country}, ${city}, ${routeDate}`} className={`${styles.postmarkSeal} ${styles.routePostmarkSeal}`} role="img" viewBox="0 0 200 200">
+        <defs>
+          <path d="M100 7 L191 187 L9 187 Z" id="route-postmark-outline" />
+          <path d="M100 22 L181 180 L19 180 Z" id="route-postmark-inner" />
+          <path d="M100 38 l5 10 11 2-8 8 2 11-10-5-10 5 2-11-8-8 11-2z" id="route-postmark-star" />
+        </defs>
+        <use className={styles.routePostmarkOuter} href="#route-postmark-outline" />
+        <use className={styles.routePostmarkInner} href="#route-postmark-inner" />
+        <use className={styles.routePostmarkMainStar} href="#route-postmark-star" transform="translate(28 15) scale(.72)" />
+        <use className={styles.routePostmarkSmallStar} href="#route-postmark-star" transform="translate(36 80) scale(.34)" />
+        <use className={styles.routePostmarkSmallStar} href="#route-postmark-star" transform="translate(66 80) scale(.34)" />
+        <use className={styles.routePostmarkSmallStar} href="#route-postmark-star" transform="translate(96 80) scale(.34)" />
+        <text className={styles.routePostmarkDate} x="100" y="88">{routeDate}</text>
+        <text className={styles.routePostmarkCity} style={{ fontSize: routeCityFontSize }} x="100" y="137">{city.toLocaleUpperCase(locale)}</text>
+        <path className={styles.routePostmarkRule} d="M39 147 H161" />
+        <text className={styles.routePostmarkCountry} style={{ fontSize: routeCountryFontSize }} x="100" y="174">{country.toLocaleUpperCase(locale)}</text>
+      </svg>
+      ) : model === "wing" ? (
+      <svg aria-label={`${country}, ${city}, ${wingDate}`} className={`${styles.postmarkSeal} ${styles.wingPostmarkSeal}`} role="img" viewBox="0 0 220 180">
+        <defs>
+          <path d="M100 38 l5 10 11 2-8 8 2 11-10-5-10 5 2-11-8-8 11-2z" id="wing-postmark-star" />
+        </defs>
+        <rect className={styles.wingPostmarkPerforation} height="164" rx="2" width="204" x="8" y="8" />
+        <rect className={styles.wingPostmarkFrame} height="154" width="194" x="13" y="13" />
+        <text className={styles.wingPostmarkCity} style={{ fontSize: wingCityFontSize }} x="110" y="52">{city.toLocaleUpperCase(locale)}</text>
+        <use className={styles.wingPostmarkStar} href="#wing-postmark-star" transform="translate(-4 53) scale(.42)" />
+        <text className={styles.wingPostmarkCountry} style={{ fontSize: wingCountryFontSize }} x="110" y="82">{country.toLocaleUpperCase(locale)}</text>
+        <use className={styles.wingPostmarkStar} href="#wing-postmark-star" transform="translate(140 53) scale(.42)" />
+        <text className={styles.wingPostmarkDate} x="110" y="112">{wingDate}</text>
+        <path className={styles.wingPostmarkRule} d="M14 126 H206" />
+        <text className={styles.wingPostmarkLabel} x="110" y="153">{t("send.postalFinishing.airMail").toLocaleUpperCase(locale)}</text>
+      </svg>
+      ) : (
+      <svg aria-label={`${country}, ${city}, ${classicDate}`} className={styles.postmarkSeal} role="img" viewBox="0 0 200 200">
+        <defs>
+          <path d="M 28 100 A 72 72 0 0 1 172 100" id="postmark-country-arc" />
+          <path d="M 26 108 A 74 74 0 0 0 174 108" id="postmark-city-arc" />
+        </defs>
+        <circle cx="100" cy="100" r="91" />
+        <circle cx="100" cy="100" r="84" />
+        <circle cx="100" cy="100" r="58" />
+        <text className={styles.postmarkArcText}><textPath href="#postmark-country-arc" startOffset="50%" textAnchor="middle">{country.toLocaleUpperCase(locale)}</textPath></text>
+        <text className={`${styles.postmarkArcText} ${styles.postmarkCityText}`} style={{ fontSize: cityFontSize }}><textPath href="#postmark-city-arc" startOffset="50%" textAnchor="middle">{city.toLocaleUpperCase(locale)}</textPath></text>
+        <path className={styles.postmarkDateRule} d="M43 88 H157 M43 114 H157" />
+        <text className={styles.postmarkDateText} x="100" y="106">{classicDate}</text>
+      </svg>
+      )}
+      {model === "classic" ? <svg aria-hidden="true" className={styles.postmarkWaves} viewBox="0 0 120 42">
+        <path d="M2 7 C14 0 24 14 36 7 S58 0 70 7 S94 14 118 7" />
+        <path d="M2 21 C14 14 24 28 36 21 S58 14 70 21 S94 28 118 21" />
+        <path d="M2 35 C14 28 24 42 36 35 S58 28 70 35 S94 42 118 35" />
+      </svg> : null}
+    </div>
+    <figcaption>{t(`send.postalFinishing.models.${model}`)}</figcaption>
+  </figure>;
+}
+
+function StampChoice({ assetKey, isSelected, label, onPreview, onSelect }: {
+  assetKey?: string;
+  isSelected: boolean;
+  label: string;
+  onPreview: () => void;
+  onSelect: () => void;
+}) {
+  const { t } = useTranslation();
+  return <article className={styles.stampChoice} data-selected={isSelected || undefined}>
+    <AssetImage alt="" assetKey={assetKey} className={styles.stampChoiceArt}><span aria-hidden="true" /></AssetImage>
+    <strong>{label}</strong>
+    <div>
+      <button aria-pressed={isSelected} onClick={onSelect} type="button">{t("send.postalFinishing.chooseStamp")}</button>
+      <button onClick={onPreview} type="button">{t("send.postalFinishing.previewStamp")}</button>
+    </div>
+  </article>;
+}
+
+function PostalProgress({ currentStep, labels }: { currentStep: number; labels: string[] }) {
+  return (
+    <ol aria-label={labels[currentStep]} className={styles.postalProgress}>
+      {labels.map((label, index) => (
+        <li
+          aria-current={index === currentStep ? "step" : undefined}
+          data-complete={index < currentStep || undefined}
+          data-current={index === currentStep || undefined}
+          key={label}
+        >
+          <span>{index + 1}</span>
+          <small>{label}</small>
+        </li>
+      ))}
+    </ol>
   );
 }
 
@@ -369,11 +739,15 @@ function SummaryRow({
 function CorrespondenceComposer({
   content,
   onChange,
+  postcards,
+  stickers,
   senderLocation,
   senderName,
 }: {
   content: CorrespondenceContent;
   onChange: (content: CorrespondenceContent) => void;
+  postcards: OwnedPostcard[];
+  stickers: OwnedSticker[];
   senderLocation: string;
   senderName: string;
 }) {
@@ -381,24 +755,42 @@ function CorrespondenceComposer({
   const [isLetterPreviewOpen, setIsLetterPreviewOpen] = useState(false);
 
   if (content.type === "postcard") {
+    const selectedPostcard = postcards.find((option) => option.catalogKey === content.postcardCatalogKey);
+
     return (
       <div className={styles.composer}>
         <fieldset className={styles.fieldset}>
           <legend>{t("send.content.postcardVariantLabel")}</legend>
           <div className={styles.segmented}>
-            {postcardVariants.map((option) => (
+            {postcards.map((option) => (
               <button
                 className={styles.segment}
-                data-active={content.postcardVariant === option.id || undefined}
-                key={option.id}
-                onClick={() => onChange({ ...content, postcardVariant: option.id })}
+                data-active={content.postcardCatalogKey === option.catalogKey || undefined}
+                key={option.catalogKey}
+                onClick={() => onChange({ ...content, postcardCatalogKey: option.catalogKey })}
                 type="button"
               >
-                {t(option.nameKey)}
+                {t(option.nameKey)}{option.quantity !== undefined ? ` · ${option.quantity}` : ""}
               </button>
             ))}
           </div>
         </fieldset>
+        {selectedPostcard ? (
+          <figure className={styles.postcardPreview}>
+            <AssetImage
+              alt={t(selectedPostcard.nameKey)}
+              assetKey={selectedPostcard.artworkAssetKey}
+              className={styles.postcardPreviewArt}
+              loading="eager"
+            >
+              <span aria-hidden="true" className={styles.postcardPreviewFallback} />
+            </AssetImage>
+            <figcaption>
+              <strong>{t(selectedPostcard.nameKey)}</strong>
+              <span>{t(selectedPostcard.descriptionKey)}</span>
+            </figcaption>
+          </figure>
+        ) : null}
         <TextComposerField
           count={getCorrespondenceContentCount(content)}
           label={t("send.content.postcardLabel")}
@@ -417,25 +809,27 @@ function CorrespondenceComposer({
         <fieldset className={styles.fieldset}>
           <legend>{t("send.content.stickerLabel")}</legend>
           <div className={styles.segmented}>
-            {stickerOptions.map((option) => {
-              const isSelected = content.stickerIds.includes(option.id);
+            {stickers.map((option) => {
+              const selectedCount = content.stickerIds.filter((id) => id === option.catalogKey).length;
 
-              return (
+              return <div className={styles.stickerChoice} key={option.catalogKey}>
                 <button
                   className={styles.segment}
-                  data-active={isSelected || undefined}
-                  key={option.id}
+                  data-active={selectedCount > 0 || undefined}
+                  disabled={content.stickerIds.length >= STICKER_MAX_SELECTION || selectedCount >= option.quantity}
                   onClick={() => {
-                    const stickerIds = isSelected
-                      ? content.stickerIds.filter((stickerId) => stickerId !== option.id)
-                      : [...content.stickerIds, option.id].slice(0, STICKER_MAX_SELECTION);
-                    onChange({ ...content, stickerIds });
+                    onChange({ ...content, stickerIds: [...content.stickerIds, option.catalogKey] });
                   }}
                   type="button"
                 >
-                  {t(option.nameKey)}
+                  {t(option.nameKey)} · {selectedCount}/{option.quantity}
                 </button>
-              );
+                {selectedCount > 0 ? <button className={styles.segment} type="button" onClick={() => {
+                  const stickerIds = [...content.stickerIds];
+                  stickerIds.splice(stickerIds.lastIndexOf(option.catalogKey), 1);
+                  onChange({ ...content, stickerIds });
+                }}>{t("send.removeSticker")} {t(option.nameKey)}</button> : null}
+              </div>;
             })}
           </div>
           <p className={styles.counter}>
@@ -545,11 +939,11 @@ function TextComposerField({
   );
 }
 
-function CorrespondenceContentPreview({ content }: { content: CorrespondenceContent }) {
+function CorrespondenceContentPreview({ content, postcards, stickers }: { content: CorrespondenceContent; postcards: OwnedPostcard[]; stickers: OwnedSticker[] }) {
   const { t } = useTranslation();
 
   if (content.type === "postcard") {
-    const variant = postcardVariants.find((option) => option.id === content.postcardVariant);
+    const variant = postcards.find((option) => option.catalogKey === content.postcardCatalogKey);
     return (
       <span>
         {variant ? t(variant.nameKey) : t("correspondence.postcard.name")}
@@ -560,8 +954,8 @@ function CorrespondenceContentPreview({ content }: { content: CorrespondenceCont
 
   if (content.type === "sticker") {
     const stickerNames = content.stickerIds
-      .map((stickerId) => stickerOptions.find((option) => option.id === stickerId))
-      .filter((option): option is (typeof stickerOptions)[number] => Boolean(option))
+      .map((stickerId) => stickers.find((option) => option.catalogKey === stickerId))
+      .filter((option): option is OwnedSticker => Boolean(option))
       .map((option) => t(option.nameKey));
 
     return <span>{stickerNames.join(" / ") || t("send.content.emptyPreview")}</span>;
@@ -576,8 +970,12 @@ function CorrespondenceContentPreview({ content }: { content: CorrespondenceCont
 
 function ConfirmationPanel({
   confirmedSend,
+  postcards,
+  stickers,
 }: {
   confirmedSend: ConfirmedSend;
+  postcards: OwnedPostcard[];
+  stickers: OwnedSticker[];
 }) {
   const { t } = useTranslation();
   const { delivery, friend, mascot, correspondence, content } = confirmedSend;
@@ -603,7 +1001,7 @@ function ConfirmationPanel({
         <SummaryRow label={t("send.selectedCorrespondence")} value={t(correspondence.nameKey)} />
         <SummaryRow
           label={t("send.contentPreview")}
-          value={<CorrespondenceContentPreview content={content} />}
+          value={<CorrespondenceContentPreview content={content} postcards={postcards} stickers={stickers} />}
         />
         <SummaryRow label={t("mascot.status")} value={t(`delivery.status.${status}`)} />
       </dl>

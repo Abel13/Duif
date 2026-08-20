@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { mapReceivedLetterRow, parseReceivedLetterRows, type ReceivedLetterRow } from "./mailbox";
+import { mapReceivedCorrespondence, mapReceivedLetterRow, parseReceivedLetterRows, type ReceivedCorrespondenceRow, type ReceivedLetterRow } from "./mailbox";
 
 const receivedLetter: ReceivedLetterRow = {
   arrived_at: "2026-07-21T15:30:00.000Z",
@@ -33,5 +33,29 @@ describe("received letters", () => {
     expect(parseReceivedLetterRows([receivedLetter, { ...receivedLetter, letter_text: null }])).toEqual([
       mapReceivedLetterRow(receivedLetter),
     ]);
+  });
+});
+
+describe("generic received correspondence", () => {
+  const surprise: ReceivedCorrespondenceRow = {
+    arrived_at: "2026-08-20T12:00:00.000Z", correspondence_type: "postcard",
+    delivery_id: "00000000-0000-4000-8000-000000000601", direction: "outbound",
+    is_opened: false, letter_text: null, origin_label: null, postcard_asset_key: null,
+    postcard_catalog_key: null, postcard_message: null, postcard_name_key: null,
+    return_reply_confirmed: false, return_reply_deadline: "2026-08-20T13:00:00.000Z",
+    sender_name: null, sender_profile_id: null, sticker_ids: [],
+  };
+
+  it("preserves the unopened surprise without inventing sender data", () => {
+    expect(mapReceivedCorrespondence(surprise)).toMatchObject({
+      correspondenceType: "postcard", isOpened: false, senderName: undefined,
+      letterText: undefined, returnReplyConfirmed: false,
+    });
+  });
+
+  it("maps a private return letter after authorized opening", () => {
+    expect(mapReceivedCorrespondence({ ...surprise, correspondence_type: "letter", direction: "return", is_opened: true, letter_text: "Voltei com resposta.", sender_name: "Lia", sender_profile_id: "00000000-0000-4000-8000-000000000101" })).toMatchObject({
+      direction: "return", isOpened: true, letterText: "Voltei com resposta.", senderName: "Lia",
+    });
   });
 });

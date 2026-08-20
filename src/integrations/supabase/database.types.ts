@@ -392,6 +392,7 @@ export type Database = {
           letter_text: string | null
           metadata: Json
           postcard_message: string | null
+          postcard_catalog_key: string | null
           postcard_variant: string | null
           sticker_ids: string[]
         }
@@ -404,6 +405,7 @@ export type Database = {
           letter_text?: string | null
           metadata?: Json
           postcard_message?: string | null
+          postcard_catalog_key?: string | null
           postcard_variant?: string | null
           sticker_ids?: string[]
         }
@@ -416,6 +418,7 @@ export type Database = {
           letter_text?: string | null
           metadata?: Json
           postcard_message?: string | null
+          postcard_catalog_key?: string | null
           postcard_variant?: string | null
           sticker_ids?: string[]
         }
@@ -927,6 +930,38 @@ export type Database = {
           },
         ]
       }
+      profile_postal_progression: {
+        Row: {
+          level: number
+          next_level_xp: number
+          profile_id: string
+          updated_at: string
+          xp: number
+        }
+        Insert: {
+          level?: number
+          next_level_xp?: number
+          profile_id: string
+          updated_at?: string
+          xp?: number
+        }
+        Update: {
+          level?: number
+          next_level_xp?: number
+          profile_id?: string
+          updated_at?: string
+          xp?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profile_postal_progression_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           auth_user_id: string | null
@@ -1171,6 +1206,26 @@ export type Database = {
           sender_profile_id: string
         }[]
       }
+      list_owned_postcards: {
+        Args: never
+        Returns: { catalog_key: string; name_key: string; description_key: string; artwork_asset_key: string; availability: string; quantity: number | null }[]
+      }
+      list_owned_stickers: {
+        Args: never
+        Returns: { catalog_key: string; name_key: string; description_key: string; artwork_asset_key: string; quantity: number }[]
+      }
+      list_received_correspondence: {
+        Args: never
+        Returns: { delivery_id: string; direction: string; arrived_at: string; correspondence_type: string; is_opened: boolean; sender_name: string | null; sender_profile_id: string | null; origin_label: string | null; letter_text: string | null; postcard_message: string | null; postcard_catalog_key: string | null; postcard_name_key: string | null; postcard_asset_key: string | null; sticker_ids: string[]; return_reply_deadline: string | null; return_reply_confirmed: boolean }[]
+      }
+      open_received_correspondence: {
+        Args: { target_delivery_id: string; target_direction: string }
+        Returns: { delivery_id: string; direction: string; arrived_at: string; correspondence_type: string; is_opened: boolean; sender_name: string | null; sender_profile_id: string | null; origin_label: string | null; letter_text: string | null; postcard_message: string | null; postcard_catalog_key: string | null; postcard_name_key: string | null; postcard_asset_key: string | null; sticker_ids: string[]; return_reply_deadline: string | null; return_reply_confirmed: boolean }[]
+      }
+      confirm_delivery_return_reply: {
+        Args: { target_delivery_id: string; letter_text_value: string }
+        Returns: Json
+      }
       search_nest_cities: {
         Args: { search_query: string }
         Returns: { id: string; label: string; latitude: number; longitude: number }[]
@@ -1233,6 +1288,8 @@ export type Database = {
       get_accepted_friend_profiles: {
         Args: never
         Returns: {
+          city_latitude: number | null
+          city_longitude: number | null
           display_name: string
           exchange_count: number
           favorite_note_key: string

@@ -41,46 +41,13 @@ import {
   MIN_REWARD_VISIBILITY_ZOOM,
   shouldShowMapRewards,
 } from "./travelMapCamera";
+import { postalMapStyle } from "./postalMapStyle";
 
 const routeSourceId = "duif-route";
 const outboundProgressSourceId = "duif-outbound-progress";
 const returnProgressSourceId = "duif-return-progress";
 const placeLabelsSourceId = "duif-place-labels";
 const postalTrafficRoutesSourceId = "duif-postal-traffic-routes";
-
-const postalMapStyle = {
-  version: 8,
-  name: "DUIF Postal Preview",
-  sources: {
-    osm: {
-      type: "raster",
-      tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
-      tileSize: 256,
-      attribution: "© OpenStreetMap contributors",
-    },
-  },
-  layers: [
-    {
-      id: "postal-paper",
-      type: "background",
-      paint: {
-        "background-color": "#eadfca",
-      },
-    },
-    {
-      id: "osm-raster",
-      type: "raster",
-      source: "osm",
-      paint: {
-        "raster-opacity": 0.62,
-        "raster-saturation": -0.72,
-        "raster-contrast": -0.18,
-        "raster-brightness-min": 0.12,
-        "raster-brightness-max": 0.9,
-      },
-    },
-  ],
-} satisfies maplibregl.StyleSpecification;
 
 export type TravelMapProps = {
   delivery: Delivery;
