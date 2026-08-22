@@ -164,7 +164,7 @@ export type TranslationDictionary = {
     postcard: { open: string; close: string; flip: string; flipHint: string; front: string; back: string; completedOn: string; backMessage: string; postmark: string; deliveredBy: string };
     rewards: { inauguralPostcard: { name: string; description: string }; firstRouteStamp: { name: string; description: string } };
   };
-  nest: { eyebrow: string; title: string; description: string; searchLabel: string; searchPlaceholder: string; searchAction: string; mapLabel: string; privacyNote: string; selectedCity: string; selectionReady: string; confirmAction: string };
+  nest: { eyebrow: string; title: string; description: string; searchLabel: string; searchPlaceholder: string; searchAction: string; noCityFound: string; mapLabel: string; privacyNote: string; selectedCity: string; selectionReady: string; confirmAction: string };
   assetStudio: { eyebrow: string; title: string; description: string; newAsset: string; uploadTitle: string; key: string; type: string; file: string; altKey: string; decorative: string; author: string; saveDraft: string; draftSaved: string; publish: string; published: string; archive: string; archived: string; restore: string; restored: string; usage: string; filters: string; all: string; loading: string; error: string };
   geonamesAdmin: { eyebrow: string; title: string; description: string; activeCities: string; latestSuccess: string; noSuccess: string; refresh: string; confirm: string; cancel: string; confirmTitle: string; confirmDescription: string; history: string; status: string; processed: string; imported: string; updated: string; archived: string; running: string; failed: string; succeeded: string; queued: string; refreshStarted: string };
   units: {
@@ -1518,6 +1518,7 @@ export type TranslationKey =
   | "nest.searchLabel"
   | "nest.searchPlaceholder"
   | "nest.searchAction"
+  | "nest.noCityFound"
   | "nest.mapLabel"
   | "nest.privacyNote"
   | "nest.selectedCity"
