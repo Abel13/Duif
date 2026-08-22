@@ -52,6 +52,7 @@ export const assetKeys = {
     brassNestPlaque: "shop.thumbnail.brassNestPlaque",
     airmailProfileRibbon: "shop.thumbnail.airmailProfileRibbon",
   },
+  jobs: { postalBoard: "jobs.artwork.postalBoard" },
   nest: {
     profileNook: "nest.artwork.profileNook",
     mascotRoost: "nest.artwork.mascotRoost",
