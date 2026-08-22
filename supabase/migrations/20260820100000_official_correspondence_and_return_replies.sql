@@ -111,7 +111,7 @@ select p.id,s.catalog_key,3 from public.profiles p cross join public.official_st
 create or replace function public.provision_initial_correspondence_inventory()
 returns trigger language plpgsql security definer set search_path=public as $$
 begin
-  perform 1 from public.profiles where id=target_profile_id for update;
+  perform 1 from public.profiles where id=new.id for update;
   insert into public.profile_sticker_balances(profile_id,sticker_catalog_key,quantity)
   select new.id,catalog_key,3 from public.official_stickers where status='active' on conflict do nothing;
   return new;
