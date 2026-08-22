@@ -49,19 +49,6 @@ export default defineConfig({
           "assets/icons/icon-512.png",
           "assets/icons/icon-maskable-512.png",
         ],
-        runtimeCaching: [
-          {
-            urlPattern: /\/assets\/.*/,
-            handler: "CacheFirst",
-            options: {
-              cacheName: "duif-static-assets",
-              expiration: {
-                maxEntries: 80,
-                maxAgeSeconds: 60 * 60 * 24 * 30,
-              },
-            },
-          },
-        ],
       },
     }),
   ],

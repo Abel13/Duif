@@ -1,4 +1,4 @@
-import { lazy, Suspense, type ReactNode } from "react";
+import { Suspense, type ReactNode } from "react";
 import { Navigate, Route, Routes, useLocation, useSearchParams } from "react-router-dom";
 
 import { FoundationStatusPage } from "../pages/FoundationStatusPage/FoundationStatusPage";
@@ -10,20 +10,21 @@ import { OnboardingPage } from "../pages/OnboardingPage/OnboardingPage";
 import { sanitizeIntendedRoute } from "../integrations/supabase/authContracts";
 import { useAuth } from "../integrations/supabase/AuthProvider";
 import { isAssetAdministrator } from "../integrations/supabase/assetStudio";
+import { lazyWithRetry } from "./lazyWithRetry";
 
-const TutorialDeliveryPage=lazy(()=>import("../pages/TutorialDeliveryPage/TutorialDeliveryPage").then(module=>({default:module.TutorialDeliveryPage})));
-const NestSetupPage=lazy(()=>import("../pages/NestSetupPage/NestSetupPage").then(module=>({default:module.NestSetupPage})));
-const TravelMapPage=lazy(()=>import("../pages/TravelMapPage/TravelMapPage").then(module=>({default:module.TravelMapPage})));
-const MascotDetailPage=lazy(()=>import("../pages/MascotDetailPage/MascotDetailPage").then(module=>({default:module.MascotDetailPage})));
-const NestHubPage=lazy(()=>import("../pages/NestHubPage/NestHubPage").then(module=>({default:module.NestHubPage})));
-const ProfilePage=lazy(()=>import("../pages/ProfilePage/ProfilePage").then(module=>({default:module.ProfilePage})));
-const InventoryAlbumPage=lazy(()=>import("../pages/InventoryAlbumPage/InventoryAlbumPage").then(module=>({default:module.InventoryAlbumPage})));
-const FriendsPage=lazy(()=>import("../pages/FriendsPage/FriendsPage").then(module=>({default:module.FriendsPage})));
-const MailboxPage=lazy(()=>import("../pages/MailboxPage/MailboxPage").then(module=>({default:module.MailboxPage})));
-const ShopPage=lazy(()=>import("../pages/ShopPage/ShopPage").then(module=>({default:module.ShopPage})));
-const SendFlowPage=lazy(()=>import("../pages/SendFlowPage/SendFlowPage").then(module=>({default:module.SendFlowPage})));
-const RewardCollectionPage=lazy(()=>import("../pages/RewardCollectionPage/RewardCollectionPage").then(module=>({default:module.RewardCollectionPage})));
-const AssetStudioPage=lazy(()=>import("../pages/AssetStudioPage/AssetStudioPage").then(module=>({default:module.AssetStudioPage})));
+const TutorialDeliveryPage=lazyWithRetry(()=>import("../pages/TutorialDeliveryPage/TutorialDeliveryPage").then(module=>({default:module.TutorialDeliveryPage})));
+const NestSetupPage=lazyWithRetry(()=>import("../pages/NestSetupPage/NestSetupPage").then(module=>({default:module.NestSetupPage})));
+const TravelMapPage=lazyWithRetry(()=>import("../pages/TravelMapPage/TravelMapPage").then(module=>({default:module.TravelMapPage})));
+const MascotDetailPage=lazyWithRetry(()=>import("../pages/MascotDetailPage/MascotDetailPage").then(module=>({default:module.MascotDetailPage})));
+const NestHubPage=lazyWithRetry(()=>import("../pages/NestHubPage/NestHubPage").then(module=>({default:module.NestHubPage})));
+const ProfilePage=lazyWithRetry(()=>import("../pages/ProfilePage/ProfilePage").then(module=>({default:module.ProfilePage})));
+const InventoryAlbumPage=lazyWithRetry(()=>import("../pages/InventoryAlbumPage/InventoryAlbumPage").then(module=>({default:module.InventoryAlbumPage})));
+const FriendsPage=lazyWithRetry(()=>import("../pages/FriendsPage/FriendsPage").then(module=>({default:module.FriendsPage})));
+const MailboxPage=lazyWithRetry(()=>import("../pages/MailboxPage/MailboxPage").then(module=>({default:module.MailboxPage})));
+const ShopPage=lazyWithRetry(()=>import("../pages/ShopPage/ShopPage").then(module=>({default:module.ShopPage})));
+const SendFlowPage=lazyWithRetry(()=>import("../pages/SendFlowPage/SendFlowPage").then(module=>({default:module.SendFlowPage})));
+const RewardCollectionPage=lazyWithRetry(()=>import("../pages/RewardCollectionPage/RewardCollectionPage").then(module=>({default:module.RewardCollectionPage})));
+const AssetStudioPage=lazyWithRetry(()=>import("../pages/AssetStudioPage/AssetStudioPage").then(module=>({default:module.AssetStudioPage})));
 
 export function AppRoutes() {
   return (
