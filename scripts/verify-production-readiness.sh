@@ -23,6 +23,7 @@ tests=(
   supabase/tests/asset_studio.sql
   supabase/tests/geonames_admin_refresh.sql
   supabase/tests/postal_friend_connections.sql
+  supabase/tests/postal_jobs.sql
 )
 
 run_test() {

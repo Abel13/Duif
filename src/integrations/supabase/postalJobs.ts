@@ -2,7 +2,7 @@ import { getSupabaseClient } from "./client";
 
 export type PostalJobOffer = {
   offer: { id: string; status: "offered" | "accepted" };
-  template: { title_key: string; description_key: string; cargo_slots: number; seed_reward: number; min_distance_km: number; max_distance_km: number };
+  template: { title_key: string; description_key: string; cargo_slots: number; seed_reward: number; mascot_xp: number; min_distance_km: number; max_distance_km: number };
   replacementsRemaining: number;
 };
 
