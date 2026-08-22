@@ -85,6 +85,8 @@ const nuvemDeliveryRow: DeliveryRow = {
   sender_profile_id: "00000000-0000-4000-8000-000000000001",
   status: "returning",
   travel_modifiers: null,
+  travel_slot_capacity: 3,
+  travel_slots_used: 1,
   updated_at: "2026-07-09T20:00:00.000Z",
 };
 

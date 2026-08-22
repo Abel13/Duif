@@ -25,6 +25,7 @@ const ShopPage=lazyWithRetry(()=>import("../pages/ShopPage/ShopPage").then(modul
 const SendFlowPage=lazyWithRetry(()=>import("../pages/SendFlowPage/SendFlowPage").then(module=>({default:module.SendFlowPage})));
 const RewardCollectionPage=lazyWithRetry(()=>import("../pages/RewardCollectionPage/RewardCollectionPage").then(module=>({default:module.RewardCollectionPage})));
 const AssetStudioPage=lazyWithRetry(()=>import("../pages/AssetStudioPage/AssetStudioPage").then(module=>({default:module.AssetStudioPage})));
+const PostalJobsPage=lazyWithRetry(()=>import("../pages/PostalJobsPage/PostalJobsPage").then(module=>({default:module.PostalJobsPage})));
 
 export function AppRoutes() {
   return (
@@ -46,6 +47,7 @@ export function AppRoutes() {
       <Route path="/mailbox" element={<ProtectedGameRoute><MailboxPage/></ProtectedGameRoute>} />
       <Route path="/shop" element={<ProtectedGameRoute><ShopPage/></ProtectedGameRoute>} />
       <Route path="/send" element={<ProtectedGameRoute><SendFlowPage/></ProtectedGameRoute>} />
+      <Route path="/jobs" element={<ProtectedGameRoute><PostalJobsPage/></ProtectedGameRoute>} />
       <Route path="/rewards/:deliveryId" element={<ProtectedGameRoute><RewardCollectionPage/></ProtectedGameRoute>} />
       <Route path="/admin/assets" element={<ProtectedAdminRoute />} />
       <Route path="*" element={<ProtectedFoundationRoute />} />

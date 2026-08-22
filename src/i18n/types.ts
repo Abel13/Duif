@@ -165,6 +165,7 @@ export type TranslationDictionary = {
     rewards: { inauguralPostcard: { name: string; description: string }; firstRouteStamp: { name: string; description: string } };
   };
   nest: { eyebrow: string; title: string; description: string; searchLabel: string; searchPlaceholder: string; searchAction: string; noCityFound: string; mapLabel: string; privacyNote: string; selectedCity: string; selectionReady: string; confirmAction: string };
+  postalJobs: { eyebrow: string; title: string; description: string; distance: string; cargo: string; seeds: string; accept: string; replace: string; depart: string; error: string; templates: { farol: { title: string; description: string }; horta: { title: string; description: string }; estacao: { title: string; description: string }; biblioteca: { title: string; description: string }; oficina: { title: string; description: string }; observatorio: { title: string; description: string } } };
   assetStudio: { eyebrow: string; title: string; description: string; newAsset: string; uploadTitle: string; key: string; type: string; file: string; altKey: string; decorative: string; author: string; saveDraft: string; draftSaved: string; publish: string; published: string; archive: string; archived: string; restore: string; restored: string; usage: string; filters: string; all: string; loading: string; error: string };
   geonamesAdmin: { eyebrow: string; title: string; description: string; activeCities: string; latestSuccess: string; noSuccess: string; refresh: string; confirm: string; cancel: string; confirmTitle: string; confirmDescription: string; history: string; status: string; processed: string; imported: string; updated: string; archived: string; running: string; failed: string; succeeded: string; queued: string; refreshStarted: string };
   units: {
@@ -1524,6 +1525,8 @@ export type TranslationKey =
   | "nest.selectedCity"
   | "nest.selectionReady"
   | "nest.confirmAction"
+  | "postalJobs.eyebrow" | "postalJobs.title" | "postalJobs.description" | "postalJobs.distance" | "postalJobs.cargo" | "postalJobs.seeds" | "postalJobs.accept" | "postalJobs.replace" | "postalJobs.depart" | "postalJobs.error"
+  | "postalJobs.templates.farol.title" | "postalJobs.templates.farol.description" | "postalJobs.templates.horta.title" | "postalJobs.templates.horta.description" | "postalJobs.templates.estacao.title" | "postalJobs.templates.estacao.description" | "postalJobs.templates.biblioteca.title" | "postalJobs.templates.biblioteca.description" | "postalJobs.templates.oficina.title" | "postalJobs.templates.oficina.description" | "postalJobs.templates.observatorio.title" | "postalJobs.templates.observatorio.description"
   | "assetStudio.eyebrow"
   | "assetStudio.title"
   | "assetStudio.description"

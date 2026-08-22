@@ -37,50 +37,71 @@ export type Database = {
       account_onboarding: {
         Row: {
           auth_user_id: string
-          created_at: string
           completed_at: string | null
+          created_at: string
           display_name: string | null
           inaugural_postcard_hint_seen_at: string | null
           mascot_name: string | null
           selected_mascot_template_id: string | null
-          tutorial_collected_at: string | null
-          tutorial_delivery_id: string | null
-          tutorial_instruction_step: Database["public"]["Enums"]["tutorial_instruction_step"] | null
           stage: Database["public"]["Enums"]["onboarding_stage"]
           stage_version: number
+          tutorial_collected_at: string | null
+          tutorial_delivery_id: string | null
+          tutorial_instruction_step:
+            | Database["public"]["Enums"]["tutorial_instruction_step"]
+            | null
           updated_at: string
         }
         Insert: {
           auth_user_id: string
-          created_at?: string
           completed_at?: string | null
+          created_at?: string
           display_name?: string | null
           inaugural_postcard_hint_seen_at?: string | null
           mascot_name?: string | null
           selected_mascot_template_id?: string | null
-          tutorial_collected_at?: string | null
-          tutorial_delivery_id?: string | null
-          tutorial_instruction_step?: Database["public"]["Enums"]["tutorial_instruction_step"] | null
           stage?: Database["public"]["Enums"]["onboarding_stage"]
           stage_version?: number
+          tutorial_collected_at?: string | null
+          tutorial_delivery_id?: string | null
+          tutorial_instruction_step?:
+            | Database["public"]["Enums"]["tutorial_instruction_step"]
+            | null
           updated_at?: string
         }
         Update: {
           auth_user_id?: string
-          created_at?: string
           completed_at?: string | null
+          created_at?: string
           display_name?: string | null
           inaugural_postcard_hint_seen_at?: string | null
           mascot_name?: string | null
           selected_mascot_template_id?: string | null
-          tutorial_collected_at?: string | null
-          tutorial_delivery_id?: string | null
-          tutorial_instruction_step?: Database["public"]["Enums"]["tutorial_instruction_step"] | null
           stage?: Database["public"]["Enums"]["onboarding_stage"]
           stage_version?: number
+          tutorial_collected_at?: string | null
+          tutorial_delivery_id?: string | null
+          tutorial_instruction_step?:
+            | Database["public"]["Enums"]["tutorial_instruction_step"]
+            | null
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "account_onboarding_selected_mascot_template_id_fkey"
+            columns: ["selected_mascot_template_id"]
+            isOneToOne: false
+            referencedRelation: "mascot_templates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "account_onboarding_tutorial_delivery_id_fkey"
+            columns: ["tutorial_delivery_id"]
+            isOneToOne: false
+            referencedRelation: "deliveries"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       correspondence_options: {
         Row: {
@@ -118,17 +139,17 @@ export type Database = {
           correspondence_option_id: string | null
           created_at: string
           destination_label_key: string
-          destination_place_label: string | null
           destination_latitude: number
           destination_longitude: number
+          destination_place_label: string | null
           distance_km: number
           id: string
           is_tutorial: boolean
           mascot_id: string
           origin_label_key: string
-          origin_place_label: string | null
           origin_latitude: number
           origin_longitude: number
+          origin_place_label: string | null
           outbound_arrival_at: string
           outbound_start_at: string
           receiver_profile_id: string
@@ -139,6 +160,8 @@ export type Database = {
           sender_profile_id: string
           status: Database["public"]["Enums"]["delivery_status"]
           travel_modifiers: Json | null
+          travel_slot_capacity: number
+          travel_slots_used: number
           updated_at: string
         }
         Insert: {
@@ -146,17 +169,17 @@ export type Database = {
           correspondence_option_id?: string | null
           created_at?: string
           destination_label_key: string
-          destination_place_label?: string | null
           destination_latitude: number
           destination_longitude: number
+          destination_place_label?: string | null
           distance_km: number
           id: string
           is_tutorial?: boolean
           mascot_id: string
           origin_label_key: string
-          origin_place_label?: string | null
           origin_latitude: number
           origin_longitude: number
+          origin_place_label?: string | null
           outbound_arrival_at: string
           outbound_start_at: string
           receiver_profile_id: string
@@ -167,6 +190,8 @@ export type Database = {
           sender_profile_id: string
           status: Database["public"]["Enums"]["delivery_status"]
           travel_modifiers?: Json | null
+          travel_slot_capacity?: number
+          travel_slots_used?: number
           updated_at?: string
         }
         Update: {
@@ -174,17 +199,17 @@ export type Database = {
           correspondence_option_id?: string | null
           created_at?: string
           destination_label_key?: string
-          destination_place_label?: string | null
           destination_latitude?: number
           destination_longitude?: number
+          destination_place_label?: string | null
           distance_km?: number
           id?: string
           is_tutorial?: boolean
           mascot_id?: string
           origin_label_key?: string
-          origin_place_label?: string | null
           origin_latitude?: number
           origin_longitude?: number
+          origin_place_label?: string | null
           outbound_arrival_at?: string
           outbound_start_at?: string
           receiver_profile_id?: string
@@ -195,6 +220,8 @@ export type Database = {
           sender_profile_id?: string
           status?: Database["public"]["Enums"]["delivery_status"]
           travel_modifiers?: Json | null
+          travel_slot_capacity?: number
+          travel_slots_used?: number
           updated_at?: string
         }
         Relationships: [
@@ -228,160 +255,6 @@ export type Database = {
           },
         ]
       }
-      geonames_cities: {
-        Row: {
-          admin1_code: string | null
-          alternate_names: string
-          archived_at: string | null
-          ascii_name: string
-          country_code: string
-          geoname_id: number
-          import_run_id: string
-          is_active: boolean
-          latitude: number
-          longitude: number
-          name: string
-          population: number
-          search_text: string
-          updated_at: string
-        }
-        Insert: {
-          admin1_code?: string | null
-          alternate_names?: string
-          archived_at?: string | null
-          ascii_name: string
-          country_code: string
-          geoname_id: number
-          import_run_id: string
-          is_active?: boolean
-          latitude: number
-          longitude: number
-          name: string
-          population?: number
-          search_text: string
-          updated_at?: string
-        }
-        Update: {
-          admin1_code?: string | null
-          alternate_names?: string
-          archived_at?: string | null
-          ascii_name?: string
-          country_code?: string
-          geoname_id?: number
-          import_run_id?: string
-          is_active?: boolean
-          latitude?: number
-          longitude?: number
-          name?: string
-          population?: number
-          search_text?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "geonames_cities_import_run_id_fkey"
-            columns: ["import_run_id"]
-            isOneToOne: false
-            referencedRelation: "geonames_import_runs"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      geonames_admin1_regions: {
-        Row: {
-          admin1_code: string
-          archived_at: string | null
-          ascii_name: string
-          country_code: string
-          geoname_id: number | null
-          import_run_id: string
-          is_active: boolean
-          name: string
-          updated_at: string
-        }
-        Insert: {
-          admin1_code: string
-          archived_at?: string | null
-          ascii_name: string
-          country_code: string
-          geoname_id?: number | null
-          import_run_id: string
-          is_active?: boolean
-          name: string
-          updated_at?: string
-        }
-        Update: {
-          admin1_code?: string
-          archived_at?: string | null
-          ascii_name?: string
-          country_code?: string
-          geoname_id?: number | null
-          import_run_id?: string
-          is_active?: boolean
-          name?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "geonames_admin1_regions_import_run_id_fkey"
-            columns: ["import_run_id"]
-            isOneToOne: false
-            referencedRelation: "geonames_import_runs"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      geonames_import_runs: {
-        Row: {
-          admin1_source_sha256: string | null
-          archived_city_count: number
-          archived_region_count: number
-          completed_at: string | null
-          created_at: string
-          dataset: string
-          id: string
-          imported_city_count: number
-          imported_region_count: number
-          operator_label: string
-          source: string
-          source_date: string
-          source_row_count: number
-          source_sha256: string
-        }
-        Insert: {
-          admin1_source_sha256?: string | null
-          archived_city_count?: number
-          archived_region_count?: number
-          completed_at?: string | null
-          created_at?: string
-          dataset: string
-          id?: string
-          imported_city_count?: number
-          imported_region_count?: number
-          operator_label: string
-          source: string
-          source_date: string
-          source_row_count: number
-          source_sha256: string
-        }
-        Update: {
-          admin1_source_sha256?: string | null
-          archived_city_count?: number
-          archived_region_count?: number
-          completed_at?: string | null
-          created_at?: string
-          dataset?: string
-          id?: string
-          imported_city_count?: number
-          imported_region_count?: number
-          operator_label?: string
-          source?: string
-          source_date?: string
-          source_row_count?: number
-          source_sha256?: string
-        }
-        Relationships: []
-      }
       delivery_correspondence_contents: {
         Row: {
           correspondence_type: Database["public"]["Enums"]["correspondence_type"]
@@ -391,8 +264,8 @@ export type Database = {
           id: string
           letter_text: string | null
           metadata: Json
-          postcard_message: string | null
           postcard_catalog_key: string | null
+          postcard_message: string | null
           postcard_variant: string | null
           sticker_ids: string[]
         }
@@ -404,8 +277,8 @@ export type Database = {
           id: string
           letter_text?: string | null
           metadata?: Json
-          postcard_message?: string | null
           postcard_catalog_key?: string | null
+          postcard_message?: string | null
           postcard_variant?: string | null
           sticker_ids?: string[]
         }
@@ -417,8 +290,8 @@ export type Database = {
           id?: string
           letter_text?: string | null
           metadata?: Json
-          postcard_message?: string | null
           postcard_catalog_key?: string | null
+          postcard_message?: string | null
           postcard_variant?: string | null
           sticker_ids?: string[]
         }
@@ -428,6 +301,159 @@ export type Database = {
             columns: ["delivery_id"]
             isOneToOne: true
             referencedRelation: "deliveries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "delivery_correspondence_contents_postcard_catalog_key_fkey"
+            columns: ["postcard_catalog_key"]
+            isOneToOne: false
+            referencedRelation: "official_postcards"
+            referencedColumns: ["catalog_key"]
+          },
+        ]
+      }
+      delivery_mailbox_opens: {
+        Row: {
+          delivery_id: string
+          direction: string
+          opened_at: string
+          profile_id: string
+        }
+        Insert: {
+          delivery_id: string
+          direction: string
+          opened_at?: string
+          profile_id: string
+        }
+        Update: {
+          delivery_id?: string
+          direction?: string
+          opened_at?: string
+          profile_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "delivery_mailbox_opens_delivery_id_fkey"
+            columns: ["delivery_id"]
+            isOneToOne: false
+            referencedRelation: "deliveries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "delivery_mailbox_opens_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      delivery_progression_awards: {
+        Row: {
+          awarded_at: string
+          delivery_id: string
+          formula_version: number
+          inputs: Json
+          mascot_id: string
+          mascot_xp: number
+          profile_id: string
+          reputation_xp: number
+          skill_awards: Json
+        }
+        Insert: {
+          awarded_at?: string
+          delivery_id: string
+          formula_version?: number
+          inputs: Json
+          mascot_id: string
+          mascot_xp: number
+          profile_id: string
+          reputation_xp: number
+          skill_awards?: Json
+        }
+        Update: {
+          awarded_at?: string
+          delivery_id?: string
+          formula_version?: number
+          inputs?: Json
+          mascot_id?: string
+          mascot_xp?: number
+          profile_id?: string
+          reputation_xp?: number
+          skill_awards?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "delivery_progression_awards_delivery_id_fkey"
+            columns: ["delivery_id"]
+            isOneToOne: true
+            referencedRelation: "deliveries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "delivery_progression_awards_mascot_id_fkey"
+            columns: ["mascot_id"]
+            isOneToOne: false
+            referencedRelation: "player_mascots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "delivery_progression_awards_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      delivery_return_replies: {
+        Row: {
+          confirmed_at: string
+          delivery_id: string
+          departure_at: string
+          letter_text: string
+          metadata: Json
+          receiver_profile_id: string
+          sender_profile_id: string
+        }
+        Insert: {
+          confirmed_at?: string
+          delivery_id: string
+          departure_at: string
+          letter_text: string
+          metadata?: Json
+          receiver_profile_id: string
+          sender_profile_id: string
+        }
+        Update: {
+          confirmed_at?: string
+          delivery_id?: string
+          departure_at?: string
+          letter_text?: string
+          metadata?: Json
+          receiver_profile_id?: string
+          sender_profile_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "delivery_return_replies_delivery_id_fkey"
+            columns: ["delivery_id"]
+            isOneToOne: true
+            referencedRelation: "deliveries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "delivery_return_replies_receiver_profile_id_fkey"
+            columns: ["receiver_profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "delivery_return_replies_sender_profile_id_fkey"
+            columns: ["sender_profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -539,6 +565,55 @@ export type Database = {
           },
         ]
       }
+      delivery_sticker_transfers: {
+        Row: {
+          delivery_id: string
+          quantity: number
+          recipient_profile_id: string
+          settled_at: string | null
+          snapshot: Json
+          sticker_catalog_key: string
+        }
+        Insert: {
+          delivery_id: string
+          quantity: number
+          recipient_profile_id: string
+          settled_at?: string | null
+          snapshot: Json
+          sticker_catalog_key: string
+        }
+        Update: {
+          delivery_id?: string
+          quantity?: number
+          recipient_profile_id?: string
+          settled_at?: string | null
+          snapshot?: Json
+          sticker_catalog_key?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "delivery_sticker_transfers_delivery_id_fkey"
+            columns: ["delivery_id"]
+            isOneToOne: false
+            referencedRelation: "deliveries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "delivery_sticker_transfers_recipient_profile_id_fkey"
+            columns: ["recipient_profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "delivery_sticker_transfers_sticker_catalog_key_fkey"
+            columns: ["sticker_catalog_key"]
+            isOneToOne: false
+            referencedRelation: "official_stickers"
+            referencedColumns: ["catalog_key"]
+          },
+        ]
+      }
       friendships: {
         Row: {
           addressee_profile_id: string
@@ -586,6 +661,296 @@ export type Database = {
             columns: ["requester_profile_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      geonames_admin1_regions: {
+        Row: {
+          admin1_code: string
+          archived_at: string | null
+          ascii_name: string
+          country_code: string
+          geoname_id: number | null
+          import_run_id: string
+          is_active: boolean
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          admin1_code: string
+          archived_at?: string | null
+          ascii_name: string
+          country_code: string
+          geoname_id?: number | null
+          import_run_id: string
+          is_active?: boolean
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          admin1_code?: string
+          archived_at?: string | null
+          ascii_name?: string
+          country_code?: string
+          geoname_id?: number | null
+          import_run_id?: string
+          is_active?: boolean
+          name?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "geonames_admin1_regions_import_run_id_fkey"
+            columns: ["import_run_id"]
+            isOneToOne: false
+            referencedRelation: "geonames_import_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      geonames_cities: {
+        Row: {
+          admin1_code: string | null
+          alternate_names: string
+          archived_at: string | null
+          ascii_name: string
+          country_code: string
+          geoname_id: number
+          import_run_id: string
+          is_active: boolean
+          latitude: number
+          longitude: number
+          name: string
+          population: number
+          search_text: string
+          updated_at: string
+        }
+        Insert: {
+          admin1_code?: string | null
+          alternate_names?: string
+          archived_at?: string | null
+          ascii_name: string
+          country_code: string
+          geoname_id: number
+          import_run_id: string
+          is_active?: boolean
+          latitude: number
+          longitude: number
+          name: string
+          population?: number
+          search_text: string
+          updated_at?: string
+        }
+        Update: {
+          admin1_code?: string | null
+          alternate_names?: string
+          archived_at?: string | null
+          ascii_name?: string
+          country_code?: string
+          geoname_id?: number
+          import_run_id?: string
+          is_active?: boolean
+          latitude?: number
+          longitude?: number
+          name?: string
+          population?: number
+          search_text?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "geonames_cities_import_run_id_fkey"
+            columns: ["import_run_id"]
+            isOneToOne: false
+            referencedRelation: "geonames_import_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      geonames_import_runs: {
+        Row: {
+          admin1_source_sha256: string | null
+          archived_city_count: number
+          archived_region_count: number
+          completed_at: string | null
+          created_at: string
+          dataset: string
+          id: string
+          imported_city_count: number
+          imported_region_count: number
+          operator_label: string
+          source: string
+          source_date: string
+          source_row_count: number
+          source_sha256: string
+        }
+        Insert: {
+          admin1_source_sha256?: string | null
+          archived_city_count?: number
+          archived_region_count?: number
+          completed_at?: string | null
+          created_at?: string
+          dataset: string
+          id?: string
+          imported_city_count?: number
+          imported_region_count?: number
+          operator_label: string
+          source: string
+          source_date: string
+          source_row_count: number
+          source_sha256: string
+        }
+        Update: {
+          admin1_source_sha256?: string | null
+          archived_city_count?: number
+          archived_region_count?: number
+          completed_at?: string | null
+          created_at?: string
+          dataset?: string
+          id?: string
+          imported_city_count?: number
+          imported_region_count?: number
+          operator_label?: string
+          source?: string
+          source_date?: string
+          source_row_count?: number
+          source_sha256?: string
+        }
+        Relationships: []
+      }
+      geonames_refresh_city_staging: {
+        Row: {
+          admin1_code: string | null
+          alternate_names: string
+          ascii_name: string
+          country_code: string
+          geoname_id: number
+          job_id: string
+          latitude: number
+          longitude: number
+          name: string
+          population: number
+          search_text: string
+        }
+        Insert: {
+          admin1_code?: string | null
+          alternate_names?: string
+          ascii_name: string
+          country_code: string
+          geoname_id: number
+          job_id: string
+          latitude: number
+          longitude: number
+          name: string
+          population: number
+          search_text: string
+        }
+        Update: {
+          admin1_code?: string | null
+          alternate_names?: string
+          ascii_name?: string
+          country_code?: string
+          geoname_id?: number
+          job_id?: string
+          latitude?: number
+          longitude?: number
+          name?: string
+          population?: number
+          search_text?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "geonames_refresh_city_staging_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "geonames_refresh_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      geonames_refresh_jobs: {
+        Row: {
+          admin1_source_sha256: string | null
+          archived_city_count: number
+          completed_at: string | null
+          created_at: string
+          id: string
+          imported_city_count: number
+          processed_city_count: number
+          requested_by: string
+          safe_error_code: string | null
+          source_date: string | null
+          source_sha256: string | null
+          started_at: string | null
+          status: Database["public"]["Enums"]["geonames_refresh_status"]
+          updated_city_count: number
+        }
+        Insert: {
+          admin1_source_sha256?: string | null
+          archived_city_count?: number
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          imported_city_count?: number
+          processed_city_count?: number
+          requested_by: string
+          safe_error_code?: string | null
+          source_date?: string | null
+          source_sha256?: string | null
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["geonames_refresh_status"]
+          updated_city_count?: number
+        }
+        Update: {
+          admin1_source_sha256?: string | null
+          archived_city_count?: number
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          imported_city_count?: number
+          processed_city_count?: number
+          requested_by?: string
+          safe_error_code?: string | null
+          source_date?: string | null
+          source_sha256?: string | null
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["geonames_refresh_status"]
+          updated_city_count?: number
+        }
+        Relationships: []
+      }
+      geonames_refresh_region_staging: {
+        Row: {
+          admin1_code: string
+          ascii_name: string
+          country_code: string
+          geoname_id: number | null
+          job_id: string
+          name: string
+        }
+        Insert: {
+          admin1_code: string
+          ascii_name: string
+          country_code: string
+          geoname_id?: number | null
+          job_id: string
+          name: string
+        }
+        Update: {
+          admin1_code?: string
+          ascii_name?: string
+          country_code?: string
+          geoname_id?: number | null
+          job_id?: string
+          name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "geonames_refresh_region_staging_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "geonames_refresh_jobs"
             referencedColumns: ["id"]
           },
         ]
@@ -660,6 +1025,41 @@ export type Database = {
           },
         ]
       }
+      mascot_skill_progression: {
+        Row: {
+          level: number
+          mascot_id: string
+          next_level_xp: number
+          skill_id: string
+          updated_at: string
+          xp: number
+        }
+        Insert: {
+          level?: number
+          mascot_id: string
+          next_level_xp?: number
+          skill_id: string
+          updated_at?: string
+          xp?: number
+        }
+        Update: {
+          level?: number
+          mascot_id?: string
+          next_level_xp?: number
+          skill_id?: string
+          updated_at?: string
+          xp?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mascot_skill_progression_mascot_id_fkey"
+            columns: ["mascot_id"]
+            isOneToOne: false
+            referencedRelation: "player_mascots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       mascot_templates: {
         Row: {
           appearance: Json
@@ -710,6 +1110,62 @@ export type Database = {
           trait?: Json
         }
         Relationships: []
+      }
+      nest_search_rate_limits: {
+        Row: {
+          auth_user_id: string
+          request_count: number
+          updated_at: string
+          window_started_at: string
+        }
+        Insert: {
+          auth_user_id: string
+          request_count?: number
+          updated_at?: string
+          window_started_at?: string
+        }
+        Update: {
+          auth_user_id?: string
+          request_count?: number
+          updated_at?: string
+          window_started_at?: string
+        }
+        Relationships: []
+      }
+      official_asset_activity: {
+        Row: {
+          action: string
+          actor_user_id: string
+          asset_version_id: string | null
+          created_at: string
+          details: Json
+          id: string
+        }
+        Insert: {
+          action: string
+          actor_user_id: string
+          asset_version_id?: string | null
+          created_at?: string
+          details?: Json
+          id?: string
+        }
+        Update: {
+          action?: string
+          actor_user_id?: string
+          asset_version_id?: string | null
+          created_at?: string
+          details?: Json
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "official_asset_activity_asset_version_id_fkey"
+            columns: ["asset_version_id"]
+            isOneToOne: false
+            referencedRelation: "official_asset_versions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       official_asset_versions: {
         Row: {
@@ -807,6 +1263,146 @@ export type Database = {
           created_at?: string
           id?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      official_postal_job_contacts: {
+        Row: {
+          catalog_key: string
+          name_key: string
+          place_key: string
+          role_key: string
+          sort_order: number
+          status: Database["public"]["Enums"]["catalog_status"]
+        }
+        Insert: {
+          catalog_key: string
+          name_key: string
+          place_key: string
+          role_key: string
+          sort_order?: number
+          status?: Database["public"]["Enums"]["catalog_status"]
+        }
+        Update: {
+          catalog_key?: string
+          name_key?: string
+          place_key?: string
+          role_key?: string
+          sort_order?: number
+          status?: Database["public"]["Enums"]["catalog_status"]
+        }
+        Relationships: []
+      }
+      official_postal_job_templates: {
+        Row: {
+          cargo_key: string
+          cargo_slots: number
+          catalog_key: string
+          contact_catalog_key: string
+          description_key: string
+          max_distance_km: number
+          max_mascot_level: number | null
+          min_distance_km: number
+          min_mascot_level: number
+          seed_reward: number
+          sort_order: number
+          status: Database["public"]["Enums"]["catalog_status"]
+          title_key: string
+        }
+        Insert: {
+          cargo_key: string
+          cargo_slots: number
+          catalog_key: string
+          contact_catalog_key: string
+          description_key: string
+          max_distance_km: number
+          max_mascot_level?: number | null
+          min_distance_km: number
+          min_mascot_level: number
+          seed_reward: number
+          sort_order?: number
+          status?: Database["public"]["Enums"]["catalog_status"]
+          title_key: string
+        }
+        Update: {
+          cargo_key?: string
+          cargo_slots?: number
+          catalog_key?: string
+          contact_catalog_key?: string
+          description_key?: string
+          max_distance_km?: number
+          max_mascot_level?: number | null
+          min_distance_km?: number
+          min_mascot_level?: number
+          seed_reward?: number
+          sort_order?: number
+          status?: Database["public"]["Enums"]["catalog_status"]
+          title_key?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "official_postal_job_templates_contact_catalog_key_fkey"
+            columns: ["contact_catalog_key"]
+            isOneToOne: false
+            referencedRelation: "official_postal_job_contacts"
+            referencedColumns: ["catalog_key"]
+          },
+        ]
+      }
+      official_postcards: {
+        Row: {
+          artwork_asset_key: string
+          availability: string
+          catalog_key: string
+          description_key: string
+          name_key: string
+          sort_order: number
+          status: Database["public"]["Enums"]["catalog_status"]
+        }
+        Insert: {
+          artwork_asset_key: string
+          availability: string
+          catalog_key: string
+          description_key: string
+          name_key: string
+          sort_order?: number
+          status?: Database["public"]["Enums"]["catalog_status"]
+        }
+        Update: {
+          artwork_asset_key?: string
+          availability?: string
+          catalog_key?: string
+          description_key?: string
+          name_key?: string
+          sort_order?: number
+          status?: Database["public"]["Enums"]["catalog_status"]
+        }
+        Relationships: []
+      }
+      official_stickers: {
+        Row: {
+          artwork_asset_key: string
+          catalog_key: string
+          description_key: string
+          name_key: string
+          sort_order: number
+          status: Database["public"]["Enums"]["catalog_status"]
+        }
+        Insert: {
+          artwork_asset_key: string
+          catalog_key: string
+          description_key: string
+          name_key: string
+          sort_order?: number
+          status?: Database["public"]["Enums"]["catalog_status"]
+        }
+        Update: {
+          artwork_asset_key?: string
+          catalog_key?: string
+          description_key?: string
+          name_key?: string
+          sort_order?: number
+          status?: Database["public"]["Enums"]["catalog_status"]
         }
         Relationships: []
       }
@@ -930,6 +1526,304 @@ export type Database = {
           },
         ]
       }
+      postal_friend_code_rate_limits: {
+        Row: {
+          profile_id: string
+          request_count: number
+          updated_at: string
+          window_started_at: string
+        }
+        Insert: {
+          profile_id: string
+          request_count: number
+          updated_at?: string
+          window_started_at: string
+        }
+        Update: {
+          profile_id?: string
+          request_count?: number
+          updated_at?: string
+          window_started_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "postal_friend_code_rate_limits_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      postal_job_cycles: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          id: string
+          mascot_id: string
+          profile_id: string
+          replacement_count: number
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          mascot_id: string
+          profile_id: string
+          replacement_count?: number
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          mascot_id?: string
+          profile_id?: string
+          replacement_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "postal_job_cycles_mascot_id_fkey"
+            columns: ["mascot_id"]
+            isOneToOne: false
+            referencedRelation: "player_mascots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "postal_job_cycles_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      postal_job_offers: {
+        Row: {
+          accepted_at: string | null
+          created_at: string
+          cycle_id: string
+          destination_latitude: number
+          destination_longitude: number
+          distance_km: number
+          id: string
+          replaced_at: string | null
+          status: string
+          template_catalog_key: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          created_at?: string
+          cycle_id: string
+          destination_latitude: number
+          destination_longitude: number
+          distance_km: number
+          id?: string
+          replaced_at?: string | null
+          status?: string
+          template_catalog_key: string
+        }
+        Update: {
+          accepted_at?: string | null
+          created_at?: string
+          cycle_id?: string
+          destination_latitude?: number
+          destination_longitude?: number
+          distance_km?: number
+          id?: string
+          replaced_at?: string | null
+          status?: string
+          template_catalog_key?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "postal_job_offers_cycle_id_fkey"
+            columns: ["cycle_id"]
+            isOneToOne: false
+            referencedRelation: "postal_job_cycles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "postal_job_offers_template_catalog_key_fkey"
+            columns: ["template_catalog_key"]
+            isOneToOne: false
+            referencedRelation: "official_postal_job_templates"
+            referencedColumns: ["catalog_key"]
+          },
+        ]
+      }
+      postal_job_runs: {
+        Row: {
+          cargo_snapshot: Json
+          collected_at: string | null
+          contact_catalog_key: string
+          contact_snapshot: Json
+          delivery_id: string
+          mascot_id: string
+          offer_id: string
+          profile_id: string
+          seed_reward: number
+        }
+        Insert: {
+          cargo_snapshot: Json
+          collected_at?: string | null
+          contact_catalog_key: string
+          contact_snapshot: Json
+          delivery_id: string
+          mascot_id: string
+          offer_id: string
+          profile_id: string
+          seed_reward: number
+        }
+        Update: {
+          cargo_snapshot?: Json
+          collected_at?: string | null
+          contact_catalog_key?: string
+          contact_snapshot?: Json
+          delivery_id?: string
+          mascot_id?: string
+          offer_id?: string
+          profile_id?: string
+          seed_reward?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "postal_job_runs_contact_catalog_key_fkey"
+            columns: ["contact_catalog_key"]
+            isOneToOne: false
+            referencedRelation: "official_postal_job_contacts"
+            referencedColumns: ["catalog_key"]
+          },
+          {
+            foreignKeyName: "postal_job_runs_delivery_id_fkey"
+            columns: ["delivery_id"]
+            isOneToOne: true
+            referencedRelation: "deliveries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "postal_job_runs_mascot_id_fkey"
+            columns: ["mascot_id"]
+            isOneToOne: false
+            referencedRelation: "player_mascots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "postal_job_runs_offer_id_fkey"
+            columns: ["offer_id"]
+            isOneToOne: true
+            referencedRelation: "postal_job_offers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "postal_job_runs_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      postal_progression_reset_audits: {
+        Row: {
+          actor_label: string
+          award_count: number
+          created_at: string
+          id: string
+          mascot_count: number
+          profile_count: number
+          project_ref: string
+          skill_count: number
+        }
+        Insert: {
+          actor_label: string
+          award_count: number
+          created_at?: string
+          id?: string
+          mascot_count: number
+          profile_count: number
+          project_ref: string
+          skill_count: number
+        }
+        Update: {
+          actor_label?: string
+          award_count?: number
+          created_at?: string
+          id?: string
+          mascot_count?: number
+          profile_count?: number
+          project_ref?: string
+          skill_count?: number
+        }
+        Relationships: []
+      }
+      postal_seed_ledger: {
+        Row: {
+          created_at: string
+          id: string
+          job_delivery_id: string
+          profile_id: string
+          quantity: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          job_delivery_id: string
+          profile_id: string
+          quantity: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          job_delivery_id?: string
+          profile_id?: string
+          quantity?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "postal_seed_ledger_job_delivery_id_fkey"
+            columns: ["job_delivery_id"]
+            isOneToOne: true
+            referencedRelation: "postal_job_runs"
+            referencedColumns: ["delivery_id"]
+          },
+          {
+            foreignKeyName: "postal_seed_ledger_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profile_postal_friend_codes: {
+        Row: {
+          code: string
+          created_at: string
+          profile_id: string
+          rotated_at: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          profile_id: string
+          rotated_at?: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          profile_id?: string
+          rotated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profile_postal_friend_codes_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profile_postal_progression: {
         Row: {
           level: number
@@ -959,6 +1853,140 @@ export type Database = {
             isOneToOne: true
             referencedRelation: "profiles"
             referencedColumns: ["id"]
+          },
+        ]
+      }
+      profile_postcard_balances: {
+        Row: {
+          postcard_catalog_key: string
+          profile_id: string
+          quantity: number
+          updated_at: string
+        }
+        Insert: {
+          postcard_catalog_key: string
+          profile_id: string
+          quantity?: number
+          updated_at?: string
+        }
+        Update: {
+          postcard_catalog_key?: string
+          profile_id?: string
+          quantity?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profile_postcard_balances_postcard_catalog_key_fkey"
+            columns: ["postcard_catalog_key"]
+            isOneToOne: false
+            referencedRelation: "official_postcards"
+            referencedColumns: ["catalog_key"]
+          },
+          {
+            foreignKeyName: "profile_postcard_balances_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profile_postcard_unlocks: {
+        Row: {
+          postcard_catalog_key: string
+          profile_id: string
+          source: string
+          unlocked_at: string
+        }
+        Insert: {
+          postcard_catalog_key: string
+          profile_id: string
+          source: string
+          unlocked_at?: string
+        }
+        Update: {
+          postcard_catalog_key?: string
+          profile_id?: string
+          source?: string
+          unlocked_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profile_postcard_unlocks_postcard_catalog_key_fkey"
+            columns: ["postcard_catalog_key"]
+            isOneToOne: false
+            referencedRelation: "official_postcards"
+            referencedColumns: ["catalog_key"]
+          },
+          {
+            foreignKeyName: "profile_postcard_unlocks_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profile_seed_balances: {
+        Row: {
+          profile_id: string
+          quantity: number
+          updated_at: string
+        }
+        Insert: {
+          profile_id: string
+          quantity?: number
+          updated_at?: string
+        }
+        Update: {
+          profile_id?: string
+          quantity?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profile_seed_balances_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profile_sticker_balances: {
+        Row: {
+          profile_id: string
+          quantity: number
+          sticker_catalog_key: string
+          updated_at: string
+        }
+        Insert: {
+          profile_id: string
+          quantity?: number
+          sticker_catalog_key: string
+          updated_at?: string
+        }
+        Update: {
+          profile_id?: string
+          quantity?: number
+          sticker_catalog_key?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profile_sticker_balances_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profile_sticker_balances_sticker_catalog_key_fkey"
+            columns: ["sticker_catalog_key"]
+            isOneToOne: false
+            referencedRelation: "official_stickers"
+            referencedColumns: ["catalog_key"]
           },
         ]
       }
@@ -1020,6 +2048,205 @@ export type Database = {
             referencedColumns: ["geoname_id"]
           },
         ]
+      }
+      referral_attributions: {
+        Row: {
+          captured_at: string
+          id: string
+          invalidated_at: string | null
+          invalidated_by_auth_user_id: string | null
+          invalidation_reason: string | null
+          invitation_link_id: string
+          invitation_version: number
+          invitee_auth_user_id: string | null
+          inviter_profile_id: string
+          qualified_at: string | null
+        }
+        Insert: {
+          captured_at?: string
+          id?: string
+          invalidated_at?: string | null
+          invalidated_by_auth_user_id?: string | null
+          invalidation_reason?: string | null
+          invitation_link_id: string
+          invitation_version: number
+          invitee_auth_user_id?: string | null
+          inviter_profile_id: string
+          qualified_at?: string | null
+        }
+        Update: {
+          captured_at?: string
+          id?: string
+          invalidated_at?: string | null
+          invalidated_by_auth_user_id?: string | null
+          invalidation_reason?: string | null
+          invitation_link_id?: string
+          invitation_version?: number
+          invitee_auth_user_id?: string | null
+          inviter_profile_id?: string
+          qualified_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referral_attributions_invitation_link_id_fkey"
+            columns: ["invitation_link_id"]
+            isOneToOne: false
+            referencedRelation: "referral_invitation_links"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "referral_attributions_inviter_profile_id_fkey"
+            columns: ["inviter_profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      referral_audit_events: {
+        Row: {
+          created_at: string
+          event_type: string
+          id: string
+          invitee_auth_user_id: string | null
+          inviter_profile_id: string | null
+          metadata: Json
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          id?: string
+          invitee_auth_user_id?: string | null
+          inviter_profile_id?: string | null
+          metadata?: Json
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          id?: string
+          invitee_auth_user_id?: string | null
+          inviter_profile_id?: string | null
+          metadata?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referral_audit_events_inviter_profile_id_fkey"
+            columns: ["inviter_profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      referral_capture_rate_limits: {
+        Row: {
+          attempt_count: number
+          auth_user_id: string
+          bucket_start: string
+        }
+        Insert: {
+          attempt_count?: number
+          auth_user_id: string
+          bucket_start: string
+        }
+        Update: {
+          attempt_count?: number
+          auth_user_id?: string
+          bucket_start?: string
+        }
+        Relationships: []
+      }
+      referral_invitation_links: {
+        Row: {
+          created_at: string
+          id: string
+          inviter_profile_id: string
+          rotated_at: string
+          token_digest: string | null
+          version: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          inviter_profile_id: string
+          rotated_at?: string
+          token_digest?: string | null
+          version?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          inviter_profile_id?: string
+          rotated_at?: string
+          token_digest?: string | null
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referral_invitation_links_inviter_profile_id_fkey"
+            columns: ["inviter_profile_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      referral_owl_rewards: {
+        Row: {
+          available_at: string
+          claimed_at: string | null
+          mascot_id: string | null
+          owner_profile_id: string
+          status: string
+        }
+        Insert: {
+          available_at?: string
+          claimed_at?: string | null
+          mascot_id?: string | null
+          owner_profile_id: string
+          status?: string
+        }
+        Update: {
+          available_at?: string
+          claimed_at?: string | null
+          mascot_id?: string | null
+          owner_profile_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referral_owl_rewards_mascot_id_fkey"
+            columns: ["mascot_id"]
+            isOneToOne: true
+            referencedRelation: "player_mascots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "referral_owl_rewards_owner_profile_id_fkey"
+            columns: ["owner_profile_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      referral_signup_tokens: {
+        Row: {
+          auth_user_id: string
+          created_at: string
+          token_digest: string
+        }
+        Insert: {
+          auth_user_id: string
+          created_at?: string
+          token_digest: string
+        }
+        Update: {
+          auth_user_id?: string
+          created_at?: string
+          token_digest?: string
+        }
+        Relationships: []
       }
       reward_items: {
         Row: {
@@ -1118,8 +2345,217 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      accept_postal_job_offer: {
+        Args: { target_offer_id: string }
+        Returns: Json
+      }
+      acknowledge_inaugural_postcard_hint: {
+        Args: never
+        Returns: {
+          auth_user_id: string
+          completed_at: string | null
+          created_at: string
+          display_name: string | null
+          inaugural_postcard_hint_seen_at: string | null
+          mascot_name: string | null
+          selected_mascot_template_id: string | null
+          stage: Database["public"]["Enums"]["onboarding_stage"]
+          stage_version: number
+          tutorial_collected_at: string | null
+          tutorial_delivery_id: string | null
+          tutorial_instruction_step:
+            | Database["public"]["Enums"]["tutorial_instruction_step"]
+            | null
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "account_onboarding"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      acknowledge_tutorial_instruction: {
+        Args: {
+          requested_step: Database["public"]["Enums"]["tutorial_instruction_step"]
+        }
+        Returns: {
+          auth_user_id: string
+          completed_at: string | null
+          created_at: string
+          display_name: string | null
+          inaugural_postcard_hint_seen_at: string | null
+          mascot_name: string | null
+          selected_mascot_template_id: string | null
+          stage: Database["public"]["Enums"]["onboarding_stage"]
+          stage_version: number
+          tutorial_collected_at: string | null
+          tutorial_delivery_id: string | null
+          tutorial_instruction_step:
+            | Database["public"]["Enums"]["tutorial_instruction_step"]
+            | null
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "account_onboarding"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      admin_activate_asset_version: {
+        Args: {
+          actor_id: string
+          public_object_path: string
+          version_id: string
+        }
+        Returns: {
+          alt_text_key: string | null
+          asset_id: string
+          author: string
+          byte_size: number
+          created_at: string
+          height: number
+          id: string
+          is_decorative: boolean
+          metadata: Json
+          mime_type: string
+          packaged_path: string | null
+          source: Database["public"]["Enums"]["official_asset_source"]
+          status: Database["public"]["Enums"]["catalog_status"]
+          storage_bucket: string | null
+          storage_object_path: string | null
+          version: number
+          width: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "official_asset_versions"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      admin_archive_asset_version: {
+        Args: { actor_id: string; version_id: string }
+        Returns: {
+          alt_text_key: string | null
+          asset_id: string
+          author: string
+          byte_size: number
+          created_at: string
+          height: number
+          id: string
+          is_decorative: boolean
+          metadata: Json
+          mime_type: string
+          packaged_path: string | null
+          source: Database["public"]["Enums"]["official_asset_source"]
+          status: Database["public"]["Enums"]["catalog_status"]
+          storage_bucket: string | null
+          storage_object_path: string | null
+          version: number
+          width: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "official_asset_versions"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      admin_begin_geonames_refresh: {
+        Args: { actor_id: string }
+        Returns: {
+          admin1_source_sha256: string | null
+          archived_city_count: number
+          completed_at: string | null
+          created_at: string
+          id: string
+          imported_city_count: number
+          processed_city_count: number
+          requested_by: string
+          safe_error_code: string | null
+          source_date: string | null
+          source_sha256: string | null
+          started_at: string | null
+          status: Database["public"]["Enums"]["geonames_refresh_status"]
+          updated_city_count: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "geonames_refresh_jobs"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      admin_create_asset_draft: {
+        Args: {
+          actor_id: string
+          requested_alt_key: string
+          requested_author: string
+          requested_bytes: number
+          requested_decorative: boolean
+          requested_height: number
+          requested_key: string
+          requested_metadata: Json
+          requested_mime: string
+          requested_type: Database["public"]["Enums"]["official_asset_type"]
+          requested_width: number
+          staging_object_path: string
+        }
+        Returns: Json
+      }
+      admin_finalize_geonames_refresh: {
+        Args: {
+          actor_id: string
+          imported_admin1_sha256: string
+          imported_source_date: string
+          imported_source_sha256: string
+          refresh_job_id: string
+        }
+        Returns: Json
+      }
+      admin_invalidate_referral: {
+        Args: { attribution_id: string; reason: string }
+        Returns: Json
+      }
+      admin_list_geonames_refreshes: { Args: never; Returns: Json }
       admin_list_official_assets: { Args: never; Returns: Json }
-      admin_invalidate_referral: { Args: { attribution_id: string; reason: string }; Returns: Json }
+      admin_validate_asset_draft: {
+        Args: {
+          actor_id: string
+          observed_bytes: number
+          observed_height: number
+          observed_mime: string
+          observed_width: number
+          version_id: string
+        }
+        Returns: {
+          alt_text_key: string | null
+          asset_id: string
+          author: string
+          byte_size: number
+          created_at: string
+          height: number
+          id: string
+          is_decorative: boolean
+          metadata: Json
+          mime_type: string
+          packaged_path: string | null
+          source: Database["public"]["Enums"]["official_asset_source"]
+          status: Database["public"]["Enums"]["catalog_status"]
+          storage_bucket: string | null
+          storage_object_path: string | null
+          version: number
+          width: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "official_asset_versions"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       advance_account_onboarding: {
         Args: {
           expected_stage: Database["public"]["Enums"]["onboarding_stage"]
@@ -1128,17 +2564,19 @@ export type Database = {
         }
         Returns: {
           auth_user_id: string
-          created_at: string
           completed_at: string | null
+          created_at: string
           display_name: string | null
           inaugural_postcard_hint_seen_at: string | null
           mascot_name: string | null
           selected_mascot_template_id: string | null
-          tutorial_collected_at: string | null
-          tutorial_delivery_id: string | null
-          tutorial_instruction_step: Database["public"]["Enums"]["tutorial_instruction_step"] | null
           stage: Database["public"]["Enums"]["onboarding_stage"]
           stage_version: number
+          tutorial_collected_at: string | null
+          tutorial_delivery_id: string | null
+          tutorial_instruction_step:
+            | Database["public"]["Enums"]["tutorial_instruction_step"]
+            | null
           updated_at: string
         }
         SetofOptions: {
@@ -1148,21 +2586,48 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      apply_delivery_progression: {
+        Args: { completed_delivery_id: string }
+        Returns: {
+          awarded_at: string
+          delivery_id: string
+          formula_version: number
+          inputs: Json
+          mascot_id: string
+          mascot_xp: number
+          profile_id: string
+          reputation_xp: number
+          skill_awards: Json
+        }
+        SetofOptions: {
+          from: "*"
+          to: "delivery_progression_awards"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      assert_asset_admin_actor: {
+        Args: { actor_id: string }
+        Returns: undefined
+      }
+      asset_version_usage: { Args: { asset_key_value: string }; Returns: Json }
       begin_or_resume_onboarding: {
         Args: never
         Returns: {
           auth_user_id: string
-          created_at: string
           completed_at: string | null
+          created_at: string
           display_name: string | null
           inaugural_postcard_hint_seen_at: string | null
           mascot_name: string | null
           selected_mascot_template_id: string | null
-          tutorial_collected_at: string | null
-          tutorial_delivery_id: string | null
-          tutorial_instruction_step: Database["public"]["Enums"]["tutorial_instruction_step"] | null
           stage: Database["public"]["Enums"]["onboarding_stage"]
           stage_version: number
+          tutorial_collected_at: string | null
+          tutorial_delivery_id: string | null
+          tutorial_instruction_step:
+            | Database["public"]["Enums"]["tutorial_instruction_step"]
+            | null
           updated_at: string
         }
         SetofOptions: {
@@ -1172,74 +2637,39 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      capture_referral_invitation: {
+        Args: { invitation_token: string }
+        Returns: string
+      }
       claim_referral_owl: { Args: { requested_name: string }; Returns: Json }
-      get_my_referral_progress: { Args: never; Returns: Json }
-      provision_initial_mascot: { Args: never; Returns: Json }
-      save_initial_mascot_draft: {
-        Args: { requested_mascot_name: string; template_id: string }
-        Returns: {
-          auth_user_id: string
-          created_at: string
-          completed_at: string | null
-          display_name: string | null
-          inaugural_postcard_hint_seen_at: string | null
-          mascot_name: string | null
-          selected_mascot_template_id: string | null
-          tutorial_collected_at: string | null
-          tutorial_delivery_id: string | null
-          tutorial_instruction_step: Database["public"]["Enums"]["tutorial_instruction_step"] | null
-          stage: Database["public"]["Enums"]["onboarding_stage"]
-          stage_version: number
-          updated_at: string
-        }
-      }
       collect_delivery_reward: { Args: { delivery_id: string }; Returns: Json }
-      admin_list_geonames_refreshes: { Args: never; Returns: Json }
-      get_delivery_progression_award: { Args: { delivery_id: string }; Returns: Json }
-      complete_nest_setup: { Args: { selected_latitude: number; selected_longitude: number; selected_city_geoname_id: number }; Returns: Json }
-      get_my_nest_city: { Args: never; Returns: { label: string }[] }
-      list_received_letters: {
-        Args: never
-        Returns: {
-          arrived_at: string
-          delivery_id: string
-          letter_text: string
-          origin_label: string
-          sender_name: string
-          sender_profile_id: string
-        }[]
-      }
-      list_owned_postcards: {
-        Args: never
-        Returns: { catalog_key: string; name_key: string; description_key: string; artwork_asset_key: string; availability: string; quantity: number | null }[]
-      }
-      list_owned_stickers: {
-        Args: never
-        Returns: { catalog_key: string; name_key: string; description_key: string; artwork_asset_key: string; quantity: number }[]
-      }
-      list_received_correspondence: {
-        Args: never
-        Returns: { delivery_id: string; direction: string; arrived_at: string; correspondence_type: string; is_opened: boolean; sender_name: string | null; sender_profile_id: string | null; origin_label: string | null; letter_text: string | null; postcard_message: string | null; postcard_catalog_key: string | null; postcard_name_key: string | null; postcard_asset_key: string | null; sticker_ids: string[]; return_reply_deadline: string | null; return_reply_confirmed: boolean }[]
-      }
-      open_received_correspondence: {
-        Args: { target_delivery_id: string; target_direction: string }
-        Returns: { delivery_id: string; direction: string; arrived_at: string; correspondence_type: string; is_opened: boolean; sender_name: string | null; sender_profile_id: string | null; origin_label: string | null; letter_text: string | null; postcard_message: string | null; postcard_catalog_key: string | null; postcard_name_key: string | null; postcard_asset_key: string | null; sticker_ids: string[]; return_reply_deadline: string | null; return_reply_confirmed: boolean }[]
-      }
-      confirm_delivery_return_reply: {
-        Args: { target_delivery_id: string; letter_text_value: string }
+      collect_tutorial_delivery: { Args: never; Returns: Json }
+      complete_nest_setup: {
+        Args: {
+          selected_city_geoname_id: number
+          selected_latitude: number
+          selected_longitude: number
+        }
         Returns: Json
       }
-      search_nest_cities: {
-        Args: { search_query: string }
-        Returns: { id: string; label: string; latitude: number; longitude: number }[]
+      confirm_delivery_return_reply: {
+        Args: { letter_text_value: string; target_delivery_id: string }
+        Returns: {
+          confirmed_at: string
+          delivery_id: string
+          departure_at: string
+          letter_text: string
+          metadata: Json
+          receiver_profile_id: string
+          sender_profile_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "delivery_return_replies"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
-      collect_tutorial_delivery: { Args: never; Returns: Json }
-      acknowledge_tutorial_instruction: {
-        Args: { requested_step: Database["public"]["Enums"]["tutorial_instruction_step"] }
-        Returns: Database["public"]["Tables"]["account_onboarding"]["Row"]
-      }
-      acknowledge_inaugural_postcard_hint: { Args: never; Returns: Database["public"]["Tables"]["account_onboarding"]["Row"] }
-      start_or_resume_tutorial_delivery: { Args: never; Returns: Json }
       create_delivery_from_selection: {
         Args: {
           content_payload: Json
@@ -1254,12 +2684,15 @@ export type Database = {
           destination_label_key: string
           destination_latitude: number
           destination_longitude: number
+          destination_place_label: string | null
           distance_km: number
           id: string
+          is_tutorial: boolean
           mascot_id: string
           origin_label_key: string
           origin_latitude: number
           origin_longitude: number
+          origin_place_label: string | null
           outbound_arrival_at: string
           outbound_start_at: string
           receiver_profile_id: string
@@ -1270,6 +2703,8 @@ export type Database = {
           sender_profile_id: string
           status: Database["public"]["Enums"]["delivery_status"]
           travel_modifiers: Json | null
+          travel_slot_capacity: number
+          travel_slots_used: number
           updated_at: string
         }
         SetofOptions: {
@@ -1279,6 +2714,95 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      create_delivery_from_selection_legacy_origin: {
+        Args: {
+          content_payload: Json
+          correspondence_catalog_key: string
+          friend_profile_id: string
+          mascot_id: string
+        }
+        Returns: {
+          animal_speed_kmh: number
+          correspondence_option_id: string | null
+          created_at: string
+          destination_label_key: string
+          destination_latitude: number
+          destination_longitude: number
+          destination_place_label: string | null
+          distance_km: number
+          id: string
+          is_tutorial: boolean
+          mascot_id: string
+          origin_label_key: string
+          origin_latitude: number
+          origin_longitude: number
+          origin_place_label: string | null
+          outbound_arrival_at: string
+          outbound_start_at: string
+          receiver_profile_id: string
+          return_arrival_at: string | null
+          return_start_at: string | null
+          reward_seed: string
+          route_discovery_version: number | null
+          sender_profile_id: string
+          status: Database["public"]["Enums"]["delivery_status"]
+          travel_modifiers: Json | null
+          travel_slot_capacity: number
+          travel_slots_used: number
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "deliveries"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      create_delivery_from_selection_legacy_postmark: {
+        Args: {
+          content_payload: Json
+          correspondence_catalog_key: string
+          friend_profile_id: string
+          mascot_id: string
+        }
+        Returns: {
+          animal_speed_kmh: number
+          correspondence_option_id: string | null
+          created_at: string
+          destination_label_key: string
+          destination_latitude: number
+          destination_longitude: number
+          destination_place_label: string | null
+          distance_km: number
+          id: string
+          is_tutorial: boolean
+          mascot_id: string
+          origin_label_key: string
+          origin_latitude: number
+          origin_longitude: number
+          origin_place_label: string | null
+          outbound_arrival_at: string
+          outbound_start_at: string
+          receiver_profile_id: string
+          return_arrival_at: string | null
+          return_start_at: string | null
+          reward_seed: string
+          route_discovery_version: number | null
+          sender_profile_id: string
+          status: Database["public"]["Enums"]["delivery_status"]
+          travel_modifiers: Json | null
+          travel_slot_capacity: number
+          travel_slots_used: number
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "deliveries"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      current_profile_for_postal_friendship: { Args: never; Returns: string }
       derive_mascot_travel_modifiers: {
         Args: {
           mascot_attributes: Json
@@ -1288,11 +2812,58 @@ export type Database = {
         }
         Returns: Json
       }
+      dispatch_postal_job: {
+        Args: { target_offer_id: string }
+        Returns: {
+          animal_speed_kmh: number
+          correspondence_option_id: string | null
+          created_at: string
+          destination_label_key: string
+          destination_latitude: number
+          destination_longitude: number
+          destination_place_label: string | null
+          distance_km: number
+          id: string
+          is_tutorial: boolean
+          mascot_id: string
+          origin_label_key: string
+          origin_latitude: number
+          origin_longitude: number
+          origin_place_label: string | null
+          outbound_arrival_at: string
+          outbound_start_at: string
+          receiver_profile_id: string
+          return_arrival_at: string | null
+          return_start_at: string | null
+          reward_seed: string
+          route_discovery_version: number | null
+          sender_profile_id: string
+          status: Database["public"]["Enums"]["delivery_status"]
+          travel_modifiers: Json | null
+          travel_slot_capacity: number
+          travel_slots_used: number
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "deliveries"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      ensure_my_referral_invitation: {
+        Args: never
+        Returns: {
+          link_id: string
+          version: number
+        }[]
+      }
+      generate_postal_friend_code: { Args: never; Returns: string }
       get_accepted_friend_profiles: {
         Args: never
         Returns: {
-          city_latitude: number | null
-          city_longitude: number | null
+          city_latitude: number
+          city_longitude: number
           display_name: string
           exchange_count: number
           favorite_note_key: string
@@ -1303,6 +2874,25 @@ export type Database = {
           profile_id: string
         }[]
       }
+      get_delivery_progression_award: {
+        Args: { delivery_id: string }
+        Returns: Json
+      }
+      get_my_nest_city: {
+        Args: never
+        Returns: {
+          label: string
+        }[]
+      }
+      get_my_postal_friend_code: {
+        Args: never
+        Returns: {
+          code: string
+          created_at: string
+          rotated_at: string
+        }[]
+      }
+      get_my_referral_progress: { Args: never; Returns: Json }
       get_nearby_postal_traffic: {
         Args: {
           center_latitude: number
@@ -1335,9 +2925,172 @@ export type Database = {
           visibility: string
         }[]
       }
+      is_asset_admin: { Args: never; Returns: boolean }
       json_translation_keys_are_official: {
         Args: { payload: Json }
         Returns: boolean
+      }
+      list_my_postal_connections: { Args: never; Returns: Json }
+      list_owned_postcards: {
+        Args: never
+        Returns: {
+          artwork_asset_key: string
+          availability: string
+          catalog_key: string
+          description_key: string
+          name_key: string
+          quantity: number
+        }[]
+      }
+      list_owned_stickers: {
+        Args: never
+        Returns: {
+          artwork_asset_key: string
+          catalog_key: string
+          description_key: string
+          name_key: string
+          quantity: number
+        }[]
+      }
+      list_received_correspondence: {
+        Args: never
+        Returns: {
+          arrived_at: string
+          correspondence_type: string
+          delivery_id: string
+          direction: string
+          is_opened: boolean
+          letter_text: string
+          origin_label: string
+          postcard_asset_key: string
+          postcard_catalog_key: string
+          postcard_message: string
+          postcard_name_key: string
+          return_reply_confirmed: boolean
+          return_reply_deadline: string
+          sender_name: string
+          sender_profile_id: string
+          sticker_ids: string[]
+        }[]
+      }
+      list_received_letters: {
+        Args: never
+        Returns: {
+          arrived_at: string
+          delivery_id: string
+          letter_text: string
+          origin_label: string
+          postmark_key: string
+          sender_name: string
+          sender_profile_id: string
+          stamp_asset_key: string
+          stamp_kind: string
+          stamp_name_key: string
+        }[]
+      }
+      open_received_correspondence: {
+        Args: { target_delivery_id: string; target_direction: string }
+        Returns: {
+          arrived_at: string
+          correspondence_type: string
+          delivery_id: string
+          direction: string
+          is_opened: boolean
+          letter_text: string
+          origin_label: string
+          postcard_asset_key: string
+          postcard_catalog_key: string
+          postcard_message: string
+          postcard_name_key: string
+          return_reply_confirmed: boolean
+          return_reply_deadline: string
+          sender_name: string
+          sender_profile_id: string
+          sticker_ids: string[]
+        }[]
+      }
+      postal_job_offer_payload: {
+        Args: { target_mascot_id: string }
+        Returns: Json
+      }
+      progression_next_level_xp: {
+        Args: { current_level: number; curve: string }
+        Returns: number
+      }
+      provision_initial_mascot: { Args: never; Returns: Json }
+      regenerate_my_postal_friend_code: {
+        Args: never
+        Returns: {
+          code: string
+          created_at: string
+          rotated_at: string
+        }[]
+      }
+      replace_postal_job_offer: {
+        Args: { target_mascot_id: string }
+        Returns: Json
+      }
+      request_friendship_by_postal_code: {
+        Args: { submitted_code: string }
+        Returns: {
+          outcome: string
+          request_id: string
+        }[]
+      }
+      resolve_referral_invitation: {
+        Args: { invitation_token: string }
+        Returns: {
+          inviter_name: string
+        }[]
+      }
+      respond_to_postal_friend_request: {
+        Args: { friendship_id: string; should_accept: boolean }
+        Returns: {
+          accepted: boolean
+          profile_id: string
+        }[]
+      }
+      rotate_my_referral_invitation: {
+        Args: never
+        Returns: {
+          link_id: string
+          version: number
+        }[]
+      }
+      save_initial_mascot_draft: {
+        Args: { requested_mascot_name: string; template_id: string }
+        Returns: {
+          auth_user_id: string
+          completed_at: string | null
+          created_at: string
+          display_name: string | null
+          inaugural_postcard_hint_seen_at: string | null
+          mascot_name: string | null
+          selected_mascot_template_id: string | null
+          stage: Database["public"]["Enums"]["onboarding_stage"]
+          stage_version: number
+          tutorial_collected_at: string | null
+          tutorial_delivery_id: string | null
+          tutorial_instruction_step:
+            | Database["public"]["Enums"]["tutorial_instruction_step"]
+            | null
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "account_onboarding"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      search_nest_cities: {
+        Args: { search_query: string }
+        Returns: {
+          id: string
+          label: string
+          latitude: number
+          longitude: number
+        }[]
       }
       set_official_catalog_status: {
         Args: {
@@ -1345,6 +3098,15 @@ export type Database = {
           entity_type: string
           next_status: Database["public"]["Enums"]["catalog_status"]
         }
+        Returns: undefined
+      }
+      settle_arrived_sticker_transfers: {
+        Args: { target_profile_id: string }
+        Returns: undefined
+      }
+      start_or_resume_tutorial_delivery: { Args: never; Returns: Json }
+      store_my_referral_invitation_digest: {
+        Args: { digest_value: string; link_id: string; link_version: number }
         Returns: undefined
       }
       translation_key_is_official: {
@@ -1363,17 +3125,8 @@ export type Database = {
         | "returning"
         | "returned"
         | "completed"
+      geonames_refresh_status: "queued" | "running" | "succeeded" | "failed"
       inventory_category: "equipment" | "stamps" | "keepsakes" | "routeMarks"
-      onboarding_stage:
-        | "welcome"
-        | "travel"
-        | "discoveries"
-        | "returnCollection"
-        | "displayName"
-        | "mascotChoice"
-        | "tutorial"
-        | "nestSetup"
-        | "completed"
       official_asset_source: "packaged" | "storage"
       official_asset_type:
         | "mascotPortrait"
@@ -1389,8 +3142,25 @@ export type Database = {
         | "postalMark"
         | "postcardArtwork"
         | "nestArtwork"
+      onboarding_stage:
+        | "welcome"
+        | "travel"
+        | "discoveries"
+        | "returnCollection"
+        | "displayName"
+        | "mascotChoice"
+        | "tutorial"
+        | "nestSetup"
+        | "completed"
       reward_rarity: "common" | "uncommon" | "rare"
-      tutorial_instruction_step: "preparing" | "outbound" | "discovery" | "destination" | "returning" | "returned" | "collection"
+      tutorial_instruction_step:
+        | "preparing"
+        | "outbound"
+        | "discovery"
+        | "destination"
+        | "returning"
+        | "returned"
+        | "collection"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1532,6 +3302,7 @@ export const Constants = {
         "returned",
         "completed",
       ],
+      geonames_refresh_status: ["queued", "running", "succeeded", "failed"],
       inventory_category: ["equipment", "stamps", "keepsakes", "routeMarks"],
       official_asset_source: ["packaged", "storage"],
       official_asset_type: [
@@ -1561,7 +3332,15 @@ export const Constants = {
         "completed",
       ],
       reward_rarity: ["common", "uncommon", "rare"],
-      tutorial_instruction_step: ["preparing", "outbound", "discovery", "destination", "returning", "returned", "collection"],
+      tutorial_instruction_step: [
+        "preparing",
+        "outbound",
+        "discovery",
+        "destination",
+        "returning",
+        "returned",
+        "collection",
+      ],
     },
   },
 } as const

@@ -132,6 +132,12 @@ export function NestHubPage() {
             onClick={() => navigate("/mascots")}
           />
           <HubCard
+            assetKey={assetKeys.nest.mascotRoost}
+            description={t("postalJobs.description")}
+            title={t("postalJobs.title")}
+            onClick={() => navigate("/jobs")}
+          />
+          <HubCard
             assetKey={assetKeys.nest.mailbox}
             badge={
               letters.length
