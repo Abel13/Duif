@@ -43,13 +43,14 @@ describe("generic received correspondence", () => {
     is_opened: false, letter_text: null, origin_label: null, postcard_asset_key: null,
     postcard_catalog_key: null, postcard_message: null, postcard_name_key: null,
     return_reply_confirmed: false, return_reply_deadline: "2026-08-20T13:00:00.000Z",
-    sender_name: null, sender_profile_id: null, stamp_asset_key: null, postmark_key: null, sticker_ids: [],
+    sender_name: null, sender_profile_id: null, stamp_asset_key: "stamp.default.front", postmark_key: "postalMark.custom", postmark_model: "route", postmark_color: "blue", postmark_city: "Londrina", postmark_country: "BR", postmark_date: "2026-08-20", sticker_ids: [], sticker_asset_keys: [],
   };
 
   it("preserves the unopened surprise without inventing sender data", () => {
     expect(mapReceivedCorrespondence(surprise)).toMatchObject({
       correspondenceType: "postcard", isOpened: false, senderName: undefined,
-      letterText: undefined, returnReplyConfirmed: false,
+      letterText: undefined, returnReplyConfirmed: false, stampAssetKey: "stamp.default.front",
+      postmark: { city: "Londrina", country: "BR", date: "2026-08-20", model: "route", color: "blue" },
     });
   });
 

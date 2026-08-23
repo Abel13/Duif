@@ -327,6 +327,7 @@ export const enUS = {
     from: "From",
     openLetter: "Open letter",
     closeLetter: "Close letter",
+    showEnvelope: "View envelope",
     letterTitle: "Received letter",
     emptyLetter: "This letter arrived without readable content.",
     reply: "Reply",

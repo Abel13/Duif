@@ -4,12 +4,14 @@ begin;
 insert into public.friendships(id,requester_profile_id,addressee_profile_id,status)
 values('00000000-0000-4000-8000-000000008001','00000000-0000-4000-8000-000000000001','00000000-0000-4000-8000-000000000101','accepted');
 
+update public.correspondence_options set status='active' where catalog_key='correspondence-sticker';
+
 set local role authenticated;
 select set_config('request.jwt.claim.sub','10000000-0000-4000-8000-000000000001',true);
 
 do $$
 begin
-  if (select count(*) from public.correspondence_options where status='active')<>4 then
+  if (select count(*) from public.correspondence_options where status='active' and type in ('letter','postcard'))<>2 then
     raise exception 'Authenticated players cannot read the active correspondence catalog';
   end if;
 end $$;
@@ -69,6 +71,7 @@ begin
   if (select quantity from public.list_owned_stickers() where catalog_key='sticker-sun-stamp')<>5 then raise exception 'Arrived sticker copies were not granted exactly once'; end if;
   select * into item from public.list_received_correspondence() where correspondence_type='letter' and direction='outbound';
   if item.sender_name is not null or item.letter_text is not null then raise exception 'Surprise sender/content leaked before opening'; end if;
+  if item.postmark_model is null or item.postmark_color is null or item.postmark_city is null or item.postmark_country is null or item.postmark_date is null then raise exception 'Sealed letter did not expose its immutable visual finishing'; end if;
   select * into opened from public.open_received_correspondence(item.delivery_id,'outbound');
   if opened.sender_name<>'Sender' or opened.letter_text<>'Carta de ida' then raise exception 'Opened correspondence did not reveal its snapshot'; end if;
   reply:=public.confirm_delivery_return_reply(item.delivery_id,'Resposta de volta');
@@ -84,6 +87,7 @@ select set_config('request.jwt.claim.sub','10000000-0000-4000-8000-000000000001'
 do $$ declare item record; opened record; begin
   select * into item from public.list_received_correspondence() where correspondence_type='letter' and direction='return';
   if item.sender_name is not null or item.letter_text is not null then raise exception 'Return reply leaked before opening'; end if;
+  if item.stamp_asset_key is null or item.postmark_city is null or item.postmark_date is null then raise exception 'Return reply did not persist its postal finishing'; end if;
   select * into opened from public.open_received_correspondence(item.delivery_id,'return');
   if opened.sender_name<>'Recipient' or opened.letter_text<>'Resposta de volta' then raise exception 'Return reply was not delivered to the original sender'; end if;
 end $$;

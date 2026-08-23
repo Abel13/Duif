@@ -157,7 +157,15 @@ export type ReceivedCorrespondence = {
   postcardAssetKey?: OfficialAssetKey;
   stampAssetKey?: OfficialAssetKey;
   postmarkKey?: string;
+  postmark?: {
+    city: string;
+    country: string;
+    date: string;
+    model: "classic" | "route" | "wing";
+    color: "brown" | "blue" | "red" | "green" | "gold" | "plum" | "charcoal" | "teal";
+  };
   stickerIds: string[];
+  stickerAssetKeys: OfficialAssetKey[];
   returnReplyDeadline?: string;
   returnReplyConfirmed: boolean;
 };

@@ -15,6 +15,10 @@ export type LetterDialogProps = {
   emptyLabel: string;
 };
 
+export type LetterPaperProps = Pick<LetterDialogProps,"action"|"dateLabel"|"emptyLabel"|"letterText"|"senderLocation"|"senderName"|"title"> & { titleId?:string };
+
+export function LetterPaper({action,dateLabel,emptyLabel,letterText,senderLocation,senderName,title,titleId}:LetterPaperProps){return <><article className={styles.paper}><header><p>{senderLocation} · {dateLabel}</p><h2 className={styles.visuallyHidden} id={titleId}>{title}</h2></header><p className={styles.text}>{letterText||emptyLabel}</p><footer>{senderName}</footer></article>{action?<div className={styles.action}>{action}</div>:null}</>}
+
 /** A reusable postal-paper reader for authored letters. */
 export function LetterDialog({
   action,
@@ -63,15 +67,7 @@ export function LetterDialog({
     >
       <div className={styles.body}>
         <button className={styles.close} ref={closeRef} type="button" onClick={onClose}>{closeLabel}</button>
-        <article className={styles.paper}>
-          <header>
-            <p>{senderLocation} · {dateLabel}</p>
-            <h2 className={styles.visuallyHidden} id="letter-dialog-title">{title}</h2>
-          </header>
-          <p className={styles.text}>{letterText || emptyLabel}</p>
-          <footer>{senderName}</footer>
-        </article>
-        {action ? <div className={styles.action}>{action}</div> : null}
+        <LetterPaper action={action} dateLabel={dateLabel} emptyLabel={emptyLabel} letterText={letterText} senderLocation={senderLocation} senderName={senderName} title={title} titleId="letter-dialog-title"/>
       </div>
     </dialog>
   );

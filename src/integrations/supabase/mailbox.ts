@@ -66,7 +66,13 @@ export type ReceivedCorrespondenceRow = {
   sender_profile_id: string | null;
   stamp_asset_key: string | null;
   sticker_ids: string[];
+  sticker_asset_keys: string[];
   postmark_key: string | null;
+  postmark_model: string | null;
+  postmark_color: string | null;
+  postmark_city: string | null;
+  postmark_country: string | null;
+  postmark_date: string | null;
 };
 
 export function mapReceivedCorrespondence(row: ReceivedCorrespondenceRow): ReceivedCorrespondence {
@@ -84,11 +90,19 @@ export function mapReceivedCorrespondence(row: ReceivedCorrespondenceRow): Recei
     postcardNameKey: row.postcard_name_key as ReceivedCorrespondence["postcardNameKey"],
     stampAssetKey: row.stamp_asset_key as ReceivedCorrespondence["stampAssetKey"],
     postmarkKey: row.postmark_key ?? undefined,
+    postmark: row.postmark_city && row.postmark_country && row.postmark_date ? {
+      city: row.postmark_city,
+      country: row.postmark_country,
+      date: row.postmark_date,
+      model: row.postmark_model === "route" || row.postmark_model === "wing" ? row.postmark_model : "classic",
+      color: row.postmark_color === "blue" || row.postmark_color === "red" || row.postmark_color === "green" || row.postmark_color === "gold" || row.postmark_color === "plum" || row.postmark_color === "charcoal" || row.postmark_color === "teal" ? row.postmark_color : "brown",
+    } : undefined,
     returnReplyConfirmed: row.return_reply_confirmed,
     returnReplyDeadline: row.return_reply_deadline ?? undefined,
     senderName: row.sender_name ?? undefined,
     senderProfileId: row.sender_profile_id ?? undefined,
     stickerIds: row.sticker_ids,
+    stickerAssetKeys: row.sticker_asset_keys as ReceivedCorrespondence["stickerAssetKeys"],
   };
 }
 

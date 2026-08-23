@@ -402,6 +402,7 @@ export const ptBR = {
     from: "De",
     openLetter: "Abrir carta",
     closeLetter: "Fechar carta",
+    showEnvelope: "Ver envelope",
     letterTitle: "Carta recebida",
     emptyLetter: "Esta carta chegou sem conteúdo legível.",
     reply: "Responder",

@@ -7,7 +7,7 @@ import { MobileTopBar, PageShell } from "../../components/layout";
 import { RoutePreview } from "../../components/map/RoutePreview";
 import { CityMapPreview } from "../../components/map/CityMapPreview";
 import { MascotPortraitNavigator } from "../../components/mascot/MascotPortraitNavigator";
-import { AssetImage, ItemCard, LetterDialog, SketchPanel, StampButton } from "../../components/ui";
+import { AssetImage, ItemCard, LetterDialog, PostalEnvelope, PostalPostcard, PostalPostmark, PostalStickerSheet, SketchPanel, StampButton } from "../../components/ui";
 import {
   assetKeys,
   createDefaultCorrespondenceContent,
@@ -481,68 +481,24 @@ function ReviewContentPreview({ city, content, country, deliveredBy, destination
   stickers: OwnedSticker[];
 }) {
   const { locale, t } = useTranslation();
-  const [isPostcardBackVisible, setIsPostcardBackVisible] = useState(false);
   const [isLetterOpen, setIsLetterOpen] = useState(false);
-  const selectedColor = postmarkColors.find((color) => color.id === postmark.color) ?? postmarkColors[0];
-  const finishing = <div className={styles.reviewFinishing}>
-    <AssetImage alt={t("send.postalFinishing.defaultStamp")} assetKey={stampAssetKey} className={styles.reviewStamp}><span aria-hidden="true" /></AssetImage>
-    <div className={styles.reviewPostmark}><PostmarkPreview city={city} color={selectedColor.value} country={country} model={postmark.model} /></div>
-  </div>;
+  const finishing = { stampAssetKey, postmark: { city, country, date: new Date().toISOString().slice(0,10), ...postmark } };
 
   if (content.type === "postcard") {
     const postcard = postcards.find((option) => option.catalogKey === content.postcardCatalogKey);
-    return <button
-      aria-label={t("tutorial.postcard.flip")}
-      aria-pressed={isPostcardBackVisible}
-      className={styles.reviewPostcardCard}
-      onClick={() => setIsPostcardBackVisible((visible) => !visible)}
-      type="button"
-    >
-      <span className={`${styles.reviewPostcardInner} ${isPostcardBackVisible ? styles.reviewPostcardBackVisible : ""}`}>
-        <span aria-label={t("tutorial.postcard.front")} className={`${styles.reviewPostcardFace} ${styles.reviewPostcardFront}`}>
-          {postcard ? <AssetImage alt={t(postcard.nameKey)} assetKey={postcard.artworkAssetKey}><span aria-hidden="true" /></AssetImage> : null}
-        </span>
-        <span aria-label={t("tutorial.postcard.back")} className={`${styles.reviewPostcardFace} ${styles.reviewPostcardBack}`}>
-          <span className={styles.reviewPostcardMessage}>{content.postcardMessage || t("send.content.emptyPreview")}</span>
-          <span className={styles.reviewPostcardDetails}>
-            {finishing}
-            <strong>{senderName}</strong>
-            <span>{t("tutorial.postcard.deliveredBy")} {deliveredBy}</span>
-            <dl>
-              <div><dt>{t("mascot.origin")}</dt><dd>{originLabel}</dd></div>
-              <div><dt>{t("mascot.destination")}</dt><dd>{destinationLabel}</dd></div>
-            </dl>
-          </span>
-        </span>
-      </span>
-    </button>;
+    return <PostalPostcard deliveredBy={`${t("tutorial.postcard.deliveredBy")} ${deliveredBy}`} destinationLabel={destinationLabel} destinationTitle={t("mascot.destination")} finishing={finishing} flipLabel={t("tutorial.postcard.flip")} frontAlt={postcard?t(postcard.nameKey):t("send.content.emptyPreview")} frontAssetKey={postcard?.artworkAssetKey} message={content.postcardMessage||t("send.content.emptyPreview")} originLabel={originLabel} originTitle={t("mascot.origin")} senderName={senderName}/>;
   }
 
   if (content.type === "sticker") {
-    return <div className={`${styles.reviewItem} ${styles.reviewStickerSheet}`}>{finishing}<div className={styles.reviewStickers}>{content.stickerIds.map((stickerId, index) => {
+    return <PostalStickerSheet finishing={finishing} stickers={content.stickerIds.flatMap((stickerId) => {
       const sticker = stickers.find((option) => option.catalogKey === stickerId);
-      return sticker ? <figure key={`${stickerId}-${index}`}>
-        <AssetImage alt={t(sticker.nameKey)} assetKey={sticker.artworkAssetKey}><span aria-hidden="true" /></AssetImage>
-        <figcaption>{t(sticker.nameKey)}</figcaption>
-      </figure> : null;
-    })}</div></div>;
+      return sticker?[{assetKey:sticker.artworkAssetKey,label:t(sticker.nameKey)}]:[];
+    })}/>;
   }
 
   const text = content.type === "letter" ? content.letterText : content.giftNote;
   if (content.type === "letter") {
-    return <div className={styles.reviewLetterExperience}>
-      <button aria-label={t("send.previewLetter")} className={styles.reviewEnvelope} onClick={() => setIsLetterOpen(true)} type="button">
-        {finishing}
-        <span className={styles.reviewEnvelopeRecipient}>
-          <small>{t("mascot.destination")}</small>
-          <strong>{destinationLabel}</strong>
-        </span>
-        <span className={styles.reviewEnvelopeSender}>
-          <small>{t("mascot.origin")}</small>
-          <strong>{senderName}</strong>
-          <em>{originLabel}</em>
-        </span>
-      </button>
+    return <div className={styles.reviewLetterExperience}><PostalEnvelope finishing={finishing} onOpen={()=>setIsLetterOpen(true)} openLabel={t("send.previewLetter")} recipientLabel={destinationLabel} recipientTitle={t("mascot.destination")} senderLabel={senderName} senderLocation={originLabel} senderTitle={t("mascot.origin")}/>
       <LetterDialog
         closeLabel={t("send.closeLetterPreview")}
         dateLabel={new Intl.DateTimeFormat(locale, { dateStyle: "long" }).format(new Date())}
@@ -568,11 +524,9 @@ function PostmarkCustomizer({ city, country, customization, level, onChange }: {
   onChange: (value: PostmarkCustomization) => void;
 }) {
   const { t } = useTranslation();
-  const selectedColor = postmarkColors.find((color) => color.id === customization.color) ?? postmarkColors[0];
-
   return <div className={styles.postmarkCustomizer}>
     <div className={styles.postmarkLevel}>{t("send.postalFinishing.reputationLevel").replace("{level}", String(level))}</div>
-    <PostmarkPreview city={city} color={selectedColor.value} country={country} model={customization.model} />
+    <PostalPostmark postmark={{city,country,date:new Date().toISOString().slice(0,10),...customization}} showLabel />
     <fieldset className={styles.postmarkOptions}>
       <legend>{t("send.postalFinishing.modelLabel")}</legend>
       <div className={styles.postmarkModelGrid}>
@@ -598,81 +552,6 @@ function PostmarkCustomizer({ city, country, customization, level, onChange }: {
       </div>
     </fieldset>
   </div>;
-}
-
-function PostmarkPreview({ city, color, country, model }: { city: string; color: string; country: string; model: PostmarkCustomization["model"] }) {
-  const { locale, t } = useTranslation();
-  const now = new Date();
-  const classicDate = new Intl.DateTimeFormat(locale, { day: "2-digit", month: "2-digit", year: "2-digit" }).format(now);
-  const dateParts = new Intl.DateTimeFormat(locale, { day: "2-digit", month: "short" }).formatToParts(now);
-  const day = dateParts.find((part) => part.type === "day")?.value ?? "--";
-  const month = (dateParts.find((part) => part.type === "month")?.value ?? "---").replace(/\./g, "").toLocaleUpperCase(locale);
-  const routeDate = `${day} ${month}`;
-  const year = new Intl.DateTimeFormat(locale, { year: "numeric" }).format(now);
-  const wingDate = `${day} ${month} ${year}`;
-  const cityFontSize = Math.max(10.5, 16 - Math.max(0, city.length - 12) * 0.34);
-  const routeCityFontSize = Math.max(9.5, 14 - Math.max(0, city.length - 11) * 0.35);
-  const routeCountryFontSize = Math.max(14, 22 - Math.max(0, country.length - 8) * 0.68);
-  const wingCityFontSize = Math.max(16, 28 - Math.max(0, city.length - 9) * 0.9);
-  const wingCountryFontSize = Math.max(12, 19 - Math.max(0, country.length - 10) * 0.45);
-  return <figure className={styles.postmarkPreview} style={{ "--postmark-color": color } as CSSProperties}>
-    <div className={styles.postmarkImpression} data-model={model}>
-      {model === "route" ? (
-      <svg aria-label={`${country}, ${city}, ${routeDate}`} className={`${styles.postmarkSeal} ${styles.routePostmarkSeal}`} role="img" viewBox="0 0 200 200">
-        <defs>
-          <path d="M100 7 L191 187 L9 187 Z" id="route-postmark-outline" />
-          <path d="M100 22 L181 180 L19 180 Z" id="route-postmark-inner" />
-          <path d="M100 38 l5 10 11 2-8 8 2 11-10-5-10 5 2-11-8-8 11-2z" id="route-postmark-star" />
-        </defs>
-        <use className={styles.routePostmarkOuter} href="#route-postmark-outline" />
-        <use className={styles.routePostmarkInner} href="#route-postmark-inner" />
-        <use className={styles.routePostmarkMainStar} href="#route-postmark-star" transform="translate(28 15) scale(.72)" />
-        <use className={styles.routePostmarkSmallStar} href="#route-postmark-star" transform="translate(36 80) scale(.34)" />
-        <use className={styles.routePostmarkSmallStar} href="#route-postmark-star" transform="translate(66 80) scale(.34)" />
-        <use className={styles.routePostmarkSmallStar} href="#route-postmark-star" transform="translate(96 80) scale(.34)" />
-        <text className={styles.routePostmarkDate} x="100" y="88">{routeDate}</text>
-        <text className={styles.routePostmarkCity} style={{ fontSize: routeCityFontSize }} x="100" y="137">{city.toLocaleUpperCase(locale)}</text>
-        <path className={styles.routePostmarkRule} d="M39 147 H161" />
-        <text className={styles.routePostmarkCountry} style={{ fontSize: routeCountryFontSize }} x="100" y="174">{country.toLocaleUpperCase(locale)}</text>
-      </svg>
-      ) : model === "wing" ? (
-      <svg aria-label={`${country}, ${city}, ${wingDate}`} className={`${styles.postmarkSeal} ${styles.wingPostmarkSeal}`} role="img" viewBox="0 0 220 180">
-        <defs>
-          <path d="M100 38 l5 10 11 2-8 8 2 11-10-5-10 5 2-11-8-8 11-2z" id="wing-postmark-star" />
-        </defs>
-        <rect className={styles.wingPostmarkPerforation} height="164" rx="2" width="204" x="8" y="8" />
-        <rect className={styles.wingPostmarkFrame} height="154" width="194" x="13" y="13" />
-        <text className={styles.wingPostmarkCity} style={{ fontSize: wingCityFontSize }} x="110" y="52">{city.toLocaleUpperCase(locale)}</text>
-        <use className={styles.wingPostmarkStar} href="#wing-postmark-star" transform="translate(-4 53) scale(.42)" />
-        <text className={styles.wingPostmarkCountry} style={{ fontSize: wingCountryFontSize }} x="110" y="82">{country.toLocaleUpperCase(locale)}</text>
-        <use className={styles.wingPostmarkStar} href="#wing-postmark-star" transform="translate(140 53) scale(.42)" />
-        <text className={styles.wingPostmarkDate} x="110" y="112">{wingDate}</text>
-        <path className={styles.wingPostmarkRule} d="M14 126 H206" />
-        <text className={styles.wingPostmarkLabel} x="110" y="153">{t("send.postalFinishing.airMail").toLocaleUpperCase(locale)}</text>
-      </svg>
-      ) : (
-      <svg aria-label={`${country}, ${city}, ${classicDate}`} className={styles.postmarkSeal} role="img" viewBox="0 0 200 200">
-        <defs>
-          <path d="M 28 100 A 72 72 0 0 1 172 100" id="postmark-country-arc" />
-          <path d="M 26 108 A 74 74 0 0 0 174 108" id="postmark-city-arc" />
-        </defs>
-        <circle cx="100" cy="100" r="91" />
-        <circle cx="100" cy="100" r="84" />
-        <circle cx="100" cy="100" r="58" />
-        <text className={styles.postmarkArcText}><textPath href="#postmark-country-arc" startOffset="50%" textAnchor="middle">{country.toLocaleUpperCase(locale)}</textPath></text>
-        <text className={`${styles.postmarkArcText} ${styles.postmarkCityText}`} style={{ fontSize: cityFontSize }}><textPath href="#postmark-city-arc" startOffset="50%" textAnchor="middle">{city.toLocaleUpperCase(locale)}</textPath></text>
-        <path className={styles.postmarkDateRule} d="M43 88 H157 M43 114 H157" />
-        <text className={styles.postmarkDateText} x="100" y="106">{classicDate}</text>
-      </svg>
-      )}
-      {model === "classic" ? <svg aria-hidden="true" className={styles.postmarkWaves} viewBox="0 0 120 42">
-        <path d="M2 7 C14 0 24 14 36 7 S58 0 70 7 S94 14 118 7" />
-        <path d="M2 21 C14 14 24 28 36 21 S58 14 70 21 S94 28 118 21" />
-        <path d="M2 35 C14 28 24 42 36 35 S58 28 70 35 S94 42 118 35" />
-      </svg> : null}
-    </div>
-    <figcaption>{t(`send.postalFinishing.models.${model}`)}</figcaption>
-  </figure>;
 }
 
 function StampChoice({ assetKey, isSelected, label, onPreview, onSelect }: {
