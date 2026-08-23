@@ -155,6 +155,8 @@ export type ReceivedCorrespondence = {
   postcardCatalogKey?: string;
   postcardNameKey?: TranslationKey;
   postcardAssetKey?: OfficialAssetKey;
+  stampAssetKey?: OfficialAssetKey;
+  postmarkKey?: string;
   stickerIds: string[];
   returnReplyDeadline?: string;
   returnReplyConfirmed: boolean;

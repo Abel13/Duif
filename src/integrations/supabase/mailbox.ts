@@ -64,7 +64,9 @@ export type ReceivedCorrespondenceRow = {
   return_reply_deadline: string | null;
   sender_name: string | null;
   sender_profile_id: string | null;
+  stamp_asset_key: string | null;
   sticker_ids: string[];
+  postmark_key: string | null;
 };
 
 export function mapReceivedCorrespondence(row: ReceivedCorrespondenceRow): ReceivedCorrespondence {
@@ -80,6 +82,8 @@ export function mapReceivedCorrespondence(row: ReceivedCorrespondenceRow): Recei
     postcardCatalogKey: row.postcard_catalog_key ?? undefined,
     postcardMessage: row.postcard_message ?? undefined,
     postcardNameKey: row.postcard_name_key as ReceivedCorrespondence["postcardNameKey"],
+    stampAssetKey: row.stamp_asset_key as ReceivedCorrespondence["stampAssetKey"],
+    postmarkKey: row.postmark_key ?? undefined,
     returnReplyConfirmed: row.return_reply_confirmed,
     returnReplyDeadline: row.return_reply_deadline ?? undefined,
     senderName: row.sender_name ?? undefined,

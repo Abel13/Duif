@@ -43,7 +43,7 @@ describe("generic received correspondence", () => {
     is_opened: false, letter_text: null, origin_label: null, postcard_asset_key: null,
     postcard_catalog_key: null, postcard_message: null, postcard_name_key: null,
     return_reply_confirmed: false, return_reply_deadline: "2026-08-20T13:00:00.000Z",
-    sender_name: null, sender_profile_id: null, sticker_ids: [],
+    sender_name: null, sender_profile_id: null, stamp_asset_key: null, postmark_key: null, sticker_ids: [],
   };
 
   it("preserves the unopened surprise without inventing sender data", () => {
