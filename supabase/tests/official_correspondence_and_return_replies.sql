@@ -66,18 +66,25 @@ set local role authenticated;
 
 select set_config('request.jwt.claim.sub','10000000-0000-4000-8000-000000000101',true);
 do $$
-declare item record; opened record; reply public.delivery_return_replies; repeated public.delivery_return_replies;
+declare item record; opened record; context record; reply public.delivery_return_replies; repeated public.delivery_return_replies;
 begin
   if (select quantity from public.list_owned_stickers() where catalog_key='sticker-sun-stamp')<>5 then raise exception 'Arrived sticker copies were not granted exactly once'; end if;
   select * into item from public.list_received_correspondence() where correspondence_type='letter' and direction='outbound';
+  if (select count(*) from public.list_active_postal_visitors())<>1 then raise exception 'Active letter visitor was not listed exactly once'; end if;
+  if exists(select 1 from public.list_active_postal_visitors() visitor where visitor.delivery_id<>item.delivery_id or visitor.departs_at<=now()) then raise exception 'Visitor payload or departure is invalid'; end if;
+  if (select to_jsonb(visitor) ?| array['sender_name','letter_text','origin_latitude','destination_latitude'] from public.list_active_postal_visitors() visitor limit 1) then raise exception 'Private correspondence data leaked through visitor payload'; end if;
   if item.sender_name is not null or item.letter_text is not null then raise exception 'Surprise sender/content leaked before opening'; end if;
   if item.postmark_model is null or item.postmark_color is null or item.postmark_city is null or item.postmark_country is null or item.postmark_date is null then raise exception 'Sealed letter did not expose its immutable visual finishing'; end if;
   select * into opened from public.open_received_correspondence(item.delivery_id,'outbound');
   if opened.sender_name<>'Sender' or opened.letter_text<>'Carta de ida' then raise exception 'Opened correspondence did not reveal its snapshot'; end if;
-  reply:=public.confirm_delivery_return_reply(item.delivery_id,'Resposta de volta');
+  select * into context from public.get_delivery_return_reply_context(item.delivery_id);
+  if context.sender_name<>'Sender' or context.mascot_name is null or context.reply_deadline is null then raise exception 'Reply context is incomplete'; end if;
+  reply:=public.confirm_delivery_return_reply(item.delivery_id,'{"version":2,"letterText":"Resposta de volta","postalFinishing":{"postmarkModel":"classic","postmarkColor":"brown"}}'::jsonb);
   if reply.departure_at<item.arrived_at+interval '30 minutes' then raise exception 'Reply bypassed minimum rest'; end if;
-  repeated:=public.confirm_delivery_return_reply(item.delivery_id,'Texto diferente');
+  if reply.metadata#>>'{postalFinishing,postmark,model}'<>'classic' or reply.metadata#>>'{postalFinishing,postmark,color}'<>'brown' or reply.metadata#>>'{postalFinishing,postmark,city}' is null or reply.metadata#>>'{postalFinishing,postmark,country}' is null or reply.metadata#>>'{postalFinishing,postmark,date}' is null or reply.metadata#>>'{postalFinishing,stamp,assetKey}' is null then raise exception 'Reply finishing snapshot is incomplete'; end if;
+  repeated:=public.confirm_delivery_return_reply(item.delivery_id,'{"version":2,"letterText":"Texto diferente","postalFinishing":{"postmarkModel":"route","postmarkColor":"blue"}}'::jsonb);
   if repeated.delivery_id<>reply.delivery_id then raise exception 'Reply confirmation is not idempotent'; end if;
+  if exists(select 1 from public.list_active_postal_visitors()) then raise exception 'Answered visitor remained active'; end if;
 end $$;
 
 reset role;

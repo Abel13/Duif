@@ -22,9 +22,37 @@
   z-index: 7;
   top: max(var(--space-3), env(safe-area-inset-top));
   left: 50%;
-  width: min(13rem, calc(100vw - 10rem));
+  width: calc(100vw - 2rem);
   transform: translateX(-50%);
 }
+.mapTravelStatus { display:grid; justify-items:center; pointer-events:none; }
+.activeMapTools { position:absolute; z-index:5; top:calc(max(var(--space-3),env(safe-area-inset-top)) + 6.7rem); right:10px; display:grid; gap:var(--space-2); width:2.75rem; }
+.activeToolButton { position:relative; display:grid; place-items:center; width:2.75rem; height:2.75rem; padding:0; border:2px solid color-mix(in srgb,var(--color-postal-blue) 65%,var(--color-postal-brown)); border-radius:50%; background:var(--color-paper); color:var(--color-postal-blue); box-shadow:0 2px 0 rgb(46 42 36/.18); cursor:pointer; }
+.activeToolButton svg { width:1.45rem; height:1.45rem; }
+.activeToolButton span { position:absolute; top:-.3rem; right:-.25rem; display:grid; place-items:center; min-width:1.15rem; height:1.15rem; padding:0 .2rem; border:1px solid var(--color-paper); border-radius:999px; background:var(--color-postal-red); color:var(--color-paper); font-size:.6rem; font-weight:900; }
+.activeToolButton:focus-visible { outline:3px solid var(--color-postal-blue); outline-offset:3px; }
+.visitorToolButton { overflow:visible; text-decoration:none; }
+.visitorPortrait { width:100%; height:100%; overflow:hidden; border-radius:50%; }
+.visitorPortrait img { width:100%; height:100%; object-fit:cover; }
+.visitorPortrait > span { position:static; width:100%; height:100%; padding:0; border:0; border-radius:50%; background:var(--color-paper-dark); }
+.visitorToolButton > span:last-child { top:auto; right:-.45rem; bottom:-.35rem; min-width:2.25rem; padding:0 .3rem; white-space:nowrap; }
+.activeToolButton[data-new="true"] { border-color:var(--color-rare-gold); animation:active-tool-pulse 900ms ease-in-out infinite alternate; }
+@keyframes active-tool-pulse { from{transform:scale(1)} to{transform:scale(1.08)} }
+.trafficDialog { width:min(30rem,calc(100vw - 1.5rem)); max-height:calc(100dvh - 1.5rem); padding:0; border:0; background:transparent; }
+.trafficDialog::backdrop { background:rgb(46 42 36/.7); }
+.trafficDialogPaper { display:grid; gap:var(--space-3); max-height:calc(100dvh - 1.5rem); padding:var(--space-4); overflow:auto; border:3px double var(--color-postal-brown); border-radius:.45rem .75rem .5rem .8rem; background:var(--color-paper); box-shadow:var(--shadow-paper-lifted); }
+.trafficDialogPaper > header { display:flex; align-items:start; justify-content:space-between; gap:var(--space-3); padding-bottom:var(--space-3); border-bottom:2px dashed rgb(139 94 60/.3); }
+.trafficDialogPaper > header span { color:var(--color-postal-brown); font-size:.65rem; font-weight:900; letter-spacing:.09em; text-transform:uppercase; }
+.trafficDialogPaper > header h2 { margin:.2rem 0 0; }
+.trafficDialogPaper > header button { display:grid; place-items:center; width:2.75rem; height:2.75rem; padding:0; border:1px solid var(--color-postal-brown); background:var(--color-paper-dark); color:var(--color-ink); cursor:pointer; }
+.trafficDialogPaper > header button svg { width:1.25rem; height:1.25rem; }
+.weatherAttribution { margin:.5rem 0 0; color:var(--color-ink-soft); font-size:.7rem; }
+.tripVisualFacts { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:var(--space-2); }
+.tripVisualFact { display:grid; grid-template-columns:auto minmax(0,1fr); gap:.55rem; align-items:center; min-width:0; padding:.7rem; border:1px solid rgb(139 94 60/.28); border-radius:.25rem .45rem .3rem .5rem; background:rgb(232 221 199/.55); }
+.tripVisualFact > svg { width:1.65rem; height:1.65rem; color:var(--color-postal-blue); }
+.tripVisualFact div { display:grid; min-width:0; }
+.tripVisualFact span { color:var(--color-postal-brown); font-size:.6rem; font-weight:900; letter-spacing:.06em; text-transform:uppercase; }
+.tripVisualFact strong { overflow:hidden; font-size:.8rem; text-overflow:ellipsis; white-space:nowrap; }
 
 .discoveryToast {
   position: absolute;
@@ -825,12 +853,6 @@
   outline-offset: 2px;
 }
 
-.mobileRewardDetails {
-  max-height: min(58dvh, 30rem);
-  overflow: auto;
-}
-
-.drawerBackButton,
 .panelBackButton {
   min-height: 2.75rem;
   padding: 0.6rem 0.8rem;
@@ -845,12 +867,6 @@
   cursor: pointer;
 }
 
-.drawerBackButton {
-  width: 100%;
-  border-bottom: 1px dashed rgba(46, 42, 36, 0.34);
-}
-
-.drawerBackButton::before,
 .panelBackButton::before {
   content: "←";
   margin-right: var(--space-2);
@@ -911,12 +927,13 @@
 .routeLink:focus-visible,
 .mobileDrawer summary:focus-visible,
 .cameraControls button:focus-visible,
-.drawerBackButton:focus-visible,
 .panelBackButton:focus-visible,
 .rewardListButton:focus-visible {
   outline: 3px solid rgba(164, 74, 63, 0.52);
   outline-offset: 3px;
 }
+
+@media (prefers-reduced-motion:reduce){.activeToolButton[data-new="true"]{animation:none;box-shadow:0 0 0 .22rem rgb(196 154 74/.35)}}
 
 .discoveryHeader {
   display: flex;

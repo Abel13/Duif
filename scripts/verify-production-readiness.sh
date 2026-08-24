@@ -24,7 +24,9 @@ tests=(
   supabase/tests/geonames_admin_refresh.sql
   supabase/tests/postal_friend_connections.sql
   supabase/tests/postal_jobs.sql
+  supabase/tests/segmented_travel_weather.sql
   supabase/tests/official_correspondence_and_return_replies.sql
+  supabase/tests/active_postal_visitors.sql
 )
 
 run_test() {

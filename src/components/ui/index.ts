@@ -10,6 +10,7 @@ export { StampButton } from "./StampButton";
 export type { StampButtonProps } from "./StampButton";
 export { TravelStatusLabel } from "./TravelStatusLabel";
 export type { TravelStatusLabelProps } from "./TravelStatusLabel";
+export { TravelWeatherBadge } from "./TravelWeatherBadge";
 export { InauguralPostcard, InauguralPostcardDialog, formatInauguralPostmark } from "./InauguralPostcard";
 export { PostcardDialog, PostcardViewer } from "./PostcardViewer";
 export type { PostcardContent } from "./PostcardViewer";

@@ -1,9 +1,10 @@
-import { useMemo, useState, useEffect, useRef, type MouseEvent } from "react";
+import { useMemo, useState, useEffect, useRef, type MouseEvent, type ReactNode } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import { Binoculars, Clock, CloudSun, Compass, Gauge, Package, Signpost, TrafficSign, X } from "@phosphor-icons/react";
 
 import { AppBottomNav } from "../../components/layout";
 import { TravelMap } from "../../components/map/TravelMap";
-import { AssetImage, ItemCard, SketchPanel, TravelStatusLabel } from "../../components/ui";
+import { AssetImage, ItemCard, SketchPanel, TravelStatusLabel, TravelWeatherBadge } from "../../components/ui";
 import {
   assetKeys,
   formatRemainingTime,
@@ -41,6 +42,7 @@ import { useRewardCollectionData } from "../../game/useRewardCollectionData";
 import { useMascotCatalog } from "../../game/useMascotCatalog";
 import { useAuth } from "../../integrations/supabase/AuthProvider";
 import { usePostalFriends } from "../../integrations/supabase/usePostalFriends";
+import { fetchActivePostalVisitors, getPostalVisitorMinutes, type ActivePostalVisitor } from "../../integrations/supabase/mailbox";
 import { type TranslationKey, useTranslation } from "../../i18n";
 import styles from "./TravelMapPage.module.css";
 import { isMapCameraTargetDisabled } from "../../components/map/travelMapCamera";
@@ -49,6 +51,7 @@ const defaultMascotId = "mascot-nuvem";
 const liveTickMs = 30 * 1000;
 const trafficTickMs = 1000;
 const discoveryHighlightMs = 4 * 1000;
+const visitorRefreshMs = 30 * 1000;
 
 export function TravelMapPage() {
   const { t } = useTranslation();
@@ -68,8 +71,14 @@ export function TravelMapPage() {
   const [selectedTrafficSnapshot, setSelectedTrafficSnapshot] = useState<PostalTrafficPetSnapshot>();
   const [selectedMascotId, setSelectedMascotId] = useState(defaultMascotId);
   const [tripStatusOpen, setTripStatusOpen] = useState(false);
+  const [trafficDialogOpen, setTrafficDialogOpen] = useState(false);
+  const [discoveryDialogOpen, setDiscoveryDialogOpen] = useState(false);
+  const [postalVisitors, setPostalVisitors] = useState<ActivePostalVisitor[]>([]);
+  const [newVisitorIds, setNewVisitorIds] = useState<Set<string>>(() => new Set());
   const tripStatusTriggerRef = useRef<HTMLElement | null>(null);
   const highlightTimersRef = useRef<Map<string, number>>(new Map());
+  const visitorHighlightTimersRef = useRef<Map<string, number>>(new Map());
+  const knownVisitorIdsRef = useRef<Set<string>>(new Set());
   const toastTimerRef = useRef<number>();
   const handledMascotQueryRef = useRef<string | null>(null);
   const motionPreference = useMotionPreference();
@@ -213,6 +222,40 @@ export function TravelMapPage() {
   }, [motionPreference]);
 
   useEffect(() => {
+    let active=true;
+    async function refreshVisitors() {
+      if (document.visibilityState!=="visible") return;
+      try {
+        const visitors=(await fetchActivePostalVisitors()).filter((visitor)=>getPostalVisitorMinutes(visitor.departsAt)>0).slice(0,3);
+        if (!active) return;
+        const nextIds=new Set(visitors.map((visitor)=>visitor.deliveryId));
+        const detected=visitors.filter((visitor)=>!knownVisitorIdsRef.current.has(visitor.deliveryId));
+        knownVisitorIdsRef.current=nextIds;
+        setPostalVisitors(visitors);
+        detected.forEach((visitor)=>{
+          setNewVisitorIds((current)=>new Set([...current,visitor.deliveryId]));
+          const existing=visitorHighlightTimersRef.current.get(visitor.deliveryId);
+          if(existing)window.clearTimeout(existing);
+          const timer=window.setTimeout(()=>{
+            setNewVisitorIds((current)=>{const next=new Set(current);next.delete(visitor.deliveryId);return next});
+            visitorHighlightTimersRef.current.delete(visitor.deliveryId);
+          },discoveryHighlightMs);
+          visitorHighlightTimersRef.current.set(visitor.deliveryId,timer);
+        });
+      } catch {
+        if(active)setPostalVisitors([]);
+      }
+    }
+    const onVisibility=()=>{if(document.visibilityState==="visible")void refreshVisitors()};
+    const onFocus=()=>void refreshVisitors();
+    void refreshVisitors();
+    const interval=window.setInterval(()=>void refreshVisitors(),visitorRefreshMs);
+    document.addEventListener("visibilitychange",onVisibility);
+    window.addEventListener("focus",onFocus);
+    return()=>{active=false;window.clearInterval(interval);document.removeEventListener("visibilitychange",onVisibility);window.removeEventListener("focus",onFocus)};
+  },[]);
+
+  useEffect(() => {
     if (isLoading) return;
     const requestedMascotId = searchParams.get("mascotId");
     if (handledMascotQueryRef.current === requestedMascotId) return;
@@ -253,6 +296,7 @@ export function TravelMapPage() {
 
   useEffect(() => () => {
     highlightTimersRef.current.forEach((timer) => window.clearTimeout(timer));
+    visitorHighlightTimersRef.current.forEach((timer) => window.clearTimeout(timer));
     if (toastTimerRef.current) window.clearTimeout(toastTimerRef.current);
   }, []);
 
@@ -325,6 +369,7 @@ export function TravelMapPage() {
     setSelectedTrafficSnapshot(undefined);
     setSelection({ kind: "reward", rewardId });
     setFocusTarget({ kind: "reward", rewardId });
+    setDiscoveryDialogOpen(true);
   }
 
   function selectTraffic(trafficId: string) {
@@ -334,6 +379,7 @@ export function TravelMapPage() {
     setSelectedTrafficSnapshot(trafficPet);
     setSelection({ kind: "traffic", trafficId });
     setFocusTarget({ kind: "traffic", trafficId });
+    setTrafficDialogOpen(true);
   }
 
   function closeRewardDetails() {
@@ -411,16 +457,15 @@ export function TravelMapPage() {
             rewards={completedMap ? [] : rewards}
             selection={selection}
             showRouteLabels={journeyPhase === "traveling"}
+            visualTheme={delivery.segmentedTravel ? { isNight: !delivery.segmentedTravel.isDay, season: delivery.segmentedTravel.season } : undefined}
           />
         </div>
 
         {journeyPhase === "traveling" && displayMascot ? (
-          <TravelStatusLabel
-            className={styles.mapTravelStatus}
-            mascotName={displayMascot.name}
-            statusLabel={t(`delivery.status.${status}`)}
-          />
+          <div className={styles.mapTravelStatus}><TravelStatusLabel mascotName={displayMascot.name} statusLabel={t(`delivery.status.${status}`)}/></div>
         ) : null}
+
+        {(postalVisitors.length>0 || (journeyPhase === "traveling" && displayMascot && (delivery.segmentedTravel || visiblePostalTraffic.length > 0 || rewards.length > 0))) ? <nav aria-label={t("map.activeMapTools")} className={styles.activeMapTools}>{postalVisitors.map((visitor)=><Link aria-label={`${t("mailbox.visitingMascot")}: ${visitor.mascotName}, ${getPostalVisitorMinutes(visitor.departsAt,now.getTime())} ${t("mailbox.minutesRemaining")}`} className={`${styles.activeToolButton} ${styles.visitorToolButton}`} data-new={newVisitorIds.has(visitor.deliveryId)||undefined} key={visitor.deliveryId} title={t("mailbox.openVisitorLetter")} to={`/mailbox?deliveryId=${visitor.deliveryId}`}><AssetImage alt="" assetKey={visitor.portraitAssetKey} className={styles.visitorPortrait}><span aria-hidden="true"/></AssetImage><span>{getPostalVisitorMinutes(visitor.departsAt,now.getTime())} min</span></Link>)}{journeyPhase === "traveling"&&displayMascot&&delivery.segmentedTravel?<TravelWeatherBadge mascotName={displayMascot.name} summary={delivery.segmentedTravel}/>:null}{journeyPhase === "traveling"&&visiblePostalTraffic.length>0?<button aria-label={t("postalTraffic.title")} className={styles.activeToolButton} onClick={()=>setTrafficDialogOpen(true)} title={t("postalTraffic.title")} type="button"><TrafficSign aria-hidden="true" weight="duotone"/><span>{visiblePostalTraffic.length}</span></button>:null}{journeyPhase === "traveling"&&rewards.length>0?<button aria-label={t("map.discoveries")} className={styles.activeToolButton} data-new={newDiscoveryIds.size>0||undefined} onClick={()=>{closeRewardDetails();setDiscoveryDialogOpen(true)}} title={t("map.discoveries")} type="button"><Binoculars aria-hidden="true" weight="duotone"/><span>{discoveredCount}/{rewards.length}</span></button>:null}</nav> : null}
 
         {discoveryToast ? (
           <div className={styles.discoveryToast} role="status">
@@ -503,90 +548,11 @@ export function TravelMapPage() {
                 </SketchPanel>
               </div>
             </>
-          ) : journeyPhase === "traveling" ? (
-            <>
-              {selectedReward || selectedTraffic ? (
-                <section className={`${styles.mobileDrawer} ${styles.mobileRewardDetails}`}>
-                  <button
-                    className={styles.drawerBackButton}
-                    onClick={selectedReward ? closeRewardDetails : closeTrafficDetails}
-                    type="button"
-                  >
-                    {t("map.backToTrip")}
-                  </button>
-                  <div className={styles.drawerContent}>
-                    {selectedReward ? (
-                      <RewardDetails reward={selectedReward} visualState={rewardStates[selectedReward.id]} />
-                    ) : selectedTraffic ? (
-                      <PostalTrafficDetails pet={selectedTraffic} rangeState={selectedTrafficRange} />
-                    ) : null}
-                  </div>
-                </section>
-              ) : (
-                <details className={styles.mobileDrawer}>
-                  <summary>
-                    <span>{t("map.tripStatus")}</span>
-                    <strong>{discoveredCount}/{rewards.length}</strong>
-                  </summary>
-                  <div className={styles.drawerContent}>
-                    <PostalTrafficContent
-                      onSelect={selectTraffic}
-                      postalTraffic={visiblePostalTraffic}
-                      selectedTrafficId={selection?.kind === "traffic" ? selection.trafficId : undefined}
-                    />
-                    <DiscoveryContent
-                      discoveredCount={discoveredCount}
-                      sourceLabel={t(delivery.routeDiscoveryVersion ? "map.persistedRewards" : "map.mockedRewards")}
-                      onSelect={selectReward}
-                      rewards={rewards}
-                      rewardStates={rewardStates}
-                      selectedRewardId={selection?.kind === "reward" ? selection.rewardId : undefined}
-                    />
-                  </div>
-                </details>
-              )}
-
-              <div className={styles.desktopCards}>
-                <SketchPanel title={t("postalTraffic.title")} variant="note">
-                  {selectedTraffic ? (
-                    <>
-                      <button className={styles.panelBackButton} onClick={closeTrafficDetails} type="button">
-                        {t("map.backToTrip")}
-                      </button>
-                      <PostalTrafficDetails pet={selectedTraffic} rangeState={selectedTrafficRange} />
-                    </>
-                  ) : (
-                    <PostalTrafficContent
-                      onSelect={selectTraffic}
-                      postalTraffic={visiblePostalTraffic}
-                      selectedTrafficId={selection?.kind === "traffic" ? selection.trafficId : undefined}
-                    />
-                  )}
-                </SketchPanel>
-
-                <SketchPanel title={selectedReward ? t("map.rewardDetails") : t("map.discoveries")} variant="map">
-                  {selectedReward ? (
-                    <>
-                      <button className={styles.panelBackButton} onClick={closeRewardDetails} type="button">
-                        {t("map.backToTrip")}
-                      </button>
-                      <RewardDetails reward={selectedReward} visualState={rewardStates[selectedReward.id]} />
-                    </>
-                  ) : (
-                    <DiscoveryContent
-                      discoveredCount={discoveredCount}
-                      sourceLabel={t(delivery.routeDiscoveryVersion ? "map.persistedRewards" : "map.mockedRewards")}
-                      onSelect={selectReward}
-                      rewards={rewards}
-                      rewardStates={rewardStates}
-                      selectedRewardId={selection?.kind === "reward" ? selection.rewardId : undefined}
-                    />
-                  )}
-                </SketchPanel>
-              </div>
-            </>
           ) : null}
         </aside>
+
+        {trafficDialogOpen?<PostalTrafficDialog onClose={()=>setTrafficDialogOpen(false)} onSelect={selectTraffic} onShowList={closeTrafficDetails} postalTraffic={visiblePostalTraffic} rangeState={selectedTrafficRange} selectedTraffic={selectedTraffic}/>:null}
+        {discoveryDialogOpen?<RouteDiscoveryDialog discoveredCount={discoveredCount} onClose={()=>setDiscoveryDialogOpen(false)} onSelect={selectReward} onShowList={closeRewardDetails} rewardStates={rewardStates} rewards={rewards} selectedReward={selectedReward} sourceLabel={t(delivery.routeDiscoveryVersion?"map.persistedRewards":"map.mockedRewards")}/>:null}
 
         {tripStatusOpen && journeyPhase !== "completed" ? (
           <TripStatusDialog
@@ -744,6 +710,13 @@ function PostalTrafficContent({
       )}
     </>
   );
+}
+
+function PostalTrafficDialog({onClose,onSelect,onShowList,postalTraffic,rangeState,selectedTraffic}:{onClose:()=>void;onSelect:(id:string)=>void;onShowList:()=>void;postalTraffic:PostalTrafficPetSnapshot[];rangeState:PostalTrafficRangeState;selectedTraffic?:PostalTrafficPetSnapshot}){
+  const {t}=useTranslation(); const ref=useRef<HTMLDialogElement>(null);
+  useEffect(()=>ref.current?.showModal(),[]);
+  function backdrop(event:MouseEvent<HTMLDialogElement>){if(event.target===event.currentTarget)ref.current?.close();}
+  return <dialog aria-labelledby="postal-traffic-dialog-title" className={styles.trafficDialog} onClick={backdrop} onClose={onClose} ref={ref}><section className={styles.trafficDialogPaper}><header><div><span>{t("postalTraffic.nearbyPets")}</span><h2 id="postal-traffic-dialog-title">{t("postalTraffic.title")}</h2></div><button aria-label={t("map.closeTripStatus")} onClick={()=>ref.current?.close()} type="button"><X aria-hidden="true"/></button></header>{selectedTraffic?<><button className={styles.panelBackButton} onClick={onShowList} type="button">{t("map.backToTrip")}</button><PostalTrafficDetails pet={selectedTraffic} rangeState={rangeState}/></>:<PostalTrafficContent onSelect={onSelect} postalTraffic={postalTraffic}/>}</section></dialog>;
 }
 
 function PostalTrafficDetails({
@@ -977,16 +950,18 @@ function TripStatusDialog({
             <div>
               <span>{t("map.carryingCargo")}</span>
               <strong>{t(`correspondence.${delivery.correspondenceType}.name`)}</strong>
-              <p>{t(`correspondence.${delivery.correspondenceType}.description`)}</p>
             </div>
           </section>
         ) : null}
 
-        <dl className={`${styles.summary} ${styles.tripStatusSummary}`}>
-          <SummaryRow label={t("mascot.status")} value={t(`delivery.status.${status}`)} />
-          <SummaryRow label={t("delivery.remainingTime")} value={formatRemainingTime(delivery, now)} />
-          <SummaryRow label={t("map.currentLeg")} value={t(`map.legs.${petLeg}`)} />
-        </dl>
+        <section className={styles.tripVisualFacts}>
+          <VisualFact icon={<Clock weight="duotone"/>} label={t("delivery.remainingTime")} value={formatRemainingTime(delivery, now)}/>
+          <VisualFact icon={<Compass weight="duotone"/>} label={t("map.currentLeg")} value={t(`map.legs.${petLeg}`)}/>
+          <VisualFact icon={<Signpost weight="duotone"/>} label={t("travelWeather.segment")} value={delivery.segmentedTravel?`${delivery.segmentedTravel.currentSegmentIndex+1}/${delivery.segmentedTravel.segmentCount}`:t(`delivery.status.${status}`)}/>
+          {delivery.segmentedTravel?<><VisualFact icon={<CloudSun weight="duotone"/>} label={t("travelWeather.weather")} value={`${t(`travelWeather.categories.${delivery.segmentedTravel.currentWeather.category}`)} · ${t(delivery.segmentedTravel.isDay?"travelWeather.day":"travelWeather.night")}`}/><VisualFact icon={<Gauge weight="duotone"/>} label={t("travelWeather.effectiveSpeed")} value={`${Math.round(delivery.segmentedTravel.effectiveSpeedMultiplier*100)}%`}/></>:null}
+          {delivery.correspondenceType?<VisualFact icon={<Package weight="duotone"/>} label={t("map.carryingCargo")} value={t(`correspondence.${delivery.correspondenceType}.name`)}/>:null}
+        </section>
+        {delivery.segmentedTravel?.currentWeather.source==="openMeteo"?<p className={styles.weatherAttribution}>{t("travelWeather.attribution")}</p>:null}
         <div className={styles.tripStatusActions}>
           <Link className={styles.routeLink} to={`/mascots/${delivery.mascotId}`}>
             {t("map.backToMascot")}
@@ -998,6 +973,17 @@ function TripStatusDialog({
       </div>
     </dialog>
   );
+}
+
+function VisualFact({icon,label,value}:{icon:ReactNode;label:string;value:string}){
+  return <article className={styles.tripVisualFact}>{icon}<div><span>{label}</span><strong>{value}</strong></div></article>;
+}
+
+function RouteDiscoveryDialog({discoveredCount,onClose,onSelect,onShowList,rewardStates,rewards,selectedReward,sourceLabel}:{discoveredCount:number;onClose:()=>void;onSelect:(id:string)=>void;onShowList:()=>void;rewardStates:Record<string,RouteDiscoveryVisualState>;rewards:RouteRewardDiscovery[];selectedReward?:RouteRewardDiscovery;sourceLabel:string}){
+  const {t}=useTranslation(); const ref=useRef<HTMLDialogElement>(null);
+  useEffect(()=>ref.current?.showModal(),[]);
+  function backdrop(event:MouseEvent<HTMLDialogElement>){if(event.target===event.currentTarget)ref.current?.close();}
+  return <dialog aria-labelledby="route-discovery-dialog-title" className={styles.trafficDialog} onClick={backdrop} onClose={onClose} ref={ref}><section className={styles.trafficDialogPaper}><header><div><span>{discoveredCount}/{rewards.length}</span><h2 id="route-discovery-dialog-title">{selectedReward?t("map.rewardDetails"):t("map.discoveries")}</h2></div><button aria-label={t("map.closeTripStatus")} onClick={()=>ref.current?.close()} type="button"><X aria-hidden="true"/></button></header>{selectedReward?<><button className={styles.panelBackButton} onClick={onShowList} type="button">{t("map.backToTrip")}</button><RewardDetails reward={selectedReward} visualState={rewardStates[selectedReward.id]}/></>:<DiscoveryContent discoveredCount={discoveredCount} onSelect={onSelect} rewards={rewards} rewardStates={rewardStates} sourceLabel={sourceLabel}/>}</section></dialog>;
 }
 
 function DiscoveryContent({

@@ -49,6 +49,16 @@ const returnProgressSourceId = "duif-return-progress";
 const placeLabelsSourceId = "duif-place-labels";
 const postalTrafficRoutesSourceId = "duif-postal-traffic-routes";
 
+function applyTravelMapTheme(map: maplibregl.Map, theme?: { isNight:boolean; season:"summer"|"autumn"|"winter"|"spring" }) {
+  const seasonalPaper={summer:"#ead8a8",autumn:"#dfc5ad",winter:"#c9d8dd",spring:"#d7dfc5"};
+  map.setPaintProperty("postal-paper","background-color",theme?.isNight?"#171d24":theme?seasonalPaper[theme.season]:"#eadfca");
+  map.setPaintProperty("osm-raster","raster-opacity",theme?.isNight ? .5 : .62);
+  map.setPaintProperty("osm-raster","raster-saturation",theme?.isNight ? -.88 : -.72);
+  map.setPaintProperty("osm-raster","raster-contrast",theme?.isNight ? .18 : -.18);
+  map.setPaintProperty("osm-raster","raster-brightness-min",theme?.isNight ? .03 : .12);
+  map.setPaintProperty("osm-raster","raster-brightness-max",theme?.isNight ? .38 : .9);
+}
+
 export type TravelMapProps = {
   delivery: Delivery;
   deliveryCompleted: boolean;
@@ -71,6 +81,7 @@ export type TravelMapProps = {
   rewards: RouteRewardDiscovery[];
   selection: MapSelection;
   showRouteLabels: boolean;
+  visualTheme?: { isNight: boolean; season: "summer" | "autumn" | "winter" | "spring" };
   onFollowChange: (follow: boolean) => void;
   onRewardDiscoveries: (
     rewardIds: string[],
@@ -104,6 +115,7 @@ export function TravelMap({
   rewards,
   selection,
   showRouteLabels,
+  visualTheme,
   onFollowChange,
   onRewardDiscoveries,
   onRewardSelect,
@@ -223,6 +235,7 @@ export function TravelMap({
 
     map.on("load", () => {
       isLoadedRef.current = true;
+      applyTravelMapTheme(map, visualTheme);
       addMapLayers(
         map,
         delivery,
@@ -291,6 +304,11 @@ export function TravelMap({
       isLoadedRef.current = false;
     };
   }, []);
+
+  useEffect(() => {
+    const map=mapRef.current;
+    if(map&&isLoadedRef.current) applyTravelMapTheme(map,visualTheme);
+  },[visualTheme?.isNight,visualTheme?.season]);
 
   useEffect(() => {
     const map = mapRef.current;
