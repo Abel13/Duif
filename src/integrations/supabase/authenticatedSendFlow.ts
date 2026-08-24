@@ -52,6 +52,10 @@ export type ConfirmedAuthenticatedSend = {
   mascot: Mascot;
 };
 
+export function getAvailableSendMascots(mascots: Mascot[]): Mascot[] {
+  return mascots.filter((mascot) => !mascot.currentDelivery);
+}
+
 export function mapCorrespondenceOptionRow(row: CorrespondenceOptionRow): CorrespondenceOption {
   return {
     descriptionKey: requireTranslationKey(row.description_key, "correspondence description key"),
@@ -152,9 +156,10 @@ export function getDefaultSendFlowSelection({
   requestedFriendId: string | null;
   requestedMascotId: string | null;
 }): SendFlowSelection {
-  const mascotId = mascots.some((mascot) => mascot.id === requestedMascotId)
-    ? requestedMascotId ?? mascots[0]?.id
-    : mascots[0]?.id;
+  const availableMascots = getAvailableSendMascots(mascots);
+  const mascotId = availableMascots.some((mascot) => mascot.id === requestedMascotId)
+    ? requestedMascotId ?? availableMascots[0]?.id
+    : availableMascots[0]?.id;
   const friendId = friends.some((friend) => friend.id === requestedFriendId)
     ? requestedFriendId ?? friends[0]?.id
     : friends[0]?.id;

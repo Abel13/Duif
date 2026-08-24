@@ -43,8 +43,10 @@ import {
 } from "../../game";
 import { useSendFlowData } from "../../game/useSendFlowData";
 import { useTranslation } from "../../i18n";
-import { createAuthenticatedDeliveryFromSelection } from "../../integrations/supabase/authenticatedSendFlow";
+import { createAuthenticatedDeliveryFromSelection, getAvailableSendMascots } from "../../integrations/supabase/authenticatedSendFlow";
+import { confirmReturnReply, fetchReturnReplyContext, type ReturnReplyContext } from "../../integrations/supabase/mailbox";
 import { useAuth } from "../../integrations/supabase/AuthProvider";
+import type { AuthProfile } from "../../integrations/supabase/profile";
 import styles from "./SendFlowPage.module.css";
 
 const isSupportedCorrespondence = (option: CorrespondenceOption) => option.type === "letter" || option.type === "postcard";
@@ -63,12 +65,14 @@ export function SendFlowPage() {
   const [searchParams] = useSearchParams();
   const requestedMascotId = searchParams.get("mascotId");
   const requestedFriendId = searchParams.get("friendId");
+  const requestedReplyId = searchParams.get("replyTo");
   const {
     data: sendFlowData,
     isLoading: isSendFlowLoading,
   } = useSendFlowData();
   const { friends, mascots, postalStamps, postcards, reputationLevel, stickers, correspondenceOptions: availableCorrespondence } = sendFlowData;
-  const initialMascotId = getInitialMascotId(mascots, requestedMascotId);
+  const availableMascots = useMemo(() => getAvailableSendMascots(mascots), [mascots]);
+  const initialMascotId = getInitialMascotId(availableMascots, requestedMascotId);
   const initialFriendId = getInitialFriendId(friends, requestedFriendId);
   const [selection, setSelection] = useState<SendFlowSelection>({
     friendId: initialFriendId,
@@ -81,10 +85,15 @@ export function SendFlowPage() {
   const [confirmedSend, setConfirmedSend] = useState<ConfirmedSend | undefined>();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasSubmitError, setHasSubmitError] = useState(false);
+  const [isMascotUnavailable, setIsMascotUnavailable] = useState(false);
   const [stampInventoryItemId, setStampInventoryItemId] = useState<string>();
   const [previewStampId, setPreviewStampId] = useState<string>();
   const [postmark, setPostmark] = useState<PostmarkCustomization>(defaultPostmarkCustomization);
   const [currentStep, setCurrentStep] = useState(0);
+  const [replyContext,setReplyContext]=useState<ReturnReplyContext>();
+  const [replyContextState,setReplyContextState]=useState<"idle"|"loading"|"unavailable">("idle");
+
+  useEffect(()=>{if(!requestedReplyId)return;let active=true;setReplyContextState("loading");fetchReturnReplyContext(requestedReplyId).then((value)=>{if(!active)return;setReplyContext(value);setReplyContextState(value?"idle":"unavailable")}).catch(()=>active&&setReplyContextState("unavailable"));return()=>{active=false}},[requestedReplyId]);
 
   useEffect(() => {
     const nextCorrespondence = availableCorrespondence.find(isSupportedCorrespondence);
@@ -92,16 +101,17 @@ export function SendFlowPage() {
     setSelection({
       correspondenceId: nextCorrespondence?.id,
       friendId: getInitialFriendId(friends, requestedFriendId),
-      mascotId: getInitialMascotId(mascots, requestedMascotId),
+      mascotId: getInitialMascotId(availableMascots, requestedMascotId),
     });
     setContent(createDefaultCorrespondenceContent(nextCorrespondence?.type ?? "letter", postcards, stickers));
     setConfirmedSend(undefined);
     setHasSubmitError(false);
-  }, [availableCorrespondence, friends, mascots, postcards, requestedFriendId, requestedMascotId, stickers]);
+    setIsMascotUnavailable(false);
+  }, [availableCorrespondence, availableMascots, friends, postcards, requestedFriendId, requestedMascotId, stickers]);
 
   const selectedFriend = friends.find((friend) => friend.id === selection.friendId);
-  const selectedMascot = mascots.find((mascot) => mascot.id === selection.mascotId);
-  const selectedMascotIndex = selectedMascot ? mascots.findIndex((mascot) => mascot.id === selectedMascot.id) : -1;
+  const selectedMascot = availableMascots.find((mascot) => mascot.id === selection.mascotId);
+  const selectedMascotIndex = selectedMascot ? availableMascots.findIndex((mascot) => mascot.id === selectedMascot.id) : -1;
   const selectedCorrespondence = availableCorrespondence.find(
     (option) => option.id === selection.correspondenceId,
   );
@@ -148,6 +158,7 @@ export function SendFlowPage() {
     }));
     setConfirmedSend(undefined);
     setHasSubmitError(false);
+    setIsMascotUnavailable(false);
   }
 
   function handleCorrespondenceSelect(option: CorrespondenceOption) {
@@ -162,6 +173,7 @@ export function SendFlowPage() {
     }
 
     setHasSubmitError(false);
+    setIsMascotUnavailable(false);
     setIsSubmitting(true);
 
     try {
@@ -174,7 +186,11 @@ export function SendFlowPage() {
         stampInventoryItemId,
       });
       if (delivery) setConfirmedSend({ correspondence: selectedCorrespondence, content, delivery, friend: selectedFriend, mascot: selectedMascot });
-    } catch {
+    } catch (error) {
+      const unavailable = typeof error === "object" && error !== null &&
+        (("code" in error && (error.code === "23505" || error.code === "23514")) ||
+          ("message" in error && typeof error.message === "string" && /mascot.*(active|open|unavailable)/i.test(error.message)));
+      setIsMascotUnavailable(unavailable);
       setHasSubmitError(true);
     } finally {
       setIsSubmitting(false);
@@ -193,6 +209,8 @@ export function SendFlowPage() {
     : selectedMascot
       ? `/mascots/${selectedMascot.id}`
       : "/mascots";
+
+  if(requestedReplyId){return <ReturnReplyFlow context={replyContext} contextState={replyContextState} postalStamps={postalStamps} profile={profile} reputationLevel={reputationLevel}/>}
 
   return (
     <PageShell className={styles.pageShell} hasTopBar>
@@ -249,17 +267,17 @@ export function SendFlowPage() {
             {selectedMascot ? (
               <div className={styles.mascotChoice}>
                 <MascotPortraitNavigator
-                  hasNext={selectedMascotIndex >= 0 && selectedMascotIndex < mascots.length - 1}
+                  hasNext={selectedMascotIndex >= 0 && selectedMascotIndex < availableMascots.length - 1}
                   hasPrevious={selectedMascotIndex > 0}
                   mascot={selectedMascot}
                   nextLabel={t("map.nextMascot")}
                   previousLabel={t("map.previousMascot")}
                   onNext={() => {
-                    const mascot = mascots[selectedMascotIndex + 1];
+                    const mascot = availableMascots[selectedMascotIndex + 1];
                     if (mascot) updateSelection({ mascotId: mascot.id });
                   }}
                   onPrevious={() => {
-                    const mascot = mascots[selectedMascotIndex - 1];
+                    const mascot = availableMascots[selectedMascotIndex - 1];
                     if (mascot) updateSelection({ mascotId: mascot.id });
                   }}
                 />
@@ -278,7 +296,7 @@ export function SendFlowPage() {
                   )}</p>
                 </div>
               </div>
-            ) : <p className={styles.hint}>{t("send.loadingData")}</p>}
+            ) : isSendFlowLoading ? <p className={styles.hint}>{t("send.loadingData")}</p> : <div className={styles.noMascots}><p>{t("send.noAvailableMascots")}</p><Link className={styles.returnLink} to="/map">{t("send.viewActiveTrips")}</Link></div>}
           </ChoiceSection>
           ) : null}
 
@@ -374,7 +392,7 @@ export function SendFlowPage() {
             ) : (
               <div className={styles.summary}>
                 <p className={styles.hint}>{summaryHint}</p>
-                {hasSubmitError && <p className={styles.error}>{t("send.errorMessage")}</p>}
+                {hasSubmitError && <p className={styles.error}>{t(isMascotUnavailable ? "send.mascotUnavailable" : "send.errorMessage")}</p>}
                 <section className={styles.reviewContent}>
                   <h3>{t("send.contentPreview")}</h3>
                   <ReviewContentPreview
@@ -413,6 +431,7 @@ export function SendFlowPage() {
                     <SummaryRow label={t("send.preparationTime")} value={formatMinutes(estimate.modifiers.preparationMinutes)} />
                     <SummaryRow label={t("send.outboundDuration")} value={formatDurationHours(estimate.outboundDurationHours)} />
                     <SummaryRow label={t("send.returnDuration")} value={formatDurationHours(estimate.returnDurationHours)} />
+                    <SummaryRow label={t("travelWeather.impactRange")} value={t("travelWeather.impactDescription")} />
                   </> : null}
                 </dl>
                 <StampButton
@@ -572,9 +591,26 @@ function StampChoice({ assetKey, isSelected, label, onPreview, onSelect }: {
   </article>;
 }
 
+function ReturnReplyFlow({context,contextState,postalStamps,profile,reputationLevel}:{context?:ReturnReplyContext;contextState:"idle"|"loading"|"unavailable";postalStamps:{assetKey?:import("../../game").OfficialAssetKey;id:string;nameKey:import("../../i18n").TranslationKey}[];profile:AuthProfile|null;reputationLevel:number}){
+  const {t}=useTranslation(); const [step,setStep]=useState(0); const [content,setContent]=useState<CorrespondenceContent>({type:"letter",letterText:""}); const [stampId,setStampId]=useState<string>(); const [previewStampId,setPreviewStampId]=useState<string>(); const [postmark,setPostmark]=useState<PostmarkCustomization>(defaultPostmarkCustomization); const [submitting,setSubmitting]=useState(false); const [confirmed,setConfirmed]=useState(false); const [error,setError]=useState(false); const [now,setNow]=useState(Date.now());
+  useEffect(()=>{const timer=window.setInterval(()=>setNow(Date.now()),1000);return()=>window.clearInterval(timer)},[]);
+  if(contextState==="loading")return <PageShell className={styles.pageShell} hasTopBar><MobileTopBar backTo="/mailbox" title={t("mailbox.returnReplyFlowTitle")}/><SketchPanel title={t("common.loading")}><p>{t("mailbox.returnReplyLoading")}</p></SketchPanel></PageShell>;
+  if(!context||contextState==="unavailable"||context.replyConfirmed||new Date(context.replyDeadline).getTime()<=now)return <PageShell className={styles.pageShell} hasTopBar><MobileTopBar backTo="/mailbox" title={t("mailbox.returnReplyFlowTitle")}/><SketchPanel title={t("mailbox.returnReplyUnavailable")}><p>{t(context?.replyConfirmed?"mailbox.returnReplyConfirmed":"mailbox.returnReplyExpired")}</p><Link className={styles.returnLink} to="/mailbox">{t("mailbox.open")}</Link></SketchPanel></PageShell>;
+  const replyContext = context;
+  const letterText=content.type==="letter"?content.letterText:""; const selectedStamp=postalStamps.find(item=>item.id===stampId); const previewStamp=postalStamps.find(item=>item.id===previewStampId); const remaining=Math.max(0,new Date(context.replyDeadline).getTime()-now); const remainingLabel=`${Math.floor(remaining/60000)}:${String(Math.floor((remaining%60000)/1000)).padStart(2,"0")}`;
+  async function confirm(){if(!letterText.trim()||submitting)return;setSubmitting(true);setError(false);try{await confirmReturnReply(replyContext.deliveryId,letterText,postmark,stampId);setConfirmed(true)}catch{setError(true)}finally{setSubmitting(false)}}
+  if(confirmed)return <PageShell className={styles.pageShell} hasTopBar><MobileTopBar backTo="/mailbox" title={t("mailbox.returnReplyFlowTitle")}/><SketchPanel title={t("mailbox.returnReplyConfirmed")}><p>{t("mailbox.returnReplyConfirmedDescription")}</p><div className={styles.actions}><Link className={styles.primaryLink} to={`/map?deliveryId=${context.deliveryId}`}>{t("mascot.viewTrip")}</Link><Link className={styles.returnLink} to="/mailbox">{t("mailbox.open")}</Link></div></SketchPanel></PageShell>;
+  return <PageShell className={styles.pageShell} hasTopBar><MobileTopBar backTo="/mailbox" title={t("mailbox.returnReplyFlowTitle")}/><div className={styles.shell}><div className={styles.replyDeadline}><span>{t("mailbox.returnWindowRemaining")}</span><strong>{remainingLabel}</strong></div><PostalProgress currentStep={step} labels={[t("send.steps.correspondence"),t("send.steps.stamp"),t("send.steps.postmark"),t("send.steps.review")]}/><div className={styles.stepViewport}><div className={styles.flowGrid}>
+    {step===0?<ChoiceSection title={t("mailbox.writeReturnReply")}><CorrespondenceComposer content={content} onChange={setContent} postcards={[]} stickers={[]} senderLocation={context.destinationLabel} senderName={profile?.display_name??t("common.unavailable")}/></ChoiceSection>:null}
+    {step===1?<ChoiceSection title={t("send.postalFinishing.stampTitle")}><div className={styles.stampChoices}><StampChoice assetKey={assetKeys.stamps.default} isSelected={!stampId} label={t("send.postalFinishing.defaultStamp")} onPreview={()=>setPreviewStampId("default")} onSelect={()=>setStampId(undefined)}/>{postalStamps.map(item=><StampChoice assetKey={item.assetKey} isSelected={stampId===item.id} key={item.id} label={t(item.nameKey)} onPreview={()=>setPreviewStampId(item.id)} onSelect={()=>setStampId(item.id)}/>)}</div></ChoiceSection>:null}
+    {step===2?<ChoiceSection title={t("send.postalFinishing.postmarkTitle")}><PostmarkCustomizer city={profile?.postal_base_city||t("common.unavailable")} country={profile?.postal_base_country||t("common.unavailable")} customization={postmark} level={reputationLevel} onChange={setPostmark}/></ChoiceSection>:null}
+    {step===3?<SketchPanel className={styles.summaryPanel} title={t("send.summary")} variant="note"><div className={styles.summary}><ReviewContentPreview city={profile?.postal_base_city||t("common.unavailable")} content={content} country={profile?.postal_base_country||t("common.unavailable")} deliveredBy={context.mascotName} destinationLabel={context.originLabel} originLabel={context.destinationLabel} postcards={[]} postmark={postmark} senderName={profile?.display_name??t("common.unavailable")} stampAssetKey={selectedStamp?.assetKey??assetKeys.stamps.default} stickers={[]}/><dl className={styles.summaryList}><SummaryRow label={t("mailbox.toOriginalSender")} value={context.senderName}/><SummaryRow label={t("send.selectedMascot")} value={context.mascotName}/></dl>{error?<p className={styles.error}>{t("mailbox.returnReplySubmitError")}</p>:null}<StampButton disabled={!letterText.trim()||submitting} onClick={()=>void confirm()}>{submitting?t("mailbox.replying"):t("mailbox.sendReturnReply")}</StampButton></div></SketchPanel>:null}
+  </div></div><nav aria-label={t("send.steps.navigation")} className={styles.stepActions}><button className={styles.backButton} disabled={step===0} onClick={()=>setStep(value=>Math.max(0,value-1))} type="button">{t("send.steps.back")}</button>{step<3?<StampButton disabled={step===0&&!letterText.trim()} onClick={()=>setStep(value=>Math.min(3,value+1))}>{t("send.steps.next")}</StampButton>:null}</nav></div>{previewStampId?<dialog aria-label={t("send.postalFinishing.previewStamp")} className={styles.stampDialog} open><div className={styles.stampDialogPaper}><button className={styles.dialogClose} onClick={()=>setPreviewStampId(undefined)} type="button">{t("send.postalFinishing.closeStampPreview")}</button><AssetImage alt={previewStamp?t(previewStamp.nameKey):t("send.postalFinishing.defaultStamp")} assetKey={previewStamp?.assetKey??assetKeys.stamps.default} className={styles.stampDialogArt}><span aria-hidden="true" /></AssetImage></div></dialog>:null}</PageShell>;
+}
+
 function PostalProgress({ currentStep, labels }: { currentStep: number; labels: string[] }) {
   return (
-    <ol aria-label={labels[currentStep]} className={styles.postalProgress}>
+    <ol aria-label={labels[currentStep]} className={styles.postalProgress} style={{"--postal-step-count":labels.length} as CSSProperties}>
       {labels.map((label, index) => (
         <li
           aria-current={index === currentStep ? "step" : undefined}

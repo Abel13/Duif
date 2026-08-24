@@ -1,6 +1,11 @@
 export type Locale = "pt-BR" | "en-US";
 
 export type TranslationDictionary = {
+  travelWeather: {
+    weather: string; season: string; segment: string; effectiveSpeed: string; etaNotice: string; attribution: string; impactRange: string; impactDescription: string; openDetails:string; close:string; eyebrow:string; title:string; ofBaseSpeed:string; virtualSource:string; day:string; night:string; conditionImpact:string; activeConditions:string; impacts:{helpful:string;neutral:string;challenging:string};
+    categories: { clear:string; partlyCloudy:string; cloudy:string; fogDrizzle:string; rain:string; snow:string; heavyFreezingRain:string; thunderstorm:string };
+    seasons: { summer:string; autumn:string; winter:string; spring:string };
+  };
   app: {
     title: string;
   };
@@ -272,6 +277,19 @@ export type TranslationDictionary = {
     sendReturnReply: string;
     replying: string;
     returnWindowRemaining: string;
+    prepareReturnReply: string;
+    returnReplyFlowTitle: string;
+    returnReplyLoading: string;
+    returnReplyUnavailable: string;
+    returnReplyExpired: string;
+    returnReplyConfirmedDescription: string;
+    writeReturnReply: string;
+    toOriginalSender: string;
+    returnReplySubmitError: string;
+    visitingMascot: string;
+    minutesRemaining: string;
+    openVisitorLetter: string;
+    correspondenceUnavailable: string;
   };
   send: {
     steps: { friend: string; mascot: string; correspondence: string; finishing: string; stamp: string; postmark: string; review: string; navigation: string; back: string; next: string };
@@ -310,6 +328,9 @@ export type TranslationDictionary = {
     loadingData: string;
     sending: string;
     errorMessage: string;
+    mascotUnavailable: string;
+    noAvailableMascots: string;
+    viewActiveTrips: string;
     composeTitle: string;
     contentPreview: string;
     contentInvalid: string;
@@ -404,6 +425,7 @@ export type TranslationDictionary = {
     backToMascot: string;
     unavailable: string;
     cameraControls: string;
+    activeMapTools: string;
     overview: string;
     focusMascot: string;
     followMascot: string;
@@ -838,6 +860,39 @@ export type TranslationDictionary = {
 };
 
 export type TranslationKey =
+  | "travelWeather.weather"
+  | "travelWeather.season"
+  | "travelWeather.segment"
+  | "travelWeather.effectiveSpeed"
+  | "travelWeather.etaNotice"
+  | "travelWeather.attribution"
+  | "travelWeather.impactRange"
+  | "travelWeather.impactDescription"
+  | "travelWeather.openDetails"
+  | "travelWeather.close"
+  | "travelWeather.eyebrow"
+  | "travelWeather.title"
+  | "travelWeather.ofBaseSpeed"
+  | "travelWeather.virtualSource"
+  | "travelWeather.day"
+  | "travelWeather.night"
+  | "travelWeather.conditionImpact"
+  | "travelWeather.activeConditions"
+  | "travelWeather.impacts.helpful"
+  | "travelWeather.impacts.neutral"
+  | "travelWeather.impacts.challenging"
+  | "travelWeather.categories.clear"
+  | "travelWeather.categories.partlyCloudy"
+  | "travelWeather.categories.cloudy"
+  | "travelWeather.categories.fogDrizzle"
+  | "travelWeather.categories.rain"
+  | "travelWeather.categories.snow"
+  | "travelWeather.categories.heavyFreezingRain"
+  | "travelWeather.categories.thunderstorm"
+  | "travelWeather.seasons.summer"
+  | "travelWeather.seasons.autumn"
+  | "travelWeather.seasons.winter"
+  | "travelWeather.seasons.spring"
   | "nestHub.eyebrow" | "nestHub.title" | "nestHub.tagline" | "nestHub.currencySummary" | "nestHub.seeds" | "nestHub.crystals" | "nestHub.settingsSoon" | "nestHub.defaultAvatar" | "nestHub.profileName" | "nestHub.nestName" | "nestHub.nestOf" | "nestHub.location" | "nestHub.levelZero" | "nestHub.xpZero" | "nestHub.sections" | "nestHub.profileTitle" | "nestHub.profileDescription" | "nestHub.mascotTitle" | "nestHub.mascotDescription" | "nestHub.mailboxTitle" | "nestHub.mailboxDescription" | "nestHub.atNest" | "nestHub.traveling" | "nestHub.newCorrespondence" | "nestHub.travelingTitle" | "nestHub.noTravelTitle" | "nestHub.noTravelDescription"
   | "profile.eyebrow" | "profile.email" | "profile.location" | "profile.joined" | "profile.level" | "profile.xp" | "profile.seeds" | "profile.crystals" | "profile.readOnlyNotice"
   | "mailbox.eyebrow"
@@ -1114,6 +1169,9 @@ export type TranslationKey =
   | "send.loadingData"
   | "send.sending"
   | "send.errorMessage"
+  | "send.mascotUnavailable"
+  | "send.noAvailableMascots"
+  | "send.viewActiveTrips"
   | "send.composeTitle"
   | "send.contentPreview"
   | "send.contentInvalid"
@@ -1206,6 +1264,7 @@ export type TranslationKey =
   | "map.backToMascot"
   | "map.unavailable"
   | "map.cameraControls"
+  | "map.activeMapTools"
   | "map.overview"
   | "map.focusMascot"
   | "map.followMascot"
@@ -1590,4 +1649,17 @@ export type TranslationKey =
   | "mailbox.sendReturnReply"
   | "mailbox.replying"
   | "mailbox.returnWindowRemaining"
+  | "mailbox.prepareReturnReply"
+  | "mailbox.returnReplyFlowTitle"
+  | "mailbox.returnReplyLoading"
+  | "mailbox.returnReplyUnavailable"
+  | "mailbox.returnReplyExpired"
+  | "mailbox.returnReplyConfirmedDescription"
+  | "mailbox.writeReturnReply"
+  | "mailbox.toOriginalSender"
+  | "mailbox.returnReplySubmitError"
+  | "mailbox.visitingMascot"
+  | "mailbox.minutesRemaining"
+  | "mailbox.openVisitorLetter"
+  | "mailbox.correspondenceUnavailable"
   | "send.removeSticker";

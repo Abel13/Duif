@@ -1,6 +1,7 @@
 import type { TranslationDictionary } from "../types";
 
 export const enUS = {
+  travelWeather: { day:"Day", night:"Night", conditionImpact:"Conditions impact on this segment", activeConditions:"Active journey conditions", impacts:{helpful:"Favorable conditions",neutral:"Neutral conditions",challenging:"Challenging conditions"}, openDetails:"View journey weather", close:"Close weather", eyebrow:"Segment conditions", title:"Journey weather", ofBaseSpeed:"of base speed", virtualSource:"Deterministic virtual weather while a real forecast is unavailable.", weather:"Current weather", season:"Season", segment:"Segment", effectiveSpeed:"Effective speed", etaNotice:"The estimated time may change as upcoming segments are refreshed.", attribution:"Weather data by Open-Meteo · CC BY 4.0", impactRange:"Possible weather impact: -8% to +2%", impactDescription:"The estimate may change before completion. Weather is resolved on the server without revealing your route.", categories:{clear:"Clear sky",partlyCloudy:"Partly cloudy",cloudy:"Cloudy",fogDrizzle:"Fog or drizzle",rain:"Rain",snow:"Snow",heavyFreezingRain:"Heavy or freezing rain",thunderstorm:"Thunderstorm"}, seasons:{summer:"Summer",autumn:"Autumn",winter:"Winter",spring:"Spring"} },
   app: {
     title: "DUIF",
   },
@@ -341,6 +342,19 @@ export const enUS = {
     sendReturnReply: "Send on return",
     replying: "Confirming",
     returnWindowRemaining: "to prepare a reply",
+    prepareReturnReply: "Prepare reply",
+    returnReplyFlowTitle: "Prepare reply",
+    returnReplyLoading: "Checking the reply window...",
+    returnReplyUnavailable: "Reply unavailable",
+    returnReplyExpired: "The window to send this reply has ended. Return to the Mailbox to continue.",
+    returnReplyConfirmedDescription: "The letter is ready and will travel with the same mascot on the return trip.",
+    writeReturnReply: "Write reply",
+    toOriginalSender: "Recipient",
+    returnReplySubmitError: "The reply could not be confirmed. Check the deadline and postal finishing.",
+    visitingMascot: "Visiting mascot",
+    minutesRemaining: "minutes remaining",
+    openVisitorLetter: "Open visitor correspondence",
+    correspondenceUnavailable: "This correspondence is no longer available at this address.",
   },
   send: {
     steps: { friend: "Friend", mascot: "Mascot", correspondence: "Mail", finishing: "Finishing", stamp: "Stamp", postmark: "Postmark", review: "Review", navigation: "Step navigation", back: "Back", next: "Continue" },
@@ -380,6 +394,9 @@ export const enUS = {
     loadingData: "Updating notebook options",
     sending: "Dispatching",
     errorMessage: "The delivery could not be created. Try again.",
+    mascotUnavailable: "This mascot is no longer available. Choose another free messenger.",
+    noAvailableMascots: "All mascots have an open delivery. Collect a completed trip or follow the active routes.",
+    viewActiveTrips: "View trips and collections",
     composeTitle: "Compose correspondence",
     contentPreview: "Content preview",
     contentInvalid: "Review the content before dispatching.",
@@ -480,6 +497,7 @@ export const enUS = {
     unavailable:
       "The real map could not be loaded right now. The route is still available in trip details.",
     cameraControls: "Map framing controls",
+    activeMapTools: "Active map items",
     overview: "Overview",
     focusMascot: "Mascot",
     followMascot: "Follow mascot",

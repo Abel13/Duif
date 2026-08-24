@@ -1,5 +1,7 @@
 import type { ReceivedCorrespondence, ReceivedLetter } from "../../game";
 import type { TranslationKey } from "../../i18n";
+import type { PostmarkCustomization } from "../../game";
+import { isOfficialAssetKey, type OfficialAssetKey } from "../../game";
 
 import { getSupabaseClient } from "./client";
 
@@ -114,6 +116,44 @@ export async function fetchReceivedCorrespondence(): Promise<ReceivedCorresponde
   return (data as ReceivedCorrespondenceRow[]).map(mapReceivedCorrespondence);
 }
 
+export type ActivePostalVisitorRow = {
+  delivery_id: string;
+  departs_at: string;
+  mascot_id: string;
+  mascot_name: string;
+  portrait_asset_key: string | null;
+};
+
+export type ActivePostalVisitor = {
+  deliveryId: string;
+  departsAt: string;
+  mascotId: string;
+  mascotName: string;
+  portraitAssetKey?: OfficialAssetKey;
+};
+
+export function mapActivePostalVisitor(row: ActivePostalVisitorRow): ActivePostalVisitor {
+  return {
+    deliveryId: row.delivery_id,
+    departsAt: row.departs_at,
+    mascotId: row.mascot_id,
+    mascotName: row.mascot_name,
+    portraitAssetKey: isOfficialAssetKey(row.portrait_asset_key) ? row.portrait_asset_key : undefined,
+  };
+}
+
+export function getPostalVisitorMinutes(departsAt: string, now = Date.now()): number {
+  return Math.max(0, Math.ceil((new Date(departsAt).getTime() - now) / 60_000));
+}
+
+export async function fetchActivePostalVisitors(): Promise<ActivePostalVisitor[]> {
+  const supabase = getSupabaseClient();
+  if (!supabase) return [];
+  const { data, error } = await supabase.rpc("list_active_postal_visitors");
+  if (error) throw error;
+  return ((data ?? []) as ActivePostalVisitorRow[]).map(mapActivePostalVisitor);
+}
+
 export async function openReceivedCorrespondence(deliveryId: string, direction: "outbound" | "return") {
   const supabase = getSupabaseClient();
   if (!supabase) throw new Error("Supabase unavailable");
@@ -122,9 +162,17 @@ export async function openReceivedCorrespondence(deliveryId: string, direction: 
   return mapReceivedCorrespondence(data[0] as ReceivedCorrespondenceRow);
 }
 
-export async function confirmReturnReply(deliveryId: string, letterText: string) {
+export type ReturnReplyContext = { deliveryId:string;destinationLabel:string;mascotId:string;mascotName:string;originLabel:string;replyConfirmed:boolean;replyDeadline:string;senderName:string;senderProfileId:string };
+
+export async function fetchReturnReplyContext(deliveryId:string):Promise<ReturnReplyContext|undefined>{
+  const supabase=getSupabaseClient(); if(!supabase)throw new Error("Supabase unavailable");
+  const {data,error}=await supabase.rpc("get_delivery_return_reply_context",{target_delivery_id:deliveryId}); if(error)throw error; const row=data?.[0];
+  return row?{deliveryId:row.delivery_id,destinationLabel:row.destination_label,mascotId:row.mascot_id,mascotName:row.mascot_name,originLabel:row.origin_label,replyConfirmed:row.reply_confirmed,replyDeadline:row.reply_deadline,senderName:row.sender_name,senderProfileId:row.sender_profile_id}:undefined;
+}
+
+export async function confirmReturnReply(deliveryId: string, letterText: string, postmark:PostmarkCustomization, stampInventoryItemId?:string) {
   const supabase = getSupabaseClient();
   if (!supabase) throw new Error("Supabase unavailable");
-  const { error } = await supabase.rpc("confirm_delivery_return_reply", { target_delivery_id: deliveryId, letter_text_value: letterText });
+  const { error } = await supabase.rpc("confirm_delivery_return_reply", { target_delivery_id: deliveryId, reply_payload:{letterText,postalFinishing:{stampInventoryItemId:stampInventoryItemId??null,postmarkModel:postmark.model,postmarkColor:postmark.color}} });
   if (error) throw error;
 }

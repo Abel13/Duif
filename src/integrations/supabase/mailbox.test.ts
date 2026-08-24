@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { mapReceivedCorrespondence, mapReceivedLetterRow, parseReceivedLetterRows, type ReceivedCorrespondenceRow, type ReceivedLetterRow } from "./mailbox";
+import { getPostalVisitorMinutes, mapActivePostalVisitor, mapReceivedCorrespondence, mapReceivedLetterRow, parseReceivedLetterRows, type ReceivedCorrespondenceRow, type ReceivedLetterRow } from "./mailbox";
 
 const receivedLetter: ReceivedLetterRow = {
   arrived_at: "2026-07-21T15:30:00.000Z",
@@ -58,5 +58,20 @@ describe("generic received correspondence", () => {
     expect(mapReceivedCorrespondence({ ...surprise, correspondence_type: "letter", direction: "return", is_opened: true, letter_text: "Voltei com resposta.", sender_name: "Lia", sender_profile_id: "00000000-0000-4000-8000-000000000101" })).toMatchObject({
       direction: "return", isOpened: true, letterText: "Voltei com resposta.", senderName: "Lia",
     });
+  });
+});
+
+describe("active postal visitors", () => {
+  it("maps only the public visitor snapshot and accepts an official portrait", () => {
+    expect(mapActivePostalVisitor({ delivery_id:"delivery-1",departs_at:"2026-08-24T12:24:01.000Z",mascot_id:"mascot-1",mascot_name:"Nuvem",portrait_asset_key:"mascot.portrait.nuvem" })).toEqual({
+      deliveryId:"delivery-1",departsAt:"2026-08-24T12:24:01.000Z",mascotId:"mascot-1",mascotName:"Nuvem",portraitAssetKey:"mascot.portrait.nuvem",
+    });
+  });
+
+  it("rounds remaining time up and never returns negative minutes", () => {
+    const now=new Date("2026-08-24T12:00:00.000Z").getTime();
+    expect(getPostalVisitorMinutes("2026-08-24T12:00:01.000Z",now)).toBe(1);
+    expect(getPostalVisitorMinutes("2026-08-24T12:24:01.000Z",now)).toBe(25);
+    expect(getPostalVisitorMinutes("2026-08-24T11:59:00.000Z",now)).toBe(0);
   });
 });

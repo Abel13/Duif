@@ -30,6 +30,7 @@
   padding: 0 var(--space-1);
   line-height: 1.45;
 }
+.replyDeadline{display:flex;align-items:center;justify-content:space-between;padding:.6rem .8rem;border:2px dashed var(--color-postal-red);background:var(--color-paper);font-size:.75rem;font-weight:900;text-transform:uppercase}.replyDeadline strong{font-size:1rem;color:var(--color-postal-red)}
 
 .flowGrid {
   display: grid;
@@ -49,7 +50,7 @@
 .postalProgress {
   position: relative;
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(var(--postal-step-count, 6), minmax(0, 1fr));
   min-width: 0;
   margin: 0;
   padding: var(--space-2) var(--space-1);
@@ -468,6 +469,17 @@
 .actions > * {
   flex: 1 1 9rem;
 }
+
+.noMascots {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border: 1px dashed var(--color-postal-brown);
+  background: color-mix(in srgb, var(--color-paper) 88%, transparent);
+}
+
+.noMascots p { margin: 0; }
 
 .composer {
   display: grid;

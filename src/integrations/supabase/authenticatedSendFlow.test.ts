@@ -7,6 +7,7 @@ import type {
 } from "./authenticatedSendFlow";
 import {
   createCorrespondenceContentPayload,
+  getAvailableSendMascots,
   getDefaultSendFlowSelection,
   mapCorrespondenceContentRow,
   mapCorrespondenceOptionRow,
@@ -130,7 +131,7 @@ describe("authenticated send flow mappers", () => {
           receivedCorrespondence: [],
         },
       ],
-      mascots: starterMascots,
+      mascots: starterMascots.map((mascot) => ({ ...mascot, currentDelivery: undefined })),
       requestedFriendId: "friend-lisbon",
       requestedMascotId: "mascot-pipoca",
     });
@@ -140,6 +141,30 @@ describe("authenticated send flow mappers", () => {
       friendId: "friend-lisbon",
       mascotId: "mascot-pipoca",
     });
+  });
+
+  it("hides busy mascots and ignores a requested busy mascot", () => {
+    const [busy, free] = starterMascots;
+    const available = getAvailableSendMascots([
+      busy,
+      { ...free, currentDelivery: undefined },
+    ]);
+
+    expect(available.map((mascot) => mascot.id)).toEqual([free.id]);
+
+    const selection = getDefaultSendFlowSelection({
+      correspondenceOptions: [mapCorrespondenceOptionRow(correspondenceOptionRow)],
+      friends: [],
+      mascots: [busy, { ...free, currentDelivery: undefined }],
+      postalStamps: [],
+      postcards: [],
+      reputationLevel: 1,
+      requestedFriendId: null,
+      requestedMascotId: busy.id,
+      stickers: [],
+    });
+
+    expect(selection.mascotId).toBe(free.id);
   });
 
 });

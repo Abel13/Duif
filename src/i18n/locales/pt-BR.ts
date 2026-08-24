@@ -1,6 +1,7 @@
 import type { TranslationDictionary } from "../types";
 
 export const ptBR = {
+  travelWeather: { day:"Dia", night:"Noite", conditionImpact:"Impacto das condições neste trecho", activeConditions:"Condições ativas da viagem", impacts:{helpful:"Condições favoráveis",neutral:"Condições neutras",challenging:"Condições adversas"}, openDetails:"Ver clima da viagem", close:"Fechar clima", eyebrow:"Condições do trecho", title:"Clima da viagem", ofBaseSpeed:"da velocidade-base", virtualSource:"Clima virtual determinístico enquanto o forecast real não está disponível.", weather:"Clima atual", season:"Estação", segment:"Trecho", effectiveSpeed:"Velocidade efetiva", etaNotice:"O horário estimado pode mudar enquanto os próximos trechos são atualizados.", attribution:"Dados meteorológicos por Open-Meteo · CC BY 4.0", impactRange:"Impacto climático possível: -8% a +2%", impactDescription:"A estimativa pode mudar antes da conclusão. O clima é resolvido no servidor sem revelar sua rota.", categories:{clear:"Céu limpo",partlyCloudy:"Parcialmente nublado",cloudy:"Nublado",fogDrizzle:"Neblina ou garoa",rain:"Chuva",snow:"Neve",heavyFreezingRain:"Chuva forte ou congelante",thunderstorm:"Tempestade"}, seasons:{summer:"Verão",autumn:"Outono",winter:"Inverno",spring:"Primavera"} },
   app: {
     title: "DUIF",
   },
@@ -416,6 +417,19 @@ export const ptBR = {
     sendReturnReply: "Enviar na volta",
     replying: "Confirmando",
     returnWindowRemaining: "para preparar a resposta",
+    prepareReturnReply: "Preparar resposta",
+    returnReplyFlowTitle: "Preparar resposta",
+    returnReplyLoading: "Conferindo a janela de resposta...",
+    returnReplyUnavailable: "Resposta indisponível",
+    returnReplyExpired: "A janela para enviar esta resposta terminou. Volte à Caixa Postal para continuar.",
+    returnReplyConfirmedDescription: "A carta foi preparada e seguirá com o mesmo mascote na viagem de volta.",
+    writeReturnReply: "Escrever resposta",
+    toOriginalSender: "Destinatário",
+    returnReplySubmitError: "Não foi possível confirmar a resposta. Confira o prazo e o acabamento postal.",
+    visitingMascot: "Mascote visitante",
+    minutesRemaining: "minutos restantes",
+    openVisitorLetter: "Abrir correspondência do visitante",
+    correspondenceUnavailable: "Esta correspondência não está mais disponível neste endereço.",
   },
   send: {
     steps: { friend: "Amigo", mascot: "Mascote", correspondence: "Envio", finishing: "Acabamento", stamp: "Selo", postmark: "Carimbo", review: "Revisão", navigation: "Navegação entre etapas", back: "Voltar", next: "Avançar" },
@@ -456,6 +470,9 @@ export const ptBR = {
     loadingData: "Atualizando opções do caderno",
     sending: "Despachando",
     errorMessage: "Não foi possível criar a entrega. Tente novamente.",
+    mascotUnavailable: "Este mascote não está mais disponível. Escolha outro mensageiro livre.",
+    noAvailableMascots: "Todos os mascotes estão em uma entrega. Colete uma viagem concluída ou acompanhe as rotas ativas.",
+    viewActiveTrips: "Ver viagens e coletas",
     composeTitle: "Compor envio",
     contentPreview: "Prévia do conteúdo",
     contentInvalid: "Revise o conteúdo antes de despachar.",
@@ -558,6 +575,7 @@ export const ptBR = {
     unavailable:
       "Não foi possível carregar o mapa real agora. A rota continua disponível nos detalhes da viagem.",
     cameraControls: "Controles de enquadramento do mapa",
+    activeMapTools: "Itens ativos do mapa",
     overview: "Visão geral",
     focusMascot: "Mascote",
     followMascot: "Seguir mascote",

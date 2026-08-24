@@ -5,8 +5,8 @@
 @media (prefers-reduced-motion: reduce) { .letterCard { transition:none; }.letterCard:hover { transform:none; } }
 .contentDialog { position:fixed; inset:0; z-index:20; width:min(calc(100% - 2rem),38rem); max-height:calc(100dvh - 2rem); margin:auto; padding:var(--space-3); overflow:auto; border:2px solid var(--color-postal-brown); background:var(--color-paper); box-shadow:0 0 0 100vmax rgba(46,42,36,.72); }
 .dialogClose { min-height:2.75rem; border:2px solid var(--color-postal-brown); background:var(--color-paper-dark); font:inherit; font-weight:800; }
-.contentPaper,.replyComposer,.replyComposer label { display:grid; gap:var(--space-2); }.letterText{min-height:12rem;margin:0;padding:1rem;background:repeating-linear-gradient(transparent 0 1.7rem,rgba(111,145,168,.2) 1.7rem 1.75rem);font-family:var(--font-postcard);line-height:1.7;white-space:pre-wrap}
+.contentPaper { display:grid; gap:var(--space-2); }.letterText{min-height:12rem;margin:0;padding:1rem;background:repeating-linear-gradient(transparent 0 1.7rem,rgba(111,145,168,.2) 1.7rem 1.75rem);font-family:var(--font-postcard);line-height:1.7;white-space:pre-wrap}
 .contentPaper { min-height:0; margin-top:0; overflow:auto; overscroll-behavior:contain; }
 .postcardArt { width:100%; aspect-ratio:3/2; overflow:hidden; border:2px solid var(--color-ink); }
 .postcardArt img { width:100%; height:100%; object-fit:cover; }
-.replyComposer textarea { min-height:8rem; padding:var(--space-2); border:2px solid var(--color-postal-brown); background:var(--color-paper); font:inherit; }
+.replyLink{display:inline-flex;justify-content:center;min-height:2.75rem;padding:.7rem 1rem;border:2px solid var(--color-postal-brown);background:var(--color-postal-red);color:var(--color-paper);font-weight:900;text-decoration:none;text-transform:uppercase}
