@@ -8,7 +8,6 @@ import { AssetImage, ItemCard, SketchPanel, TravelStatusLabel, TravelWeatherBadg
 import {
   assetKeys,
   formatRemainingTime,
-  geographicVisualTheme,
   getDeliveryStatus,
   getMapJourneyPhase,
   getPostalTrafficDisplayPosition,
@@ -38,6 +37,7 @@ import {
   type RouteDiscoveryVisualState,
   type TravelLeg,
 } from "../../game";
+import { useTravelVisualTheme } from "../../game/useTravelVisualTheme";
 import { usePostalTraffic } from "../../game/usePostalTraffic";
 import { useRewardCollectionData } from "../../game/useRewardCollectionData";
 import { useMascotCatalog } from "../../game/useMascotCatalog";
@@ -183,9 +183,8 @@ export function TravelMapPage() {
   const status = getDeliveryStatus(delivery, now);
   const isCollected = collectionState.delivery?.id === delivery.id && collectionState.isCollected;
   const journeyPhase = getMapJourneyPhase(status, isCollected);
-  const visualTheme = delivery.segmentedTravel
-    ? { isNight: !delivery.segmentedTravel.isDay, season: delivery.segmentedTravel.season }
-    : geographicVisualTheme(now, journeyPhase === "traveling" ? petPosition.coordinates : delivery.origin);
+  const visualCoordinates = journeyPhase === "traveling" ? petPosition.coordinates : delivery.origin;
+  const visualTheme = useTravelVisualTheme(delivery.id, now, visualCoordinates);
   const completedMap = journeyPhase === "completed";
   const progressPercent = Math.round(getTravelProgress(delivery, now) * 100);
   const displayedPlaceLabels = journeyPhase === "traveling" ? placeLabels : [];

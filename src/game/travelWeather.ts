@@ -36,15 +36,73 @@ export function meteorologicalSeason(date: Date, latitude: number): TravelSeason
   return ({ winter: "summer", spring: "autumn", summer: "winter", autumn: "spring" } as const)[northern];
 }
 
-export function isDayAtLongitude(date: Date, longitude: number): boolean {
-  const utcHours = date.getUTCHours() + date.getUTCMinutes() / 60;
-  const solarHours = ((utcHours + longitude / 15) % 24 + 24) % 24;
-  return solarHours >= 6 && solarHours < 18;
+export type GeographicVisualTheme = {
+  isNight: boolean;
+  season: TravelSeason;
+};
+
+/**
+ * Returns the civil date at a location. The IANA identifier is deliberately an
+ * input: deriving it from longitude is not valid around political boundaries
+ * or daylight-saving transitions.
+ */
+export function localDateAtTimeZone(date: Date, timeZone: string): { year: number; month: number; day: number } {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(date);
+  const value = (type: Intl.DateTimeFormatPartTypes) => Number(parts.find((part) => part.type === type)?.value);
+  return { year: value("year"), month: value("month"), day: value("day") };
 }
 
-export function geographicVisualTheme(date: Date, coordinates: { latitude: number; longitude: number }) {
+/**
+ * Whether the sun is above the standard apparent sunrise/sunset altitude
+ * (-0.833°). This handles seasons and polar day/night without a fixed clock
+ * window. The result is independent of a device clock's configured timezone.
+ */
+export function isDayAtCoordinates(date: Date, coordinates: { latitude: number; longitude: number }): boolean {
+  const utcDay = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+  const dayOfYear = Math.floor((utcDay - Date.UTC(date.getUTCFullYear(), 0, 0)) / 86_400_000);
+  const minutes = date.getUTCHours() * 60 + date.getUTCMinutes() + date.getUTCSeconds() / 60;
+  const gamma = (2 * Math.PI / 365) * (dayOfYear - 1 + (minutes - 720) / 1440);
+  const equationOfTime = 229.18 * (0.000075 + 0.001868 * Math.cos(gamma) - 0.032077 * Math.sin(gamma)
+    - 0.014615 * Math.cos(2 * gamma) - 0.040849 * Math.sin(2 * gamma));
+  const declination = 0.006918 - 0.399912 * Math.cos(gamma) + 0.070257 * Math.sin(gamma)
+    - 0.006758 * Math.cos(2 * gamma) + 0.000907 * Math.sin(2 * gamma)
+    - 0.002697 * Math.cos(3 * gamma) + 0.00148 * Math.sin(3 * gamma);
+  const trueSolarMinutes = ((minutes + equationOfTime + 4 * coordinates.longitude) % 1440 + 1440) % 1440;
+  const hourAngle = (trueSolarMinutes / 4 - 180) * Math.PI / 180;
+  const latitude = coordinates.latitude * Math.PI / 180;
+  const elevation = Math.asin(
+    Math.sin(latitude) * Math.sin(declination) + Math.cos(latitude) * Math.cos(declination) * Math.cos(hourAngle),
+  ) * 180 / Math.PI;
+  return elevation >= -0.833;
+}
+
+/** @deprecated Use isDayAtCoordinates with an IANA timezone resolved server-side. */
+export function isDayAtLongitude(date: Date, longitude: number): boolean {
+  return isDayAtCoordinates(date, { latitude: 0, longitude });
+}
+
+export function geographicVisualTheme(
+  date: Date,
+  coordinates: { latitude: number; longitude: number },
+  timeZone = "UTC",
+): GeographicVisualTheme {
+  // Validate the supplied IANA zone even though the solar elevation is an
+  // absolute physical value. This prevents callers silently falling back to a
+  // longitude approximation and keeps civil-date behaviour explicit.
+  try {
+    localDateAtTimeZone(date, timeZone);
+  } catch {
+    // A stale catalog must not stop map rendering. The astronomical result
+    // remains correct; UTC is only the safe civil-date fallback.
+    localDateAtTimeZone(date, "UTC");
+  }
   return {
-    isNight: !isDayAtLongitude(date, coordinates.longitude),
+    isNight: !isDayAtCoordinates(date, coordinates),
     season: meteorologicalSeason(date, coordinates.latitude),
   };
 }

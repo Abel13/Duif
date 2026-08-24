@@ -3074,6 +3074,14 @@ export type Database = {
           inviter_name: string
         }[]
       }
+      resolve_delivery_visual_timezone: {
+        Args: {
+          delivery_id: string
+          latitude: number
+          longitude: number
+        }
+        Returns: string
+      }
       respond_to_postal_friend_request: {
         Args: { friendship_id: string; should_accept: boolean }
         Returns: {
