@@ -1,5 +1,5 @@
 import { describe,expect,it } from "vitest";
-import { normalizeOpenMeteo,openMeteoUrl } from "./travel-weather";
+import { normalizeOpenMeteo,openMeteoUrl,weatherProviderFailureCode } from "./travel-weather";
 
 describe("Open-Meteo adapter",()=>{
   it("normalizes only the nearest approved hourly fields",()=>{
@@ -10,5 +10,10 @@ describe("Open-Meteo adapter",()=>{
   it("requests no provider fields beyond the approved set",()=>{
     const url=new URL(openMeteoUrl("https://api.open-meteo.com/v1/forecast",-20,30));
     expect(url.searchParams.get("hourly")).toBe("weather_code,is_day,wind_speed_10m,wind_gusts_10m");
+  });
+  it("exposes only safe provider failure categories",()=>{
+    expect(weatherProviderFailureCode(new Error("invalid_base_url"))).toBe("invalid_base_url");
+    expect(weatherProviderFailureCode(new Error("provider_http_error"))).toBe("provider_http_error");
+    expect(weatherProviderFailureCode(new Error("secret-provider-detail"))).toBe("provider_unavailable");
   });
 });

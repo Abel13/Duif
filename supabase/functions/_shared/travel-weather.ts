@@ -1,4 +1,12 @@
 export type NormalizedWeather = { weatherCode: number; isDay: boolean; windSpeedKmh: number; windGustKmh: number };
+export type WeatherProviderFailureCode = "invalid_base_url" | "provider_http_error" | "provider_timeout" | "provider_unavailable" | "invalid_provider_payload" | "forecast_apply_failed";
+
+export function weatherProviderFailureCode(error: unknown): WeatherProviderFailureCode {
+  if (error instanceof Error && ["invalid_base_url", "provider_http_error", "provider_timeout", "invalid_provider_payload", "forecast_apply_failed"].includes(error.message)) {
+    return error.message as WeatherProviderFailureCode;
+  }
+  return "provider_unavailable";
+}
 
 export function normalizeOpenMeteo(payload: unknown, blockStart: string): NormalizedWeather | null {
   if (!payload || typeof payload !== "object") return null;
