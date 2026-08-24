@@ -2307,7 +2307,9 @@ Success criteria:
 
 ## Milestone 55: Segmented Travel, Weather, And Automatic Adversities
 
-Status: Implemented locally; awaiting review and commit. Open-Meteo is the initial adapter, with a deterministic virtual fallback.
+Status: Complete, committed, deployed, and validated in production. Open-Meteo is the initial
+adapter, with a deterministic virtual fallback; the production validation applied three provider
+forecasts with no provider failure, circuit break, or fallback.
 
 Goal:
 
@@ -2352,7 +2354,8 @@ Success criteria:
 
 ## Milestone 56: Functional Equipment, Backpacks, And Loadout Preview
 
-Status: Planned; equipment principles approved, catalog economy unresolved.
+Status: Next planned milestone; equipment principles approved, catalog economy unresolved. Plan
+and approve the unresolved decisions below before implementation.
 
 Goal:
 

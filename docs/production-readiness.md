@@ -1,8 +1,8 @@
 # Production readiness
 
-Milestone 47 is the release gate for accounts and onboarding. Run this checklist against a local
-database after migrations, then repeat the configuration steps in the explicitly identified remote
-project. Do not use a production project as a test target.
+This checklist covers the production baseline through Milestone 55. Run it against a local database
+after migrations, then repeat only the documented configuration and verification steps in the
+explicitly identified remote project. Do not use a production project as a test target.
 
 ## Verification
 
@@ -35,7 +35,16 @@ Before release, configure Supabase Auth for the production HTTPS origin:
 - retain refresh-token rotation, a one-hour JWT lifetime, and rate limits for sign-in/sign-up,
   email delivery, token verification, and token refresh;
 - set `VITE_DUIF_REQUIRE_PWA_INSTALL=true` only in the production web environment;
-- deploy the `asset-studio` and `geonames-refresh` Edge Functions after migrations.
+- deploy `asset-studio` and `geonames-refresh` after their dependencies change;
+- configure `WEATHER_RESOLVER_CRON_SECRET` in the Edge Function and the matching
+  `duif_weather_resolver_cron_secret` in Vault, then deploy `weather-travel-resolver` with
+  `--no-verify-jwt` after its migrations;
+- remember that Git/Vercel deployment does not apply Supabase migrations or publish Edge Functions.
+
+Validate the weather resolver through `net._http_response`: require HTTP `200`, `applied > 0`,
+`failed = 0`, `circuitOpen = false`, and `fallback = false`. Recent rows in
+`weather_forecast_cache` must use `source = 'openMeteo'`. The initial production validation on
+2026-08-24 applied three forecasts successfully.
 
 The public app always shows generic confirmation, resend, sign-in, and recovery responses. Never
 surface whether an e-mail address exists, and never put service-role or database credentials in a

@@ -30,14 +30,17 @@ Do not build the full product yet. Build only the current requested feature.
 
 ## Current Baseline
 
-Milestones 1 through 36A are complete. The project includes Supabase-backed authenticated flows,
-a MapLibre travel map, deterministic persisted discoveries, atomic
-collection, inventory, multi-mascot route selection, and authoritative regional postal traffic.
+Milestones 1 through 55 are complete. The project includes Supabase-backed account and onboarding
+flows, postal connections and correspondence, repeatable NPC jobs, a MapLibre travel map,
+authoritative segmented travel, persisted discoveries, regional postal traffic, and Open-Meteo
+weather with deterministic fallback. Milestone 55 is deployed and provider-backed forecasts have
+been validated in production.
 
-Milestone 37 is in progress: the local database and production bundle are clean, while the remote
-reset awaits an explicitly identified allowlisted project. Milestones 38 through 47 continue the
-account and onboarding phase. Payments, real-time multiplayer, precise public locations, trading,
-chat, and unrestricted user uploads remain out of scope.
+Milestone 56 is the next planned slice, but its launch equipment catalog, durability, Seed prices,
+repair prices, unlock sources, equipment positions, and protection scale require product approval
+before implementation. Payments, real-time multiplayer, precise public locations, trading, chat,
+and unrestricted user uploads remain out of scope. Remote operations remain explicit and scoped;
+never infer authorization for a reset, and preserve official catalogs in any approved reset.
 
 ## Tech Stack
 
@@ -293,6 +296,7 @@ Before finishing any task:
 
 ## Next Implementation Target
 
-Milestone 37 is the next approved slice. Follow its reset safeguards exactly, especially for any
-remote environment, and preserve official catalogs while removing player-owned prototype state.
-Implement later milestones only after the preceding slice is reviewed.
+Plan Milestone 56 next. Do not implement its persistence, economy, catalog, or equipment effects
+until the unresolved product decisions listed in the roadmap are approved. Continue to require
+explicit authorization for remote deployment or reset operations; any approved reset must use an
+identified allowlisted project and preserve official catalogs.

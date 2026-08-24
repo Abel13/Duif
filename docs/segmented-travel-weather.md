@@ -24,3 +24,21 @@ The map and travel-status UI show the current astronomical light at the mascot p
 snapshot remains the source for weather category and attribution, so a stale forecast daylight value
 cannot make the UI report night after sunrise. The timezone-boundary catalog is imported through
 `supabase/admin/import_timezone_boundaries.sql`; its geometry stays server-only.
+
+## Release and production validation
+
+A Git push or Vercel deployment does not apply Supabase migrations or publish Edge Functions. Apply
+the database changes first, then publish the resolver so its RPC dependencies already exist:
+
+```sh
+supabase db push --linked
+supabase functions deploy weather-travel-resolver \
+  --project-ref zeuzkzfefulpqafchcsy \
+  --no-verify-jwt
+```
+
+Invoke the asynchronous resolver with `select public.invoke_weather_travel_edge_function();`, then
+inspect the returned request in `net._http_response`. A healthy provider-backed execution has HTTP
+`200`, `applied > 0`, `failed = 0`, `circuitOpen = false`, and `fallback = false`. Confirm that recent
+rows in `weather_forecast_cache` use `source = 'openMeteo'`. Production was validated on 2026-08-24
+with three applied forecasts and no provider failure or fallback.
