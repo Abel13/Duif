@@ -1,7 +1,7 @@
 -- Milestone 54 completion. Keep the original jobs migration immutable and refine its contracts here.
 
 alter table public.official_postal_job_templates
-  add column mascot_xp integer not null default 30 check (mascot_xp > 0);
+  add column if not exists mascot_xp integer not null default 30 check (mascot_xp > 0);
 
 update public.official_postal_job_templates
 set mascot_xp = case
