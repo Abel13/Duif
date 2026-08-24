@@ -1,14 +1,14 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { authorizeCronRequest } from "../_shared/cron-auth.ts";
 import { normalizeOpenMeteo, openMeteoUrl } from "../_shared/travel-weather.ts";
 
 const jsonHeaders={"Content-Type":"application/json"};
 type Cell={cell_latitude:number;cell_longitude:number;block_start:string;cached_weather_code:number|null;cached_is_day:boolean|null;cached_wind_speed_kmh:number|null;cached_wind_gust_kmh:number|null;cached_source:"openMeteo"|"virtual"|null};
 
 Deno.serve(async (request)=>{
-  if (request.method!=="POST") return response({error:"method_not_allowed"},405);
-  const url=Deno.env.get("SUPABASE_URL")??"", serviceKey=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")??"";
-  const authorization=request.headers.get("Authorization")??"";
-  if (!url || !serviceKey || authorization!==`Bearer ${serviceKey}`) return response({error:"unauthorized"},401);
+  const url=Deno.env.get("SUPABASE_URL")??"", serviceKey=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")??"", cronSecret=Deno.env.get("WEATHER_RESOLVER_CRON_SECRET")??"";
+  const authorization=await authorizeCronRequest({method:request.method,providedSecret:request.headers.get("X-Duif-Cron-Secret"),expectedSecret:cronSecret,internalConfigurationReady:Boolean(url&&serviceKey)});
+  if (authorization) return response({error:authorization.error},authorization.status);
   const admin=createClient(url,serviceKey,{auth:{persistSession:false}});
   const {data,error}=await admin.rpc("pending_weather_forecast_requests",{reference_time:new Date().toISOString()});
   if (error) return response({error:"forecast_cells_unavailable"},500);

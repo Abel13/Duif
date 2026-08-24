@@ -382,6 +382,9 @@ inspector_port = 56328
 # The Deno major version to use.
 deno_version = 2
 
+[functions.weather-travel-resolver]
+verify_jwt = false
+
 # [edge_runtime.secrets]
 # secret_key = "env(SECRET_VALUE)"
 

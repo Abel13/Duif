@@ -1,8 +1,11 @@
 begin;
 
 do $$
-declare mascot record; target_id uuid:=gen_random_uuid(); target_mascot_id uuid:=gen_random_uuid(); segment_total integer; distance_total numeric; first_weather jsonb; first_completed timestamptz; summary jsonb;
+declare mascot record; target_id uuid:=gen_random_uuid(); target_mascot_id uuid:=gen_random_uuid(); segment_total integer; distance_total numeric; first_weather jsonb; first_completed timestamptz; summary jsonb; invoke_definition text;
 begin
+  select pg_get_functiondef('public.invoke_weather_travel_edge_function()'::regprocedure) into invoke_definition;
+  if invoke_definition not like '%duif_weather_resolver_cron_secret%' or invoke_definition not like '%X-Duif-Cron-Secret%' then raise exception 'weather resolver does not use its dedicated cron secret'; end if;
+  if invoke_definition like '%duif_service_role_key%' or invoke_definition like '%''Authorization''%' then raise exception 'weather resolver still exposes service role authorization'; end if;
   select pm.id,pm.owner_profile_id,p.home_latitude,p.home_longitude into mascot from public.player_mascots pm join public.profiles p on p.id=pm.owner_profile_id limit 1;
   if mascot.id is null then raise exception 'mascot fixture required'; end if;
   insert into public.player_mascots(id,owner_profile_id,template_id,name,level,xp,next_level_xp,attributes,trait,equipment,skills,appearance)
