@@ -498,7 +498,7 @@ export function TravelMapPage() {
                 <span>{getPostalVisitorMinutes(visitor.departsAt, now.getTime())} min</span>
               </Link>
             ))}
-            {journeyPhase === "traveling" && displayMascot && delivery.segmentedTravel ? <TravelWeatherBadge mascotName={displayMascot.name} summary={delivery.segmentedTravel} /> : null}
+            {journeyPhase === "traveling" && displayMascot && delivery.segmentedTravel ? <TravelWeatherBadge isDay={!visualTheme.isNight} mascotName={displayMascot.name} summary={delivery.segmentedTravel} /> : null}
             {journeyPhase === "traveling" && visiblePostalTraffic.length > 0 ? <button aria-label={t("postalTraffic.title")} className={styles.activeToolButton} onClick={() => setTrafficDialogOpen(true)} title={t("postalTraffic.title")} type="button"><TrafficSign aria-hidden="true" weight="duotone" /><span>{visiblePostalTraffic.length}</span></button> : null}
             {journeyPhase === "traveling" && rewards.length > 0 ? <button aria-label={t("map.discoveries")} className={styles.activeToolButton} data-new={newDiscoveryIds.size > 0 || undefined} onClick={() => { closeRewardDetails(); setDiscoveryDialogOpen(true); }} title={t("map.discoveries")} type="button"><Binoculars aria-hidden="true" weight="duotone" /><span>{discoveredCount}/{rewards.length}</span></button> : null}
           </nav>
@@ -596,6 +596,7 @@ export function TravelMapPage() {
             delivery={delivery}
             displayMascot={displayMascot}
             destinationLabel={destinationLabel}
+            isDay={!visualTheme.isNight}
             now={now}
             onClosed={closeTripStatus}
             originLabel={originLabel}
@@ -918,6 +919,7 @@ function TripStatusDialog({
   destinationLabel,
   displayMascot,
   now,
+  isDay,
   onClosed,
   originLabel,
   petLeg,
@@ -927,6 +929,7 @@ function TripStatusDialog({
   delivery: Delivery;
   destinationLabel: string;
   displayMascot: Mascot | undefined;
+  isDay: boolean;
   now: Date;
   onClosed: () => void;
   originLabel: string;
@@ -995,7 +998,7 @@ function TripStatusDialog({
           <VisualFact icon={<Clock weight="duotone"/>} label={t("delivery.remainingTime")} value={formatRemainingTime(delivery, now)}/>
           <VisualFact icon={<Compass weight="duotone"/>} label={t("map.currentLeg")} value={t(`map.legs.${petLeg}`)}/>
           <VisualFact icon={<Signpost weight="duotone"/>} label={t("travelWeather.segment")} value={delivery.segmentedTravel?`${delivery.segmentedTravel.currentSegmentIndex+1}/${delivery.segmentedTravel.segmentCount}`:t(`delivery.status.${status}`)}/>
-          {delivery.segmentedTravel?<><VisualFact icon={<CloudSun weight="duotone"/>} label={t("travelWeather.weather")} value={`${t(`travelWeather.categories.${delivery.segmentedTravel.currentWeather.category}`)} · ${t(delivery.segmentedTravel.isDay?"travelWeather.day":"travelWeather.night")}`}/><VisualFact icon={<Gauge weight="duotone"/>} label={t("travelWeather.effectiveSpeed")} value={`${Math.round(delivery.segmentedTravel.effectiveSpeedMultiplier*100)}%`}/></>:null}
+          {delivery.segmentedTravel?<><VisualFact icon={<CloudSun weight="duotone"/>} label={t("travelWeather.weather")} value={`${t(`travelWeather.categories.${delivery.segmentedTravel.currentWeather.category}`)} · ${t(isDay?"travelWeather.day":"travelWeather.night")}`}/><VisualFact icon={<Gauge weight="duotone"/>} label={t("travelWeather.effectiveSpeed")} value={`${Math.round(delivery.segmentedTravel.effectiveSpeedMultiplier*100)}%`}/></>:null}
           {delivery.correspondenceType?<VisualFact icon={<Package weight="duotone"/>} label={t("map.carryingCargo")} value={t(`correspondence.${delivery.correspondenceType}.name`)}/>:null}
         </section>
         {delivery.segmentedTravel?.currentWeather.source==="openMeteo"?<p className={styles.weatherAttribution}>{t("travelWeather.attribution")}</p>:null}

@@ -11,3 +11,16 @@ Quando o provedor falha, a resposta administrativa agrega somente categorias seg
 The database cron always resolves due segments, even when the Edge Function is unavailable. The Edge Function adds provider forecasts and then invokes the same idempotent resolver. Forecast writes affect only planned segments whose start is in the future. Started and completed segment snapshots are immutable by contract.
 
 Open-Meteo data is attributed under CC BY 4.0 in provider-backed UI. Cache rows older than 30 days are removed by the resolver; completed delivery segments remain as versioned journey history.
+
+## Daylight rules v2
+
+Deliveries created after the daylight-v2 migration retain weather segments but use an astronomical
+sunrise/sunset calculation for the virtual fallback and for live night-speed changes. The database
+records private `delivery_route_daylight_windows`, checks active journeys every minute, and only
+changes the active or future portion of a v2 journey. Completed segments remain immutable; journeys
+created under rules version 1 are deliberately not migrated.
+
+The map and travel-status UI show the current astronomical light at the mascot position. The weather
+snapshot remains the source for weather category and attribution, so a stale forecast daylight value
+cannot make the UI report night after sunrise. The timezone-boundary catalog is imported through
+`supabase/admin/import_timezone_boundaries.sql`; its geometry stays server-only.

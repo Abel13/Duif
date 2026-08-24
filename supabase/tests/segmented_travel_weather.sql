@@ -26,6 +26,7 @@ begin
   if exists(select 1 from public.delivery_route_segments where delivery_id=target_id and leg='outbound' and segment_index=0 and (weather_snapshot<>first_weather or completed_at<>first_completed)) then raise exception 'completed snapshot changed'; end if;
   if exists(select 1 from public.delivery_route_segments where delivery_id=target_id and effective_speed_kmh/(select animal_speed_kmh from public.deliveries where id=target_id) not between .60 and 1.25) then raise exception 'speed clamp violated'; end if;
   if public.virtual_travel_weather(target_id,'outbound',2,timestamptz '2026-08-23 03:00Z',10,10)<>public.virtual_travel_weather(target_id,'outbound',2,timestamptz '2026-08-23 03:00Z',10,10) then raise exception 'virtual weather is not deterministic'; end if;
+  if public.astronomical_is_day(timestamptz '2026-08-24 14:14Z',-23.5505,-46.6333) is not true or public.astronomical_is_day(timestamptz '2026-08-24 02:14Z',-23.5505,-46.6333) is not false then raise exception 'astronomical daylight fallback is invalid'; end if;
 end $$;
 
 set local role service_role;
