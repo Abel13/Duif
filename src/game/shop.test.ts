@@ -10,9 +10,9 @@ describe("shop catalog", () => {
     expect(shopCatalog.every((item) => isOfficialAssetKey(item.thumbnailAssetKey))).toBe(true);
   });
 
-  it("covers every visible category and both functional currencies", () => {
+  it("keeps demonstration content separate from functional cosmetics", () => {
     expect(new Set(shopCatalog.map((item) => item.category))).toEqual(
-      new Set(["cosmetics", "stickers", "postcards", "decorations"]),
+      new Set(["stickers", "postcards", "decorations"]),
     );
     expect(new Set(shopCatalog.map((item) => item.currency))).toEqual(
       new Set(["seeds", "crystals"]),

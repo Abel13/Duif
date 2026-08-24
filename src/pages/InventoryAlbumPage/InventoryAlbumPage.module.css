@@ -312,3 +312,11 @@
     grid-template-columns: 1fr;
   }
 }
+.equipmentGroups { display:grid; gap:1rem; grid-template-columns:repeat(auto-fit,minmax(min(100%,18rem),1fr)); }
+.equipmentGroup { display:grid; grid-template-columns:6rem 1fr; gap:.8rem; padding:.8rem; border:1px dashed var(--color-postal-brown); background:color-mix(in srgb,var(--color-paper) 86%,white); }
+.equipmentGroup h3,.equipmentGroup p { margin:.15rem 0; }
+.equipmentGroup ul { display:grid; gap:.45rem; padding:0; list-style:none; }
+.equipmentGroup li { display:flex; flex-wrap:wrap; align-items:center; gap:.45rem; padding-top:.4rem; border-top:1px solid var(--color-paper-dark); }
+.equipmentGroup small { width:100%; }
+.equipmentGroup button { border:1px solid var(--color-postal-brown); background:var(--color-paper); color:var(--color-ink); padding:.4rem .6rem; }
+.repairError { color:var(--color-postal-red); font-weight:700; }

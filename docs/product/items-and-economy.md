@@ -68,8 +68,16 @@ eventualmente coleções de adesivos e pacotes de cartões de arte paga. A econo
 oferecer com Sementes equipamento funcional básico e Lanches Revigorantes depois do balanceamento.
 Cristais não venderão vantagem de rota, XP, drops aleatórios pagos ou acesso social.
 
-Preços, moedas, pagamento e limites de compra permanecem fora de escopo até uma milestone de
-economia aprovada.
+O catálogo funcional básico possui compra autoritativa por Sementes: mochilas pequena, média e
+grande custam respectivamente 150, 350 e 700; capa impermeável, lanterna de rota, óculos de vento,
+cachecol carmim e quepe postal custam 200 cada. Utilitários possuem 10 usos e somente um equipamento esgotado pode receber reparo
+integral por 80 Sementes. Compras repetidas criam instâncias físicas distintas; não há venda,
+reembolso, presente ou vantagem funcional adquirida com Cristais.
+
+Uma instância equipada pertence exclusivamente ao loadout de um mascote. Mochilas não se desgastam;
+utilitários gastam no máximo um uso por jornada e apenas quando mitigam de fato uma condição de um
+segmento iniciado. Seus efeitos são declarativos: proteções diferentes podem somar até quatro pontos
+percentuais, sem superar o dano real e sem acumular dois mitigadores do mesmo perigo. O loadout fica bloqueado até a coleta de uma entrega aberta.
 
 ## Regras de envio
 

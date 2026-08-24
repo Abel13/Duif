@@ -1,7 +1,13 @@
 import type { TranslationDictionary } from "../types";
 
 export const ptBR = {
-  travelWeather: { day:"Dia", night:"Noite", conditionImpact:"Impacto das condições neste trecho", activeConditions:"Condições ativas da viagem", impacts:{helpful:"Condições favoráveis",neutral:"Condições neutras",challenging:"Condições adversas"}, openDetails:"Ver clima da viagem", close:"Fechar clima", eyebrow:"Condições do trecho", title:"Clima da viagem", ofBaseSpeed:"da velocidade-base", virtualSource:"Clima virtual determinístico enquanto o forecast real não está disponível.", weather:"Clima atual", season:"Estação", segment:"Trecho", effectiveSpeed:"Velocidade efetiva", etaNotice:"O horário estimado pode mudar enquanto os próximos trechos são atualizados.", attribution:"Dados meteorológicos por Open-Meteo · CC BY 4.0", impactRange:"Impacto climático possível: -8% a +2%", impactDescription:"A estimativa pode mudar antes da conclusão. O clima é resolvido no servidor sem revelar sua rota.", categories:{clear:"Céu limpo",partlyCloudy:"Parcialmente nublado",cloudy:"Nublado",fogDrizzle:"Neblina ou garoa",rain:"Chuva",snow:"Neve",heavyFreezingRain:"Chuva forte ou congelante",thunderstorm:"Tempestade"}, seasons:{summer:"Verão",autumn:"Outono",winter:"Inverno",spring:"Primavera"} },
+  functionalEquipment: {
+    shopTitle:"Equipamentos funcionais",shopDescription:"Prepare cada mascote para carga e condições da rota.",balance:"Saldo de Sementes",buy:"Comprar",buying:"Comprando",purchaseError:"Não foi possível concluir a compra.",
+    loadoutDescription:"Escolha uma mochila e um utilitário para esta rota.",lockedDuringTravel:"Os equipamentos ficam protegidos enquanto o mascote possui uma entrega aberta.",backpackSlot:"Mochila",utilitySlot:"Utilitário",none:"Nenhum",saveEquipment:"Salvar equipamentos",chooseEquipment:"Toque para escolher",choose:"Escolher",change:"Trocar",locked:"Bloqueado em viagem",loadout:"Equipamentos do mascote",chooseBackpack:"Escolher mochila",chooseUtility:"Escolher utilitário",closePicker:"Fechar seleção",removeEquipment:"Deixar este espaço vazio",assignedTo:"Com {name}",anotherMascot:"outro mascote",noOwnedEquipment:"Você ainda não possui equipamentos deste tipo.",cargo:"Carga",volumeMarks:"volumes disponíveis",noProtection:"Sem proteção",conditions:{rain:"Chuva",night:"Noite",wind:"Vento"},hazards:{wet:"Chuva e umidade",visibility:"Baixa visibilidade",night:"Noite",wind:"Vento",cold:"Frio",winterCold:"Frio de inverno",heat:"Calor",summerHeat:"Calor de verão",strongSun:"Sol forte"},speed:"Velocidade",slots:"slots",protection:"Proteção",contextual:"Contextual",current:"Atual",withChange:"Com alteração",saveError:"O loadout mudou ou o item não está mais disponível.",saving:"Salvando",applyLoadout:"Aplicar loadout",uses:"usos",repair:"Reparar por 80",repairing:"Reparando",repairError:"Não foi possível reparar o equipamento.",instances:"cópias",equippedBy:"Equipado por",available:"Disponível",kinds:{backpack:"Mochila",utility:"Utilitário"},
+    smallBackpack:{name:"Mochila pequena",description:"Leva mais um volume com uma redução de 5% na velocidade."},mediumBackpack:{name:"Mochila média",description:"Leva mais dois volumes com uma redução de 10% na velocidade."},largeBackpack:{name:"Mochila grande",description:"Leva mais três volumes com uma redução de 15% na velocidade."},
+    raincoat:{name:"Capa impermeável",description:"Reduz em 3 pontos percentuais a penalidade de chuva quando realmente necessária."},routeLantern:{name:"Lanterna de rota",description:"Elimina a penalidade noturna de 2 pontos percentuais quando for o melhor efeito disponível."},windGoggles:{name:"Óculos de vento",description:"Reduz em 2 pontos percentuais a penalidade de ventos a partir de 30 km/h."},
+  },
+  travelWeather: { day:"Dia", night:"Noite", conditionImpact:"Impacto das condições neste trecho", activeConditions:"Condições ativas da viagem", impacts:{helpful:"Condições favoráveis",neutral:"Condições neutras",challenging:"Condições adversas"}, openDetails:"Ver clima da viagem", close:"Fechar clima", eyebrow:"Condições do trecho", title:"Clima da viagem", ofBaseSpeed:"da velocidade-base", virtualSource:"Clima virtual determinístico enquanto o forecast real não está disponível.", weather:"Clima atual", temperature:"Temperatura", season:"Estação", segment:"Trecho", effectiveSpeed:"Velocidade efetiva", etaNotice:"O horário estimado pode mudar enquanto os próximos trechos são atualizados.", attribution:"Dados meteorológicos por Open-Meteo · CC BY 4.0", impactRange:"Impacto climático possível: -8% a +2%", impactDescription:"A estimativa pode mudar antes da conclusão. O clima é resolvido no servidor sem revelar sua rota.", categories:{clear:"Céu limpo",partlyCloudy:"Parcialmente nublado",cloudy:"Nublado",fogDrizzle:"Neblina ou garoa",rain:"Chuva",snow:"Neve",heavyFreezingRain:"Chuva forte ou congelante",thunderstorm:"Tempestade"}, seasons:{summer:"Verão",autumn:"Outono",winter:"Inverno",spring:"Primavera"} },
   app: {
     title: "DUIF",
   },
@@ -894,12 +900,12 @@ export const ptBR = {
     items: {
       crimsonCourierScarf: {
         name: "Cachecol carmim de mensageiro",
-        description: "Um cachecol leve com costura postal para dias de vento.",
+        description: "Protege contra frio, vento e a intensificação do inverno.",
       },
       meadowPostCap: {
         name: "Quepe postal do campo",
         description:
-          "Um pequeno quepe verde, gasto nas bordas e pronto para novas rotas.",
+          "Protege contra calor, sol forte e a intensificação do verão.",
       },
       sunnyRouteSticker: {
         name: "Adesivo rota ensolarada",

@@ -36,4 +36,11 @@ describe("segmented travel weather rules",()=>{
     expect(composeEffectiveSpeedMultiplier({weather:"clear",windSpeedKmh:0,isDay:true,season:"summer",mascot:.5})).toBe(1.25);
     expect(composeEffectiveSpeedMultiplier({weather:"cloudy",windSpeedKmh:0,isDay:true,season:"spring"})).toBe(1);
   });
+  it("applies sensitive thermal thresholds and only amplifies seasonal extremes",()=>{
+    expect(composeEffectiveSpeedMultiplier({weather:"cloudy",windSpeedKmh:0,isDay:true,season:"winter",temperatureC:10})).toBe(1);
+    expect(composeEffectiveSpeedMultiplier({weather:"cloudy",windSpeedKmh:0,isDay:true,season:"winter",temperatureC:9.9})).toBe(.97);
+    expect(composeEffectiveSpeedMultiplier({weather:"cloudy",windSpeedKmh:0,isDay:true,season:"winter",temperatureC:2.9})).toBe(.95);
+    expect(composeEffectiveSpeedMultiplier({weather:"clear",windSpeedKmh:0,isDay:true,season:"summer",temperatureC:27})).toBe(.98);
+    expect(composeEffectiveSpeedMultiplier({weather:"cloudy",windSpeedKmh:0,isDay:true,season:"summer",temperatureC:34})).toBe(.95);
+  });
 });

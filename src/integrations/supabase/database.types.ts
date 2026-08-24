@@ -143,6 +143,7 @@ export type Database = {
           destination_longitude: number
           destination_place_label: string | null
           distance_km: number
+          equipment_snapshot: Json
           id: string
           is_tutorial: boolean
           mascot_id: string
@@ -160,10 +161,10 @@ export type Database = {
           sender_profile_id: string
           status: Database["public"]["Enums"]["delivery_status"]
           travel_modifiers: Json | null
-          travel_rules_snapshot?: Json | null
-          travel_weather_summary?: Json | null
+          travel_rules_snapshot: Json | null
           travel_slot_capacity: number
           travel_slots_used: number
+          travel_weather_summary: Json | null
           updated_at: string
         }
         Insert: {
@@ -175,6 +176,7 @@ export type Database = {
           destination_longitude: number
           destination_place_label?: string | null
           distance_km: number
+          equipment_snapshot?: Json
           id: string
           is_tutorial?: boolean
           mascot_id: string
@@ -193,9 +195,9 @@ export type Database = {
           status: Database["public"]["Enums"]["delivery_status"]
           travel_modifiers?: Json | null
           travel_rules_snapshot?: Json | null
-          travel_weather_summary?: Json | null
           travel_slot_capacity?: number
           travel_slots_used?: number
+          travel_weather_summary?: Json | null
           updated_at?: string
         }
         Update: {
@@ -207,6 +209,7 @@ export type Database = {
           destination_longitude?: number
           destination_place_label?: string | null
           distance_km?: number
+          equipment_snapshot?: Json
           id?: string
           is_tutorial?: boolean
           mascot_id?: string
@@ -225,9 +228,9 @@ export type Database = {
           status?: Database["public"]["Enums"]["delivery_status"]
           travel_modifiers?: Json | null
           travel_rules_snapshot?: Json | null
-          travel_weather_summary?: Json | null
           travel_slot_capacity?: number
           travel_slots_used?: number
+          travel_weather_summary?: Json | null
           updated_at?: string
         }
         Relationships: [
@@ -315,6 +318,58 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "official_postcards"
             referencedColumns: ["catalog_key"]
+          },
+        ]
+      }
+      delivery_equipment_activations: {
+        Row: {
+          activated_at: string
+          applied_effects: Json
+          condition: string
+          delivery_id: string
+          equipment_instance_id: string
+          mitigation_points: number
+          segment_id: string
+        }
+        Insert: {
+          activated_at?: string
+          applied_effects?: Json
+          condition: string
+          delivery_id: string
+          equipment_instance_id: string
+          mitigation_points: number
+          segment_id: string
+        }
+        Update: {
+          activated_at?: string
+          applied_effects?: Json
+          condition?: string
+          delivery_id?: string
+          equipment_instance_id?: string
+          mitigation_points?: number
+          segment_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "delivery_equipment_activations_delivery_id_fkey"
+            columns: ["delivery_id"]
+            isOneToOne: false
+            referencedRelation: "deliveries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "delivery_equipment_activations_equipment_instance_id_fkey"
+            columns: ["equipment_instance_id"]
+            isOneToOne: false
+            referencedRelation: "equipment_instances"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "delivery_equipment_activations_segment_id_fkey"
+            columns: ["segment_id"]
+            isOneToOne: false
+            referencedRelation: "delivery_route_segments"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -506,6 +561,51 @@ export type Database = {
           },
         ]
       }
+      delivery_route_daylight_windows: {
+        Row: {
+          created_at: string
+          delivery_id: string
+          ended_at: string | null
+          id: string
+          is_day: boolean
+          segment_id: string
+          started_at: string
+        }
+        Insert: {
+          created_at?: string
+          delivery_id: string
+          ended_at?: string | null
+          id?: string
+          is_day: boolean
+          segment_id: string
+          started_at: string
+        }
+        Update: {
+          created_at?: string
+          delivery_id?: string
+          ended_at?: string | null
+          id?: string
+          is_day?: boolean
+          segment_id?: string
+          started_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "delivery_route_daylight_windows_delivery_id_fkey"
+            columns: ["delivery_id"]
+            isOneToOne: false
+            referencedRelation: "deliveries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "delivery_route_daylight_windows_segment_id_fkey"
+            columns: ["segment_id"]
+            isOneToOne: false
+            referencedRelation: "delivery_route_segments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       delivery_route_discoveries: {
         Row: {
           collected_at: string | null
@@ -571,6 +671,74 @@ export type Database = {
           },
         ]
       }
+      delivery_route_segments: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          delivery_id: string
+          distance_km: number
+          effective_speed_kmh: number
+          estimated_end_at: string
+          estimated_start_at: string
+          id: string
+          leg: string
+          modifiers: Json
+          route_fraction_end: number
+          route_fraction_start: number
+          segment_index: number
+          state: string
+          updated_at: string
+          weather_snapshot: Json
+          weather_source: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          delivery_id: string
+          distance_km: number
+          effective_speed_kmh: number
+          estimated_end_at: string
+          estimated_start_at: string
+          id?: string
+          leg: string
+          modifiers: Json
+          route_fraction_end: number
+          route_fraction_start: number
+          segment_index: number
+          state?: string
+          updated_at?: string
+          weather_snapshot: Json
+          weather_source: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          delivery_id?: string
+          distance_km?: number
+          effective_speed_kmh?: number
+          estimated_end_at?: string
+          estimated_start_at?: string
+          id?: string
+          leg?: string
+          modifiers?: Json
+          route_fraction_end?: number
+          route_fraction_start?: number
+          segment_index?: number
+          state?: string
+          updated_at?: string
+          weather_snapshot?: Json
+          weather_source?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "delivery_route_segments_delivery_id_fkey"
+            columns: ["delivery_id"]
+            isOneToOne: false
+            referencedRelation: "deliveries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       delivery_sticker_transfers: {
         Row: {
           delivery_id: string
@@ -617,6 +785,208 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "official_stickers"
             referencedColumns: ["catalog_key"]
+          },
+        ]
+      }
+      equipment_catalog: {
+        Row: {
+          asset_key: string | null
+          catalog_key: string
+          condition: string | null
+          created_at: string
+          description_key: string
+          id: string
+          kind: string
+          max_uses: number | null
+          metadata: Json
+          mitigation_points: number
+          name_key: string
+          repair_seed_price: number | null
+          seed_price: number | null
+          slot_bonus: number
+          sort_order: number
+          speed_multiplier: number
+          status: string
+        }
+        Insert: {
+          asset_key?: string | null
+          catalog_key: string
+          condition?: string | null
+          created_at?: string
+          description_key: string
+          id?: string
+          kind: string
+          max_uses?: number | null
+          metadata?: Json
+          mitigation_points?: number
+          name_key: string
+          repair_seed_price?: number | null
+          seed_price?: number | null
+          slot_bonus?: number
+          sort_order?: number
+          speed_multiplier?: number
+          status?: string
+        }
+        Update: {
+          asset_key?: string | null
+          catalog_key?: string
+          condition?: string | null
+          created_at?: string
+          description_key?: string
+          id?: string
+          kind?: string
+          max_uses?: number | null
+          metadata?: Json
+          mitigation_points?: number
+          name_key?: string
+          repair_seed_price?: number | null
+          seed_price?: number | null
+          slot_bonus?: number
+          sort_order?: number
+          speed_multiplier?: number
+          status?: string
+        }
+        Relationships: []
+      }
+      equipment_catalog_effects: {
+        Row: { catalog_id: string; hazard_key: string; mitigation_points: number; sort_order: number }
+        Insert: { catalog_id: string; hazard_key: string; mitigation_points: number; sort_order?: number }
+        Update: { catalog_id?: string; hazard_key?: string; mitigation_points?: number; sort_order?: number }
+        Relationships: [{ foreignKeyName: "equipment_catalog_effects_catalog_id_fkey"; columns: ["catalog_id"]; isOneToOne: false; referencedRelation: "equipment_catalog"; referencedColumns: ["id"] }]
+      }
+      equipment_instances: {
+        Row: {
+          acquired_at: string
+          acquisition_key: string
+          catalog_id: string
+          equipped_mascot_id: string | null
+          id: string
+          owner_profile_id: string
+          source: string
+          updated_at: string
+          uses_remaining: number | null
+        }
+        Insert: {
+          acquired_at?: string
+          acquisition_key?: string
+          catalog_id: string
+          equipped_mascot_id?: string | null
+          id?: string
+          owner_profile_id: string
+          source?: string
+          updated_at?: string
+          uses_remaining?: number | null
+        }
+        Update: {
+          acquired_at?: string
+          acquisition_key?: string
+          catalog_id?: string
+          equipped_mascot_id?: string | null
+          id?: string
+          owner_profile_id?: string
+          source?: string
+          updated_at?: string
+          uses_remaining?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "equipment_instances_catalog_id_fkey"
+            columns: ["catalog_id"]
+            isOneToOne: false
+            referencedRelation: "equipment_catalog"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "equipment_instances_equipped_mascot_id_fkey"
+            columns: ["equipped_mascot_id"]
+            isOneToOne: false
+            referencedRelation: "player_mascots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "equipment_instances_owner_profile_id_fkey"
+            columns: ["owner_profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      equipment_mutation_requests: {
+        Row: {
+          created_at: string
+          mutation_kind: string
+          profile_id: string
+          request_id: string
+          result: Json
+        }
+        Insert: {
+          created_at?: string
+          mutation_kind: string
+          profile_id: string
+          request_id: string
+          result: Json
+        }
+        Update: {
+          created_at?: string
+          mutation_kind?: string
+          profile_id?: string
+          request_id?: string
+          result?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "equipment_mutation_requests_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      equipment_purchase_requests: {
+        Row: {
+          catalog_id: string
+          created_at: string
+          instance_id: string
+          profile_id: string
+          request_id: string
+        }
+        Insert: {
+          catalog_id: string
+          created_at?: string
+          instance_id: string
+          profile_id: string
+          request_id: string
+        }
+        Update: {
+          catalog_id?: string
+          created_at?: string
+          instance_id?: string
+          profile_id?: string
+          request_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "equipment_purchase_requests_catalog_id_fkey"
+            columns: ["catalog_id"]
+            isOneToOne: false
+            referencedRelation: "equipment_catalog"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "equipment_purchase_requests_instance_id_fkey"
+            columns: ["instance_id"]
+            isOneToOne: false
+            referencedRelation: "equipment_instances"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "equipment_purchase_requests_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -1031,6 +1401,52 @@ export type Database = {
           },
         ]
       }
+      mascot_loadouts: {
+        Row: {
+          backpack_instance_id: string | null
+          mascot_id: string
+          revision: number
+          updated_at: string
+          utility_instance_id: string | null
+        }
+        Insert: {
+          backpack_instance_id?: string | null
+          mascot_id: string
+          revision?: number
+          updated_at?: string
+          utility_instance_id?: string | null
+        }
+        Update: {
+          backpack_instance_id?: string | null
+          mascot_id?: string
+          revision?: number
+          updated_at?: string
+          utility_instance_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mascot_loadouts_backpack_instance_id_fkey"
+            columns: ["backpack_instance_id"]
+            isOneToOne: true
+            referencedRelation: "equipment_instances"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mascot_loadouts_mascot_id_fkey"
+            columns: ["mascot_id"]
+            isOneToOne: true
+            referencedRelation: "player_mascots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mascot_loadouts_utility_instance_id_fkey"
+            columns: ["utility_instance_id"]
+            isOneToOne: true
+            referencedRelation: "equipment_instances"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       mascot_skill_progression: {
         Row: {
           level: number
@@ -1306,6 +1722,7 @@ export type Database = {
           catalog_key: string
           contact_catalog_key: string
           description_key: string
+          mascot_xp: number
           max_distance_km: number
           max_mascot_level: number | null
           min_distance_km: number
@@ -1321,6 +1738,7 @@ export type Database = {
           catalog_key: string
           contact_catalog_key: string
           description_key: string
+          mascot_xp?: number
           max_distance_km: number
           max_mascot_level?: number | null
           min_distance_km: number
@@ -1336,6 +1754,7 @@ export type Database = {
           catalog_key?: string
           contact_catalog_key?: string
           description_key?: string
+          mascot_xp?: number
           max_distance_km?: number
           max_mascot_level?: number | null
           min_distance_km?: number
@@ -2346,6 +2765,113 @@ export type Database = {
           },
         ]
       }
+      timezone_boundaries: {
+        Row: {
+          created_at: string
+          geometry: unknown
+          id: number
+          import_id: string
+          priority: number
+          time_zone: string
+        }
+        Insert: {
+          created_at?: string
+          geometry: unknown
+          id?: never
+          import_id: string
+          priority?: number
+          time_zone: string
+        }
+        Update: {
+          created_at?: string
+          geometry?: unknown
+          id?: never
+          import_id?: string
+          priority?: number
+          time_zone?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "timezone_boundaries_import_id_fkey"
+            columns: ["import_id"]
+            isOneToOne: false
+            referencedRelation: "timezone_boundary_imports"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      timezone_boundary_imports: {
+        Row: {
+          boundary_count: number
+          id: string
+          imported_at: string
+          source: string
+          source_sha256: string
+          version: string
+        }
+        Insert: {
+          boundary_count: number
+          id?: string
+          imported_at?: string
+          source: string
+          source_sha256: string
+          version: string
+        }
+        Update: {
+          boundary_count?: number
+          id?: string
+          imported_at?: string
+          source?: string
+          source_sha256?: string
+          version?: string
+        }
+        Relationships: []
+      }
+      weather_forecast_cache: {
+        Row: {
+          block_start: string
+          category: string
+          cell_latitude: number
+          cell_longitude: number
+          expires_at: string
+          is_day: boolean
+          queried_at: string
+          source: string
+          temperature_c: number | null
+          weather_code: number
+          wind_gust_kmh: number
+          wind_speed_kmh: number
+        }
+        Insert: {
+          block_start: string
+          category: string
+          cell_latitude: number
+          cell_longitude: number
+          expires_at: string
+          is_day: boolean
+          queried_at?: string
+          source: string
+          temperature_c?: number | null
+          weather_code: number
+          wind_gust_kmh: number
+          wind_speed_kmh: number
+        }
+        Update: {
+          block_start?: string
+          category?: string
+          cell_latitude?: number
+          cell_longitude?: number
+          expires_at?: string
+          is_day?: boolean
+          queried_at?: string
+          source?: string
+          temperature_c?: number | null
+          weather_code?: number
+          wind_gust_kmh?: number
+          wind_speed_kmh?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -2612,11 +3138,29 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      apply_weather_forecast: {
+        Args: {
+          block_start: string
+          cell_latitude: number
+          cell_longitude: number
+          is_day: boolean
+          source?: string
+          temperature_c: number
+          weather_code: number
+          wind_gust_kmh: number
+          wind_speed_kmh: number
+        }
+        Returns: number
+      }
       assert_asset_admin_actor: {
         Args: { actor_id: string }
         Returns: undefined
       }
       asset_version_usage: { Args: { asset_key_value: string }; Returns: Json }
+      astronomical_is_day: {
+        Args: { at_time: string; latitude: number; longitude: number }
+        Returns: boolean
+      }
       begin_or_resume_onboarding: {
         Args: never
         Returns: {
@@ -2692,6 +3236,7 @@ export type Database = {
           destination_longitude: number
           destination_place_label: string | null
           distance_km: number
+          equipment_snapshot: Json
           id: string
           is_tutorial: boolean
           mascot_id: string
@@ -2709,8 +3254,10 @@ export type Database = {
           sender_profile_id: string
           status: Database["public"]["Enums"]["delivery_status"]
           travel_modifiers: Json | null
+          travel_rules_snapshot: Json | null
           travel_slot_capacity: number
           travel_slots_used: number
+          travel_weather_summary: Json | null
           updated_at: string
         }
         SetofOptions: {
@@ -2720,19 +3267,52 @@ export type Database = {
           isSetofReturn: false
         }
       }
-      get_delivery_return_reply_context: {
-        Args: { target_delivery_id: string }
-        Returns: {
-          delivery_id: string
-          destination_label: string
+      create_delivery_from_selection_legacy_equipment: {
+        Args: {
+          content_payload: Json
+          correspondence_catalog_key: string
+          friend_profile_id: string
           mascot_id: string
-          mascot_name: string
-          origin_label: string
-          reply_confirmed: boolean
-          reply_deadline: string
-          sender_name: string
+        }
+        Returns: {
+          animal_speed_kmh: number
+          correspondence_option_id: string | null
+          created_at: string
+          destination_label_key: string
+          destination_latitude: number
+          destination_longitude: number
+          destination_place_label: string | null
+          distance_km: number
+          equipment_snapshot: Json
+          id: string
+          is_tutorial: boolean
+          mascot_id: string
+          origin_label_key: string
+          origin_latitude: number
+          origin_longitude: number
+          origin_place_label: string | null
+          outbound_arrival_at: string
+          outbound_start_at: string
+          receiver_profile_id: string
+          return_arrival_at: string | null
+          return_start_at: string | null
+          reward_seed: string
+          route_discovery_version: number | null
           sender_profile_id: string
-        }[]
+          status: Database["public"]["Enums"]["delivery_status"]
+          travel_modifiers: Json | null
+          travel_rules_snapshot: Json | null
+          travel_slot_capacity: number
+          travel_slots_used: number
+          travel_weather_summary: Json | null
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "deliveries"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       create_delivery_from_selection_legacy_origin: {
         Args: {
@@ -2750,6 +3330,7 @@ export type Database = {
           destination_longitude: number
           destination_place_label: string | null
           distance_km: number
+          equipment_snapshot: Json
           id: string
           is_tutorial: boolean
           mascot_id: string
@@ -2767,8 +3348,10 @@ export type Database = {
           sender_profile_id: string
           status: Database["public"]["Enums"]["delivery_status"]
           travel_modifiers: Json | null
+          travel_rules_snapshot: Json | null
           travel_slot_capacity: number
           travel_slots_used: number
+          travel_weather_summary: Json | null
           updated_at: string
         }
         SetofOptions: {
@@ -2794,6 +3377,7 @@ export type Database = {
           destination_longitude: number
           destination_place_label: string | null
           distance_km: number
+          equipment_snapshot: Json
           id: string
           is_tutorial: boolean
           mascot_id: string
@@ -2811,8 +3395,10 @@ export type Database = {
           sender_profile_id: string
           status: Database["public"]["Enums"]["delivery_status"]
           travel_modifiers: Json | null
+          travel_rules_snapshot: Json | null
           travel_slot_capacity: number
           travel_slots_used: number
+          travel_weather_summary: Json | null
           updated_at: string
         }
         SetofOptions: {
@@ -2823,6 +3409,7 @@ export type Database = {
         }
       }
       current_profile_for_postal_friendship: { Args: never; Returns: string }
+      current_profile_id: { Args: never; Returns: string }
       derive_mascot_travel_modifiers: {
         Args: {
           mascot_attributes: Json
@@ -2843,6 +3430,7 @@ export type Database = {
           destination_longitude: number
           destination_place_label: string | null
           distance_km: number
+          equipment_snapshot: Json
           id: string
           is_tutorial: boolean
           mascot_id: string
@@ -2860,8 +3448,10 @@ export type Database = {
           sender_profile_id: string
           status: Database["public"]["Enums"]["delivery_status"]
           travel_modifiers: Json | null
+          travel_rules_snapshot: Json | null
           travel_slot_capacity: number
           travel_slots_used: number
+          travel_weather_summary: Json | null
           updated_at: string
         }
         SetofOptions: {
@@ -2897,6 +3487,20 @@ export type Database = {
       get_delivery_progression_award: {
         Args: { delivery_id: string }
         Returns: Json
+      }
+      get_delivery_return_reply_context: {
+        Args: { target_delivery_id: string }
+        Returns: {
+          delivery_id: string
+          destination_label: string
+          mascot_id: string
+          mascot_name: string
+          origin_label: string
+          reply_confirmed: boolean
+          reply_deadline: string
+          sender_name: string
+          sender_profile_id: string
+        }[]
       }
       get_my_nest_city: {
         Args: never
@@ -2945,10 +3549,22 @@ export type Database = {
           visibility: string
         }[]
       }
+      invoke_weather_travel_edge_function: { Args: never; Returns: number }
       is_asset_admin: { Args: never; Returns: boolean }
       json_translation_keys_are_official: {
         Args: { payload: Json }
         Returns: boolean
+      }
+      list_active_postal_visitors: {
+        Args: never
+        Returns: {
+          correspondence_type: string
+          delivery_id: string
+          departs_at: string
+          mascot_id: string
+          mascot_name: string
+          portrait_asset_key: string
+        }[]
       }
       list_my_postal_connections: { Args: never; Returns: Json }
       list_owned_postcards: {
@@ -2972,17 +3588,6 @@ export type Database = {
           quantity: number
         }[]
       }
-      list_active_postal_visitors: {
-        Args: never
-        Returns: {
-          delivery_id: string
-          correspondence_type: string
-          departs_at: string
-          mascot_id: string
-          mascot_name: string
-          portrait_asset_key: string | null
-        }[]
-      }
       list_received_correspondence: {
         Args: never
         Returns: {
@@ -2997,10 +3602,18 @@ export type Database = {
           postcard_catalog_key: string
           postcard_message: string
           postcard_name_key: string
+          postmark_city: string
+          postmark_color: string
+          postmark_country: string
+          postmark_date: string
+          postmark_key: string
+          postmark_model: string
           return_reply_confirmed: boolean
           return_reply_deadline: string
           sender_name: string
           sender_profile_id: string
+          stamp_asset_key: string
+          sticker_asset_keys: string[]
           sticker_ids: string[]
         }[]
       }
@@ -3033,15 +3646,61 @@ export type Database = {
           postcard_catalog_key: string
           postcard_message: string
           postcard_name_key: string
+          postmark_city: string
+          postmark_color: string
+          postmark_country: string
+          postmark_date: string
+          postmark_key: string
+          postmark_model: string
           return_reply_confirmed: boolean
           return_reply_deadline: string
           sender_name: string
           sender_profile_id: string
+          stamp_asset_key: string
+          sticker_asset_keys: string[]
           sticker_ids: string[]
+        }[]
+      }
+      pending_weather_forecast_cells: {
+        Args: { reference_time?: string }
+        Returns: {
+          block_start: string
+          cell_latitude: number
+          cell_longitude: number
+        }[]
+      }
+      pending_weather_forecast_requests: {
+        Args: { reference_time?: string }
+        Returns: {
+          block_start: string
+          cached_is_day: boolean
+          cached_source: string
+          cached_temperature_c: number
+          cached_weather_code: number
+          cached_wind_gust_kmh: number
+          cached_wind_speed_kmh: number
+          cell_latitude: number
+          cell_longitude: number
         }[]
       }
       postal_job_offer_payload: {
         Args: { target_mascot_id: string }
+        Returns: Json
+      }
+      preview_mascot_loadout: {
+        Args: {
+          backpack_instance_id: string
+          target_mascot_id: string
+          utility_instance_id: string
+          weather: Json
+        } | {
+          backpack_instance_id: string
+          is_day?: boolean
+          target_mascot_id: string
+          utility_instance_id: string
+          weather_category?: string
+          wind_speed_kmh?: number
+        }
         Returns: Json
       }
       progression_next_level_xp: {
@@ -3049,6 +3708,10 @@ export type Database = {
         Returns: number
       }
       provision_initial_mascot: { Args: never; Returns: Json }
+      purchase_equipment: {
+        Args: { request_id: string; target_catalog_key: string }
+        Returns: Json
+      }
       regenerate_my_postal_friend_code: {
         Args: never
         Returns: {
@@ -3056,6 +3719,10 @@ export type Database = {
           created_at: string
           rotated_at: string
         }[]
+      }
+      repair_equipment: {
+        Args: { request_id: string; target_instance_id: string }
+        Returns: Json
       }
       replace_postal_job_offer: {
         Args: { target_mascot_id: string }
@@ -3068,19 +3735,31 @@ export type Database = {
           request_id: string
         }[]
       }
+      resolve_delivery_route_segments: {
+        Args: { at_time?: string; target_delivery_id: string }
+        Returns: Json
+      }
+      resolve_delivery_visual_timezone: {
+        Args: { delivery_id: string; latitude: number; longitude: number }
+        Returns: string
+      }
+      resolve_due_delivery_route_segments: {
+        Args: { reference_time?: string }
+        Returns: number
+      }
+      resolve_live_delivery_daylight: {
+        Args: { reference_time?: string }
+        Returns: number
+      }
       resolve_referral_invitation: {
         Args: { invitation_token: string }
         Returns: {
           inviter_name: string
         }[]
       }
-      resolve_delivery_visual_timezone: {
-        Args: {
-          delivery_id: string
-          latitude: number
-          longitude: number
-        }
-        Returns: string
+      resolve_travel_progress: {
+        Args: { reference_time?: string }
+        Returns: number
       }
       respond_to_postal_friend_request: {
         Args: { friendship_id: string; should_accept: boolean }
@@ -3131,6 +3810,26 @@ export type Database = {
           longitude: number
         }[]
       }
+      set_mascot_loadout:
+        | {
+            Args: {
+              backpack_instance_id: string
+              expected_revision?: number
+              target_mascot_id: string
+              utility_instance_id: string
+            }
+            Returns: Json
+          }
+        | {
+            Args: {
+              backpack_instance_id: string
+              expected_revision: number
+              request_id: string
+              target_mascot_id: string
+              utility_instance_id: string
+            }
+            Returns: Json
+          }
       set_official_catalog_status: {
         Args: {
           entity_id: string
@@ -3151,6 +3850,34 @@ export type Database = {
       translation_key_is_official: {
         Args: { candidate: string }
         Returns: boolean
+      }
+      travel_effective_multiplier: {
+        Args: {
+          category: string
+          is_day: boolean
+          season: string
+          wind_speed: number
+        }
+        Returns: number
+      }
+      travel_season: {
+        Args: { at_time: string; latitude: number }
+        Returns: string
+      }
+      travel_weather_category: {
+        Args: { weather_code: number }
+        Returns: string
+      }
+      virtual_travel_weather: {
+        Args: {
+          block_start: string
+          delivery_id: string
+          latitude: number
+          leg: string
+          longitude: number
+          segment_index: number
+        }
+        Returns: Json
       }
     }
     Enums: {

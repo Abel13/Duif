@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
 
 import { AppBottomNav, PageShell } from "../../components/layout";
+import { EquipmentArtwork } from "../../components/mascot/MascotLoadoutEditor";
 import { AssetImage, SketchPanel, StampButton } from "../../components/ui";
 import {
   assetKeys,
@@ -9,7 +10,9 @@ import {
   shopCategories,
   type ShopCatalogItem,
   type ShopCategory,
+  useEquipmentData,
 } from "../../game";
+import { purchaseEquipment } from "../../integrations/supabase/equipment";
 import { useTranslation } from "../../i18n";
 import styles from "./ShopPage.module.css";
 
@@ -17,6 +20,9 @@ export function ShopPage() {
   const { t } = useTranslation();
   const [selectedCategory, setSelectedCategory] = useState<ShopCategory>("all");
   const [selectedItem, setSelectedItem] = useState<ShopCatalogItem | null>(null);
+  const [buyingKey, setBuyingKey] = useState<string>();
+  const [purchaseError, setPurchaseError] = useState(false);
+  const { data: equipmentData, refresh: refreshEquipment } = useEquipmentData();
   const lastTriggerRef = useRef<HTMLButtonElement | null>(null);
   const items = useMemo(
     () => filterShopItemsByCategory(shopCatalog, selectedCategory),
@@ -33,6 +39,14 @@ export function ShopPage() {
     requestAnimationFrame(() => lastTriggerRef.current?.focus());
   }
 
+  async function handleEquipmentPurchase(catalogKey: string) {
+    setBuyingKey(catalogKey);
+    setPurchaseError(false);
+    try { await purchaseEquipment(catalogKey); await refreshEquipment(); }
+    catch { setPurchaseError(true); }
+    finally { setBuyingKey(undefined); }
+  }
+
   return (
     <PageShell hasBottomNav>
       <div className={styles.shell}>
@@ -42,6 +56,15 @@ export function ShopPage() {
         </SketchPanel>
 
         <section className={styles.catalog} aria-labelledby="shop-catalog-title">
+          <div className={styles.functionalHeader}><div><h2>{t("functionalEquipment.shopTitle")}</h2><p>{t("functionalEquipment.shopDescription")}</p></div><strong>{t("functionalEquipment.balance")}: {equipmentData.seedBalance}</strong></div>
+          <div className={styles.grid}>
+            {equipmentData.catalog.map((item) => <article className={styles.card} key={item.id}>
+              <EquipmentArtwork item={item} />
+              <div className={styles.cardBody}><p className={styles.category}>{t(`functionalEquipment.kinds.${item.kind}`)}</p><h3>{t(item.nameKey)}</h3><p>{t(item.descriptionKey)}</p><p className={styles.price}><CurrencyIcon currency="seeds"/><strong>{item.seedPrice}</strong></p></div>
+              <button className={styles.cardAction} disabled={buyingKey===item.catalogKey || equipmentData.seedBalance<item.seedPrice} onClick={()=>void handleEquipmentPurchase(item.catalogKey)} type="button">{buyingKey===item.catalogKey?t("functionalEquipment.buying"):t("functionalEquipment.buy")}</button>
+            </article>)}
+          </div>
+          {purchaseError?<p className={styles.purchaseError}>{t("functionalEquipment.purchaseError")}</p>:null}
           <div className={styles.filterHeader}>
             <h2 id="shop-catalog-title">{t("shop.categoriesLabel")}</h2>
             <div className={styles.filters} aria-label={t("shop.categoriesLabel")}>

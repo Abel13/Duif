@@ -2,7 +2,7 @@ import { useEffect, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { AppBottomNav, PageShell } from "../../components/layout";
-import { MascotEquipmentGrid } from "../../components/mascot/MascotEquipmentGrid";
+import { MascotLoadoutEditor } from "../../components/mascot/MascotLoadoutEditor";
 import { MascotPortraitNavigator } from "../../components/mascot/MascotPortraitNavigator";
 import { MascotSkillsPanel } from "../../components/mascot/MascotSkillsPanel";
 import { MascotStatsPanel } from "../../components/mascot/MascotStatsPanel";
@@ -138,7 +138,11 @@ export function MascotDetailPage() {
             <MascotTraitCard trait={mascot.trait} />
 
             <SketchPanel title={t("mascot.equipment")}>
-              <MascotEquipmentGrid equipment={mascot.equipment} />
+              <MascotLoadoutEditor
+                disabled={Boolean(mascot.currentDelivery)}
+                mascotId={mascot.id}
+                mascotNames={Object.fromEntries(mascots.map((candidate) => [candidate.id, candidate.name]))}
+              />
             </SketchPanel>
 
             <MascotTravelCard delivery={mascot.currentDelivery} />

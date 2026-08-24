@@ -225,6 +225,7 @@ export async function createAuthenticatedDeliveryFromSelection({
   mascot,
   postmark,
   stampInventoryItemId,
+  equipmentLoadoutRevision,
 }: {
   correspondence: CorrespondenceOption;
   content: CorrespondenceContent;
@@ -232,6 +233,7 @@ export async function createAuthenticatedDeliveryFromSelection({
   mascot: Mascot;
   postmark: import("../../game").PostmarkCustomization;
   stampInventoryItemId?: string;
+  equipmentLoadoutRevision?: number;
 }): Promise<Delivery | undefined> {
   const supabase = getSupabaseClient();
 
@@ -241,7 +243,7 @@ export async function createAuthenticatedDeliveryFromSelection({
 
   const { data, error } = await supabase.rpc("create_delivery_from_selection", {
     correspondence_catalog_key: correspondence.id,
-    content_payload: { ...createCorrespondenceContentPayload(content), postalFinishing: { stampInventoryItemId: stampInventoryItemId ?? null, postmarkKey: "postalMark.custom", postmarkModel: postmark.model, postmarkColor: postmark.color } },
+    content_payload: { ...createCorrespondenceContentPayload(content), equipmentLoadoutRevision: equipmentLoadoutRevision ?? 1, postalFinishing: { stampInventoryItemId: stampInventoryItemId ?? null, postmarkKey: "postalMark.custom", postmarkModel: postmark.model, postmarkColor: postmark.color } },
     friend_profile_id: friend.id,
     mascot_id: mascot.id,
   });

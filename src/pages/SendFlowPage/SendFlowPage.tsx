@@ -1,5 +1,5 @@
 import { Link, useSearchParams } from "react-router-dom";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { LockKey } from "@phosphor-icons/react";
 
@@ -7,6 +7,7 @@ import { MobileTopBar, PageShell } from "../../components/layout";
 import { RoutePreview } from "../../components/map/RoutePreview";
 import { CityMapPreview } from "../../components/map/CityMapPreview";
 import { MascotPortraitNavigator } from "../../components/mascot/MascotPortraitNavigator";
+import { MascotLoadoutEditor, type MascotLoadoutEditorHandle } from "../../components/mascot/MascotLoadoutEditor";
 import { AssetImage, ItemCard, LetterDialog, PostalEnvelope, PostalPostcard, PostalPostmark, PostalStickerSheet, SketchPanel, StampButton } from "../../components/ui";
 import {
   assetKeys,
@@ -46,6 +47,7 @@ import { useTranslation } from "../../i18n";
 import { createAuthenticatedDeliveryFromSelection, getAvailableSendMascots } from "../../integrations/supabase/authenticatedSendFlow";
 import { confirmReturnReply, fetchReturnReplyContext, type ReturnReplyContext } from "../../integrations/supabase/mailbox";
 import { useAuth } from "../../integrations/supabase/AuthProvider";
+import { fetchEquipmentData } from "../../integrations/supabase/equipment";
 import type { AuthProfile } from "../../integrations/supabase/profile";
 import styles from "./SendFlowPage.module.css";
 
@@ -90,6 +92,8 @@ export function SendFlowPage() {
   const [previewStampId, setPreviewStampId] = useState<string>();
   const [postmark, setPostmark] = useState<PostmarkCustomization>(defaultPostmarkCustomization);
   const [currentStep, setCurrentStep] = useState(0);
+  const [isSavingLoadout, setIsSavingLoadout] = useState(false);
+  const loadoutEditorRef = useRef<MascotLoadoutEditorHandle>(null);
   const [replyContext,setReplyContext]=useState<ReturnReplyContext>();
   const [replyContextState,setReplyContextState]=useState<"idle"|"loading"|"unavailable">("idle");
 
@@ -167,6 +171,14 @@ export function SendFlowPage() {
     setContent(createDefaultCorrespondenceContent(option.type, postcards, stickers));
   }
 
+  async function handleNextStep() {
+    if (currentStep === 1) {
+      const saved = await loadoutEditorRef.current?.saveDraft();
+      if (saved === false) return;
+    }
+    setCurrentStep((step) => Math.min(5, step + 1));
+  }
+
   async function handleConfirmSend() {
     if (!selectedFriend || !selectedMascot || !selectedCorrespondence || isSubmitting) {
       return;
@@ -177,11 +189,14 @@ export function SendFlowPage() {
     setIsSubmitting(true);
 
     try {
+      const currentEquipment = profile ? await fetchEquipmentData(profile.id) : undefined;
+      const equipmentLoadoutRevision = currentEquipment?.loadouts.find((loadout) => loadout.mascotId === selectedMascot.id)?.revision ?? 1;
       const delivery = await createAuthenticatedDeliveryFromSelection({
         correspondence: selectedCorrespondence,
         content,
         friend: selectedFriend,
         mascot: selectedMascot,
+        equipmentLoadoutRevision,
         postmark,
         stampInventoryItemId,
       });
@@ -263,7 +278,7 @@ export function SendFlowPage() {
           ) : null}
 
           {currentStep === 1 ? (
-          <ChoiceSection title={t("send.chooseMascot")}>
+          <ChoiceSection fullWidth title={t("send.chooseMascot")}>
             {selectedMascot ? (
               <div className={styles.mascotChoice}>
                 <MascotPortraitNavigator
@@ -295,6 +310,14 @@ export function SendFlowPage() {
                     t,
                   )}</p>
                 </div>
+                <MascotLoadoutEditor
+                  key={selectedMascot.id}
+                  mascotId={selectedMascot.id}
+                  mascotNames={Object.fromEntries(mascots.map((mascot) => [mascot.id, mascot.name]))}
+                  onSavingChange={setIsSavingLoadout}
+                  persistence="external"
+                  ref={loadoutEditorRef}
+                />
               </div>
             ) : isSendFlowLoading ? <p className={styles.hint}>{t("send.loadingData")}</p> : <div className={styles.noMascots}><p>{t("send.noAvailableMascots")}</p><Link className={styles.returnLink} to="/map">{t("send.viewActiveTrips")}</Link></div>}
           </ChoiceSection>
@@ -459,8 +482,8 @@ export function SendFlowPage() {
             </button>
             {currentStep < 5 ? (
               <StampButton
-                disabled={!canAdvance || isSendFlowLoading}
-                onClick={() => setCurrentStep((step) => Math.min(5, step + 1))}
+                disabled={!canAdvance || isSendFlowLoading || isSavingLoadout}
+                onClick={() => void handleNextStep()}
               >
                 {t("send.steps.next")}
               </StampButton>
@@ -626,10 +649,10 @@ function PostalProgress({ currentStep, labels }: { currentStep: number; labels: 
   );
 }
 
-function ChoiceSection({ title, children }: { title: string; children: ReactNode }) {
+function ChoiceSection({ title, children, fullWidth = false }: { title: string; children: ReactNode; fullWidth?: boolean }) {
   return (
     <SketchPanel title={title}>
-      <div className={styles.options}>{children}</div>
+      <div className={styles.options} data-full-width={fullWidth || undefined}>{children}</div>
     </SketchPanel>
   );
 }

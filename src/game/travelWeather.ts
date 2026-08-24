@@ -6,7 +6,7 @@ export type TravelWeatherSummary = {
   estimatedArrivalAt: string;
   currentSegmentIndex: number;
   segmentCount: number;
-  currentWeather: { category: TravelWeatherCategory; source: TravelWeatherSource; observedAt: string };
+  currentWeather: { category: TravelWeatherCategory; source: TravelWeatherSource; observedAt: string; temperatureC?: number };
   season: TravelSeason;
   effectiveSpeedMultiplier: number;
   conditionImpactMultiplier: number;
@@ -108,14 +108,17 @@ export function geographicVisualTheme(
 }
 
 export function composeEffectiveSpeedMultiplier(input: {
-  weather: TravelWeatherCategory; windSpeedKmh: number; isDay: boolean; season: TravelSeason;
+  weather: TravelWeatherCategory; windSpeedKmh: number; isDay: boolean; season: TravelSeason; temperatureC?: number;
   mascot?: number; equipment?: number; backpack?: number; skills?: number; familiarity?: number;
 }) {
   const wind = input.windSpeedKmh >= 50 ? -.04 : input.windSpeedKmh >= 30 ? -.02 : 0;
   const meteorological = Math.max(-.08, Math.min(.02, weatherMultipliers[input.weather] - 1 + wind));
   const night = input.isDay ? 0 : -.02;
-  const seasonal = input.season === "summer" ? .01 : input.season === "winter" ? -.02 : 0;
-  const composed = 1 + meteorological + night + seasonal
+  const cold = input.temperatureC === undefined ? 0 : input.temperatureC < 3 ? -.04 : input.temperatureC < 10 ? -.02 : 0;
+  const heat = input.temperatureC === undefined ? 0 : input.temperatureC >= 34 ? -.04 : input.temperatureC >= 27 ? -.02 : 0;
+  const seasonal = input.temperatureC === undefined ? 0 : input.season === "winter" && input.temperatureC < 10 ? -.01 : input.season === "summer" && input.temperatureC >= 27 ? -.01 : 0;
+  const strongSun = input.temperatureC !== undefined && input.isDay && input.temperatureC >= 27 && ["clear","partlyCloudy"].includes(input.weather) ? -.01 : 0;
+  const composed = 1 + meteorological + night + cold + heat + seasonal + strongSun
     + (input.mascot ?? 0) + (input.equipment ?? 0) + (input.backpack ?? 0)
     + (input.skills ?? 0) + (input.familiarity ?? 0);
   return Math.max(.6, Math.min(1.25, Number(composed.toFixed(4))));

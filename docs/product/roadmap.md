@@ -6,14 +6,14 @@ Procedimentos de deploy pertencem a [Operações](../operations/release.md), nã
 
 ## Estado atual
 
-- Milestones 1–55: concluídas.
-- Próxima etapa: planejar a Milestone 56 e aprovar suas decisões pendentes antes de implementar.
+- Milestones 1–56: concluídas localmente.
+- Próxima etapa: planejar e aprovar as decisões pendentes da Milestone 57.
 - Milestones 57–62: planejadas, com pendências explícitas abaixo.
 
 ## Milestone 56 — Equipamentos funcionais, mochilas e prévia de loadout
 
-**Estado:** Next planned milestone; equipment principles approved, catalog economy unresolved. Plan
-and approve the unresolved decisions below before implementation.
+**Estado:** Concluída localmente. Catálogo, economia, loadout, durabilidade e integração climática
+foram implementados; publicação permanece um procedimento operacional separado.
 
 **Objetivo:**
 
@@ -45,13 +45,14 @@ gameplay advantage.
 - automatic loadout selection, Crystal-purchased functional advantage, repair timers, equipment
   trading, stat rerolls, or stacking several mitigators for the same condition.
 
-**Decisões pendentes antes da implementação:**
+**Decisões entregues:**
 
-- the launch equipment catalog beyond backpacks and the conceptual raincoat/lantern examples;
-- durability per item, Seed prices, repair prices, unlock sources, and inventory presentation for
-  many instances;
-- equipment positions other than the dedicated backpack position and the exact meaning of the
-  preview's protection scale.
+- três mochilas permanentes por `150/350/700` Sementes e cinco utilitários de 10 usos por 200;
+- reparo integral de utilitário esgotado por 80 Sementes;
+- uma posição de mochila e uma utilitária, com instância exclusiva por mascote;
+- proteção expressa como penalidade climática efetivamente evitada, sem escala abstrata;
+- acessórios legados convertidos em instâncias cosméticas ocultas e não equipadas.
+- perigos térmicos baseados em temperatura real e efeitos multifatoriais declarativos por utilitário.
 
 **Critérios de sucesso:**
 

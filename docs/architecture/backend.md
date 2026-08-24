@@ -237,8 +237,23 @@ Friend profile reads for social UI use `get_accepted_friend_profiles`, not unres
 `profiles` rows. The owner can still read their own full profile through RLS. The reward
 collection screen can use authenticated delivery/reward data, and the collection inventory
 screen now reads `inventory_items` for the current profile through the existing owner RLS
-policy. Caixa Postal, delivery history, equipment management, and inventory writes outside
-reward collection remain future milestones.
+policy. Caixa Postal e equipamentos funcionais possuem contratos autoritativos próprios; demais
+escritas de inventário continuam restritas às operações explicitamente aprovadas.
+
+## Equipamentos funcionais
+
+`equipment_catalog` define o catálogo oficial e `equipment_catalog_effects` relaciona cada utilitário
+a um ou mais perigos, enquanto `equipment_instances` preserva propriedade,
+durabilidade e associação exclusiva. `mascot_loadouts` mantém uma mochila e um utilitário por
+mascote. Compra, equipagem e reparo passam por RPCs autenticados e idempotentes, com débito de
+`profile_seed_balances` sob lock.
+
+No despacho, um trigger grava `deliveries.equipment_snapshot` antes da segmentação, aplica capacidade
+e velocidade da mochila e impede que alterações posteriores afetem a jornada. O resolver de
+segmentos produz um mapa de perigos e aplica os efeitos fotografados no snapshot v2, limitado ao
+dano real e a quatro pontos percentuais por trecho; a chave única em
+`delivery_equipment_activations` garante no máximo um consumo por jornada, inclusive sob cron e
+reconnect concorrentes. Tutoriais ignoram esse domínio e preservam seus tempos fixos.
 
 Regional postal traffic uses the authenticated `get_nearby_postal_traffic` RPC. The function
 reads complete active-delivery coordinates behind RLS, expands the supplied viewport by 25%,

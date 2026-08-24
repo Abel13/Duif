@@ -1,8 +1,20 @@
 export type Locale = "pt-BR" | "en-US";
 
 export type TranslationDictionary = {
+  functionalEquipment: {
+    shopTitle:string; shopDescription:string; balance:string; buy:string; buying:string; purchaseError:string;
+    loadoutDescription:string; lockedDuringTravel:string; backpackSlot:string; utilitySlot:string; none:string;
+    saveEquipment:string; chooseEquipment:string; choose:string; change:string; locked:string; loadout:string; chooseBackpack:string; chooseUtility:string; closePicker:string; removeEquipment:string; assignedTo:string; anotherMascot:string; noOwnedEquipment:string;
+    cargo:string; volumeMarks:string; noProtection:string; conditions:{rain:string;night:string;wind:string};
+    hazards:{wet:string;visibility:string;night:string;wind:string;cold:string;winterCold:string;heat:string;summerHeat:string;strongSun:string};
+    speed:string; slots:string; protection:string; contextual:string; current:string; withChange:string; saveError:string; saving:string; applyLoadout:string;
+    uses:string; repair:string; repairing:string; repairError:string; instances:string; equippedBy:string; available:string;
+    kinds:{backpack:string;utility:string};
+    smallBackpack:{name:string;description:string}; mediumBackpack:{name:string;description:string}; largeBackpack:{name:string;description:string};
+    raincoat:{name:string;description:string}; routeLantern:{name:string;description:string}; windGoggles:{name:string;description:string};
+  };
   travelWeather: {
-    weather: string; season: string; segment: string; effectiveSpeed: string; etaNotice: string; attribution: string; impactRange: string; impactDescription: string; openDetails:string; close:string; eyebrow:string; title:string; ofBaseSpeed:string; virtualSource:string; day:string; night:string; conditionImpact:string; activeConditions:string; impacts:{helpful:string;neutral:string;challenging:string};
+    weather: string; temperature:string; season: string; segment: string; effectiveSpeed: string; etaNotice: string; attribution: string; impactRange: string; impactDescription: string; openDetails:string; close:string; eyebrow:string; title:string; ofBaseSpeed:string; virtualSource:string; day:string; night:string; conditionImpact:string; activeConditions:string; impacts:{helpful:string;neutral:string;challenging:string};
     categories: { clear:string; partlyCloudy:string; cloudy:string; fogDrizzle:string; rain:string; snow:string; heavyFreezingRain:string; thunderstorm:string };
     seasons: { summer:string; autumn:string; winter:string; spring:string };
   };
@@ -860,7 +872,17 @@ export type TranslationDictionary = {
 };
 
 export type TranslationKey =
+  | "functionalEquipment.shopTitle" | "functionalEquipment.shopDescription" | "functionalEquipment.balance" | "functionalEquipment.buy" | "functionalEquipment.buying" | "functionalEquipment.purchaseError"
+  | "functionalEquipment.loadoutDescription" | "functionalEquipment.lockedDuringTravel" | "functionalEquipment.backpackSlot" | "functionalEquipment.utilitySlot" | "functionalEquipment.none"
+  | "functionalEquipment.speed" | "functionalEquipment.slots" | "functionalEquipment.protection" | "functionalEquipment.contextual" | "functionalEquipment.saveError" | "functionalEquipment.saving" | "functionalEquipment.applyLoadout"
+  | "functionalEquipment.current" | "functionalEquipment.withChange" | "functionalEquipment.saveEquipment" | "functionalEquipment.chooseEquipment" | "functionalEquipment.choose" | "functionalEquipment.change" | "functionalEquipment.locked" | "functionalEquipment.loadout" | "functionalEquipment.chooseBackpack" | "functionalEquipment.chooseUtility" | "functionalEquipment.closePicker" | "functionalEquipment.removeEquipment" | "functionalEquipment.assignedTo" | "functionalEquipment.anotherMascot" | "functionalEquipment.noOwnedEquipment" | "functionalEquipment.cargo" | "functionalEquipment.volumeMarks" | "functionalEquipment.noProtection" | "functionalEquipment.conditions.rain" | "functionalEquipment.conditions.night" | "functionalEquipment.conditions.wind"
+  | "functionalEquipment.hazards.wet" | "functionalEquipment.hazards.visibility" | "functionalEquipment.hazards.night" | "functionalEquipment.hazards.wind" | "functionalEquipment.hazards.cold" | "functionalEquipment.hazards.winterCold" | "functionalEquipment.hazards.heat" | "functionalEquipment.hazards.summerHeat" | "functionalEquipment.hazards.strongSun"
+  | "functionalEquipment.uses" | "functionalEquipment.repair" | "functionalEquipment.repairing" | "functionalEquipment.repairError" | "functionalEquipment.instances" | "functionalEquipment.equippedBy" | "functionalEquipment.available"
+  | "functionalEquipment.kinds.backpack" | "functionalEquipment.kinds.utility"
+  | "functionalEquipment.smallBackpack.name" | "functionalEquipment.smallBackpack.description" | "functionalEquipment.mediumBackpack.name" | "functionalEquipment.mediumBackpack.description" | "functionalEquipment.largeBackpack.name" | "functionalEquipment.largeBackpack.description"
+  | "functionalEquipment.raincoat.name" | "functionalEquipment.raincoat.description" | "functionalEquipment.routeLantern.name" | "functionalEquipment.routeLantern.description" | "functionalEquipment.windGoggles.name" | "functionalEquipment.windGoggles.description"
   | "travelWeather.weather"
+  | "travelWeather.temperature"
   | "travelWeather.season"
   | "travelWeather.segment"
   | "travelWeather.effectiveSpeed"

@@ -19,6 +19,14 @@ export const assetKeys = {
     travelCap: "equipment.icon.travelCap",
     featherCharm: "equipment.icon.featherCharm",
     smallSatchel: "equipment.icon.smallSatchel",
+    functional: {
+      smallBackpack: "equipment.functional.smallBackpack",
+      mediumBackpack: "equipment.functional.mediumBackpack",
+      largeBackpack: "equipment.functional.largeBackpack",
+      raincoat: "equipment.functional.raincoat",
+      routeLantern: "equipment.functional.routeLantern",
+      windGoggles: "equipment.functional.windGoggles",
+    },
   },
   activeItems: {
     firstJourneyBoost: "activeItem.firstJourneyBoost",

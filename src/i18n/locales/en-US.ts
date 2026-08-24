@@ -1,7 +1,13 @@
 import type { TranslationDictionary } from "../types";
 
 export const enUS = {
-  travelWeather: { day:"Day", night:"Night", conditionImpact:"Conditions impact on this segment", activeConditions:"Active journey conditions", impacts:{helpful:"Favorable conditions",neutral:"Neutral conditions",challenging:"Challenging conditions"}, openDetails:"View journey weather", close:"Close weather", eyebrow:"Segment conditions", title:"Journey weather", ofBaseSpeed:"of base speed", virtualSource:"Deterministic virtual weather while a real forecast is unavailable.", weather:"Current weather", season:"Season", segment:"Segment", effectiveSpeed:"Effective speed", etaNotice:"The estimated time may change as upcoming segments are refreshed.", attribution:"Weather data by Open-Meteo · CC BY 4.0", impactRange:"Possible weather impact: -8% to +2%", impactDescription:"The estimate may change before completion. Weather is resolved on the server without revealing your route.", categories:{clear:"Clear sky",partlyCloudy:"Partly cloudy",cloudy:"Cloudy",fogDrizzle:"Fog or drizzle",rain:"Rain",snow:"Snow",heavyFreezingRain:"Heavy or freezing rain",thunderstorm:"Thunderstorm"}, seasons:{summer:"Summer",autumn:"Autumn",winter:"Winter",spring:"Spring"} },
+  functionalEquipment: {
+    shopTitle:"Functional equipment",shopDescription:"Prepare each mascot for cargo and route conditions.",balance:"Seed balance",buy:"Buy",buying:"Buying",purchaseError:"The purchase could not be completed.",
+    loadoutDescription:"Choose one backpack and one utility for this route.",lockedDuringTravel:"Equipment is locked while the mascot has an open delivery.",backpackSlot:"Backpack",utilitySlot:"Utility",none:"None",saveEquipment:"Save equipment",chooseEquipment:"Tap to choose",choose:"Choose",change:"Change",locked:"Locked while traveling",loadout:"Mascot equipment",chooseBackpack:"Choose backpack",chooseUtility:"Choose utility",closePicker:"Close picker",removeEquipment:"Leave this slot empty",assignedTo:"With {name}",anotherMascot:"another mascot",noOwnedEquipment:"You do not own equipment of this type yet.",cargo:"Cargo",volumeMarks:"available parcels",noProtection:"No protection",conditions:{rain:"Rain",night:"Night",wind:"Wind"},hazards:{wet:"Rain and moisture",visibility:"Low visibility",night:"Night",wind:"Wind",cold:"Cold",winterCold:"Winter cold",heat:"Heat",summerHeat:"Summer heat",strongSun:"Strong sun"},speed:"Speed",slots:"slots",protection:"Protection",contextual:"Contextual",current:"Current",withChange:"With change",saveError:"The loadout changed or the item is no longer available.",saving:"Saving",applyLoadout:"Apply loadout",uses:"uses",repair:"Repair for 80",repairing:"Repairing",repairError:"The equipment could not be repaired.",instances:"copies",equippedBy:"Equipped by",available:"Available",kinds:{backpack:"Backpack",utility:"Utility"},
+    smallBackpack:{name:"Small backpack",description:"Carries one extra parcel with a 5% speed reduction."},mediumBackpack:{name:"Medium backpack",description:"Carries two extra parcels with a 10% speed reduction."},largeBackpack:{name:"Large backpack",description:"Carries three extra parcels with a 15% speed reduction."},
+    raincoat:{name:"Raincoat",description:"Reduces rain penalties by 3 percentage points when it is actually needed."},routeLantern:{name:"Route lantern",description:"Removes the 2 percentage-point night penalty when it is the strongest available effect."},windGoggles:{name:"Wind goggles",description:"Reduces wind penalties by 2 percentage points from 30 km/h onward."},
+  },
+  travelWeather: { day:"Day", night:"Night", conditionImpact:"Conditions impact on this segment", activeConditions:"Active journey conditions", impacts:{helpful:"Favorable conditions",neutral:"Neutral conditions",challenging:"Challenging conditions"}, openDetails:"View journey weather", close:"Close weather", eyebrow:"Segment conditions", title:"Journey weather", ofBaseSpeed:"of base speed", virtualSource:"Deterministic virtual weather while a real forecast is unavailable.", weather:"Current weather", temperature:"Temperature", season:"Season", segment:"Segment", effectiveSpeed:"Effective speed", etaNotice:"The estimated time may change as upcoming segments are refreshed.", attribution:"Weather data by Open-Meteo · CC BY 4.0", impactRange:"Possible weather impact: -8% to +2%", impactDescription:"The estimate may change before completion. Weather is resolved on the server without revealing your route.", categories:{clear:"Clear sky",partlyCloudy:"Partly cloudy",cloudy:"Cloudy",fogDrizzle:"Fog or drizzle",rain:"Rain",snow:"Snow",heavyFreezingRain:"Heavy or freezing rain",thunderstorm:"Thunderstorm"}, seasons:{summer:"Summer",autumn:"Autumn",winter:"Winter",spring:"Spring"} },
   app: {
     title: "DUIF",
   },
@@ -813,12 +819,12 @@ export const enUS = {
     items: {
       crimsonCourierScarf: {
         name: "Crimson courier scarf",
-        description: "A light scarf with postal stitching for windy days.",
+        description: "Protects against cold, wind, and harsher winter conditions.",
       },
       meadowPostCap: {
         name: "Meadow post cap",
         description:
-          "A small green cap, worn at the edges and ready for new routes.",
+          "Protects against heat, strong sun, and harsher summer conditions.",
       },
       sunnyRouteSticker: {
         name: "Sunny route sticker",

@@ -12,6 +12,12 @@ The database cron always resolves due segments, even when the Edge Function is u
 
 Open-Meteo data is attributed under CC BY 4.0 in provider-backed UI. Cache rows older than 30 days are removed by the resolver; completed delivery segments remain as versioned journey history.
 
+As regras v2 consultam também `temperature_2m` em Celsius. Frio começa abaixo de 10°C e calor a
+partir de 27°C, com faixas fortes abaixo de 3°C e a partir de 34°C. Inverno e verão somente
+amplificam o extremo térmico correspondente; sol forte exige período diurno, calor ativo e céu
+limpo ou parcialmente nublado. Snapshots virtuais geram temperatura determinística por estação e
+hemisfério. Viagens v1 não são recalculadas nem recebem temperatura retroativa.
+
 ## Daylight rules v2
 
 Deliveries created after the daylight-v2 migration retain weather segments but use an astronomical

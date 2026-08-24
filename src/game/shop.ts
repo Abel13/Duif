@@ -11,26 +11,6 @@ export const shopCategories: ShopCategory[] = [
 
 export const shopCatalog: ShopCatalogItem[] = [
   {
-    id: "shop-crimson-courier-scarf",
-    category: "cosmetics",
-    currency: "crystals",
-    price: 45,
-    nameKey: "shop.items.crimsonCourierScarf.name",
-    descriptionKey: "shop.items.crimsonCourierScarf.description",
-    thumbnailAssetKey: assetKeys.shop.crimsonCourierScarf,
-    previewKind: "mascot",
-  },
-  {
-    id: "shop-meadow-post-cap",
-    category: "cosmetics",
-    currency: "seeds",
-    price: 180,
-    nameKey: "shop.items.meadowPostCap.name",
-    descriptionKey: "shop.items.meadowPostCap.description",
-    thumbnailAssetKey: assetKeys.shop.meadowPostCap,
-    previewKind: "mascot",
-  },
-  {
     id: "shop-sunny-route-sticker",
     category: "stickers",
     currency: "seeds",

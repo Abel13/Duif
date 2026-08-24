@@ -14,7 +14,7 @@ begin
   values(target_id,mascot.owner_profile_id,mascot.owner_profile_id,target_mascot_id,mascot.home_latitude,mascot.home_longitude,'test.origin',mascot.home_latitude+1,mascot.home_longitude+1,'test.destination',120,20,now()-interval '1 hour',now()+interval '5 hours',now()+interval '35 minutes'+interval '5 hours',now()+interval '11 hours 35 minutes','completed','weather-test');
   select count(*),sum(distance_km) into segment_total,distance_total from public.delivery_route_segments where delivery_id=target_id and leg='outbound';
   if segment_total<1 or segment_total>24 or distance_total<>120 then raise exception 'invalid outbound segmentation: %, %',segment_total,distance_total; end if;
-  if (select travel_rules_snapshot->>'version' from public.deliveries where id=target_id)<>'1' then raise exception 'missing rules snapshot'; end if;
+  if (select travel_rules_snapshot->>'version' from public.deliveries where id=target_id)<>'2' then raise exception 'missing rules snapshot'; end if;
   if (select travel_weather_summary ? 'estimatedArrivalAt' from public.deliveries where id=target_id) is not true then raise exception 'missing safe travel summary'; end if;
   if (select travel_weather_summary ?& array['isDay','conditionImpactMultiplier'] from public.deliveries where id=target_id) is not true then raise exception 'missing current day/night or mascot impact'; end if;
   select travel_weather_summary into summary from public.deliveries where id=target_id;
@@ -25,14 +25,15 @@ begin
   perform public.resolve_delivery_route_segments(target_id,now()+interval '3 days');
   if exists(select 1 from public.delivery_route_segments where delivery_id=target_id and leg='outbound' and segment_index=0 and (weather_snapshot<>first_weather or completed_at<>first_completed)) then raise exception 'completed snapshot changed'; end if;
   if exists(select 1 from public.delivery_route_segments where delivery_id=target_id and effective_speed_kmh/(select animal_speed_kmh from public.deliveries where id=target_id) not between .60 and 1.25) then raise exception 'speed clamp violated'; end if;
-  if public.virtual_travel_weather(target_id,'outbound',2,timestamptz '2026-08-23 03:00Z',10,10)<>public.virtual_travel_weather(target_id,'outbound',2,timestamptz '2026-08-23 03:00Z',10,10) then raise exception 'virtual weather is not deterministic'; end if;
+  if public.virtual_travel_weather_v2(target_id,'outbound',2,timestamptz '2026-08-23 03:00Z',10,10)<>public.virtual_travel_weather_v2(target_id,'outbound',2,timestamptz '2026-08-23 03:00Z',10,10) then raise exception 'virtual weather is not deterministic'; end if;
+  if public.virtual_travel_weather_v2(target_id,'outbound',2,timestamptz '2026-08-23 03:00Z',10,10)->'temperatureC' is null then raise exception 'virtual temperature missing'; end if;
   if public.astronomical_is_day(timestamptz '2026-08-24 14:14Z',-23.5505,-46.6333) is not true or public.astronomical_is_day(timestamptz '2026-08-24 02:14Z',-23.5505,-46.6333) is not false then raise exception 'astronomical daylight fallback is invalid'; end if;
 end $$;
 
 set local role service_role;
 select set_config('request.jwt.claim.role','service_role',true);
 do $$ begin
-  if public.apply_weather_forecast(10.0,20.0,date_bin(interval '3 hours',now()+interval '3 hours',timestamptz '2000-01-01'),1,true,10,15,'openMeteo')<0 then raise exception 'forecast application returned an invalid count'; end if;
+  if public.apply_weather_forecast(10.0,20.0,date_bin(interval '3 hours',now()+interval '3 hours',timestamptz '2000-01-01'),1,true,10,15,28,'openMeteo')<0 then raise exception 'forecast application returned an invalid count'; end if;
 end $$;
 reset role;
 

@@ -100,6 +100,21 @@ export {
   shopCategories,
 } from "./shop";
 export { useInventoryData } from "./useInventoryData";
+export { useEquipmentData } from "./useEquipmentData";
+export {
+  calculateLoadoutComparison,
+  getMascotLoadout,
+  groupEquipmentInstances,
+} from "./equipment";
+export type {
+  EquipmentEffect,
+  EquipmentHazardKey,
+  EquipmentData,
+  EquipmentInstance,
+  FunctionalEquipmentCatalogItem,
+  FunctionalEquipmentKind,
+  MascotLoadout,
+} from "./equipment";
 export { useRewardCollectionData } from "./useRewardCollectionData";
 export {
   correspondenceOptions,

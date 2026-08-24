@@ -54,6 +54,9 @@ const inventoryItemRow: InventoryItemRow = {
 };
 
 const deliveryRow: DeliveryRow = {
+  equipment_snapshot: { version: 1 },
+  travel_rules_snapshot: null,
+  travel_weather_summary: null,
   is_tutorial: false,
   animal_speed_kmh: 62,
   correspondence_option_id: "00000000-0000-4000-8000-000000000401",

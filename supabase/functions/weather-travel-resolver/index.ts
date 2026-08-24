@@ -3,7 +3,7 @@ import { authorizeCronRequest } from "../_shared/cron-auth.ts";
 import { normalizeOpenMeteo, openMeteoUrl, weatherProviderFailureCode, type WeatherProviderFailureCode } from "../_shared/travel-weather.ts";
 
 const jsonHeaders={"Content-Type":"application/json"};
-type Cell={cell_latitude:number;cell_longitude:number;block_start:string;cached_weather_code:number|null;cached_is_day:boolean|null;cached_wind_speed_kmh:number|null;cached_wind_gust_kmh:number|null;cached_source:"openMeteo"|"virtual"|null};
+type Cell={cell_latitude:number;cell_longitude:number;block_start:string;cached_weather_code:number|null;cached_is_day:boolean|null;cached_wind_speed_kmh:number|null;cached_wind_gust_kmh:number|null;cached_temperature_c:number|null;cached_source:"openMeteo"|"virtual"|null};
 
 Deno.serve(async (request)=>{
   const url=Deno.env.get("SUPABASE_URL")??"", serviceKey=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")??"", cronSecret=Deno.env.get("WEATHER_RESOLVER_CRON_SECRET")??"";
@@ -17,8 +17,8 @@ Deno.serve(async (request)=>{
   const providerEnabled=Boolean(baseUrl) && (isLocal || allowPublicEndpoint || Boolean(apiKey));
   let applied=0,failed=0,circuitOpen=false; const failureReasons:Partial<Record<WeatherProviderFailureCode,number>>={};
   for (const cell of cells) {
-    if (cell.cached_weather_code!==null && cell.cached_is_day!==null && cell.cached_wind_speed_kmh!==null && cell.cached_wind_gust_kmh!==null) {
-      const {error:cacheError}=await admin.rpc("apply_weather_forecast",{cell_latitude:cell.cell_latitude,cell_longitude:cell.cell_longitude,block_start:cell.block_start,weather_code:cell.cached_weather_code,is_day:cell.cached_is_day,wind_speed_kmh:cell.cached_wind_speed_kmh,wind_gust_kmh:cell.cached_wind_gust_kmh,source:cell.cached_source??"openMeteo"});
+    if (cell.cached_weather_code!==null && cell.cached_is_day!==null && cell.cached_wind_speed_kmh!==null && cell.cached_wind_gust_kmh!==null && cell.cached_temperature_c!==null) {
+      const {error:cacheError}=await admin.rpc("apply_weather_forecast",{cell_latitude:cell.cell_latitude,cell_longitude:cell.cell_longitude,block_start:cell.block_start,weather_code:cell.cached_weather_code,is_day:cell.cached_is_day,wind_speed_kmh:cell.cached_wind_speed_kmh,wind_gust_kmh:cell.cached_wind_gust_kmh,temperature_c:cell.cached_temperature_c,source:cell.cached_source??"openMeteo"});
       if (cacheError) failed++; else applied++; continue;
     }
     if (!providerEnabled) continue;
@@ -27,7 +27,7 @@ Deno.serve(async (request)=>{
       let providerUrl:string; try { providerUrl=openMeteoUrl(baseUrl,cell.cell_latitude,cell.cell_longitude,apiKey||undefined); } catch { throw new Error("invalid_base_url"); }
       const payload=await fetchWeather(providerUrl);
       const normalized=normalizeOpenMeteo(payload,cell.block_start); if (!normalized) throw new Error("invalid_provider_payload");
-      const {error:applyError}=await admin.rpc("apply_weather_forecast",{cell_latitude:cell.cell_latitude,cell_longitude:cell.cell_longitude,block_start:cell.block_start,weather_code:normalized.weatherCode,is_day:normalized.isDay,wind_speed_kmh:normalized.windSpeedKmh,wind_gust_kmh:normalized.windGustKmh,source:"openMeteo"});
+      const {error:applyError}=await admin.rpc("apply_weather_forecast",{cell_latitude:cell.cell_latitude,cell_longitude:cell.cell_longitude,block_start:cell.block_start,weather_code:normalized.weatherCode,is_day:normalized.isDay,wind_speed_kmh:normalized.windSpeedKmh,wind_gust_kmh:normalized.windGustKmh,temperature_c:normalized.temperatureC,source:"openMeteo"});
       if (applyError) throw new Error("forecast_apply_failed"); applied++;
     } catch(error) { const code=weatherProviderFailureCode(error); failureReasons[code]=(failureReasons[code]??0)+1; console.warn("weather_provider_failure",{code}); failed++; }
   }
