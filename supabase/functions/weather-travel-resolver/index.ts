@@ -13,7 +13,8 @@ Deno.serve(async (request)=>{
   const {data,error}=await admin.rpc("pending_weather_forecast_requests",{reference_time:new Date().toISOString()});
   if (error) return response({error:"forecast_cells_unavailable"},500);
   const cells=(data??[]) as Cell[]; const baseUrl=Deno.env.get("OPEN_METEO_BASE_URL")??""; const apiKey=Deno.env.get("OPEN_METEO_API_KEY")??"";
-  const isLocal=/localhost|127\.0\.0\.1/.test(url); const providerEnabled=Boolean(baseUrl) && (isLocal || Boolean(apiKey));
+  const isLocal=/localhost|127\.0\.0\.1/.test(url); const allowPublicEndpoint=Deno.env.get("OPEN_METEO_ALLOW_PUBLIC_ENDPOINT")==="true";
+  const providerEnabled=Boolean(baseUrl) && (isLocal || allowPublicEndpoint || Boolean(apiKey));
   let applied=0,failed=0,circuitOpen=false;
   for (const cell of cells) {
     if (cell.cached_weather_code!==null && cell.cached_is_day!==null && cell.cached_wind_speed_kmh!==null && cell.cached_wind_gust_kmh!==null) {
