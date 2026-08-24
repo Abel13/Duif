@@ -127,6 +127,7 @@ export type Delivery = {
   travelModifiers?: MascotTravelModifiers;
   tutorialTravelBoost?: TutorialTravelBoost;
   correspondenceType?: CorrespondenceType;
+  segmentedTravel?: import("./travelWeather").TravelWeatherSummary;
 };
 
 export type ReceivedLetter = {

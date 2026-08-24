@@ -2261,7 +2261,7 @@ Success criteria:
 
 ## Milestone 54: Dynamic Postal Jobs And Story Routes
 
-Status: Planned; core flow approved, content catalog and reward coefficients unresolved.
+Status: Complete locally; repeatable NPC job cycle, 12-template catalog, fixed rewards, five-minute handoff, collection integration, artwork, and transactional verification implemented.
 
 Goal:
 
@@ -2307,7 +2307,7 @@ Success criteria:
 
 ## Milestone 55: Segmented Travel, Weather, And Automatic Adversities
 
-Status: Planned; behavioral model approved, provider and coefficients unresolved.
+Status: Implemented locally; awaiting review and commit. Open-Meteo is the initial adapter, with a deterministic virtual fallback.
 
 Goal:
 
@@ -2335,15 +2335,14 @@ Does not include:
 - real-time GPS, player decisions during hazards, cargo loss, injury, failure, climate-specific pet
   animation sets, or map recoloring for every traversed region.
 
-Still unresolved before implementation:
+Approved implementation decisions:
 
-- final provider and commercial plan; WeatherAPI is the current candidate, not an approved
-  dependency or contract;
-- cache cell size, refresh schedule, seasonal boundary dates, weather categories, and every
-  modifier coefficient;
-- scheduler/Edge Function operations, provider attribution, outage monitoring, and forecast data
-  retention;
-- how historical trips are displayed after a provider or modifier-version change.
+- Open-Meteo hourly WMO weather, daylight, wind and gust data, normalized behind an internal adapter;
+- half-degree cache cells, three-hour UTC blocks, a 72-hour real forecast window and 30-day cache retention;
+- six-hour target segments with at most 24 per leg, immutable after starting, resolved automatically every three hours;
+- meteorological seasons inverted by hemisphere, weather subtotal clamped to `-8%/+2%`, and final speed clamped to `60%/125%`;
+- provider failures, missing production credentials and later segments use deterministic virtual weather;
+- Open-Meteo attribution appears whenever provider-backed weather is shown.
 
 Success criteria:
 
@@ -2655,6 +2654,53 @@ Success criteria:
 - retries cannot create duplicate user-visible notifications for the same event;
 - unsubscribed, denied, or invalid installations do not block gameplay or in-app notifications;
 - deep links re-check the authenticated user's authorization before showing any correspondence.
+
+## Milestone 62: Seasonal Atmosphere And Weather Effects
+
+Status: Planned; visual direction and performance boundaries approved, final asset catalog unresolved.
+
+Goal:
+
+Give each journey a stronger sense of season, time, and weather through lightweight illustrated
+effects that preserve map readability, accessibility, and mobile performance.
+
+Includes:
+
+- four stable seasonal treatments derived from the current authoritative segment: spring flowers
+  and soft greens, warm golden summer light, autumn leaves and earth tones, and cool winter frost;
+- current-condition overlays for rain, snow, fog, storms, clear nights, dawn, and dusk, without
+  revealing future forecasts or private route details;
+- a dark night map with restrained stars and a readable glow around the selected mascot;
+- small condition effects around the selected mascot, including wind, droplets, snow, and a visual
+  indication when equipped protection is mitigating a penalty;
+- transform/opacity-only CSS or SVG animation, with no heavy canvas particle engine;
+- a strict animated-element budget, reduced intensity on mobile, lazy loading of only the active
+  effect assets, and automatic cleanup when the segment changes;
+- complete reduced-motion behavior that replaces movement with a static seasonal or weather frame;
+- shared visual tokens so the map, travel-status modal, and current-condition modal present the
+  same season, time, weather, and mitigation state.
+
+Does not include:
+
+- gameplay modifier changes, new weather providers, climate-specific full mascot animation sets,
+  forecast previews, map recoloring per crossed region, cargo damage, route failure, 3D weather,
+  audio ambience, or a general-purpose seasonal event system.
+
+Still unresolved before implementation:
+
+- final SVG/texture asset set and whether each effect is packaged or generated from CSS primitives;
+- exact dawn and dusk visual windows, effect density per viewport, and the animated-element budget;
+- contrast thresholds for every map palette and the fallback behavior for low-power devices;
+- whether equipment mitigation receives one shared protective effect or category-specific visuals.
+
+Success criteria:
+
+- season, day/night, and weather always match the selected segment snapshot from Milestone 55;
+- routes, markers, labels, zoom controls, and active-map tools remain readable in every condition;
+- mobile rendering remains responsive and loads no inactive seasonal or weather asset;
+- reduced-motion mode contains no looping particles or flashes;
+- changing or reconnecting during a segment produces the same deterministic visual state without
+  changing authoritative travel timing or rewards.
 
 ## Historical First Execution Order
 

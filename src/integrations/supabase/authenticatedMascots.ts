@@ -13,6 +13,7 @@ import {
   type MascotTemplateRow,
 } from "./catalogMappers";
 import type { Database } from "./database.types";
+import type { TravelWeatherSummary } from "../../game/travelWeather";
 
 export type PlayerMascotRow = Database["public"]["Tables"]["player_mascots"]["Row"];
 export type DeliveryRow = Database["public"]["Tables"]["deliveries"]["Row"];
@@ -52,7 +53,23 @@ export function mapDeliveryRowToDelivery(row: DeliveryRow, mascotPublicId: strin
     status: row.status,
     travelModifiers: mapTravelModifiers(row.travel_modifiers),
     tutorialTravelBoost: mapTutorialTravelBoost(row.travel_modifiers),
+    segmentedTravel: mapTravelWeatherSummary(row.travel_weather_summary),
   };
+}
+
+function mapTravelWeatherSummary(value: DeliveryRow["travel_weather_summary"]): TravelWeatherSummary | undefined {
+  if (!value || Array.isArray(value) || typeof value !== "object") return undefined;
+  const item = value as Record<string, unknown>;
+  const weather = item.currentWeather;
+  if (!weather || Array.isArray(weather) || typeof weather !== "object") return undefined;
+  const currentWeather = weather as Record<string, unknown>;
+  if (typeof item.estimatedArrivalAt !== "string" || typeof item.currentSegmentIndex !== "number"
+    || typeof item.segmentCount !== "number" || typeof item.effectiveSpeedMultiplier !== "number"
+    || typeof item.conditionImpactMultiplier !== "number" || typeof item.isDay !== "boolean"
+    || typeof item.rulesVersion !== "number" || typeof item.season !== "string"
+    || typeof currentWeather.category !== "string" || typeof currentWeather.source !== "string"
+    || typeof currentWeather.observedAt !== "string") return undefined;
+  return item as unknown as TravelWeatherSummary;
 }
 
 const correspondenceTypeByOptionId: Record<string, CorrespondenceType> = {

@@ -160,6 +160,8 @@ export type Database = {
           sender_profile_id: string
           status: Database["public"]["Enums"]["delivery_status"]
           travel_modifiers: Json | null
+          travel_rules_snapshot?: Json | null
+          travel_weather_summary?: Json | null
           travel_slot_capacity: number
           travel_slots_used: number
           updated_at: string
@@ -190,6 +192,8 @@ export type Database = {
           sender_profile_id: string
           status: Database["public"]["Enums"]["delivery_status"]
           travel_modifiers?: Json | null
+          travel_rules_snapshot?: Json | null
+          travel_weather_summary?: Json | null
           travel_slot_capacity?: number
           travel_slots_used?: number
           updated_at?: string
@@ -220,6 +224,8 @@ export type Database = {
           sender_profile_id?: string
           status?: Database["public"]["Enums"]["delivery_status"]
           travel_modifiers?: Json | null
+          travel_rules_snapshot?: Json | null
+          travel_weather_summary?: Json | null
           travel_slot_capacity?: number
           travel_slots_used?: number
           updated_at?: string
@@ -2653,7 +2659,7 @@ export type Database = {
         Returns: Json
       }
       confirm_delivery_return_reply: {
-        Args: { letter_text_value: string; target_delivery_id: string }
+        Args: { reply_payload: Json; target_delivery_id: string }
         Returns: {
           confirmed_at: string
           delivery_id: string
@@ -2713,6 +2719,20 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      get_delivery_return_reply_context: {
+        Args: { target_delivery_id: string }
+        Returns: {
+          delivery_id: string
+          destination_label: string
+          mascot_id: string
+          mascot_name: string
+          origin_label: string
+          reply_confirmed: boolean
+          reply_deadline: string
+          sender_name: string
+          sender_profile_id: string
+        }[]
       }
       create_delivery_from_selection_legacy_origin: {
         Args: {
@@ -2950,6 +2970,16 @@ export type Database = {
           description_key: string
           name_key: string
           quantity: number
+        }[]
+      }
+      list_active_postal_visitors: {
+        Args: never
+        Returns: {
+          delivery_id: string
+          departs_at: string
+          mascot_id: string
+          mascot_name: string
+          portrait_asset_key: string | null
         }[]
       }
       list_received_correspondence: {
