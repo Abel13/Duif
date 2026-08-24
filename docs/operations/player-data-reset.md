@@ -1,6 +1,6 @@
-# Player Data Reset Runbook
+# Runbook de reset de dados de jogadores
 
-Milestone 37 separates official catalogs from player-owned state. Never run this operation from
+Official catalogs are separate from player-owned state. Never run this operation from
 an application startup, migration, seed, or deployment hook.
 
 ## Preserved data

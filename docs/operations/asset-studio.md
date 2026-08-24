@@ -1,4 +1,4 @@
-# Studio Administrativo de Assets
+# Studio administrativo de assets
 
 O Studio está disponível em `/admin/assets` apenas para contas cujo JWT possua
 `app_metadata.duif_role = "admin"`. Esconder o link não concede acesso: a rota, as políticas de

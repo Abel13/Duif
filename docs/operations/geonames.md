@@ -1,4 +1,4 @@
-# GeoNames city catalog
+# Catálogo de cidades GeoNames
 
 The private nest search uses the GeoNames `cities15000` and `admin1CodesASCII` dumps. DUIF imports these catalogs into
 Supabase; the game never requests GeoNames at runtime. The map remains an OpenStreetMap visual

@@ -1,7 +1,8 @@
-# Backend Decision (historical)
+# Decisão de backend (histórico)
 
 > This records the original Milestone 16 choice. The current architecture and operational rules
-> live in [technical-decisions.md](./technical-decisions.md) and [backend-schema.md](./backend-schema.md).
+> estão em [decisões técnicas](../architecture/technical-decisions.md) e
+> [arquitetura do backend](../architecture/backend.md).
 
 This document records the Milestone 16 backend decision for DUIF.
 
@@ -224,5 +225,5 @@ snapshots, persisted route discoveries, atomic reward collection, inventory pers
 regionalized postal-traffic queries with RLS or security-definer boundaries where appropriate.
 
 This document remains the rationale for choosing Supabase; it no longer defines the next
-milestone. Milestones 37 through 47 in `docs/roadmap.md` are the approved account and onboarding
+milestone. As etapas de conta e onboarding estão preservadas no histórico do roadmap
 phase, beginning with the safeguarded removal of prototype player state locally and remotely.

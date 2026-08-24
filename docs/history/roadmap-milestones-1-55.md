@@ -1,6 +1,9 @@
-# Roadmap
+# Histórico do roadmap — Milestones 1–55
 
-> Fonte única para estado, escopo e sequência das milestones. Consulte o [índice da documentação](./README.md) para regras, arquitetura e operação.
+> Registro histórico. Este arquivo preserva decisões e etapas concluídas e não define o trabalho
+> atual. Consulte [o roadmap ativo](../product/roadmap.md) para planejamento vigente.
+
+> Consulte o [índice da documentação](../README.md) para regras, arquitetura e operação.
 
 This roadmap defines the initial execution plan for DUIF.
 
@@ -615,7 +618,7 @@ Success criteria:
 Suggested Codex task:
 
 Audit the front-end performance.
-Run the build, review dependencies, check animation patterns, inspect large assets, and document performance decisions in docs/performance.md.
+Run the build, review dependencies, check animation patterns, inspect large assets, and document performance decisions in `docs/architecture/performance.md`.
 
 ## Milestone 16: Backend Decision Point
 
@@ -657,7 +660,7 @@ Success criteria:
 
 Decision outcome:
 
-The Milestone 16 decision is documented in `docs/backend-decision.md`.
+The Milestone 16 decision is documented in `docs/history/backend-decision.md`.
 
 DUIF is ready for a minimal Supabase backend foundation, focused on the current core loop only. Mapa, Loja, trading, chat, payments, push notifications, and complex economy systems remain outside the first backend pass.
 
@@ -699,7 +702,7 @@ Success criteria:
 Implementation notes:
 
 - local ports use the `56321-56329` range to avoid conflicts with another local Supabase app;
-- schema documentation lives in `docs/backend-schema.md`.
+- schema documentation lives in `docs/architecture/backend.md`.
 
 ## Milestone 18: Supabase Read Layer, Catalog First
 
@@ -888,9 +891,9 @@ Does not include:
 
 Success criteria:
 
-- product rules are documented in `docs/product-rules.md`;
-- `docs/product.md` points to the rules document;
-- privacy and map technical decisions are reflected in `docs/technical-decisions.md`;
+- product rules are documented in `docs/product/rules.md`;
+- `docs/product/vision.md` points to the rules document;
+- privacy and map technical decisions are reflected in `docs/architecture/technical-decisions.md`;
 - future roadmap milestones reference the new product direction.
 
 ## Milestone 24: Real Map Validation
@@ -1112,8 +1115,8 @@ full final asset pack.
 
 Includes:
 
-- add a few optimized runtime assets following `docs/assets.md`;
-- validate the first typography pair from `docs/typography.md`;
+- add a few optimized runtime assets following `docs/design/assets.md`;
+- validate the first typography pair from `docs/design/typography.md`;
 - validate portraits for Nuvem, Trovão, and Pipoca;
 - add a small sample of equipment, reward, texture, and postal-mark assets;
 - keep CSS fallbacks intact for every asset surface;
@@ -1210,7 +1213,7 @@ Decision outcome:
 - duplicate behavior is defined by item category, while conversion quantities remain a
   later balancing decision;
 - user-uploaded photo postcards remain outside the first commercial prototype;
-- detailed rules and paid-economy guardrails live in `docs/product-rules.md`.
+- detailed rules and paid-economy guardrails live in `docs/product/rules.md`.
 
 ## Milestone 30: Read-Only Shop Prototype
 
@@ -1644,7 +1647,7 @@ Includes:
 - per-type metadata validation so unrelated attributes cannot be mixed;
 - migration and registration of every current official asset;
 - active-asset reads for the game and CSS fallbacks for loading failures;
-- validation against the budgets and conventions in `docs/assets.md`.
+- validation against the budgets and conventions in `docs/design/assets.md`.
 
 Success criteria:
 
@@ -2043,7 +2046,7 @@ Goal:
 
 Implement the approved three-layer progression — Reputação Postal, mascot flight XP, and
 conditional skill XP — without creating a universally optimal species for leveling. The product
-definition is in [XP System](xp-system.md).
+definition is in [Progressão e XP](../product/progression.md).
 
 Includes:
 
@@ -2351,359 +2354,6 @@ Success criteria:
 - the same versioned segment snapshot resolves identically after reconnect;
 - provider failure never blocks the core travel loop;
 - no client receives precise nest coordinates or a reusable trail of another player.
-
-## Milestone 56: Functional Equipment, Backpacks, And Loadout Preview
-
-Status: Next planned milestone; equipment principles approved, catalog economy unresolved. Plan
-and approve the unresolved decisions below before implementation.
-
-Goal:
-
-Introduce manually selected functional equipment with understandable tradeoffs and no premium
-gameplay advantage.
-
-Includes:
-
-- physical inventory instances for equipment whose durability or reservation state can differ;
-- one copy reserved by at most one traveling mascot at a time;
-- manually equipped loadouts and a compact `Atual` versus `Com alteração` graph for speed,
-  protection, and slots; simulation never consumes uses;
-- strongest-only resolution when multiple items mitigate the same condition, with no same-category
-  stacking;
-- condition-based durability: at most one use per journey and only when the selected item actually
-  reduces a penalty;
-- zero-use equipment remaining owned but inactive, with manual full repair using Seeds for less
-  than replacement cost;
-- permanent backpacks with no durability and a dedicated worn position: small `+1 slot/-5%`,
-  medium `+2/-10%`, and large `+3/-15%`;
-- backpack cosmetics that may later cost Crystals without changing capacity or speed;
-- basic functional equipment bought with Seeds, improved functional variants earned through play,
-  and visual variants available through progression, events, or the future cosmetic shop;
-- equipment activating only when it improves the resolved outcome; for example, a lantern is not
-  consumed when Lume's night ability already provides the stronger applicable effect.
-
-Does not include:
-
-- automatic loadout selection, Crystal-purchased functional advantage, repair timers, equipment
-  trading, stat rerolls, or stacking several mitigators for the same condition.
-
-Still unresolved before implementation:
-
-- the launch equipment catalog beyond backpacks and the conceptual raincoat/lantern examples;
-- durability per item, Seed prices, repair prices, unlock sources, and inventory presentation for
-  many instances;
-- equipment positions other than the dedicated backpack position and the exact meaning of the
-  preview's protection scale.
-
-Success criteria:
-
-- ownership, reservation, activation, durability, and repair are backend-authoritative;
-- the preview matches the dispatched modifier snapshot;
-- every route remains possible without purchasing or equipping an optional item.
-
-## Milestone 57: Mascot Skill Identities And Contextual Mastery
-
-Status: Planned; identities and progression framework approved, some coefficients and triggers
-remain unresolved.
-
-Goal:
-
-Give Nuvem, Trovão, Pipoca, and Lume distinct travel identities through one innate trait, two fixed
-skills, and one player-chosen individual skill per mascot.
-
-Includes:
-
-- traits that are permanent and do not level;
-- fixed and individual skills with levels 1–10 and accumulated thresholds
-  `0, 40, 100, 190, 320, 500, 740, 1050, 1450, 1950` XP;
-- XP only when the skill's condition actually participates in a completed journey, generally 8–20
-  XP according to duration/intensity, with multiple genuinely activated skills allowed to train;
-- individual-skill choice at mascot level 5 from three visible options and a modifier graph;
-- one free individual-skill change before mascot level 10, then a permanent choice with no Crystal
-  respec;
-- **Nuvem**, safe long-route carrier: `Rota Segura`, `Rota Longa`, `Memória Postal`; individual
-  options `Carga Equilibrada`, `Correio de Volta`, or `Olhar Cartográfico`;
-- **Trovão**, fast direct-flight carrier: `Voo Direto`, `Despacho Rápido`, `Instinto de Vento
-  Cruzado`; individual options `Asa Solar`, `Arrancada Urbana`, or `Carga Aerodinâmica`;
-- **Pipoca**, explorer and collector: `Achador Curioso` gives a 15% wider discovery corridor,
-  `Coisa Brilhante` improves rarity weight, and `Desvio Feliz` widens the corridor further with a
-  small speed tradeoff; individual options `Plumas Impermeáveis`, `Caminho d'Água`, or `Primeiro
-  Passeio`;
-- **Lume**, referral-unlocked night specialist: `Olhos da Noite`, `Vigília Noturna`, and `Voo
-  Silencioso`; individual options `Memória Lunar`, `Carga Noturna`, or `Guardiã da Madrugada`;
-- linear, visible effect growth to each skill's explicit maximum, never a permanent species XP
-  multiplier.
-
-Does not include:
-
-- manual training, random skill rolls, paid skills, paid respec, hidden bonuses, damage/failure
-  mechanics, or species-exclusive collection content.
-
-Still unresolved before implementation:
-
-- exact XP awarded for every trigger and anti-farming rules for repeated trivial routes;
-- final coefficients for several fixed and individual skills, including every climate threshold;
-- whether `Desvio Feliz` changes path geometry or only the discovery corridor and calculated time;
-- localized copy, icons, animation cues, and migration behavior for existing mascot skills.
-
-Success criteria:
-
-- each mascot has a recognizable advantage without becoming universally optimal;
-- skill XP and effects are auditable, snapshotted, capped, and explained in the trip result;
-- every discovery remains obtainable with any mascot even when Pipoca obtains it more efficiently.
-
-## Milestone 58: Flight Levels, Familiar Routes, And Prestige Borders
-
-Status: Planned; primary curves and unlock table approved, account-level unlocks unresolved.
-
-Goal:
-
-Connect each mascot's flight level to distance, natural capacity, familiar-route efficiency, and
-long-term visual prestige without introducing a hard progression cap.
-
-Includes:
-
-- the existing flight XP formula `ceil(100 × level^1.35)` for every next level, continuing above
-  level 20;
-- functional unlocks ending at level 20 while numeric progression continues indefinitely;
-- approved maximum one-way distance and natural slots:
-  `L1 25km/3`, `L2 50/3`, `L3 100/3`, `L4 180/3`, `L5 300/4`, `L6 500/4`,
-  `L7 800/4`, `L8 1200/4`, `L9 1800/4`, `L10 2500/5`, `L11 3500/5`,
-  `L12 4500/5`, `L13 6000/5`, `L14 7500/5`, `L15 9000/6`, `L16 11000/6`,
-  `L17 13000/6`, `L18 15500/6`, `L19 18000/6`, `L20 20050/7`;
-- level 20 reaching the full practical world range without requiring equipment;
-- per-mascot familiarity keyed by persistent origin/destination identities, not fragile decimal
-  coordinate equality; both directions share the same pair history;
-- familiarity counted only after completion: New `0–2`, Known `3–7`, Familiar `8–19`, Mastered
-  `20+`, granting `0%`, `+2%`, `+4%`, and `+6%` speed respectively;
-- no familiarity decay;
-- visual level borders every ten levels after functional progression, with initial art coverage at
-  levels 20, 30, 40, and 50; higher mascots retain the highest available border until new assets
-  are published, then resolve them retroactively by minimum level.
-
-Does not include:
-
-- functional unlocks above level 20, an actual level cap, paid level acceleration, equipment that
-  unlocks otherwise unreachable world routes, or familiarity shared across all mascots.
-
-Still unresolved before implementation:
-
-- exact non-capacity unlocks at each level from 1–20 and their relationship to Reputação Postal;
-- border art, titles, accessibility presentation, and whether border selection is automatic or
-  player-selectable after unlock;
-- route-identity migration for existing destinations and dynamically generated job locations.
-
-Success criteria:
-
-- all route-range, slot, familiarity, XP, and border resolution is backend-authoritative and
-  versioned;
-- progression beyond available border art never blocks travel or leveling;
-- a coordinate refresh cannot silently erase familiarity with a persistent destination.
-
-## Milestone 59: Travel Journal, Discoveries, And Consumable Boosts
-
-Status: Planned; collection roles approved, content catalog and drop tables unresolved.
-
-Goal:
-
-Turn route findings into a permanent per-mascot travel journal and a controlled source of useful
-consumables without confusing discoveries with inventory items or official postcards.
-
-Includes:
-
-- `Diário de Viagem` inside each mascot profile rather than a new primary Album surface;
-- permanent discovery records containing official illustration, localized description, approximate
-  region, mascot, date, and rarity;
-- initial rarities Common, Uncommon, and Rare; `Special` describes event/mission origin rather than
-  a fourth superior rarity;
-- discoveries never occupying travel slots and never being consumed;
-- a discovery optionally unlocking a related permanent official postcard while remaining a
-  distinct journal record;
-- the permanent simple base postcard, city postcards unlocked when a mascot passes through that
-  city, and event postcards unlocked by their mission;
-- paid postcard art modeled as finite consumable copies in future packs, while unlocked official
-  postcards remain permanent;
-- `Lanche Revigorante` found on routes, granted by jobs, and later purchasable with Seeds: common
-  `+5%` and uncommon/special `+10%`, one per journey, selected and consumed at confirmed dispatch,
-  occupying no slot and affecting outbound and return within the global speed cap;
-- found snacks remaining pending delivery rewards and entering inventory only at final collection;
-- the tutorial's `Impulso da Primeira Viagem` remaining a separate automatic, non-inventory
-  modifier despite using related acceleration visual language.
-
-Does not include:
-
-- player-uploaded journal art, exclusive discoveries obtainable only by Pipoca, Crystal-purchased
-  route power, consuming unlocked city/event postcards, or activating found items before return.
-
-Still unresolved before implementation:
-
-- discovery taxonomy, launch illustrations/text, regional coverage, duplicate behavior, and exact
-  rarity/drop tables;
-- how city passage is determined for long route segments and how retroactive city unlocks work;
-- snack stack limits, Seed prices, job quantities, event variants, and whether the `+10%` version
-  should be named `Especial` or receive a different product name;
-- the precise visual distinction between a snack modifier and the tutorial-only boost.
-
-Success criteria:
-
-- journal records, postcard unlocks, pending findings, inventory grants, and snack consumption are
-  separate and idempotent backend operations;
-- collection cannot grant a found snack or other reward twice;
-- the UI never implies that a permanent discovery record occupies inventory or travel capacity.
-
-## Milestone 60: Local Mascot Encounters, Friendship Safety, And Moderation
-
-Status: Planned; discovery and privacy rules approved, moderation operations unresolved.
-
-Goal:
-
-Replace world-wide postal-traffic tracking with bounded local encounters that can lead to safe,
-intentional friendship requests.
-
-Includes:
-
-- other players' mascots visible only in relation to the viewing player's current mascot or nest;
-- local eligibility resolved by the backend around that anchor, never by an arbitrary world-map
-  viewport, camera pan, searched city, or guessed coordinate;
-- removal of the ability to browse or follow other players' mascots flying anywhere in the world;
-- encounter visibility enabled by default, with an explained profile privacy toggle to opt out;
-- a sanitized public profile opened from a locally encountered mascot: nickname, mascot and level,
-  approximate city/country, Postal Reputation, and player-selected official showcase only;
-- friendship requests without a daily product limit, while retaining idempotency, one pending
-  request per pair, and technical burst protection;
-- a seven-day retry cooldown after refusal;
-- separate report and block actions: blocking immediately hides both players and prevents requests,
-  while reporting alone does not hide or punish automatically;
-- individual human/admin review of every report, using controlled categories, optional explanation,
-  a snapshot of the public profile, encounter context, and prior decisions without revealing the
-  reporter;
-- no free-text public biography initially;
-- five friendship levels based mainly on reciprocal correspondence cycles, without decay, purchase,
-  or gameplay rewards: New Correspondents, Frequent Correspondents, Postal Friends, Route
-  Companions, and Lasting Bond;
-- unfriending preserves private history locally but a later re-add starts friendship level 1;
-  blocking hides history and level from the blocked player;
-- surprise protection: an accepted friend's approaching mascot and sender identity remain hidden
-  from the recipient until correspondence is opened.
-
-Does not include:
-
-- global traffic browsing, exact distance, exact coordinates, live trails, chat, public bios,
-  automatic friendship, friend rewards, report-count auto-punishment, or automatic suspension.
-
-Still unresolved before implementation:
-
-- the encounter radius/frequency, result limit, refresh cadence, and behavior when the player's own
-  mascot is traveling far from its nest;
-- whether the anchor is the selected mascot, every owned mascot, the nest, or a priority order when
-  several are simultaneously eligible;
-- report categories, evidence retention, moderator roles, service targets, appeals, policy text,
-  notification copy, and legal/operational requirements;
-- exact reciprocal-cycle thresholds for each friendship level and treatment of legacy friends.
-
-Success criteria:
-
-- moving or searching the camera cannot enumerate mascots outside the authorized local anchor;
-- clients never receive global active-delivery datasets, exact nests, or reusable private route
-  endpoints;
-- report and block remain independent, auditable operations with no punishment based only on report
-  volume.
-
-## Milestone 61: Push Notifications And Delivery Privacy
-
-Status: Planned; notification moments are approved, platform/provider operations unresolved.
-
-Goal:
-
-Notify players about meaningful asynchronous postal moments without revealing a surprise sender,
-private content, precise location, or route information on a device lock screen.
-
-Includes:
-
-- explicit notification permission education and opt-in after the player has experienced the core
-  loop, never as a blocking onboarding permission wall;
-- Web Push subscription registration per installation, revocation, expiry cleanup, and
-  backend-authoritative ownership;
-- localized notifications for correspondence arrival, remaining return-preparation time, confirmed
-  return departure, mascot return ready for collection, invitation qualification/reward, and
-  selected future event reminders;
-- arrival copy that says only that correspondence arrived and how long the mascot may prepare its
-  return; sender and contents remain hidden until the player opens the correspondence in DUIF;
-- deep links that restore the authenticated PWA and route to the authorized in-app surface without
-  embedding secrets or private content in the URL;
-- per-category preferences, quiet hours, duplicate suppression, retry/idempotency keys, invalid
-  subscription cleanup, and an auditable delivery log with limited retention;
-- an in-app fallback whenever push is unavailable, denied, expired, or fails.
-
-Does not include:
-
-- mandatory notification permission, SMS, WhatsApp, email marketing, notification ads, exact route
-  coordinates, sender names on surprise arrivals, correspondence text in payloads, or third-party
-  behavioral targeting.
-
-Still unresolved before implementation:
-
-- push provider versus direct VAPID Web Push, key custody/rotation, Edge Function or worker shape,
-  scheduler, quotas, and production domains;
-- exact trigger timing, quiet-hour defaults/time-zone changes, retry policy, log retention, and
-  notification preference taxonomy;
-- iOS installed-PWA support matrix, browser-specific UX, multi-device behavior, and whether opening
-  one device dismisses notifications on others;
-- consent copy, privacy-policy updates, observability, abuse limits, and production runbooks.
-
-Success criteria:
-
-- no push payload or lock-screen copy reveals the surprise sender, content, exact nest, or route;
-- retries cannot create duplicate user-visible notifications for the same event;
-- unsubscribed, denied, or invalid installations do not block gameplay or in-app notifications;
-- deep links re-check the authenticated user's authorization before showing any correspondence.
-
-## Milestone 62: Seasonal Atmosphere And Weather Effects
-
-Status: Planned; visual direction and performance boundaries approved, final asset catalog unresolved.
-
-Goal:
-
-Give each journey a stronger sense of season, time, and weather through lightweight illustrated
-effects that preserve map readability, accessibility, and mobile performance.
-
-Includes:
-
-- four stable seasonal treatments derived from the current authoritative segment: spring flowers
-  and soft greens, warm golden summer light, autumn leaves and earth tones, and cool winter frost;
-- current-condition overlays for rain, snow, fog, storms, clear nights, dawn, and dusk, without
-  revealing future forecasts or private route details;
-- a dark night map with restrained stars and a readable glow around the selected mascot;
-- small condition effects around the selected mascot, including wind, droplets, snow, and a visual
-  indication when equipped protection is mitigating a penalty;
-- transform/opacity-only CSS or SVG animation, with no heavy canvas particle engine;
-- a strict animated-element budget, reduced intensity on mobile, lazy loading of only the active
-  effect assets, and automatic cleanup when the segment changes;
-- complete reduced-motion behavior that replaces movement with a static seasonal or weather frame;
-- shared visual tokens so the map, travel-status modal, and current-condition modal present the
-  same season, time, weather, and mitigation state.
-
-Does not include:
-
-- gameplay modifier changes, new weather providers, climate-specific full mascot animation sets,
-  forecast previews, map recoloring per crossed region, cargo damage, route failure, 3D weather,
-  audio ambience, or a general-purpose seasonal event system.
-
-Still unresolved before implementation:
-
-- final SVG/texture asset set and whether each effect is packaged or generated from CSS primitives;
-- exact dawn and dusk visual windows, effect density per viewport, and the animated-element budget;
-- contrast thresholds for every map palette and the fallback behavior for low-power devices;
-- whether equipment mitigation receives one shared protective effect or category-specific visuals.
-
-Success criteria:
-
-- season, day/night, and weather always match the selected segment snapshot from Milestone 55;
-- routes, markers, labels, zoom controls, and active-map tools remain readable in every condition;
-- mobile rendering remains responsive and loads no inactive seasonal or weather asset;
-- reduced-motion mode contains no looping particles or flashes;
-- changing or reconnecting during a segment produces the same deterministic visual state without
-  changing authoritative travel timing or rewards.
 
 ## Historical First Execution Order
 

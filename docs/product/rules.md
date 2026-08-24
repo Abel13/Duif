@@ -1,9 +1,9 @@
-# Product Rules
+# Regras do produto
 
 This document records product decisions for DUIF after the first playable backend loop.
 
 For the authoritative item taxonomy, consumption, ownership, acquisition, and transfer rules, see
-[items.md](./items.md).
+[itens e economia](./items-and-economy.md).
 
 It should be treated as the source of truth for gameplay, privacy, social behavior, map
 mechanics, rewards, inventory, and monetization direction until a more formal game design
@@ -77,7 +77,7 @@ Boosts:
   otherwise inaccessible routes, rewards, or social content.
 - Approved initial snack values are `+5%` for the common version and `+10%` for the improved
   version, always within the global effective-speed cap; acquisition rates and Seed prices remain
-  unresolved in Milestone 59.
+  unresolved in the [active roadmap](./roadmap.md).
 
 ## Account Onboarding Rules
 
@@ -122,7 +122,7 @@ Route rewards:
 
 Local mascot encounters:
 
-- The shipped regional-viewport traffic model is superseded by Milestone 60. It must not become a
+- The shipped regional-viewport traffic model is planned for replacement. It must not become a
   way to browse mascots flying anywhere in the world.
 - Another player's mascot may be eligible only in relation to an authorized local anchor: the
   viewing player's nest or current mascot. Panning, zooming, or searching another region never
@@ -133,11 +133,11 @@ Local mascot encounters:
 - Encounter visibility starts enabled and can be disabled in profile privacy settings. A player
   who opts out does not appear through local discovery.
 - A local mascot can open a deliberately small public profile and friendship-request action under
-  the reporting, blocking, cooldown, and surprise rules defined for Milestone 60.
+  the reporting, blocking, cooldown, and surprise rules planned in the [roadmap](./roadmap.md).
 - Accepted friendship does not authorize advance tracking of an incoming surprise delivery. The
   approaching mascot and sender remain hidden from the recipient until correspondence is opened.
 - Exact encounter radius, anchor priority, refresh cadence, and result limit are unresolved and
-  must be fixed before Milestone 60 implementation.
+  must be fixed before implementation of the encounter model.
 
 Technical direction:
 
@@ -162,7 +162,7 @@ Postcards:
 - Every account can use the permanent base postcard. The inaugural postcard is available after its
   tutorial inventory reward is collected.
 - City postcards remain catalog-backed but their city list and artwork belong to a later dedicated
-  art plan; Milestone 52 does not fabricate city art.
+  art plan; the current catalog does not fabricate city art.
 - Permanent city/event cards and finite paid-art copies are different ownership modes. Sending a
   permanent unlocked card never decrements it; sending a paid-art card consumes one granted copy.
 - User-uploaded photo postcards are excluded from the first commercial shop prototype.
@@ -182,7 +182,7 @@ Stickers:
 
 Return correspondence:
 
-- One correspondence uses one natural travel slot in the implemented Milestone 53 baseline.
+- One correspondence uses one natural travel slot in the implemented baseline.
 - Outbound content is unloaded at arrival. The recipient may confirm one return letter while the
   mascot prepares, using one newly freed slot.
 - Return rest lasts at least 30 minutes and at most 60 minutes. A reply confirmed before minute 30
@@ -308,7 +308,7 @@ player must confirm a literal mascot name, which remains unchanged when the inte
 changes. Retrying provisioning cannot grant a second starter mascot.
 
 Mascots level up by completing deliveries. The approved three-layer progression, formulas,
-curves, skill-XP triggers, and economy guardrails are specified in [XP System](xp-system.md).
+curves, skill-XP triggers, and economy guardrails are specified in [Progressão e XP](./progression.md).
 
 Rules:
 
@@ -355,7 +355,7 @@ Attribute direction:
 - Attribute and skill bonuses must use explicit caps so later progression cannot create
   unbounded speed, discovery, or rarity advantages.
 
-Approved mascot identities for the Milestone 57 redesign:
+Approved mascot identities for the planned skill redesign:
 
 - Nuvem specializes in safety, load, and long/familiar routes.
 - Trovão specializes in speed, dispatch, and direct flight.
@@ -366,7 +366,7 @@ Approved mascot identities for the Milestone 57 redesign:
 - Pipoca improves the efficiency of collection but never owns species-exclusive discoveries;
   every discovery remains obtainable with any mascot.
 - Complete skill names, individual choices, approved maxima, and explicitly unresolved triggers
-  are recorded in Milestone 57 and [XP System](./xp-system.md).
+  são planejados no [roadmap](./roadmap.md) e detalhados em [Progressão e XP](./progression.md).
 
 Preparation snapshot compatibility:
 
@@ -391,7 +391,7 @@ Modifier boundary:
 
 - The future unified effective-speed result is clamped between `0.60` and `1.25` of base speed.
 - Current version-2 delivery snapshots keep their historical outbound/return bounds and effects;
-  they are not silently recalculated. Milestones 55–57 require a new explicit modifier version.
+  they are not silently recalculated. Future rule changes require a new explicit modifier version.
 - Rarity changes multiply the underlying rarity weight; they never add direct percentage points or
   guarantee a rare result.
 - Every changed coefficient affects only future deliveries because dispatched snapshots are
@@ -431,7 +431,7 @@ Cargo:
 
 - There is no hard general inventory limit. The meaningful limit is travel slots.
 - Natural travel capacity grows from 3 slots at level 1 to 7 at level 20 according to the table in
-  [XP System](./xp-system.md).
+  [Progressão e XP](./progression.md).
 - Outgoing correspondence, mission cargo, gifts, and functional carried equipment consume their
   defined slots. Cosmetics and route discoveries do not.
 - Backpacks use a dedicated worn position and add slots without occupying one: small `+1/-5%`
@@ -442,7 +442,7 @@ Cargo:
 - Items found during travel remain in delivery reward state until return collection; they do not
   retroactively compete with dispatched cargo capacity.
 - Detailed slot validation, return bundles, equipment acquisition, and unresolved catalog values
-  belong to Milestones 53 and 56.
+  are defined by the current correspondence contract and the planned equipment work.
 
 ## Inventory, Collection, Journal, and Mailbox Rules
 

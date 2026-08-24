@@ -1,4 +1,4 @@
-# Technical Decisions
+# Decisões técnicas
 
 This document describes the initial technical direction for DUIF.
 
@@ -7,13 +7,12 @@ The goal is to build a lightweight, maintainable PWA-style prototype for a socia
 The first implementation focused on the mascot detail screen, mock game data, visual style, and
 travel logic foundations. References to “the first prototype” below are historical constraints.
 
-## Current Technical Baseline
+## Baseline técnico
 
-Milestones 1 through 36A are implemented. The application now combines React/Vite, CSS Modules,
-Supabase-backed authenticated flows, explicit mock fallbacks, MapLibre, PWA installation support,
-persisted discoveries, atomic collection, and authoritative regional postal traffic. `/map` is
-the opening gameplay route. Milestones 37 through 47 define the approved account and onboarding
-phase; Milestone 37 begins by removing prototype player state and runtime mocks.
+A aplicação combina React/Vite, CSS Modules, fluxos autenticados em Supabase, MapLibre, instalação
+PWA, descobertas persistidas, coleta atômica, correspondências e viagens segmentadas autoritativas.
+`/map` é a rota inicial de gameplay. Estado e sequência de produto pertencem ao
+[roadmap](../product/roadmap.md).
 
 ## Initial Technical Goal
 
@@ -207,11 +206,11 @@ Do not put core game calculations inside React components.
 
 Do not add a backend in the first visual prototype.
 
-Milestone 16 reviewed the playable prototype and concluded that DUIF is ready for a minimal backend foundation, but not a full backend product build.
+The original backend review concluded that DUIF was ready for a minimal backend foundation, but not a full backend product build.
 
 See:
 
-docs/backend-decision.md
+docs/history/backend-decision.md
 
 Later backend options:
 
@@ -234,7 +233,7 @@ The recommended next backend step is a local Supabase foundation with a minimal 
 
 The local schema and non-default development ports are documented in:
 
-docs/backend-schema.md
+docs/architecture/backend.md
 
 The first frontend integration is catalog-first. The browser client may read public
 definition tables such as `mascot_templates`, while mock data remains the default
@@ -376,7 +375,7 @@ Recommended validation stack:
 
 MapLibre GL JS
 
-Milestone 24 uses MapLibre with public raster tiles for validation only, then adds DUIF
+The map implementation uses MapLibre with public raster tiles for validation, then adds DUIF
 route, reward, pet, and place-label layers on top.
 
 This avoids adding a provider key before the product validates whether MapLibre feels right
@@ -408,8 +407,8 @@ Validation goals:
 
 Route reward architecture:
 
-Milestone 27 initially validated route rewards with pure TypeScript and local fixtures.
-Milestone 35 replaced that production path with an authoritative seeded point catalog and
+The initial route-reward prototype used pure TypeScript and local fixtures.
+The current production path uses an authoritative seeded point catalog and
 per-delivery discoveries materialized by the backend. The client still calculates temporal
 visibility from persisted route progress, while reward eligibility, grants, collection, and
 inventory writes remain authoritative. Local fixtures are retained only for mock development
@@ -433,7 +432,7 @@ Preferred technical shape:
 This keeps the first version closer to "postal traffic" than to an MMO simulation, while
 leaving room for a richer live map if the experience proves strong.
 
-Milestones 36 and 36A add official mascot portraits and authoritative regional postal traffic.
+The current map includes official mascot portraits and authoritative regional postal traffic.
 The backend queries active deliveries against the expanded camera viewport, limits results to
 the 10 closest, resolves friendship visibility, and returns deterministic regionalized route
 geometry. The frontend interpolates positions locally between five-minute refreshes. Public
@@ -441,7 +440,7 @@ non-friend snapshots omit owner data, streets, neighborhoods, private postal bas
 delivery endpoints.
 
 This describes the currently shipped implementation, not the approved long-term authorization
-boundary. Milestone 60 replaces viewport-authorized queries with server-authorized encounters
+boundary. The planned encounter model replaces viewport-authorized queries with server-authorized encounters
 anchored only to the viewing player's nest or current mascot. Camera movement and searched regions
 must no longer enumerate other players' flights anywhere in the world. The old RPC must be retired
 or narrowed as part of that migration; retaining sanitized geometry does not make global browsing
@@ -491,9 +490,9 @@ When real assets are added:
 
 ## Typography Strategy
 
-DUIF will use the typography roles documented in `docs/typography.md`.
+DUIF will use the typography roles documented in `docs/design/typography.md`.
 
-Milestone 27.75 introduced the first self-hosted runtime font pair:
+The first self-hosted runtime font pair introduced:
 
 - `Atkinson Hyperlegible` for UI/body text;
 - `Fraunces` for display titles and mascot names.
@@ -620,7 +619,7 @@ display strings. Catalog publishing follows `draft | active | archived`; activat
 when a referenced key is absent from either locale, including keys nested in archetype JSON.
 User-authored names and correspondence remain literal across locale changes.
 
-See `docs/internationalization.md` for the full i18n direction.
+See `docs/architecture/internationalization.md` for the full i18n direction.
 
 ## Testing
 
@@ -875,7 +874,7 @@ the final install or Add to Home Screen action always belongs to the player.
 
 The monetization boundary itself is no longer deferred: premium value is limited to
 cosmetics and social expression, while the full gameplay loop remains free. See
-`docs/product-rules.md` for the authoritative shop and economy guardrails.
+`docs/product/rules.md` for the authoritative shop and economy guardrails.
 
 ## First Implementation Sequence
 

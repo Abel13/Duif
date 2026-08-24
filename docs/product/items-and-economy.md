@@ -1,7 +1,7 @@
-# Itens e economia de coleção
+# Itens e economia
 
 > Fonte de verdade para tipos de item, propriedade, consumo e origem. Regras de produto gerais
-> permanecem em [product-rules.md](./product-rules.md); escopo de implementação fica no
+> permanecem em [regras do produto](./rules.md); escopo de implementação fica no
 > [roadmap](./roadmap.md).
 
 ## Princípios
@@ -114,4 +114,4 @@ operação.
 - Sem arte, texto ou imagens criadas por jogadores.
 - Sem itens pagos com Cristais que alterem velocidade, probabilidade de descoberta, XP, carga ou
   acesso a rotas. Consumíveis e equipamentos funcionais obtidos no jogo ou com Sementes obedecem
-  às Milestones 56 e 59.
+  ao trabalho planejado de equipamentos e diário de viagem.

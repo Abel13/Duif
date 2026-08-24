@@ -1,4 +1,4 @@
-# Mascots
+# Mascotes
 
 The prototype defines three official starter archetypes. During the production onboarding, each
 new player chooses exactly one archetype and supplies the mascot's real display name. Archetypes

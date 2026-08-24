@@ -1,4 +1,4 @@
-# Typography
+# Tipografia
 
 This document defines the intended typography system for DUIF.
 
@@ -175,7 +175,7 @@ first art direction slice until stamp/code labels prove they need a dedicated fo
 - Do not block first paint on decorative fonts.
 - Critical body text must remain readable with system fallback fonts.
 
-Milestone 27.75 loaded the first two runtime families:
+The first typography implementation loaded two runtime families:
 
 - `Atkinson Hyperlegible` latin subset at weights `400` and `700`;
 - `Fraunces` latin subset as one variable WOFF2 covering display weights `700` to `900`.
@@ -210,7 +210,7 @@ Current path:
 
 1. The app used system fonts through the core navigation, privacy, correspondence, map
    rewards, and postal traffic milestones.
-2. Milestone 27.75 added `Atkinson Hyperlegible` and `Fraunces` as the first self-hosted
+2. The first typography implementation added `Atkinson Hyperlegible` and `Fraunces` as the self-hosted
    typography pair.
 3. Continue validating mobile readability, layout shifts, bundle/build size, and visual
    identity before adding more font roles.

@@ -1,4 +1,4 @@
-# Product
+# Visão do produto
 
 DUIF is a slow social game about messenger animals.
 
@@ -8,7 +8,7 @@ The first version should focus on making the player care about their mascots and
 
 This document deliberately describes the durable product vision, not implementation status. For
 current and planned work, use the [roadmap](./roadmap.md). For the binding rules that govern that
-vision, use [product-rules.md](./product-rules.md).
+vision, use [rules.md](./rules.md).
 
 ## Core Concept
 
@@ -203,7 +203,7 @@ Mechanical direction:
 - active deliveries keep an immutable modifier snapshot so later changes cannot reroll them.
 
 Detailed attribute, trait, skill, determinism, and balancing rules live in
-`docs/product-rules.md`.
+`docs/product/rules.md`.
 
 ## Travel System
 
@@ -291,7 +291,7 @@ Rewards can be generated from a deterministic seed based on the delivery, animal
 Mascot progression uses the same base XP formula for every species: distance, novelty, and a
 route-context bonus. Species identity should shape travel style, situational affinities, and
 discoveries—not provide a permanent XP-farming advantage. Exact coefficients and level curves are
-defined in `product-rules.md` and remain deferred until authoritative progression is implemented.
+defined in `docs/product/rules.md` and remain deferred until authoritative progression is implemented.
 
 The first version can use simple random rewards.
 
@@ -351,7 +351,7 @@ A later version may include:
 The full send-travel-return-collect loop remains free. Premium purchases cannot grant XP,
 attributes, route rewards, cargo capacity, exclusive gameplay access, or required travel
 speed. Paid loot boxes and Crystal-to-Seed conversion are not allowed. Detailed
-economy rules live in `docs/product-rules.md`.
+economy rules live in `docs/product/rules.md`.
 
 ## Events
 

@@ -1,6 +1,4 @@
-# Sistema de XP
-
-Status: contrato e coleta autoritativa implementados localmente no Milestone 49; migration remota pendente de deployment.
+# Progressão e XP
 
 ## Princípio
 
@@ -97,7 +95,7 @@ que a progressão normal torne inacessível.
 
 Espécie, arquétipo, traços e skills nunca recebem um multiplicador permanente de XP. A escolha do mascote deve refletir afeto e estilo de viagem, não a forma objetivamente mais rápida de evoluir.
 
-Cada afinidade aplicável vale `×1,10`: urbana (mesma cidade), longa distância (acima de 50 km), noturna, costeira ou social (carta para amigo). As regras de coexistência serão resolvidas no Milestone 49 para impedir que afinidades virem um bônus permanente esperado. Quando a mesma identidade puder ser expressa por tempo de viagem ou descoberta, essa alternativa é preferível a XP adicional.
+Cada afinidade aplicável vale `×1,10`: urbana (mesma cidade), longa distância (acima de 50 km), noturna, costeira ou social (carta para amigo). As regras de coexistência impedem que afinidades virem um bônus permanente esperado. Quando a mesma identidade puder ser expressa por tempo de viagem ou descoberta, essa alternativa é preferível a XP adicional.
 
 As identidades aprovadas são Nuvem para segurança/carga/rotas longas, Trovão para velocidade,
 Pipoca para exploração e Lume, a coruja de indicação, para viagens noturnas. Espécies futuras podem
@@ -124,7 +122,7 @@ cada uma tiver sido realmente ativada.
 | 10 | 1.950 |
 
 Uma ativação deve conceder aproximadamente 8–20 XP conforme duração e intensidade. O valor exato
-por gatilho e os controles contra repetição de rotas triviais permanecem pendentes na Milestone 57.
+por gatilho e os controles contra repetição de rotas triviais permanecem pendentes no [roadmap](./roadmap.md).
 Os efeitos crescem linearmente: um teto de 10% equivale normalmente a 1% por nível; 15%, a 1,5%;
 mitigação de 50%, a 5%; e redução de 20%, a 2%. Efeitos de raridade alteram o peso da chance-base,
 nunca pontos percentuais diretos nem garantia de recompensa rara.
@@ -132,7 +130,7 @@ nunca pontos percentuais diretos nem garantia de recompensa rara.
 Cada espécie possui um traço inato sem nível, duas skills fixas e uma skill individual escolhida no
 nível 5 do mascote. Há uma troca individual gratuita antes do nível 10 do mascote; depois disso a
 escolha é definitiva e não pode ser refeita com Cristais. A biblioteca aprovada e suas pendências
-estão na Milestone 57 do roadmap.
+estão no [roadmap ativo](./roadmap.md).
 
 ## Familiaridade de rota
 

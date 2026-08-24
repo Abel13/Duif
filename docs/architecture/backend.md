@@ -1,4 +1,4 @@
-# Backend Schema
+# Arquitetura do backend
 
 This document describes the first local Supabase foundation for DUIF.
 
@@ -179,7 +179,7 @@ completes the delivery, and advances onboarding atomically and idempotently.
 
 Local confirmation and recovery messages can be inspected through Inbucket. Equivalent remote
 password, confirmation, redirect-allowlist, and SMTP settings must be applied only after the
-remote project passes the Milestone 37 identification, backup, and reset gate.
+remote project passes the identification, backup, allowlist, and reset gate in the operations runbook.
 
 ## Frontend Read Layer
 
@@ -247,7 +247,7 @@ camera center. Its response contains deterministic quarter-degree route geometry
 labels; exact endpoints, addresses, city labels, and non-friend owner identity never leave the
 database. The browser interpolates these public snapshots between five-minute refreshes.
 
-That RPC records the Milestone 36A schema and is planned for replacement in Milestone 60. The
+That RPC records the current regional-traffic schema and is planned for replacement by the
 approved future contract accepts no arbitrary camera viewport as an authorization source: other
 players' mascots are eligible only relative to a server-resolved anchor belonging to the viewer
 (nest or current mascot). The migration shape, anchor priority, radius, refresh cadence, and legacy
@@ -255,7 +255,7 @@ RPC retirement remain explicitly unresolved in the roadmap.
 
 ## Official correspondence and return replies
 
-Milestones 52 and 53 add `official_postcards`, `official_stickers`, per-profile unlock/balance
+The official-correspondence schema includes `official_postcards`, `official_stickers`, per-profile unlock/balance
 tables, sticker-transfer escrow, finite paid-postcard balances, mailbox-open records, and one
 `delivery_return_replies` row per social delivery. `create_delivery_from_selection` accepts active
 letters, owned postcards, and one-to-three owned sticker copies, snapshots official presentation,
@@ -283,7 +283,7 @@ active version switching is performed atomically by the server boundary.
 ## Clean account foundation
 
 `supabase/seed.sql` contains only official catalog records. Player-owned state and Auth users are
-removed using the explicit runbook in `docs/player-data-reset.md`; the operation is not a migration
+removed using the explicit runbook in `docs/operations/player-data-reset.md`; the operation is not a migration
 or deploy hook. Remote execution requires an exact allowlist, reviewed counts, a mandatory backup,
 a typed token, and an append-only audit row.
 

@@ -1,6 +1,6 @@
-# Segmented travel and weather operations
+# Operação de viagens segmentadas e clima
 
-Milestone 55 stores authoritative route detail in `delivery_route_segments`. Client code must consume only `deliveries.travel_weather_summary`; the segment table, forecast cache, regional cells and interpolated coordinates have no authenticated grants.
+Authoritative route detail is stored in `delivery_route_segments`. Client code must consume only `deliveries.travel_weather_summary`; the segment table, forecast cache, regional cells and interpolated coordinates have no authenticated grants.
 
 `weather-travel-resolver` is invoked every três horas. Configure `duif_project_url` e `duif_weather_resolver_cron_secret` no Vault; o segundo deve ter exatamente o mesmo valor de `WEATHER_RESOLVER_CRON_SECRET` nos secrets da Edge Function. Gere pelo menos 32 bytes aleatórios por ambiente (por exemplo, `openssl rand -hex 32`) e nunca reutilize a `service_role` nesse canal. Configure também `OPEN_METEO_BASE_URL` e, para uso comercial, um `OPEN_METEO_API_KEY` aprovado. Em um protótipo não comercial, o endpoint público sem chave pode ser habilitado explicitamente com `OPEN_METEO_ALLOW_PUBLIC_ENDPOINT=true`; mantenha esse segredo como `false` em uso comercial. Se configuração, autenticação, timeout, validação ou provedor falharem, os snapshots virtuais existentes continuam autoritativos e a viagem segue normalmente.
 
@@ -40,5 +40,5 @@ supabase functions deploy weather-travel-resolver \
 Invoke the asynchronous resolver with `select public.invoke_weather_travel_edge_function();`, then
 inspect the returned request in `net._http_response`. A healthy provider-backed execution has HTTP
 `200`, `applied > 0`, `failed = 0`, `circuitOpen = false`, and `fallback = false`. Confirm that recent
-rows in `weather_forecast_cache` use `source = 'openMeteo'`. Production was validated on 2026-08-24
-with three applied forecasts and no provider failure or fallback.
+rows in `weather_forecast_cache` use `source = 'openMeteo'`. Resultados datados pertencem ao
+[histórico de releases](../history/releases.md).

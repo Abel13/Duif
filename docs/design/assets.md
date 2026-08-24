@@ -53,7 +53,7 @@ Keep large source files outside `public/` so they are not copied into the produc
 
 ## Ninho Hub Artwork
 
-Milestone 51 adds three decorative, modular `480×640` WebP illustrations under
+The Ninho hub uses three decorative, modular `480×640` WebP illustrations under
 `public/assets/nest/`:
 
 - `profile-nook.webp` for the personal profile entry;
@@ -103,7 +103,7 @@ Recommended runtime budgets:
 - Small texture: ideally under `80KB`.
 - Avoid any individual runtime asset above `300KB` without a performance review.
 - Avoid adding more than `1MB` of new runtime assets in one milestone without a build-size
-  note in `docs/performance.md`.
+  note in `docs/architecture/performance.md`.
 
 ## Formats
 
@@ -135,7 +135,7 @@ Source files:
 
 ## Official Registry And Administration
 
-Milestone 40 registers gameplay and illustrated UI art through stable typed keys and immutable
+The official registry stores gameplay and illustrated UI art through stable typed keys and immutable
 versions. Current versions remain packaged under `public/assets/`; the schema already discriminates
 packaged and future Storage locations. Runtime screens load one active public manifest and never
 persist or construct free-form art paths.
@@ -144,10 +144,10 @@ The registry contains 42 identities: 41 active versions and the unused `route-do
 archived. PWA icons, the brand logo, and fonts remain outside the runtime registry because they
 must work before Supabase, authentication, or onboarding has loaded.
 
-Milestone 46 provides `/admin/assets` to accounts with the server-verified `duif_role=admin` app
+The administrative flow provides `/admin/assets` to accounts with the server-verified `duif_role=admin` app
 metadata. It uploads new files to private staging, validates them in the `asset-studio` Edge
 Function, and publishes immutable Storage versions without overwriting an active object. See
-[`asset-studio.md`](./asset-studio.md) for the bootstrap and publishing runbook.
+[`asset-studio.md`](../operations/asset-studio.md) for the bootstrap and publishing runbook.
 
 The administrative studio may edit metadata only through the schema for that asset type. It must
 validate file signature, MIME type, dimensions, byte budget, required translation keys, usage
@@ -180,7 +180,7 @@ Fallback requirements:
 
 Before producing the final asset pack, create a small validation slice.
 
-Milestone 27.75 added the first validation slice:
+The first art-direction validation slice added:
 
 - Mascot portraits:
   - `public/assets/mascots/portraits/nuvem.webp` (`640x640`, about `59KB`);
@@ -210,7 +210,7 @@ The slice was generated as AI raster artwork, cropped from small concept sheets,
 as optimized WebP runtime files. The generated source sheets remain outside the runtime app
 under the local Codex generated image directory.
 
-Milestone 44 adds the interactive tutorial collection slice:
+The tutorial collection uses:
 
 - `public/assets/tutorial/postcards/inaugural-front.webp` (`1024x683`, about `151KB`), the
   watercolor front of the Cartão Inaugural; its seal and completion postmark are rendered in
@@ -218,7 +218,7 @@ Milestone 44 adds the interactive tutorial collection slice:
 - `public/assets/tutorial/stamps/first-journey.webp` (`256x256`, about `16KB`), a transparent
   Selo de Primeira Viagem reused on both sides of the card.
 
-Milestone 52 adds `public/assets/postcards/duif-base.webp` (`900x600`, about `153KB`), the
+The postcard catalog includes `public/assets/postcards/duif-base.webp` (`900x600`, about `153KB`), the
 permanent simple DUIF base postcard registered as `postcard.base.front`. City postcard art is
 intentionally deferred to its dedicated production plan.
 
@@ -227,7 +227,7 @@ The permanent default postal stamp uses `public/assets/stamps/duif-default.webp`
 watercolor messenger illustration match the correspondence composer and are not based on a real
 postal operator's issued stamp.
 
-Milestone 27.8 adds the first graphic navigation slice:
+The first graphic navigation slice includes:
 
 - `public/assets/navigation/nest.webp`;
 - `public/assets/navigation/collection.webp`;
@@ -240,7 +240,7 @@ decorative visual language inside real navigation buttons with visible labels an
 Do not export the entire bottom navigation as one image; the button structure, focus state,
 disabled state, and translated text must remain in HTML/CSS.
 
-Milestone 30 adds a small read-only shop catalog slice:
+The read-only shop catalog slice includes:
 
 - `public/assets/shop/thumbnails/crimson-courier-scarf.webp`;
 - `public/assets/shop/thumbnails/meadow-post-cap.webp`;
@@ -261,10 +261,10 @@ The currency naming pass adds two code-native balance marks:
 - `public/assets/currency/seed.svg` for common-currency Sementes/Seeds;
 - `public/assets/currency/crystal.svg` for premium-currency Cristais/Crystals.
 
-Both marks follow the visual rules in `docs/visual-direction.md`. They are decorative beside
+Both marks follow the visual rules in `docs/design/visual-direction.md`. They are decorative beside
 an accessible localized currency name and must retain a lightweight CSS fallback.
 
-Milestone 44 adds the active tutorial item:
+The active tutorial item is:
 
 - `public/assets/items/active/first-journey-boost.webp` (`192x192`, about `9KB`), registered as
   `activeItem.firstJourneyBoost`.
@@ -273,7 +273,7 @@ It is an isolated watercolor postal seal with a transparent background. The tuto
 as the first-journey boost at the middle-right edge of the map; its accessible name remains the
 localized “First journey boost” label rather than text baked into the artwork.
 
-Milestone 31 adds four code-native guided-map controls:
+The guided map uses four code-native controls:
 
 - `public/assets/map/controls/overview.webp`;
 - `public/assets/map/controls/mascot.webp`;
@@ -293,7 +293,7 @@ Both are transparent `256x256` WebP assets under `15KB`, anchored to their real 
 coordinates. They remain non-interactive map decoration with localized accessible labels and
 a CSS fallback if an image fails to load.
 
-Milestone 36 adds three public postal-traffic portraits:
+The public postal-traffic set includes three portraits:
 
 - `public/assets/friends/mascots/maple.webp`;
 - `public/assets/mascots/public/bento.webp`;
@@ -354,4 +354,4 @@ Before adding any runtime asset:
 - Does the component still have a fallback?
 - Does the image have useful alt text when meaningful?
 - Did `npm run build` keep the production bundle/assets reasonable?
-- Does `docs/performance.md` need a note for a larger asset change?
+- Does `docs/architecture/performance.md` need a note for a larger asset change?

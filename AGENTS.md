@@ -1,66 +1,33 @@
 # AGENTS.md
 
-## Project
+## Papel deste arquivo
 
-DUIF is a PWA-style web game prototype.
+Este arquivo contém somente regras estáveis para agentes que trabalham no DUIF. Consulte
+[`docs/README.md`](docs/README.md) antes de alterar produto, arquitetura, design ou operação. Estado,
+sequência e escopo de trabalho pertencem exclusivamente ao roadmap.
 
-The game is a social idle game where players own messenger animals that deliver letters, cards, stickers, and collectible items across the world.
+## Projeto
 
-The completed prototype uses 3 messenger animals, but the approved onboarding phase changes new
-accounts to exactly one chosen starter archetype. The player always chooses that mascot's name.
-Each animal has its own speed, attributes, equipment, visual customization, level, and travel status.
+DUIF é uma PWA de aventura postal social. Jogadores cuidam de animais mensageiros que transportam
+cartas, cartões, adesivos e itens, viajam pelo mapa, fazem descobertas e retornam ao ninho.
 
-The implemented prototype now covers mascot profiles, sending, travel, discoveries, collection,
-inventory, friends, a read-only shop, and the interactive postal map.
+Implemente somente o recurso solicitado. Não amplie o produto por inferência.
 
-## Product Vision
+## Stack
 
-The game should feel like a social postal adventure.
+- React e TypeScript;
+- Vite;
+- CSS Modules;
+- React Router;
+- MapLibre no mapa;
+- Framer Motion somente quando a animação agregar valor;
+- Phosphor Icons para affordances convencionais.
 
-Players should be able to:
+Não introduza dependências sem justificar.
 
-- View their messenger animals.
-- Send letters or items to friends.
-- See animals travel from origin to destination and return.
-- Collect items found during travels.
-- Customize animals with cosmetic equipment.
-- Visit friends' profiles and see their mascots.
+## Organização do código
 
-Do not build the full product yet. Build only the current requested feature.
-
-## Current Baseline
-
-Milestones 1 through 55 are complete. The project includes Supabase-backed account and onboarding
-flows, postal connections and correspondence, repeatable NPC jobs, a MapLibre travel map,
-authoritative segmented travel, persisted discoveries, regional postal traffic, and Open-Meteo
-weather with deterministic fallback. Milestone 55 is deployed and provider-backed forecasts have
-been validated in production.
-
-Milestone 56 is the next planned slice, but its launch equipment catalog, durability, Seed prices,
-repair prices, unlock sources, equipment positions, and protection scale require product approval
-before implementation. Payments, real-time multiplayer, precise public locations, trading, chat,
-and unrestricted user uploads remain out of scope. Remote operations remain explicit and scoped;
-never infer authorization for a reset, and preserve official catalogs in any approved reset.
-
-## Tech Stack
-
-Use:
-
-- React
-- TypeScript
-- Vite
-- CSS Modules
-- React Router
-- Framer Motion, only when animation adds value
-- Phosphor Icons (`@phosphor-icons/react`) for interface iconography
-
-Do not introduce new dependencies without explaining why.
-
-## Architecture Rules
-
-Use this folder structure:
-
-```txt
+```text
 src/
   app/
   components/
@@ -71,232 +38,79 @@ src/
   game/
   i18n/
     locales/
+  integrations/
+    supabase/
   pages/
   styles/
 ```
 
-Rules:
+- Mantenha componentes pequenos e focados.
+- Extraia funções visuais/comportamentais repetidas para componentes compartilhados.
+- Coloque regras puras e tipos de domínio em `src/game`, não nas páginas.
+- Páginas orquestram dados e layout; adaptadores Supabase ficam em `src/integrations/supabase`.
+- Mutações autoritativas exigem autorização e validação no backend.
+- Preserve fallbacks mock explícitos quando o contrato atual exigir, sem misturá-los a dados autenticados.
 
-- Keep components small and focused.
-- Keep game logic outside UI components.
-- Put reusable UI components in `src/components/ui`.
-- Follow atomic design for shared UI: when two or more surfaces perform the same visual and behavioral function, extract a focused reusable component at the appropriate UI layer instead of duplicating markup and styles in pages.
-- Put mascot-specific components in `src/components/mascot`.
-- Put game types and mock data in `src/game`.
-- Put page-level components in `src/pages`.
-- Use TypeScript types for all game entities.
-- Avoid large components with too many responsibilities.
+## Produto e privacidade
 
-## Visual Direction
+- Consulte [regras do produto](docs/product/rules.md) para comportamento vinculante.
+- Não exponha coordenadas precisas, trilhas privadas, conteúdo postal fechado ou dados de outro jogador.
+- Não adicione pagamentos, chat, trading, uploads irrestritos ou multiplayer em tempo real sem escopo aprovado.
+- Não crie persistence, RPC, economia ou catálogo fora do recurso solicitado.
 
-The app should look like an illustrated postal notebook.
+## Design
 
-Keywords:
+- Consulte [direção visual](docs/design/visual-direction.md), [tipografia](docs/design/typography.md)
+  e [assets](docs/design/assets.md).
+- Preserve a linguagem de caderno postal ilustrado; evite UI genérica de SaaS.
+- Use tokens CSS existentes e assets oficiais por chaves estáveis.
+- Não use emojis como iconografia, glassmorphism, neon, gradientes pesados ou botões padrão do navegador.
+- Prefira HTML/CSS, SVG e assets WebP/AVIF leves; não use canvas pesado ou Three.js para UI estática.
 
-- sketch
-- hand-drawn
-- postal notebook
-- paper cards
-- stamps
-- envelopes
-- old maps
-- animal profile cards
-- collectible album
-- soft ink
-- worn paper
-- gentle watercolor
+## Mobile e acessibilidade
 
-The UI should feel like objects from the game world, not like a generic website.
+- Projete mobile first; desktop amplia a mesma experiência.
+- Evite rolagem horizontal e mantenha ações principais alcançáveis.
+- Use HTML semântico, botões reais, foco visível e alvos confortáveis.
+- Não dependa somente de cor; forneça texto alternativo útil.
+- Respeite movimento reduzido e preserve legibilidade sobre o mapa.
 
-## Important Visual Constraints
+## Internacionalização
 
-Do not use:
+- `pt-BR` é o locale padrão e `en-US` o secundário.
+- Todo texto visível vem das traduções, sem strings hardcoded em JSX.
+- Identificadores de código e chaves de tradução permanecem em inglês.
+- Consulte [internacionalização](docs/architecture/internationalization.md).
 
-- Emojis.
-- Generic blue website buttons.
-- Default browser-looking buttons.
-- Generic SaaS cards.
-- Generic dashboard layout.
-- Heavy gradients.
-- Glassmorphism.
-- Neon colors.
-- Overly modern corporate UI.
+## Desempenho
 
-Prefer:
+- Não anime propriedades de layout quando transform e opacity resolverem.
+- Não carregue assets grandes ou efeitos inativos sem necessidade.
+- Preserve code splitting e lazy loading existentes.
+- Consulte [desempenho](docs/architecture/performance.md).
 
-- Paper panels.
-- Stamp-like buttons.
-- Torn paper tabs.
-- Sketch borders.
-- Tape corners.
-- Postal labels.
-- Cardboard tags.
-- Inventory cards.
-- Notebook page layout.
+## Banco e arquivos
 
-## Color Palette
+- Migrations aplicadas são imutáveis; correções usam migration posterior.
+- Preserve alterações não relacionadas do usuário em worktrees sujos.
+- Use `apply_patch` para edições manuais.
+- Prefira `rg` para busca.
+- Nunca execute reset destrutivo ou operação remota sem autorização explícita e alvo validado.
+- Runbooks operacionais estão em [`docs/operations`](docs/operations/release.md).
 
-Use CSS variables for this palette:
+## Qualidade
 
-```css
---color-paper: #f7f1e3;
---color-paper-dark: #e8ddc7;
---color-ink: #2e2a24;
---color-postal-brown: #8b5e3c;
---color-postal-blue: #6f91a8;
---color-postal-red: #a44a3f;
---color-muted-green: #7a8f68;
---color-rare-gold: #c49a4a;
-```
+Antes de concluir uma implementação:
 
-## Typography
+- execute testes TypeScript relevantes;
+- execute o build;
+- execute suites SQL proporcionais ao risco;
+- execute `git diff --check`;
+- remova imports e arquivos não usados;
+- descreva mudanças, validações e pendências com clareza.
 
-Use system fonts for now.
+## Regra de planejamento
 
-Do not import external fonts yet.
-
-The final design may later use:
-
-- one readable body font;
-- one hand-drawn display font.
-
-For now, simulate the style with spacing, uppercase labels, letter spacing, borders, and layout.
-
-## Performance Rules
-
-The app must remain lightweight.
-
-Do not:
-
-- Use a full-screen image as the UI.
-- Use heavy canvas rendering for static UI.
-- Use Three.js.
-- Use map tiles in the mascot page.
-- Use expensive blur filters.
-- Animate layout properties like width, height, top, or left.
-- Add large image assets.
-
-Prefer:
-
-- HTML and CSS for layout.
-- CSS variables for theme.
-- SVG for simple icons and marks.
-- Small reusable image assets.
-- WebP or AVIF later for painted illustrations.
-- Transform and opacity for animations.
-
-Use Phosphor Icons for conventional interface affordances such as navigation, settings,
-close, status, and actions. Keep illustrated postal assets for game-world objects and do not
-replace them with generic icons.
-
-## Accessibility Rules
-
-- Use semantic HTML.
-- Use real button elements for actions.
-- Preserve visible focus states.
-- Keep text readable.
-- Do not rely only on color to communicate state.
-- Interactive targets should be comfortable on mobile.
-- Images should have useful alt text when meaningful.
-
-## Mobile-First Rules
-
-DUIF should be designed and implemented mobile first.
-
-Mobile web is the primary experience.
-
-Desktop should enhance the same experience with more space, not define the base layout.
-
-Rules:
-
-- Start layouts from the narrow mobile viewport.
-- Use responsive CSS to progressively adapt to tablet and desktop.
-- Keep primary actions reachable on mobile.
-- Keep tap targets comfortable.
-- Avoid horizontal scrolling.
-- Avoid dense dashboard layouts that only work on desktop.
-- Test important screens on mobile-sized and desktop-sized viewports before finishing.
-
-## Language
-
-The app should start with internationalization support.
-
-Use:
-
-- `pt-BR` as the default locale.
-- `en-US` as the secondary initial locale.
-
-Visible UI copy should come from translation files, not from hardcoded JSX strings.
-
-Keep code identifiers and translation keys in English.
-
-Keep visible labels translated per locale.
-
-Use labels such as:
-
-- Meus Mascotes
-- Nível
-- Atributos
-- Velocidade
-- Resistência
-- Orientação
-- Sorte
-- Traço Especial
-- Equipamento
-- Em Viagem
-- Habilidades
-- Treinar
-- Ver Viagem
-- Ninho
-- Cartas
-- Mapa
-- Amigos
-- Loja
-
-## Game Data Rules
-
-Preserve both authenticated Supabase flows and explicit local mock fallbacks. New authoritative
-gameplay mutations belong in the backend with appropriate authorization; mocks should exercise
-the same public domain contracts where practical.
-
-Initial mascots:
-
-- Nuvem
-- Trovão
-- Pipoca
-
-Animals should have:
-
-- id
-- name
-- species
-- level
-- xp
-- nextLevelXp
-- attributes
-- trait
-- equipment
-- skills
-- currentDelivery
-
-Do not add new persistence, schema, RPCs, or economic writes unless the current approved
-milestone explicitly requires them.
-
-## Code Quality
-
-Before finishing any task:
-
-- Run TypeScript checks if available.
-- Run the build if available.
-- Fix lint or type errors.
-- Avoid unused files.
-- Avoid unused imports.
-- Keep naming consistent.
-- Explain what changed briefly.
-
-## Next Implementation Target
-
-Plan Milestone 56 next. Do not implement its persistence, economy, catalog, or equipment effects
-until the unresolved product decisions listed in the roadmap are approved. Continue to require
-explicit authorization for remote deployment or reset operations; any approved reset must use an
-identified allowlisted project and preserve official catalogs.
+Consulte [o roadmap ativo](docs/product/roadmap.md) somente quando o usuário pedir planejamento ou
+próxima etapa. O roadmap não concede autorização automática para implementar, publicar, resetar,
+commitar ou fazer push.

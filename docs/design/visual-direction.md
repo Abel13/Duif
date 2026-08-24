@@ -1,4 +1,4 @@
-# Visual Direction
+# Direção visual
 
 DUIF should look like an illustrated postal notebook.
 
@@ -461,7 +461,7 @@ Use system fonts initially.
 
 The first implementation should not depend on external fonts.
 
-The long-term direction is documented in `docs/typography.md`.
+The long-term direction is documented in `docs/design/typography.md`.
 
 DUIF should use typography by role:
 

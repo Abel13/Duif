@@ -1,10 +1,10 @@
-# Performance
+# Desempenho
 
 This document records the first performance review for DUIF before backend, persistence, and real asset production.
 
 ## Current Baseline
 
-Measured on the local production build during Milestone 15:
+Measured on the initial local production baseline:
 
 - JavaScript bundle: about `240K` raw in `dist/assets`.
 - CSS bundle: about `40K` raw in `dist/assets`.
@@ -38,13 +38,13 @@ Measured on the local production build during Milestone 15:
 - Existing CSS uses gradients and shadows for the paper style, but no expensive blur/backdrop-filter pattern was found.
 - The main performance risk before this pass was the multi-megabyte app icon being copied into the production build.
 
-## Milestone 27.75 Asset Slice
+## Primeiro recorte de assets reais
 
 Measured after adding the first real art and typography slice:
 
 - Public runtime assets: about `1.2M`.
 - Production `dist`: about `3.0M`.
-- PWA precache after Milestone 27.8 navigation icons: `32` entries, about `2.7M`.
+- PWA precache after the first navigation icon set: `32` entries, about `2.7M`.
 - Main CSS bundles:
   - `index`: about `48K` raw;
   - `TravelMapPage`: about `78K` raw.
