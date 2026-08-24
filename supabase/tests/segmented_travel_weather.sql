@@ -28,4 +28,11 @@ begin
   if public.virtual_travel_weather(target_id,'outbound',2,timestamptz '2026-08-23 03:00Z',10,10)<>public.virtual_travel_weather(target_id,'outbound',2,timestamptz '2026-08-23 03:00Z',10,10) then raise exception 'virtual weather is not deterministic'; end if;
 end $$;
 
+set local role service_role;
+select set_config('request.jwt.claim.role','service_role',true);
+do $$ begin
+  if public.apply_weather_forecast(10.0,20.0,date_bin(interval '3 hours',now()+interval '3 hours',timestamptz '2000-01-01'),1,true,10,15,'openMeteo')<0 then raise exception 'forecast application returned an invalid count'; end if;
+end $$;
+reset role;
+
 rollback;
