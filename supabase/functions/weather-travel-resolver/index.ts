@@ -31,7 +31,7 @@ Deno.serve(async (request)=>{
       if (applyError) throw new Error("forecast_apply_failed"); applied++;
     } catch(error) { const code=weatherProviderFailureCode(error); failureReasons[code]=(failureReasons[code]??0)+1; console.warn("weather_provider_failure",{code}); failed++; }
   }
-  const {data:resolved,error:resolveError}=await admin.rpc("resolve_due_delivery_route_segments",{reference_time:new Date().toISOString()});
+  const {data:resolved,error:resolveError}=await admin.rpc("resolve_travel_progress",{reference_time:new Date().toISOString()});
   if (resolveError) return response({error:"segment_resolution_failed",applied,failed},500);
   return response({cells:cells.length,applied,failed,resolved,circuitOpen,fallback:!providerEnabled||failed>0,...(failed>0?{failureReasons}:{})});
 });
