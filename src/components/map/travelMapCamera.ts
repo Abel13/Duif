@@ -1,6 +1,7 @@
 export const MIN_REWARD_VISIBILITY_ZOOM = 6;
 export const MASCOT_FOCUS_ZOOM = 13;
 export const TRAFFIC_FOCUS_ZOOM = 12;
+export const NEST_FOCUS_RADIUS_KM = 3;
 
 type RouteCoordinate = {
   latitude: number;
@@ -20,6 +21,20 @@ export function getNormalizedRouteBounds(
       Math.max(origin.longitude, destination.longitude),
       Math.max(origin.latitude, destination.latitude),
     ],
+  ];
+}
+
+export function getLocalFocusBounds(
+  center: RouteCoordinate,
+  radiusKm = NEST_FOCUS_RADIUS_KM,
+): [[number, number], [number, number]] {
+  const safeRadius = Number.isFinite(radiusKm) && radiusKm > 0 ? radiusKm : NEST_FOCUS_RADIUS_KM;
+  const latitudeDelta = safeRadius / 111.32;
+  const longitudeScale = Math.max(0.01, Math.cos(center.latitude * Math.PI / 180));
+  const longitudeDelta = safeRadius / (111.32 * longitudeScale);
+  return [
+    [center.longitude - longitudeDelta, center.latitude - latitudeDelta],
+    [center.longitude + longitudeDelta, center.latitude + latitudeDelta],
   ];
 }
 

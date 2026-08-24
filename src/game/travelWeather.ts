@@ -36,6 +36,19 @@ export function meteorologicalSeason(date: Date, latitude: number): TravelSeason
   return ({ winter: "summer", spring: "autumn", summer: "winter", autumn: "spring" } as const)[northern];
 }
 
+export function isDayAtLongitude(date: Date, longitude: number): boolean {
+  const utcHours = date.getUTCHours() + date.getUTCMinutes() / 60;
+  const solarHours = ((utcHours + longitude / 15) % 24 + 24) % 24;
+  return solarHours >= 6 && solarHours < 18;
+}
+
+export function geographicVisualTheme(date: Date, coordinates: { latitude: number; longitude: number }) {
+  return {
+    isNight: !isDayAtLongitude(date, coordinates.longitude),
+    season: meteorologicalSeason(date, coordinates.latitude),
+  };
+}
+
 export function composeEffectiveSpeedMultiplier(input: {
   weather: TravelWeatherCategory; windSpeedKmh: number; isDay: boolean; season: TravelSeason;
   mascot?: number; equipment?: number; backpack?: number; skills?: number; familiarity?: number;

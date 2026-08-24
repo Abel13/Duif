@@ -1,6 +1,7 @@
 export { assetKeys, isOfficialAssetKey, parseOfficialAssetManifest, resolveActiveOfficialAssetPath, resolveOfficialAssetPath } from "./assets";
 export type { OfficialAssetKey, OfficialAssetManifest, OfficialAssetType, OfficialAssetVersion } from "./assets";
 export { defaultPostmarkCustomization, isPostmarkCustomizationUnlocked, postmarkColors, postmarkModels } from "./postmarks";
+export { geographicVisualTheme, isDayAtLongitude, meteorologicalSeason } from "./travelWeather";
 export type { PostmarkColorId, PostmarkCustomization, PostmarkModelId } from "./postmarks";
 export {
   friendMascots,
@@ -61,6 +62,7 @@ export {
   createPublicTrafficSnapshot,
   getNearbyPostalTrafficPets,
   getPostalTrafficLabel,
+  getPostalTrafficDisplayPosition,
   getPostalTrafficPetPosition,
   getPostalTrafficSnapshotPosition,
   isPostalTrafficJourneyVisible,

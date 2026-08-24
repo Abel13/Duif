@@ -117,6 +117,7 @@ export async function fetchReceivedCorrespondence(): Promise<ReceivedCorresponde
 }
 
 export type ActivePostalVisitorRow = {
+  correspondence_type: string;
   delivery_id: string;
   departs_at: string;
   mascot_id: string;
@@ -125,6 +126,7 @@ export type ActivePostalVisitorRow = {
 };
 
 export type ActivePostalVisitor = {
+  correspondenceType: "letter" | "postcard" | "sticker";
   deliveryId: string;
   departsAt: string;
   mascotId: string;
@@ -134,6 +136,7 @@ export type ActivePostalVisitor = {
 
 export function mapActivePostalVisitor(row: ActivePostalVisitorRow): ActivePostalVisitor {
   return {
+    correspondenceType: row.correspondence_type === "postcard" || row.correspondence_type === "sticker" ? row.correspondence_type : "letter",
     deliveryId: row.delivery_id,
     departsAt: row.departs_at,
     mascotId: row.mascot_id,

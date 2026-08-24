@@ -35,6 +35,7 @@ import { assetKeys, resolveActiveOfficialAssetPath, type OfficialAssetKey } from
 import { useOfficialAssets } from "../../integrations/supabase/OfficialAssetProvider";
 import styles from "./TravelMap.module.css";
 import {
+  getLocalFocusBounds,
   getMapFocusZoom,
   getNormalizedRouteBounds,
   getRouteFitPadding,
@@ -1173,6 +1174,15 @@ function focusMap(
 
   if (target.kind === "overview") {
     fitMapToDelivery(map, delivery, duration);
+    return;
+  }
+
+  if (target.kind === "origin") {
+    map.fitBounds(getLocalFocusBounds(delivery.origin), {
+      duration,
+      maxZoom: 15,
+      padding: getRouteFitPadding(map.getContainer().clientWidth, map.getContainer().clientHeight),
+    });
     return;
   }
 

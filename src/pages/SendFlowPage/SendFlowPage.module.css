@@ -609,7 +609,20 @@
 .postmarkCustomizer {
   display: grid;
   gap: var(--space-3);
+  min-width: 0;
+  overflow: hidden;
 }
+
+.postmarkCustomizer > .postmarkPreview {
+  box-sizing: border-box;
+  justify-self: center;
+  width: min(100%, clamp(6rem, 28vw, 10rem));
+  max-width: 100%;
+  padding: clamp(.45rem, 2vw, var(--space-2));
+  overflow: hidden;
+}
+
+.postmarkCustomizer > .postmarkPreview .postmarkImpression { width: 100%; max-width: 100%; }
 
 .postmarkPreview figcaption { color: var(--color-postal-brown); font-weight: 900; }
 

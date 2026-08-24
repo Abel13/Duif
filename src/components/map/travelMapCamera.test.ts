@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  getLocalFocusBounds,
   getMapFocusZoom,
   getNormalizedRouteBounds,
   getRouteFitPadding,
@@ -26,6 +27,13 @@ describe("travel map camera helpers", () => {
     expect(getRouteFitPadding(390, 844)).toBe(18);
     expect(getRouteFitPadding(1024, 768)).toBe(31);
     expect(getRouteFitPadding(2400, 1400)).toBe(36);
+  });
+
+  it("frames only a few kilometers around the nest", () => {
+    const bounds = getLocalFocusBounds({ latitude: -23.3045, longitude: -51.1696 });
+    expect(bounds[0][1]).toBeCloseTo(-23.33145, 4);
+    expect(bounds[1][1]).toBeCloseTo(-23.27755, 4);
+    expect(bounds[1][0] - bounds[0][0]).toBeLessThan(.07);
   });
 
   it("falls back safely for invalid viewport sizes", () => {

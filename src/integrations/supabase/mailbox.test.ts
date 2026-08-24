@@ -63,8 +63,8 @@ describe("generic received correspondence", () => {
 
 describe("active postal visitors", () => {
   it("maps only the public visitor snapshot and accepts an official portrait", () => {
-    expect(mapActivePostalVisitor({ delivery_id:"delivery-1",departs_at:"2026-08-24T12:24:01.000Z",mascot_id:"mascot-1",mascot_name:"Nuvem",portrait_asset_key:"mascot.portrait.nuvem" })).toEqual({
-      deliveryId:"delivery-1",departsAt:"2026-08-24T12:24:01.000Z",mascotId:"mascot-1",mascotName:"Nuvem",portraitAssetKey:"mascot.portrait.nuvem",
+    expect(mapActivePostalVisitor({ correspondence_type:"postcard",delivery_id:"delivery-1",departs_at:"2026-08-24T12:24:01.000Z",mascot_id:"mascot-1",mascot_name:"Nuvem",portrait_asset_key:"mascot.portrait.nuvem" })).toEqual({
+      correspondenceType:"postcard",deliveryId:"delivery-1",departsAt:"2026-08-24T12:24:01.000Z",mascotId:"mascot-1",mascotName:"Nuvem",portraitAssetKey:"mascot.portrait.nuvem",
     });
   });
 

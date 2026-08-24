@@ -2976,6 +2976,7 @@ export type Database = {
         Args: never
         Returns: {
           delivery_id: string
+          correspondence_type: string
           departs_at: string
           mascot_id: string
           mascot_name: string

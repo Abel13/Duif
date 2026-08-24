@@ -6,6 +6,7 @@ import {
   createPublicTrafficSnapshot,
   expandPostalTrafficViewport,
   getNearbyPostalTrafficPets,
+  getPostalTrafficDisplayPosition,
   getPostalTrafficPetPosition,
   isPostalTrafficJourneyVisible,
   mockPostalTrafficPets,
@@ -53,6 +54,11 @@ function petAt(id: string, longitude: number): PostalTrafficPet {
 }
 
 describe("postal traffic helpers", () => {
+  it("snaps an active visitor at the authenticated nest while delivered", () => {
+    const snapshot=createPublicTrafficSnapshot({ ...friendPet,route:{...friendPet.route,returnStartAt:"2026-07-18T14:00:00.000Z",returnArrivalAt:"2026-07-18T16:00:00.000Z"}},mascotCoordinates,new Date("2026-07-18T13:00:00.000Z"));
+    const nest={latitude:-23.42,longitude:-51.93};
+    expect(getPostalTrafficDisplayPosition(snapshot,new Set([snapshot.id]),nest,new Date("2026-07-18T13:00:00.000Z"))).toEqual({coordinates:nest,leg:"delivered",progress:1});
+  });
   it("keeps every mock traffic route inside Brazil", () => {
     mockPostalTrafficPets.forEach((pet) => {
       expect(pet.route.originRegionKey).toMatch(/Brazil$/);

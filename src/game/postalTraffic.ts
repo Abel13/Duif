@@ -266,6 +266,19 @@ export function getPostalTrafficSnapshotPosition(
   return getPostalTrafficPetPosition(snapshotToPet(snapshot), now);
 }
 
+export function getPostalTrafficDisplayPosition(
+  snapshot: PostalTrafficPetSnapshot,
+  activeVisitorIds: ReadonlySet<string>,
+  nest: MapCoordinate | undefined,
+  now: Date = new Date(),
+) {
+  const position = getPostalTrafficSnapshotPosition(snapshot, now);
+  if (nest && activeVisitorIds.has(snapshot.id) && position.leg === "delivered") {
+    return { coordinates: nest, leg: "delivered" as const, progress: 1 };
+  }
+  return position;
+}
+
 export function isPostalTrafficJourneyVisible(
   snapshot: PostalTrafficPetSnapshot,
   now: Date = new Date(),

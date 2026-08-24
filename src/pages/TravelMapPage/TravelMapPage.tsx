@@ -8,9 +8,10 @@ import { AssetImage, ItemCard, SketchPanel, TravelStatusLabel, TravelWeatherBadg
 import {
   assetKeys,
   formatRemainingTime,
+  geographicVisualTheme,
   getDeliveryStatus,
   getMapJourneyPhase,
-  getPostalTrafficSnapshotPosition,
+  getPostalTrafficDisplayPosition,
   isPostalTrafficJourneyVisible,
   getRouteDiscoveryVisualState,
   getPetMapPosition,
@@ -134,6 +135,16 @@ export function TravelMapPage() {
       : reward),
     [baseRewards, runtimeDiscoveryIds],
   );
+  const activePostalVisitors = useMemo(
+    () => postalVisitors
+      .filter((visitor) => getPostalVisitorMinutes(visitor.departsAt, now.getTime()) > 0)
+      .slice(0, 3),
+    [now, postalVisitors],
+  );
+  const activeVisitorIds = useMemo(
+    () => new Set(activePostalVisitors.map((visitor) => visitor.deliveryId)),
+    [activePostalVisitors],
+  );
   const rewardStates = useMemo<Record<string, RouteDiscoveryVisualState>>(
     () => Object.fromEntries(rewards.map((reward) => [
       reward.id,
@@ -145,7 +156,12 @@ export function TravelMapPage() {
     () => trafficSnapshots
       .filter((pet) => isPostalTrafficJourneyVisible(pet, trafficNow))
       .map((pet) => {
-        const position = getPostalTrafficSnapshotPosition(pet, trafficNow);
+        const position = getPostalTrafficDisplayPosition(
+          pet,
+          activeVisitorIds,
+          profile ? { latitude: profile.home_latitude, longitude: profile.home_longitude } : undefined,
+          trafficNow,
+        );
         return {
           ...pet,
           coordinates: position.coordinates,
@@ -153,7 +169,7 @@ export function TravelMapPage() {
           progress: Math.round(position.progress * 100),
         };
       }),
-    [trafficSnapshots, trafficNow],
+    [activeVisitorIds, profile, trafficSnapshots, trafficNow],
   );
   const visiblePostalTraffic = useMemo(
     () => postalTraffic.filter((pet) => pet.visualPhase !== "leaving"),
@@ -167,6 +183,9 @@ export function TravelMapPage() {
   const status = getDeliveryStatus(delivery, now);
   const isCollected = collectionState.delivery?.id === delivery.id && collectionState.isCollected;
   const journeyPhase = getMapJourneyPhase(status, isCollected);
+  const visualTheme = delivery.segmentedTravel
+    ? { isNight: !delivery.segmentedTravel.isDay, season: delivery.segmentedTravel.season }
+    : geographicVisualTheme(now, journeyPhase === "traveling" ? petPosition.coordinates : delivery.origin);
   const completedMap = journeyPhase === "completed";
   const progressPercent = Math.round(getTravelProgress(delivery, now) * 100);
   const displayedPlaceLabels = journeyPhase === "traveling" ? placeLabels : [];
@@ -243,7 +262,7 @@ export function TravelMapPage() {
           visitorHighlightTimersRef.current.set(visitor.deliveryId,timer);
         });
       } catch {
-        if(active)setPostalVisitors([]);
+        // Keep the last authoritative snapshot until a later retry succeeds.
       }
     }
     const onVisibility=()=>{if(document.visibilityState==="visible")void refreshVisitors()};
@@ -457,7 +476,7 @@ export function TravelMapPage() {
             rewards={completedMap ? [] : rewards}
             selection={selection}
             showRouteLabels={journeyPhase === "traveling"}
-            visualTheme={delivery.segmentedTravel ? { isNight: !delivery.segmentedTravel.isDay, season: delivery.segmentedTravel.season } : undefined}
+            visualTheme={visualTheme}
           />
         </div>
 
@@ -465,7 +484,26 @@ export function TravelMapPage() {
           <div className={styles.mapTravelStatus}><TravelStatusLabel mascotName={displayMascot.name} statusLabel={t(`delivery.status.${status}`)}/></div>
         ) : null}
 
-        {(postalVisitors.length>0 || (journeyPhase === "traveling" && displayMascot && (delivery.segmentedTravel || visiblePostalTraffic.length > 0 || rewards.length > 0))) ? <nav aria-label={t("map.activeMapTools")} className={styles.activeMapTools}>{postalVisitors.map((visitor)=><Link aria-label={`${t("mailbox.visitingMascot")}: ${visitor.mascotName}, ${getPostalVisitorMinutes(visitor.departsAt,now.getTime())} ${t("mailbox.minutesRemaining")}`} className={`${styles.activeToolButton} ${styles.visitorToolButton}`} data-new={newVisitorIds.has(visitor.deliveryId)||undefined} key={visitor.deliveryId} title={t("mailbox.openVisitorLetter")} to={`/mailbox?deliveryId=${visitor.deliveryId}`}><AssetImage alt="" assetKey={visitor.portraitAssetKey} className={styles.visitorPortrait}><span aria-hidden="true"/></AssetImage><span>{getPostalVisitorMinutes(visitor.departsAt,now.getTime())} min</span></Link>)}{journeyPhase === "traveling"&&displayMascot&&delivery.segmentedTravel?<TravelWeatherBadge mascotName={displayMascot.name} summary={delivery.segmentedTravel}/>:null}{journeyPhase === "traveling"&&visiblePostalTraffic.length>0?<button aria-label={t("postalTraffic.title")} className={styles.activeToolButton} onClick={()=>setTrafficDialogOpen(true)} title={t("postalTraffic.title")} type="button"><TrafficSign aria-hidden="true" weight="duotone"/><span>{visiblePostalTraffic.length}</span></button>:null}{journeyPhase === "traveling"&&rewards.length>0?<button aria-label={t("map.discoveries")} className={styles.activeToolButton} data-new={newDiscoveryIds.size>0||undefined} onClick={()=>{closeRewardDetails();setDiscoveryDialogOpen(true)}} title={t("map.discoveries")} type="button"><Binoculars aria-hidden="true" weight="duotone"/><span>{discoveredCount}/{rewards.length}</span></button>:null}</nav> : null}
+        {(activePostalVisitors.length > 0 || (journeyPhase === "traveling" && displayMascot && (delivery.segmentedTravel || visiblePostalTraffic.length > 0 || rewards.length > 0))) ? (
+          <nav aria-label={t("map.activeMapTools")} className={styles.activeMapTools}>
+            {activePostalVisitors.map((visitor) => (
+              <Link
+                aria-label={`${t("mailbox.visitingMascot")}: ${visitor.mascotName}, ${getPostalVisitorMinutes(visitor.departsAt, now.getTime())} ${t("mailbox.minutesRemaining")}`}
+                className={`${styles.activeToolButton} ${styles.visitorToolButton}`}
+                data-new={newVisitorIds.has(visitor.deliveryId) || undefined}
+                key={visitor.deliveryId}
+                title={t("mailbox.openVisitorLetter")}
+                to={`/mailbox?deliveryId=${visitor.deliveryId}`}
+              >
+                <AssetImage alt="" assetKey={visitor.portraitAssetKey} className={styles.visitorPortrait}><span aria-hidden="true" /></AssetImage>
+                <span>{getPostalVisitorMinutes(visitor.departsAt, now.getTime())} min</span>
+              </Link>
+            ))}
+            {journeyPhase === "traveling" && displayMascot && delivery.segmentedTravel ? <TravelWeatherBadge mascotName={displayMascot.name} summary={delivery.segmentedTravel} /> : null}
+            {journeyPhase === "traveling" && visiblePostalTraffic.length > 0 ? <button aria-label={t("postalTraffic.title")} className={styles.activeToolButton} onClick={() => setTrafficDialogOpen(true)} title={t("postalTraffic.title")} type="button"><TrafficSign aria-hidden="true" weight="duotone" /><span>{visiblePostalTraffic.length}</span></button> : null}
+            {journeyPhase === "traveling" && rewards.length > 0 ? <button aria-label={t("map.discoveries")} className={styles.activeToolButton} data-new={newDiscoveryIds.size > 0 || undefined} onClick={() => { closeRewardDetails(); setDiscoveryDialogOpen(true); }} title={t("map.discoveries")} type="button"><Binoculars aria-hidden="true" weight="duotone" /><span>{discoveredCount}/{rewards.length}</span></button> : null}
+          </nav>
+        ) : null}
 
         {discoveryToast ? (
           <div className={styles.discoveryToast} role="status">
