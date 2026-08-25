@@ -172,6 +172,9 @@ export type ReceivedCorrespondence = {
     city: string;
     country: string;
     date: string;
+    stampedAt?: string;
+    timeZone?: string;
+    dateSource?: "origin-local-v1" | "utc-fallback-v1";
     model: "classic" | "route" | "wing";
     color: "brown" | "blue" | "red" | "green" | "gold" | "plum" | "charcoal" | "teal";
   };

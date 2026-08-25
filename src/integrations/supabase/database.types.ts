@@ -3488,6 +3488,10 @@ export type Database = {
         Args: { delivery_id: string }
         Returns: Json
       }
+      get_delivery_postmark_snapshot: {
+        Args: { target_delivery_id: string }
+        Returns: Json
+      }
       get_mascot_skill_state: {
         Args: { target_mascot_id: string }
         Returns: Json
@@ -3532,6 +3536,7 @@ export type Database = {
         Args: { target_mascot_id: string; destination_key: string; distance_km: number }
         Returns: Json
       }
+      preview_origin_postmark: { Args: { target_delivery_id?: string }; Returns: Json }
       get_my_postal_friend_code: {
         Args: never
         Returns: {

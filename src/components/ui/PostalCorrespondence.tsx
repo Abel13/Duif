@@ -7,7 +7,7 @@ import { LetterPaper, type LetterPaperProps } from "./LetterDialog";
 import styles from "./PostalCorrespondence.module.css";
 
 export type PostalDensity = "preview" | "compact" | "reader";
-export type PostalFinishing = { stampAssetKey?: OfficialAssetKey; postmark?: { city:string; country:string; date:string; model:PostmarkModelId; color:PostmarkColorId } };
+export type PostalFinishing = { stampAssetKey?: OfficialAssetKey; postmark?: { city:string; country:string; date:string; model:PostmarkModelId; color:PostmarkColorId; stampedAt?:string; timeZone?:string; dateSource?:"origin-local-v1"|"utc-fallback-v1" } };
 const densityClass=(density:PostalDensity)=>`${styles.correspondence} ${styles[density]}`;
 
 export function PostalPostmark({postmark,showLabel=false}:{postmark?:PostalFinishing["postmark"];showLabel?:boolean}){

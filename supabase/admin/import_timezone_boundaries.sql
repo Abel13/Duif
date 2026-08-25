@@ -25,4 +25,8 @@ returning id \gset
 insert into public.timezone_boundaries(import_id,time_zone,priority,geometry)
 select :'id'::uuid, time_zone, coalesce(priority,0), extensions.ST_Multi(extensions.ST_GeomFromText(geometry_wkt,4326))
 from timezone_boundary_staging;
+
+-- Replace any explicit UTC fallback snapshots now that authoritative civil
+-- time is available. The backfill is idempotent and preserves postal content.
+select public.backfill_authoritative_postmark_dates();
 commit;

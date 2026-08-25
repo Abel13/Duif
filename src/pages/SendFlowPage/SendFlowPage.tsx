@@ -49,6 +49,7 @@ import { confirmReturnReply, fetchReturnReplyContext, type ReturnReplyContext } 
 import { useAuth } from "../../integrations/supabase/AuthProvider";
 import { fetchEquipmentData } from "../../integrations/supabase/equipment";
 import { previewMascotSkillModifiers, type SkillPreview } from "../../integrations/supabase/skillPreview";
+import { fetchDeliveryPostmarkSnapshot, previewOriginPostmark, type AuthoritativePostmark } from "../../integrations/supabase/postmarkSnapshot";
 import type { AuthProfile } from "../../integrations/supabase/profile";
 import styles from "./SendFlowPage.module.css";
 
@@ -60,6 +61,7 @@ type ConfirmedSend = {
   mascot: Mascot;
   correspondence: CorrespondenceOption;
   content: CorrespondenceContent;
+  postmark?: AuthoritativePostmark;
 };
 
 export function SendFlowPage() {
@@ -99,8 +101,10 @@ export function SendFlowPage() {
   const [skillPreview,setSkillPreview]=useState<SkillPreview>();
   const [skillPreviewState,setSkillPreviewState]=useState<"idle"|"loading"|"unavailable">("idle");
   const [replyContextState,setReplyContextState]=useState<"idle"|"loading"|"unavailable">("idle");
+  const [postmarkPreview,setPostmarkPreview]=useState<AuthoritativePostmark>();
 
   useEffect(()=>{if(!requestedReplyId)return;let active=true;setReplyContextState("loading");fetchReturnReplyContext(requestedReplyId).then((value)=>{if(!active)return;setReplyContext(value);setReplyContextState(value?"idle":"unavailable")}).catch(()=>active&&setReplyContextState("unavailable"));return()=>{active=false}},[requestedReplyId]);
+  useEffect(()=>{if(!profile){setPostmarkPreview(undefined);return}let active=true;previewOriginPostmark(requestedReplyId??undefined).then((value)=>{if(active)setPostmarkPreview(value)}).catch(()=>{if(active)setPostmarkPreview(undefined)});return()=>{active=false}},[profile,requestedReplyId]);
 
   useEffect(() => {
     const nextCorrespondence = availableCorrespondence.find(isSupportedCorrespondence);
@@ -213,7 +217,11 @@ export function SendFlowPage() {
         postmark,
         stampInventoryItemId,
       });
-      if (delivery) setConfirmedSend({ correspondence: selectedCorrespondence, content, delivery, friend: selectedFriend, mascot: selectedMascot });
+      if (delivery) {
+        let persistedPostmark: AuthoritativePostmark | undefined;
+        try { persistedPostmark=await fetchDeliveryPostmarkSnapshot(delivery.id); } catch { persistedPostmark=undefined; }
+        setConfirmedSend({ correspondence: selectedCorrespondence, content, delivery, friend: selectedFriend, mascot: selectedMascot, postmark:persistedPostmark });
+      }
     } catch (error) {
       const unavailable = typeof error === "object" && error !== null &&
         (("code" in error && (error.code === "23505" || error.code === "23514")) ||
@@ -238,7 +246,7 @@ export function SendFlowPage() {
       ? `/mascots/${selectedMascot.id}`
       : "/mascots";
 
-  if(requestedReplyId){return <ReturnReplyFlow context={replyContext} contextState={replyContextState} postalStamps={postalStamps} profile={profile} reputationLevel={reputationLevel}/>}
+  if(requestedReplyId){return <ReturnReplyFlow context={replyContext} contextState={replyContextState} postalStamps={postalStamps} postmarkPreview={postmarkPreview} profile={profile} reputationLevel={reputationLevel}/>}
 
   return (
     <PageShell className={styles.pageShell} hasTopBar>
@@ -411,6 +419,7 @@ export function SendFlowPage() {
               city={profile?.postal_base_city || t("common.unavailable")}
               country={profile?.postal_base_country || t("common.unavailable")}
               customization={postmark}
+              date={postmarkPreview?.date}
               level={reputationLevel}
               onChange={setPostmark}
             />
@@ -440,6 +449,7 @@ export function SendFlowPage() {
                     originLabel={profile ? formatPostalLocationLabel({ city: profile.postal_base_city, state: profile.postal_base_state, country: profile.postal_base_country }) : t("common.unavailable")}
                     postcards={postcards}
                     postmark={postmark}
+                    postmarkSnapshot={postmarkPreview}
                     senderName={profile?.display_name ?? t("common.unavailable")}
                     stampAssetKey={selectedPostalStamp?.assetKey ?? assetKeys.stamps.default}
                     stickers={stickers}
@@ -523,7 +533,7 @@ export function SendFlowPage() {
   );
 }
 
-function ReviewContentPreview({ city, content, country, deliveredBy, destinationLabel, originLabel, postcards, postmark, senderName, stampAssetKey, stickers }: {
+function ReviewContentPreview({ city, content, country, deliveredBy, destinationLabel, originLabel, postcards, postmark, postmarkSnapshot, senderName, stampAssetKey, stickers }: {
   city: string;
   content: CorrespondenceContent;
   country: string;
@@ -532,13 +542,14 @@ function ReviewContentPreview({ city, content, country, deliveredBy, destination
   originLabel: string;
   postcards: OwnedPostcard[];
   postmark: PostmarkCustomization;
+  postmarkSnapshot?: AuthoritativePostmark;
   senderName: string;
   stampAssetKey: string;
   stickers: OwnedSticker[];
 }) {
   const { locale, t } = useTranslation();
   const [isLetterOpen, setIsLetterOpen] = useState(false);
-  const finishing = { stampAssetKey, postmark: { city, country, date: new Date().toISOString().slice(0,10), ...postmark } };
+  const finishing = { stampAssetKey, postmark: { city, country, date: postmarkSnapshot?.date??"----", ...postmark, stampedAt:postmarkSnapshot?.stampedAt, timeZone:postmarkSnapshot?.timeZone, dateSource:postmarkSnapshot?.dateSource } };
 
   if (content.type === "postcard") {
     const postcard = postcards.find((option) => option.catalogKey === content.postcardCatalogKey);
@@ -572,17 +583,18 @@ function ReviewContentPreview({ city, content, country, deliveredBy, destination
   return <div className={`${styles.reviewItem} ${styles.reviewLetterSheet}`}><blockquote className={styles.reviewLetter}>{text || t("send.content.emptyPreview")}</blockquote></div>;
 }
 
-function PostmarkCustomizer({ city, country, customization, level, onChange }: {
+function PostmarkCustomizer({ city, country, customization, date, level, onChange }: {
   city: string;
   country: string;
   customization: PostmarkCustomization;
+  date?: string;
   level: number;
   onChange: (value: PostmarkCustomization) => void;
 }) {
   const { t } = useTranslation();
   return <div className={styles.postmarkCustomizer}>
     <div className={styles.postmarkLevel}>{t("send.postalFinishing.reputationLevel").replace("{level}", String(level))}</div>
-    <PostalPostmark postmark={{city,country,date:new Date().toISOString().slice(0,10),...customization}} showLabel />
+    <PostalPostmark postmark={{city,country,date:date??"----",...customization}} showLabel />
     <fieldset className={styles.postmarkOptions}>
       <legend>{t("send.postalFinishing.modelLabel")}</legend>
       <div className={styles.postmarkModelGrid}>
@@ -628,20 +640,20 @@ function StampChoice({ assetKey, isSelected, label, onPreview, onSelect }: {
   </article>;
 }
 
-function ReturnReplyFlow({context,contextState,postalStamps,profile,reputationLevel}:{context?:ReturnReplyContext;contextState:"idle"|"loading"|"unavailable";postalStamps:{assetKey?:import("../../game").OfficialAssetKey;id:string;nameKey:import("../../i18n").TranslationKey}[];profile:AuthProfile|null;reputationLevel:number}){
-  const {t}=useTranslation(); const [step,setStep]=useState(0); const [content,setContent]=useState<CorrespondenceContent>({type:"letter",letterText:""}); const [stampId,setStampId]=useState<string>(); const [previewStampId,setPreviewStampId]=useState<string>(); const [postmark,setPostmark]=useState<PostmarkCustomization>(defaultPostmarkCustomization); const [submitting,setSubmitting]=useState(false); const [confirmed,setConfirmed]=useState(false); const [error,setError]=useState(false); const [now,setNow]=useState(Date.now());
+function ReturnReplyFlow({context,contextState,postalStamps,postmarkPreview,profile,reputationLevel}:{context?:ReturnReplyContext;contextState:"idle"|"loading"|"unavailable";postalStamps:{assetKey?:import("../../game").OfficialAssetKey;id:string;nameKey:import("../../i18n").TranslationKey}[];postmarkPreview?:AuthoritativePostmark;profile:AuthProfile|null;reputationLevel:number}){
+  const {t}=useTranslation(); const [step,setStep]=useState(0); const [content,setContent]=useState<CorrespondenceContent>({type:"letter",letterText:""}); const [stampId,setStampId]=useState<string>(); const [previewStampId,setPreviewStampId]=useState<string>(); const [postmark,setPostmark]=useState<PostmarkCustomization>(defaultPostmarkCustomization); const [submitting,setSubmitting]=useState(false); const [confirmed,setConfirmed]=useState(false); const [unavailableReason,setUnavailableReason]=useState<"expired"|"confirmed">(); const [error,setError]=useState(false); const [now,setNow]=useState(Date.now());
   useEffect(()=>{const timer=window.setInterval(()=>setNow(Date.now()),1000);return()=>window.clearInterval(timer)},[]);
   if(contextState==="loading")return <PageShell className={styles.pageShell} hasTopBar><MobileTopBar backTo="/mailbox" title={t("mailbox.returnReplyFlowTitle")}/><SketchPanel title={t("common.loading")}><p>{t("mailbox.returnReplyLoading")}</p></SketchPanel></PageShell>;
-  if(!context||contextState==="unavailable"||context.replyConfirmed||new Date(context.replyDeadline).getTime()<=now)return <PageShell className={styles.pageShell} hasTopBar><MobileTopBar backTo="/mailbox" title={t("mailbox.returnReplyFlowTitle")}/><SketchPanel title={t("mailbox.returnReplyUnavailable")}><p>{t(context?.replyConfirmed?"mailbox.returnReplyConfirmed":"mailbox.returnReplyExpired")}</p><Link className={styles.returnLink} to="/mailbox">{t("mailbox.open")}</Link></SketchPanel></PageShell>;
+  if(!context||contextState==="unavailable"||unavailableReason||context.replyConfirmed||new Date(context.replyDeadline).getTime()<=now)return <PageShell className={styles.pageShell} hasTopBar><MobileTopBar backTo="/mailbox" title={t("mailbox.returnReplyFlowTitle")}/><SketchPanel title={t("mailbox.returnReplyUnavailable")}><p>{t(context?.replyConfirmed||unavailableReason==="confirmed"?"mailbox.returnReplyConfirmed":"mailbox.returnReplyExpired")}</p><Link className={styles.returnLink} to="/mailbox">{t("mailbox.open")}</Link></SketchPanel></PageShell>;
   const replyContext = context;
   const letterText=content.type==="letter"?content.letterText:""; const selectedStamp=postalStamps.find(item=>item.id===stampId); const previewStamp=postalStamps.find(item=>item.id===previewStampId); const remaining=Math.max(0,new Date(context.replyDeadline).getTime()-now); const remainingLabel=`${Math.floor(remaining/60000)}:${String(Math.floor((remaining%60000)/1000)).padStart(2,"0")}`;
-  async function confirm(){if(!letterText.trim()||submitting)return;setSubmitting(true);setError(false);try{await confirmReturnReply(replyContext.deliveryId,letterText,postmark,stampId);setConfirmed(true)}catch{setError(true)}finally{setSubmitting(false)}}
+  async function confirm(){if(!letterText.trim()||submitting)return;setSubmitting(true);setError(false);try{await confirmReturnReply(replyContext.deliveryId,letterText,postmark,stampId);setConfirmed(true)}catch{try{const current=await fetchReturnReplyContext(replyContext.deliveryId);if(!current||current.replyConfirmed){setUnavailableReason(current?.replyConfirmed?"confirmed":"expired");return}}catch{/* Preserve the actionable submission error when eligibility cannot be refreshed. */}setError(true)}finally{setSubmitting(false)}}
   if(confirmed)return <PageShell className={styles.pageShell} hasTopBar><MobileTopBar backTo="/mailbox" title={t("mailbox.returnReplyFlowTitle")}/><SketchPanel title={t("mailbox.returnReplyConfirmed")}><p>{t("mailbox.returnReplyConfirmedDescription")}</p><div className={styles.actions}><Link className={styles.primaryLink} to={`/map?deliveryId=${context.deliveryId}`}>{t("mascot.viewTrip")}</Link><Link className={styles.returnLink} to="/mailbox">{t("mailbox.open")}</Link></div></SketchPanel></PageShell>;
   return <PageShell className={styles.pageShell} hasTopBar><MobileTopBar backTo="/mailbox" title={t("mailbox.returnReplyFlowTitle")}/><div className={styles.shell}><div className={styles.replyDeadline}><span>{t("mailbox.returnWindowRemaining")}</span><strong>{remainingLabel}</strong></div><PostalProgress currentStep={step} labels={[t("send.steps.correspondence"),t("send.steps.stamp"),t("send.steps.postmark"),t("send.steps.review")]}/><div className={styles.stepViewport}><div className={styles.flowGrid}>
     {step===0?<ChoiceSection title={t("mailbox.writeReturnReply")}><CorrespondenceComposer content={content} onChange={setContent} postcards={[]} stickers={[]} senderLocation={context.destinationLabel} senderName={profile?.display_name??t("common.unavailable")}/></ChoiceSection>:null}
     {step===1?<ChoiceSection title={t("send.postalFinishing.stampTitle")}><div className={styles.stampChoices}><StampChoice assetKey={assetKeys.stamps.default} isSelected={!stampId} label={t("send.postalFinishing.defaultStamp")} onPreview={()=>setPreviewStampId("default")} onSelect={()=>setStampId(undefined)}/>{postalStamps.map(item=><StampChoice assetKey={item.assetKey} isSelected={stampId===item.id} key={item.id} label={t(item.nameKey)} onPreview={()=>setPreviewStampId(item.id)} onSelect={()=>setStampId(item.id)}/>)}</div></ChoiceSection>:null}
-    {step===2?<ChoiceSection title={t("send.postalFinishing.postmarkTitle")}><PostmarkCustomizer city={profile?.postal_base_city||t("common.unavailable")} country={profile?.postal_base_country||t("common.unavailable")} customization={postmark} level={reputationLevel} onChange={setPostmark}/></ChoiceSection>:null}
-    {step===3?<SketchPanel className={styles.summaryPanel} title={t("send.summary")} variant="note"><div className={styles.summary}><ReviewContentPreview city={profile?.postal_base_city||t("common.unavailable")} content={content} country={profile?.postal_base_country||t("common.unavailable")} deliveredBy={context.mascotName} destinationLabel={context.originLabel} originLabel={context.destinationLabel} postcards={[]} postmark={postmark} senderName={profile?.display_name??t("common.unavailable")} stampAssetKey={selectedStamp?.assetKey??assetKeys.stamps.default} stickers={[]}/><dl className={styles.summaryList}><SummaryRow label={t("mailbox.toOriginalSender")} value={context.senderName}/><SummaryRow label={t("send.selectedMascot")} value={context.mascotName}/></dl>{error?<p className={styles.error}>{t("mailbox.returnReplySubmitError")}</p>:null}<StampButton disabled={!letterText.trim()||submitting} onClick={()=>void confirm()}>{submitting?t("mailbox.replying"):t("mailbox.sendReturnReply")}</StampButton></div></SketchPanel>:null}
+    {step===2?<ChoiceSection title={t("send.postalFinishing.postmarkTitle")}><PostmarkCustomizer city={profile?.postal_base_city||t("common.unavailable")} country={profile?.postal_base_country||t("common.unavailable")} customization={postmark} date={postmarkPreview?.date} level={reputationLevel} onChange={setPostmark}/></ChoiceSection>:null}
+    {step===3?<SketchPanel className={styles.summaryPanel} title={t("send.summary")} variant="note"><div className={styles.summary}><ReviewContentPreview city={profile?.postal_base_city||t("common.unavailable")} content={content} country={profile?.postal_base_country||t("common.unavailable")} deliveredBy={context.mascotName} destinationLabel={context.originLabel} originLabel={context.destinationLabel} postcards={[]} postmark={postmark} postmarkSnapshot={postmarkPreview} senderName={profile?.display_name??t("common.unavailable")} stampAssetKey={selectedStamp?.assetKey??assetKeys.stamps.default} stickers={[]}/><dl className={styles.summaryList}><SummaryRow label={t("mailbox.toOriginalSender")} value={context.senderName}/><SummaryRow label={t("send.selectedMascot")} value={context.mascotName}/></dl>{error?<p className={styles.error}>{t("mailbox.returnReplySubmitError")}</p>:null}<StampButton disabled={!letterText.trim()||submitting} onClick={()=>void confirm()}>{submitting?t("mailbox.replying"):t("mailbox.sendReturnReply")}</StampButton></div></SketchPanel>:null}
   </div></div><nav aria-label={t("send.steps.navigation")} className={styles.stepActions}><button className={styles.backButton} disabled={step===0} onClick={()=>setStep(value=>Math.max(0,value-1))} type="button">{t("send.steps.back")}</button>{step<3?<StampButton disabled={step===0&&!letterText.trim()} onClick={()=>setStep(value=>Math.min(3,value+1))}>{t("send.steps.next")}</StampButton>:null}</nav></div>{previewStampId?<dialog aria-label={t("send.postalFinishing.previewStamp")} className={styles.stampDialog} open><div className={styles.stampDialogPaper}><button className={styles.dialogClose} onClick={()=>setPreviewStampId(undefined)} type="button">{t("send.postalFinishing.closeStampPreview")}</button><AssetImage alt={previewStamp?t(previewStamp.nameKey):t("send.postalFinishing.defaultStamp")} assetKey={previewStamp?.assetKey??assetKeys.stamps.default} className={styles.stampDialogArt}><span aria-hidden="true" /></AssetImage></div></dialog>:null}</PageShell>;
 }
 
@@ -939,6 +951,7 @@ function ConfirmationPanel({
   return (
     <div className={styles.confirmation}>
       <p className={styles.hint}>{t("send.confirmationDescription")}</p>
+      {confirmedSend.postmark?<PostalPostmark postmark={confirmedSend.postmark}/>:null}
       <RoutePreview
         originLabel={resolveDeliveryPlaceLabel(delivery, "origin", t)}
         destinationLabel={resolveDeliveryPlaceLabel(delivery, "destination", t)}
