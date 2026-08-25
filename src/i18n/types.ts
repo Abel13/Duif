@@ -277,6 +277,7 @@ export type TranslationDictionary = {
     emptyDescription: string;
     letterList: string;
     from: string;
+    deliveredBy: string;
     openLetter: string;
     closeLetter: string;
     showEnvelope: string;
@@ -952,6 +953,7 @@ export type TranslationKey =
   | "mailbox.emptyDescription"
   | "mailbox.letterList"
   | "mailbox.from"
+  | "mailbox.deliveredBy"
   | "mailbox.openLetter"
   | "mailbox.closeLetter"
   | "mailbox.showEnvelope"

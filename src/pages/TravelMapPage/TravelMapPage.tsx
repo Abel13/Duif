@@ -1,6 +1,6 @@
 import { useMemo, useState, useEffect, useRef, type MouseEvent, type ReactNode } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { Binoculars, Clock, CloudSun, Compass, Gauge, Package, Signpost, TrafficSign, X } from "@phosphor-icons/react";
+import { AirTrafficControl, Binoculars, Clock, CloudSun, Compass, Gauge, Package, Signpost, X } from "@phosphor-icons/react";
 
 import { AppBottomNav } from "../../components/layout";
 import { TravelMap } from "../../components/map/TravelMap";
@@ -8,6 +8,7 @@ import { MascotPrestigeMedallion } from "../../components/mascot/MascotPrestigeM
 import { AssetImage, ItemCard, SketchPanel, TravelStatusLabel, TravelWeatherBadge } from "../../components/ui";
 import {
   assetKeys,
+  effectiveSpeedKmh,
   formatRemainingTime,
   getDeliveryStatus,
   getMapJourneyPhase,
@@ -500,8 +501,8 @@ export function TravelMapPage() {
                 <span>{getPostalVisitorMinutes(visitor.departsAt, now.getTime())} min</span>
               </Link>
             ))}
-            {journeyPhase === "traveling" && displayMascot && delivery.segmentedTravel ? <TravelWeatherBadge isDay={!visualTheme.isNight} mascotName={displayMascot.name} summary={delivery.segmentedTravel} /> : null}
-            {journeyPhase === "traveling" && visiblePostalTraffic.length > 0 ? <button aria-label={t("postalTraffic.title")} className={styles.activeToolButton} onClick={() => setTrafficDialogOpen(true)} title={t("postalTraffic.title")} type="button"><TrafficSign aria-hidden="true" weight="duotone" /><span>{visiblePostalTraffic.length}</span></button> : null}
+            {journeyPhase === "traveling" && displayMascot && delivery.segmentedTravel ? <TravelWeatherBadge baseSpeedKmh={delivery.animalSpeedKmh} isDay={!visualTheme.isNight} mascotName={displayMascot.name} summary={delivery.segmentedTravel} /> : null}
+            {journeyPhase === "traveling" && visiblePostalTraffic.length > 0 ? <button aria-label={t("postalTraffic.title")} className={styles.activeToolButton} onClick={() => setTrafficDialogOpen(true)} title={t("postalTraffic.title")} type="button"><AirTrafficControl aria-hidden="true" weight="duotone" /><span>{visiblePostalTraffic.length}</span></button> : null}
             {journeyPhase === "traveling" && rewards.length > 0 ? <button aria-label={t("map.discoveries")} className={styles.activeToolButton} data-new={newDiscoveryIds.size > 0 || undefined} onClick={() => { closeRewardDetails(); setDiscoveryDialogOpen(true); }} title={t("map.discoveries")} type="button"><Binoculars aria-hidden="true" weight="duotone" /><span>{discoveredCount}/{rewards.length}</span></button> : null}
           </nav>
         ) : null}
@@ -1000,7 +1001,7 @@ function TripStatusDialog({
           <VisualFact icon={<Clock weight="duotone"/>} label={t("delivery.remainingTime")} value={formatRemainingTime(delivery, now)}/>
           <VisualFact icon={<Compass weight="duotone"/>} label={t("map.currentLeg")} value={t(`map.legs.${petLeg}`)}/>
           <VisualFact icon={<Signpost weight="duotone"/>} label={t("travelWeather.segment")} value={delivery.segmentedTravel?`${delivery.segmentedTravel.currentSegmentIndex+1}/${delivery.segmentedTravel.segmentCount}`:t(`delivery.status.${status}`)}/>
-          {delivery.segmentedTravel?<><VisualFact icon={<CloudSun weight="duotone"/>} label={t("travelWeather.weather")} value={`${t(`travelWeather.categories.${delivery.segmentedTravel.currentWeather.category}`)} · ${t(isDay?"travelWeather.day":"travelWeather.night")}`}/>{delivery.segmentedTravel.currentWeather.temperatureC!==undefined?<VisualFact icon={<CloudSun weight="duotone"/>} label={t("travelWeather.temperature")} value={`${Math.round(delivery.segmentedTravel.currentWeather.temperatureC)}°C`}/>:null}<VisualFact icon={<Gauge weight="duotone"/>} label={t("travelWeather.effectiveSpeed")} value={`${Math.round(delivery.segmentedTravel.effectiveSpeedMultiplier*100)}%`}/></>:null}
+          {delivery.segmentedTravel?<><VisualFact icon={<CloudSun weight="duotone"/>} label={t("travelWeather.weather")} value={`${t(`travelWeather.categories.${delivery.segmentedTravel.currentWeather.category}`)} · ${t(isDay?"travelWeather.day":"travelWeather.night")}`}/>{delivery.segmentedTravel.currentWeather.temperatureC!==undefined?<VisualFact icon={<CloudSun weight="duotone"/>} label={t("travelWeather.temperature")} value={`${Math.round(delivery.segmentedTravel.currentWeather.temperatureC)}°C`}/>:null}<VisualFact icon={<Gauge weight="duotone"/>} label={t("travelWeather.effectiveSpeed")} value={`${Math.round(effectiveSpeedKmh(delivery.animalSpeedKmh,delivery.segmentedTravel.effectiveSpeedMultiplier))} km/h`}/></>:null}
           {delivery.correspondenceType?<VisualFact icon={<Package weight="duotone"/>} label={t("map.carryingCargo")} value={t(`correspondence.${delivery.correspondenceType}.name`)}/>:null}
         </section>
         {delivery.segmentedTravel?.currentWeather.source==="openMeteo"?<p className={styles.weatherAttribution}>{t("travelWeather.attribution")}</p>:null}

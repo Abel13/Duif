@@ -41,6 +41,7 @@ describe("generic received correspondence", () => {
     arrived_at: "2026-08-20T12:00:00.000Z", correspondence_type: "postcard",
     delivery_id: "00000000-0000-4000-8000-000000000601", direction: "outbound",
     is_opened: false, letter_text: null, origin_label: null, postcard_asset_key: null,
+    mascot_name: null, mascot_portrait_asset_key: null,
     postcard_catalog_key: null, postcard_message: null, postcard_name_key: null,
     return_reply_confirmed: false, return_reply_deadline: "2026-08-20T13:00:00.000Z",
     sender_name: null, sender_profile_id: null, stamp_asset_key: "stamp.default.front", postmark_key: "postalMark.custom", postmark_model: "route", postmark_color: "blue", postmark_city: "Londrina", postmark_country: "BR", postmark_date: "2026-08-20", sticker_ids: [], sticker_asset_keys: [],
@@ -55,8 +56,8 @@ describe("generic received correspondence", () => {
   });
 
   it("maps a private return letter after authorized opening", () => {
-    expect(mapReceivedCorrespondence({ ...surprise, correspondence_type: "letter", direction: "return", is_opened: true, letter_text: "Voltei com resposta.", sender_name: "Lia", sender_profile_id: "00000000-0000-4000-8000-000000000101" })).toMatchObject({
-      direction: "return", isOpened: true, letterText: "Voltei com resposta.", senderName: "Lia",
+    expect(mapReceivedCorrespondence({ ...surprise, correspondence_type: "letter", direction: "return", is_opened: true, letter_text: "Voltei com resposta.", mascot_name: "Focao", mascot_portrait_asset_key: "mascot.portrait.trovao", sender_name: "Lia", sender_profile_id: "00000000-0000-4000-8000-000000000101" })).toMatchObject({
+      direction: "return", isOpened: true, letterText: "Voltei com resposta.", mascotName: "Focao", mascotPortraitAssetKey: "mascot.portrait.trovao", senderName: "Lia",
     });
   });
 });

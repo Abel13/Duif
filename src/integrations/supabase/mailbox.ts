@@ -56,6 +56,8 @@ export type ReceivedCorrespondenceRow = {
   delivery_id: string;
   direction: string;
   is_opened: boolean;
+  mascot_name: string | null;
+  mascot_portrait_asset_key: string | null;
   letter_text: string | null;
   origin_label: string | null;
   postcard_asset_key: string | null;
@@ -84,6 +86,8 @@ export function mapReceivedCorrespondence(row: ReceivedCorrespondenceRow): Recei
     deliveryId: row.delivery_id,
     direction: row.direction === "return" ? "return" : "outbound",
     isOpened: row.is_opened,
+    mascotName: row.mascot_name ?? undefined,
+    mascotPortraitAssetKey: isOfficialAssetKey(row.mascot_portrait_asset_key) ? row.mascot_portrait_asset_key : undefined,
     letterText: row.letter_text ?? undefined,
     originLabel: row.origin_label ?? undefined,
     postcardAssetKey: row.postcard_asset_key as ReceivedCorrespondence["postcardAssetKey"],

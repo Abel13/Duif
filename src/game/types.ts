@@ -161,6 +161,8 @@ export type ReceivedCorrespondence = {
   deliveryId: string;
   direction: "outbound" | "return";
   isOpened: boolean;
+  mascotName?: string;
+  mascotPortraitAssetKey?: OfficialAssetKey;
   senderName?: string;
   senderProfileId?: string;
   originLabel?: string;

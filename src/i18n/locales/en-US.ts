@@ -336,6 +336,7 @@ export const enUS = {
     emptyDescription: "When a friend completes the outbound leg, their letter will arrive here.",
     letterList: "Received letters",
     from: "From",
+    deliveredBy: "Delivered by {mascot}",
     openLetter: "Open letter",
     closeLetter: "Close letter",
     showEnvelope: "View envelope",

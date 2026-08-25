@@ -41,6 +41,10 @@ export type GeographicVisualTheme = {
   season: TravelSeason;
 };
 
+export function effectiveSpeedKmh(baseSpeedKmh: number, multiplier: number): number {
+  return Math.max(0, baseSpeedKmh * multiplier);
+}
+
 /**
  * Returns the civil date at a location. The IANA identifier is deliberately an
  * input: deriving it from longitude is not valid around political boundaries

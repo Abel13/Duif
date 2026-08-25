@@ -1,5 +1,5 @@
 import { describe,expect,it } from "vitest";
-import { composeEffectiveSpeedMultiplier,geographicVisualTheme,isDayAtCoordinates,isDayAtLongitude,localDateAtTimeZone,meteorologicalSeason,weatherCategoryForWmo } from "./travelWeather";
+import { composeEffectiveSpeedMultiplier,effectiveSpeedKmh,geographicVisualTheme,isDayAtCoordinates,isDayAtLongitude,localDateAtTimeZone,meteorologicalSeason,weatherCategoryForWmo } from "./travelWeather";
 
 describe("segmented travel weather rules",()=>{
   it("normalizes every approved WMO family",()=>{
@@ -35,6 +35,10 @@ describe("segmented travel weather rules",()=>{
     expect(composeEffectiveSpeedMultiplier({weather:"thunderstorm",windSpeedKmh:80,isDay:false,season:"winter",mascot:-.5})).toBe(.6);
     expect(composeEffectiveSpeedMultiplier({weather:"clear",windSpeedKmh:0,isDay:true,season:"summer",mascot:.5})).toBe(1.25);
     expect(composeEffectiveSpeedMultiplier({weather:"cloudy",windSpeedKmh:0,isDay:true,season:"spring"})).toBe(1);
+  });
+  it("converts the effective multiplier to the delivery speed in km/h",()=>{
+    expect(effectiveSpeedKmh(80,.92)).toBeCloseTo(73.6);
+    expect(effectiveSpeedKmh(80,1.25)).toBe(100);
   });
   it("applies sensitive thermal thresholds and only amplifies seasonal extremes",()=>{
     expect(composeEffectiveSpeedMultiplier({weather:"cloudy",windSpeedKmh:0,isDay:true,season:"winter",temperatureC:10})).toBe(1);

@@ -411,6 +411,7 @@ export const ptBR = {
     emptyDescription: "Quando um amigo concluir o trecho de ida, a carta chegará aqui.",
     letterList: "Cartas recebidas",
     from: "De",
+    deliveredBy: "Entregue por {mascot}",
     openLetter: "Abrir carta",
     closeLetter: "Fechar carta",
     showEnvelope: "Ver envelope",
