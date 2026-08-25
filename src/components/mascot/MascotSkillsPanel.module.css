@@ -48,6 +48,11 @@
   text-transform: uppercase;
 }
 
+.category, .progress {
+  color: var(--ink-soft);
+  font-size: .82rem;
+}
+
 .skill p {
   color: var(--color-ink-soft);
 }

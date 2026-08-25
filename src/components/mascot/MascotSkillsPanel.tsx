@@ -17,7 +17,9 @@ export function MascotSkillsPanel({ skills }: MascotSkillsPanelProps) {
           <span className={styles.level}>
             {t("mascot.level")} {skill.level}
           </span>
+          {skill.category ? <span className={styles.category}>{t(skill.category === "fixed" ? "skills.fixed" : "skills.individual")}</span> : null}
           <p>{t(skill.descriptionKey)}</p>
+          {skill.xp !== undefined && skill.nextLevelXp !== undefined ? <p className={styles.progress}>{skill.xp} / {skill.nextLevelXp} XP</p> : null}
         </li>
       ))}
     </ul>

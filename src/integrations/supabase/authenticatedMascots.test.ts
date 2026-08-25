@@ -164,7 +164,7 @@ describe("authenticated mascot mappers", () => {
     const delivery = mapDeliveryRowToDelivery({
       ...nuvemDeliveryRow,
       travel_modifiers: {
-        version: 3, preparationMinutes: 1, outboundSpeedMultiplier: 1,
+        version: 4, preparationMinutes: 1, outboundSpeedMultiplier: 1,
         returnSpeedMultiplier: 1, discoveryRadiusMultiplier: 1,
         rarityWeightMultiplier: 1, longRouteConsistency: 1, isLongRoute: false,
       },

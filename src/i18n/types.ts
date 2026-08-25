@@ -594,6 +594,8 @@ export type TranslationDictionary = {
     };
   };
   skills: {
+    fixed: string;
+    individual: string;
     longRoute: {
       name: string;
       description: string;
@@ -619,6 +621,16 @@ export type TranslationDictionary = {
       description: string;
     };
     owlNightWatch: { name: string; description: string; };
+    postalMemory: { name: string; description: string; };
+    balancedLoad: { name: string; description: string; };
+    returnMail: { name: string; description: string; };
+    cartographicEye: { name: string; description: string; };
+    solarWing: { name: string; description: string; };
+    urbanStart: { name: string; description: string; };
+    aerodynamicLoad: { name: string; description: string; };
+    waterPath: { name: string; description: string; };
+    waterproofFeathers: { name: string; description: string; };
+    firstTrip: { name: string; description: string; };
   };
   delivery: {
     progress: string;
@@ -1389,6 +1401,17 @@ export type TranslationKey =
   | "skills.shinyThing.description"
   | "skills.happyDetour.name"
   | "skills.happyDetour.description"
+  | "skills.fixed" | "skills.individual"
+  | "skills.postalMemory.name" | "skills.postalMemory.description"
+  | "skills.balancedLoad.name" | "skills.balancedLoad.description"
+  | "skills.returnMail.name" | "skills.returnMail.description"
+  | "skills.cartographicEye.name" | "skills.cartographicEye.description"
+  | "skills.solarWing.name" | "skills.solarWing.description"
+  | "skills.urbanStart.name" | "skills.urbanStart.description"
+  | "skills.aerodynamicLoad.name" | "skills.aerodynamicLoad.description"
+  | "skills.waterPath.name" | "skills.waterPath.description"
+  | "skills.waterproofFeathers.name" | "skills.waterproofFeathers.description"
+  | "skills.firstTrip.name" | "skills.firstTrip.description"
   | "delivery.progress"
   | "delivery.remainingTime"
   | "delivery.routePreview"

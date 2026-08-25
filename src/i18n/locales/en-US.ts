@@ -667,6 +667,8 @@ export const enUS = {
     },
   },
   skills: {
+    fixed: "Fixed skill",
+    individual: "Individual skill",
     longRoute: {
       name: "Long Route",
       description: "Keeps strong orientation across longer distances.",
@@ -692,6 +694,16 @@ export const enUS = {
       description: "Turns small delays into a chance for discovery.",
     },
     owlNightWatch: { name: "Night Watch", description: "Keeps orientation when a route crosses the night." },
+    postalMemory: { name: "Postal Memory", description: "Uses repeated paths after three completed trips." },
+    balancedLoad: { name: "Balanced Load", description: "Eases the backpack speed loss." },
+    returnMail: { name: "Return Mail", description: "Helps on the return when a postal reply is confirmed." },
+    cartographicEye: { name: "Cartographic Eye", description: "Broadens discoveries on long or known routes." },
+    solarWing: { name: "Solar Wing", description: "Handles strong sunlight better." },
+    urbanStart: { name: "Urban Start", description: "Gains agility on urban routes." },
+    aerodynamicLoad: { name: "Aerodynamic Load", description: "Eases backpack speed loss on direct flight." },
+    waterPath: { name: "Water Path", description: "Broadens discoveries on coastal routes." },
+    waterproofFeathers: { name: "Waterproof Feathers", description: "Handles rain and moisture better." },
+    firstTrip: { name: "First Trip", description: "Values a first visit to a destination." },
   },
   delivery: {
     progress: "Progress",

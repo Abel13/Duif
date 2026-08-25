@@ -745,6 +745,8 @@ export const ptBR = {
     },
   },
   skills: {
+    fixed: "Habilidade fixa",
+    individual: "Habilidade individual",
     longRoute: {
       name: "Rota Longa",
       description: "Mantém boa orientação em distâncias maiores.",
@@ -770,6 +772,16 @@ export const ptBR = {
       description: "Transforma pequenos atrasos em chance de descoberta.",
     },
     owlNightWatch: { name: "Vigília Noturna", description: "Mantém a orientação quando a rota atravessa a noite." },
+    postalMemory: { name: "Memória Postal", description: "Aproveita caminhos repetidos depois de três viagens concluídas." },
+    balancedLoad: { name: "Carga Equilibrada", description: "Alivia a perda de velocidade da mochila." },
+    returnMail: { name: "Correio de Volta", description: "Ajuda no retorno quando uma resposta postal é confirmada." },
+    cartographicEye: { name: "Olhar Cartográfico", description: "Amplia descobertas em rotas longas ou conhecidas." },
+    solarWing: { name: "Asa Solar", description: "Lida melhor com o sol forte." },
+    urbanStart: { name: "Arrancada Urbana", description: "Ganha agilidade em rotas urbanas." },
+    aerodynamicLoad: { name: "Carga Aerodinâmica", description: "Alivia a perda de velocidade da mochila em voo direto." },
+    waterPath: { name: "Caminho d'Água", description: "Amplia descobertas em rotas costeiras." },
+    waterproofFeathers: { name: "Plumas Impermeáveis", description: "Lida melhor com chuva e umidade." },
+    firstTrip: { name: "Primeiro Passeio", description: "Valoriza a primeira visita a um destino." },
   },
   delivery: {
     progress: "Progresso",

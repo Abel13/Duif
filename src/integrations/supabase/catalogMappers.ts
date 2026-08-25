@@ -72,7 +72,11 @@ export function mapEquipment(value:Json, fallback?:EquipmentItem[]):EquipmentIte
 function mapSkill(value:unknown):Skill {const item=record(value,"skill");
   if(typeof item.level!=="number"||!Number.isFinite(item.level))throw new CatalogContractError("Invalid skill level");
   return {id:requireString(item.id,"skill id"),nameKey:requireTranslationKey(item.nameKey,"skill name key"),
-    descriptionKey:requireTranslationKey(item.descriptionKey,"skill description key"),level:item.level};}
+    descriptionKey:requireTranslationKey(item.descriptionKey,"skill description key"),level:item.level,
+    category:item.category === "fixed" || item.category === "individual" ? item.category : undefined,
+    xp:typeof item.xp === "number" && Number.isFinite(item.xp) ? item.xp : undefined,
+    nextLevelXp:typeof item.nextLevelXp === "number" && Number.isFinite(item.nextLevelXp) ? item.nextLevelXp : undefined,
+    isSelected:typeof item.isSelected === "boolean" ? item.isSelected : undefined};}
 export function mapSkills(value:Json,fallback?:Skill[]):Skill[]{
   if(!Array.isArray(value)){if(fallback)return fallback;throw new CatalogContractError("Invalid skills list");} return value.map(mapSkill);
 }

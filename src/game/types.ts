@@ -74,6 +74,11 @@ export type Skill = {
   nameKey: TranslationKey;
   descriptionKey: TranslationKey;
   level: number;
+  /** Fixed skills are always available; individual skills require the level-five choice. */
+  category?: "fixed" | "individual";
+  xp?: number;
+  nextLevelXp?: number;
+  isSelected?: boolean;
 };
 
 export type DeliveryStatus =
@@ -86,7 +91,7 @@ export type DeliveryStatus =
   | "completed";
 
 export type MascotTravelModifiers = {
-  version: 1 | 2;
+  version: 1 | 2 | 3;
   preparationMinutes: number;
   outboundSpeedMultiplier: number;
   returnSpeedMultiplier: number;
@@ -94,6 +99,8 @@ export type MascotTravelModifiers = {
   rarityWeightMultiplier: number;
   longRouteConsistency: number;
   isLongRoute: boolean;
+  skillContext?: Record<string, boolean>;
+  skillMitigations?: Record<string, number>;
 };
 
 export type TutorialTravelBoost = {
