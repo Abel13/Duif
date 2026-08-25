@@ -86,7 +86,8 @@ export function mapProgressionPayload(value: unknown): DeliveryProgressionAward 
   const skillAwards = source.skill_awards.flatMap((award) => isObject(award)
     && typeof award.skillId === "string" && typeof award.xp === "number" && typeof award.level === "number"
     && typeof award.currentXp === "number" && typeof award.nextLevelXp === "number"
-      ? [{ skillId: award.skillId, xp: award.xp, level: award.level, currentXp: award.currentXp, nextLevelXp: award.nextLevelXp }]
+      ? [{ skillId: award.skillId, xp: award.xp, level: award.level, currentXp: award.currentXp, nextLevelXp: award.nextLevelXp,
+        appliedEffects: Array.isArray(award.appliedEffects) ? award.appliedEffects.filter(isObject) : [] }]
       : []);
   return {
     formulaVersion: 1,

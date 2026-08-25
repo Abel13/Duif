@@ -87,6 +87,19 @@ drop trigger if exists m57_record_route_familiarity_on_completion on public.deli
 create trigger m57_record_route_familiarity_on_completion after update of status on public.deliveries for each row execute function public.m57_record_route_familiarity();
 
 -- Add the new contracts without rewriting legacy in-flight deliveries.
+insert into public.official_translation_keys(translation_key) values
+  ('skills.postalMemory.name'), ('skills.postalMemory.description'),
+  ('skills.balancedLoad.name'), ('skills.balancedLoad.description'),
+  ('skills.returnMail.name'), ('skills.returnMail.description'),
+  ('skills.cartographicEye.name'), ('skills.cartographicEye.description'),
+  ('skills.solarWing.name'), ('skills.solarWing.description'),
+  ('skills.urbanStart.name'), ('skills.urbanStart.description'),
+  ('skills.aerodynamicLoad.name'), ('skills.aerodynamicLoad.description'),
+  ('skills.waterPath.name'), ('skills.waterPath.description'),
+  ('skills.waterproofFeathers.name'), ('skills.waterproofFeathers.description'),
+  ('skills.firstTrip.name'), ('skills.firstTrip.description')
+on conflict(translation_key) do nothing;
+
 update public.mascot_templates set
   skills = case catalog_key
     when 'mascot-nuvem' then '[{"id":"skill-nuvem-long-route","nameKey":"skills.longRoute.name","descriptionKey":"skills.longRoute.description","level":1,"category":"fixed"},{"id":"skill-nuvem-postal-memory","nameKey":"skills.postalMemory.name","descriptionKey":"skills.postalMemory.description","level":1,"category":"fixed"},{"id":"skill-nuvem-balanced-load","nameKey":"skills.balancedLoad.name","descriptionKey":"skills.balancedLoad.description","level":1,"category":"individual"},{"id":"skill-nuvem-return-mail","nameKey":"skills.returnMail.name","descriptionKey":"skills.returnMail.description","level":1,"category":"individual"},{"id":"skill-nuvem-cartographic-eye","nameKey":"skills.cartographicEye.name","descriptionKey":"skills.cartographicEye.description","level":1,"category":"individual"}]'::jsonb

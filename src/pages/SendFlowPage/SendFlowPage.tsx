@@ -43,11 +43,12 @@ import {
   type SendFlowSelection,
 } from "../../game";
 import { useSendFlowData } from "../../game/useSendFlowData";
-import { useTranslation } from "../../i18n";
+import { useTranslation, type TranslationKey } from "../../i18n";
 import { createAuthenticatedDeliveryFromSelection, getAvailableSendMascots } from "../../integrations/supabase/authenticatedSendFlow";
 import { confirmReturnReply, fetchReturnReplyContext, type ReturnReplyContext } from "../../integrations/supabase/mailbox";
 import { useAuth } from "../../integrations/supabase/AuthProvider";
 import { fetchEquipmentData } from "../../integrations/supabase/equipment";
+import { previewMascotSkillModifiers, type SkillPreview } from "../../integrations/supabase/skillPreview";
 import type { AuthProfile } from "../../integrations/supabase/profile";
 import styles from "./SendFlowPage.module.css";
 
@@ -95,6 +96,8 @@ export function SendFlowPage() {
   const [isSavingLoadout, setIsSavingLoadout] = useState(false);
   const loadoutEditorRef = useRef<MascotLoadoutEditorHandle>(null);
   const [replyContext,setReplyContext]=useState<ReturnReplyContext>();
+  const [skillPreview,setSkillPreview]=useState<SkillPreview>();
+  const [skillPreviewState,setSkillPreviewState]=useState<"idle"|"loading"|"unavailable">("idle");
   const [replyContextState,setReplyContextState]=useState<"idle"|"loading"|"unavailable">("idle");
 
   useEffect(()=>{if(!requestedReplyId)return;let active=true;setReplyContextState("loading");fetchReturnReplyContext(requestedReplyId).then((value)=>{if(!active)return;setReplyContext(value);setReplyContextState(value?"idle":"unavailable")}).catch(()=>active&&setReplyContextState("unavailable"));return()=>{active=false}},[requestedReplyId]);
@@ -154,6 +157,16 @@ export function SendFlowPage() {
       ),
     };
   }, [selectedFriend, selectedMascot]);
+
+  useEffect(() => {
+    if (!selectedMascot || !selectedFriend || !estimate) { setSkillPreview(undefined); setSkillPreviewState("idle"); return; }
+    let active=true; setSkillPreviewState("loading");
+    const destinationKey=getFriendLocationLabel(selectedFriend.location,t);
+    previewMascotSkillModifiers(selectedMascot.id,destinationKey,estimate.distanceKm)
+      .then((value)=>{if(!active)return;setSkillPreview(value);setSkillPreviewState(value?"idle":"unavailable")})
+      .catch(()=>{if(active){setSkillPreview(undefined);setSkillPreviewState("unavailable")}});
+    return()=>{active=false};
+  },[estimate,selectedFriend,selectedMascot,t]);
 
   function updateSelection(nextSelection: SendFlowSelection) {
     setSelection((currentSelection) => ({
@@ -457,6 +470,7 @@ export function SendFlowPage() {
                     <SummaryRow label={t("travelWeather.impactRange")} value={t("travelWeather.impactDescription")} />
                   </> : null}
                 </dl>
+                <SkillPreviewSection mascot={selectedMascot} preview={skillPreview} state={skillPreviewState} />
                 <StampButton
                   disabled={!isSelectionComplete || !isContentValid || isSubmitting || isSendFlowLoading}
                   onClick={handleConfirmSend}
@@ -943,6 +957,7 @@ function ConfirmationPanel({
         />
         <SummaryRow label={t("mascot.status")} value={t(`delivery.status.${status}`)} />
       </dl>
+      <SkillPreviewSection mascot={mascot} preview={skillPreviewFromDelivery(delivery)} state="idle" />
       <div className={styles.actions}>
         <Link className={styles.primaryLink} to={`/map?mascotId=${mascot.id}`}>
           {t("mascot.viewTrip")}
@@ -953,6 +968,26 @@ function ConfirmationPanel({
       </div>
     </div>
   );
+}
+
+function skillPreviewFromDelivery(delivery: Delivery): SkillPreview | undefined {
+  const modifiers=delivery.travelModifiers;
+  if(modifiers?.version!==3||!modifiers.skillEffects)return undefined;
+  return {weatherMayChange:modifiers.weatherMayChange===true,skillEffects:modifiers.skillEffects.flatMap((effect)=>
+    (effect.reason==="snapshot"||effect.reason==="conditionNotMet")
+      ? [{...effect,reason:effect.reason,weatherDependent:effect.weatherDependent===true}]
+      : [])};
+}
+
+function SkillPreviewSection({mascot,preview,state}:{mascot?:Mascot;preview?:SkillPreview;state:"idle"|"loading"|"unavailable"}) {
+  const {t}=useTranslation();
+  return <section className={styles.skillPreview} aria-busy={state==="loading"}>
+    <h3>{t("send.skillPreview.title")}</h3>
+    {state==="loading"?<p>{t("send.skillPreview.loading")}</p>:null}
+    {state==="unavailable"?<p>{t("send.skillPreview.unavailable")}</p>:null}
+    {preview?<ul>{preview.skillEffects.map((effect)=>{const skill=mascot?.skills.find((candidate)=>candidate.id===effect.skillId);return <li key={effect.skillId}><strong>{skill?t(skill.nameKey):effect.skillId}</strong><span>{effect.state==="active"?t(effect.weatherDependent?"send.skillPreview.weatherDependent":"send.skillPreview.active"):t("send.skillPreview.inactive")}</span><small>{t(`send.skillPreview.reasons.${effect.reason}` as TranslationKey)}</small></li>})}</ul>:null}
+    {preview?.weatherMayChange?<p className={styles.hint}>{t("send.skillPreview.weatherNotice")}</p>:null}
+  </section>;
 }
 
 function formatDurationHours(durationHours: number) {

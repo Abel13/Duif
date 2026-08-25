@@ -3488,6 +3488,10 @@ export type Database = {
         Args: { delivery_id: string }
         Returns: Json
       }
+      get_mascot_skill_state: {
+        Args: { target_mascot_id: string }
+        Returns: Json
+      }
       get_delivery_return_reply_context: {
         Args: { target_delivery_id: string }
         Returns: {
@@ -3507,6 +3511,18 @@ export type Database = {
         Returns: {
           label: string
         }[]
+      }
+      choose_mascot_individual_skill: {
+        Args: { target_mascot_id: string; target_skill_id: string }
+        Returns: undefined
+      }
+      resolve_soft_landing_migration: {
+        Args: { target_mascot_id: string; target_skill_id: string }
+        Returns: undefined
+      }
+      preview_mascot_skill_modifiers: {
+        Args: { target_mascot_id: string; destination_key: string; distance_km: number }
+        Returns: Json
       }
       get_my_postal_friend_code: {
         Args: never

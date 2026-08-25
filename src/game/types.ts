@@ -99,8 +99,10 @@ export type MascotTravelModifiers = {
   rarityWeightMultiplier: number;
   longRouteConsistency: number;
   isLongRoute: boolean;
-  skillContext?: Record<string, boolean>;
+  skillContext?: Record<string, boolean | number | string>;
   skillMitigations?: Record<string, number>;
+  skillEffects?: Array<{ skillId: string; level: number; state: "active" | "inactive"; reason: string; weatherDependent?: boolean }>;
+  weatherMayChange?: boolean;
 };
 
 export type TutorialTravelBoost = {
@@ -204,6 +206,7 @@ export type DeliveryProgressionAward = {
     level: number;
     currentXp: number;
     nextLevelXp: number;
+    appliedEffects: Array<Record<string, unknown>>;
   }>;
 };
 
@@ -330,6 +333,11 @@ export type Mascot = {
   trait: MascotTrait;
   equipment: EquipmentItem[];
   skills: Skill[];
+  skillState?: {
+    chosenSkillId?: string;
+    freeChangeUsed: boolean;
+    migrationPending: boolean;
+  };
   appearance: MascotAppearance;
   currentDelivery?: Delivery;
 };

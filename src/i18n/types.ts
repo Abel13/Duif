@@ -304,6 +304,7 @@ export type TranslationDictionary = {
     correspondenceUnavailable: string;
   };
   send: {
+    skillPreview:{title:string;loading:string;unavailable:string;active:string;inactive:string;weatherDependent:string;weatherNotice:string;reasons:{snapshot:string;conditionNotMet:string}};
     steps: { friend: string; mascot: string; correspondence: string; finishing: string; stamp: string; postmark: string; review: string; navigation: string; back: string; next: string };
     startAction: string;
     eyebrow: string;
@@ -676,6 +677,7 @@ export type TranslationDictionary = {
     reputationXp: string;
     mascotFlightXp: string;
     skillXp: string;
+    skillEffectApplied: string;
     affinity: string;
     affinityLongDistance: string;
     affinityUrban: string;
@@ -884,6 +886,7 @@ export type TranslationDictionary = {
 };
 
 export type TranslationKey =
+  | "send.skillPreview.title" | "send.skillPreview.loading" | "send.skillPreview.unavailable" | "send.skillPreview.active" | "send.skillPreview.inactive" | "send.skillPreview.weatherDependent" | "send.skillPreview.weatherNotice" | "send.skillPreview.reasons.snapshot" | "send.skillPreview.reasons.conditionNotMet"
   | "functionalEquipment.shopTitle" | "functionalEquipment.shopDescription" | "functionalEquipment.balance" | "functionalEquipment.buy" | "functionalEquipment.buying" | "functionalEquipment.purchaseError"
   | "functionalEquipment.loadoutDescription" | "functionalEquipment.lockedDuringTravel" | "functionalEquipment.backpackSlot" | "functionalEquipment.utilitySlot" | "functionalEquipment.none"
   | "functionalEquipment.speed" | "functionalEquipment.slots" | "functionalEquipment.protection" | "functionalEquipment.contextual" | "functionalEquipment.saveError" | "functionalEquipment.saving" | "functionalEquipment.applyLoadout"
@@ -1451,6 +1454,7 @@ export type TranslationKey =
   | "rewards.reputationXp"
   | "rewards.mascotFlightXp"
   | "rewards.skillXp"
+  | "rewards.skillEffectApplied"
   | "rewards.affinity"
   | "rewards.affinityLongDistance"
   | "rewards.affinityUrban"

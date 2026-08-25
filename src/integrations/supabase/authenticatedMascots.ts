@@ -19,6 +19,8 @@ export type PlayerMascotRow = Database["public"]["Tables"]["player_mascots"]["Ro
 export type DeliveryRow = Database["public"]["Tables"]["deliveries"]["Row"];
 export type MascotSpeciesRow = Pick<MascotTemplateRow, "id" | "species_key">;
 
+type MascotSkillStatePayload = { skills?: unknown; chosenSkillId?: unknown; freeChangeUsed?: unknown; migrationPending?: unknown };
+
 function getMascotPublicId(row: PlayerMascotRow) {
   return row.id;
 }
@@ -197,6 +199,22 @@ export function composeAuthenticatedMascots({
     .sort((firstMascot, secondMascot) => firstMascot.name.localeCompare(secondMascot.name));
 }
 
+function applySkillState(mascot: Mascot, value: unknown): Mascot {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return mascot;
+  const skills = (value as MascotSkillStatePayload).skills;
+  if (!Array.isArray(skills)) return mascot;
+  try {
+    const source = value as MascotSkillStatePayload;
+    return { ...mascot, skills: mapSkills(skills as never, mascot.skills), skillState: {
+      chosenSkillId: typeof source.chosenSkillId === "string" ? source.chosenSkillId : undefined,
+      freeChangeUsed: source.freeChangeUsed === true,
+      migrationPending: source.migrationPending === true,
+    } };
+  } catch {
+    return mascot;
+  }
+}
+
 export async function fetchAuthenticatedMascots(profileId: string): Promise<Mascot[]> {
   const supabase = getSupabaseClient();
 
@@ -216,14 +234,19 @@ export async function fetchAuthenticatedMascots(profileId: string): Promise<Masc
   const mascotIds = mascotRows.map((mascotRow) => mascotRow.id);
   const templateIds = [...new Set(mascotRows.map((mascotRow) => mascotRow.template_id))];
 
-  const [{ data: deliveryRows }, { data: speciesRows }] = await Promise.all([
+  const [{ data: deliveryRows }, { data: speciesRows }, skillStates] = await Promise.all([
     supabase.from("deliveries").select("*").in("mascot_id", mascotIds),
     supabase.from("mascot_templates").select("id, species_key").eq("status", "active").in("id", templateIds),
+    Promise.all(mascotIds.map(async (mascotId) => {
+      const { data } = await supabase.rpc("get_mascot_skill_state", { target_mascot_id: mascotId });
+      return [mascotId, data] as const;
+    })),
   ]);
 
+  const skillStateByMascotId = new Map(skillStates);
   return composeAuthenticatedMascots({
     deliveryRows: deliveryRows ?? [],
     mascotRows,
     speciesRows: speciesRows ?? [],
-  });
+  }).map((mascot) => applySkillState(mascot, skillStateByMascotId.get(mascot.id)));
 }

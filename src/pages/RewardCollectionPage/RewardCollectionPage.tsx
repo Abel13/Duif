@@ -104,6 +104,7 @@ export function RewardCollectionPage() {
               onCollect={collectReward}
               reward={displayReward}
               progression={progression}
+              mascot={mascot}
               routeDiscoveries={routeDiscoveries}
             />
           ) : (
@@ -125,6 +126,7 @@ function RewardPanel({
   onCollect,
   reward,
   progression,
+  mascot,
   routeDiscoveries,
 }: {
   canCollect: boolean;
@@ -136,6 +138,7 @@ function RewardPanel({
   onCollect: () => void;
   reward?: DeliveryReward;
   progression?: DeliveryProgressionAward;
+  mascot?: ReturnType<typeof useMascotCatalog>["mascots"][number];
   routeDiscoveries: ReturnType<typeof useRewardCollectionData>["routeDiscoveries"];
 }) {
   const { t } = useTranslation();
@@ -195,7 +198,9 @@ function RewardPanel({
               <SummaryRow label={t("rewards.mascotFlightXp")} value={`+${progression.mascotXp} XP`} />
               {progression.affinity ? <SummaryRow label={t("rewards.affinity")} value={t(`rewards.affinity${progression.affinity[0].toUpperCase()}${progression.affinity.slice(1)}` as TranslationKey)} /> : null}
               {progression.skillAwards.map((award) => (
-                <SummaryRow key={award.skillId} label={t("rewards.skillXp")} value={`+${award.xp} XP`} />
+                <SummaryRow key={award.skillId} label={mascot?.skills.find((skill) => skill.id === award.skillId)?.nameKey
+                  ? t(mascot.skills.find((skill) => skill.id === award.skillId)!.nameKey)
+                  : t("rewards.skillXp")} value={`${award.xp > 0 ? "+" : ""}${award.xp} XP${award.appliedEffects.length ? ` · ${t("rewards.skillEffectApplied")}` : ""}`} />
               ))}
             </dl>
           </section>

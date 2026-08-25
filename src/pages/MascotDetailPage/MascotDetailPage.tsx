@@ -5,6 +5,7 @@ import { AppBottomNav, PageShell } from "../../components/layout";
 import { MascotLoadoutEditor } from "../../components/mascot/MascotLoadoutEditor";
 import { MascotPortraitNavigator } from "../../components/mascot/MascotPortraitNavigator";
 import { MascotSkillsPanel } from "../../components/mascot/MascotSkillsPanel";
+import { MascotSkillNotice } from "../../components/mascot/MascotSkillNotice";
 import { MascotStatsPanel } from "../../components/mascot/MascotStatsPanel";
 import { MascotTraitCard } from "../../components/mascot/MascotTraitCard";
 import { MascotTravelCard } from "../../components/mascot/MascotTravelCard";
@@ -155,6 +156,7 @@ export function MascotDetailPage() {
             </SketchPanel>
 
             <SketchPanel title={t("mascot.skills")}>
+              <MascotSkillNotice mascot={mascot} />
               <MascotSkillsPanel skills={mascot.skills} />
             </SketchPanel>
           </div>

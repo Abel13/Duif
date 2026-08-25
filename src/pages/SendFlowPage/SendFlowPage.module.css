@@ -417,6 +417,8 @@
   gap: .15rem;
   min-width: 0;
 }
+.skillPreview { display:grid; gap:var(--space-2); padding:var(--space-3); border:1px dashed rgb(139 94 60/.45); background:rgb(247 241 227/.55); }
+.skillPreview h3,.skillPreview p { margin:0; }.skillPreview ul { display:grid; gap:var(--space-2); padding:0; margin:0; list-style:none; }.skillPreview li { display:grid; grid-template-columns:1fr auto; gap:.25rem var(--space-2); }.skillPreview li small { grid-column:1/-1; color:var(--color-postal-brown); }
 
 .summaryList div {
   display: grid;

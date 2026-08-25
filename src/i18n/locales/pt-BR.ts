@@ -438,6 +438,7 @@ export const ptBR = {
     correspondenceUnavailable: "Esta correspondência não está mais disponível neste endereço.",
   },
   send: {
+    skillPreview:{title:"Habilidades nesta viagem",loading:"Calculando habilidades...",unavailable:"A prévia de habilidades está indisponível. O envio ainda será validado pelo servidor.",active:"Ativa",inactive:"Inativa",weatherDependent:"Pode variar com o clima",weatherNotice:"As condições dos trechos futuros podem mudar.",reasons:{snapshot:"Condição confirmada para esta rota.",conditionNotMet:"A condição não participa desta rota."}},
     steps: { friend: "Amigo", mascot: "Mascote", correspondence: "Envio", finishing: "Acabamento", stamp: "Selo", postmark: "Carimbo", review: "Revisão", navigation: "Navegação entre etapas", back: "Voltar", next: "Avançar" },
     startAction: "Enviar",
     eyebrow: "Envio postal",
@@ -831,6 +832,7 @@ export const ptBR = {
     reputationXp: "Reputação Postal",
     mascotFlightXp: "XP de voo",
     skillXp: "XP de habilidade",
+    skillEffectApplied: "efeito aplicado",
     affinity: "Afinidade de rota",
     affinityLongDistance: "Rota longa",
     affinityUrban: "Rota urbana",

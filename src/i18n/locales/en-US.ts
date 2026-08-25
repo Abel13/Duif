@@ -363,6 +363,7 @@ export const enUS = {
     correspondenceUnavailable: "This correspondence is no longer available at this address.",
   },
   send: {
+    skillPreview:{title:"Skills on this journey",loading:"Calculating skills...",unavailable:"The skill preview is unavailable. Sending will still be validated by the server.",active:"Active",inactive:"Inactive",weatherDependent:"May vary with weather",weatherNotice:"Conditions on future segments may change.",reasons:{snapshot:"Condition confirmed for this route.",conditionNotMet:"The condition does not participate in this route."}},
     steps: { friend: "Friend", mascot: "Mascot", correspondence: "Mail", finishing: "Finishing", stamp: "Stamp", postmark: "Postmark", review: "Review", navigation: "Step navigation", back: "Back", next: "Continue" },
     startAction: "Send",
     eyebrow: "Postal dispatch",
@@ -753,6 +754,7 @@ export const enUS = {
     reputationXp: "Postal Reputation",
     mascotFlightXp: "Flight XP",
     skillXp: "Skill XP",
+    skillEffectApplied: "effect applied",
     affinity: "Route affinity",
     affinityLongDistance: "Long-distance route",
     affinityUrban: "Urban route",

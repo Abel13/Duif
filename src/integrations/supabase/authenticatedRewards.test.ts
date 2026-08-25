@@ -177,7 +177,7 @@ describe("authenticated reward mappers", () => {
       reputation_xp: 35,
       mascot_xp: 92,
       inputs: { affinity: "longDistance" },
-      skill_awards: [{ skillId: "skill-nuvem-long-route", xp: 10, level: 1, currentXp: 10, nextLevelXp: 60 }],
+      skill_awards: [{ skillId: "skill-nuvem-long-route", xp: 10, level: 1, currentXp: 10, nextLevelXp: 60, appliedEffects: [{ kind: "contextual" }] }],
     })).toMatchObject({
       formulaVersion: 1,
       reputationXp: 35,
