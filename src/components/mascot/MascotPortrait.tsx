@@ -4,6 +4,7 @@ import { assetKeys, type Mascot } from "../../game";
 import { useOfficialAssets } from "../../integrations/supabase/OfficialAssetProvider";
 import { useTranslation } from "../../i18n";
 import { AssetImage } from "../ui";
+import { MascotPrestigeMedallion } from "./MascotPrestigeMedallion";
 import styles from "./MascotPortrait.module.css";
 
 type MascotPortraitProps = {
@@ -20,12 +21,13 @@ export function MascotPortrait({ mascot }: MascotPortraitProps) {
     "--portrait-postal-mark": postalMarkPath ? `url(${postalMarkPath})` : "none",
   } as CSSProperties;
   const hasPortraitAsset = Boolean(mascot.appearance.portraitAssetKey);
+  const prestige=mascot.flightState?.borders.find((border)=>border.selected);
 
   return (
-    <section className={styles.portrait} style={portraitStyle} aria-label={t("mascot.visualPreview")}>
+    <section className={styles.portrait} data-prestige={prestige?.catalogKey} style={portraitStyle} aria-label={`${t("mascot.visualPreview")}${prestige?` — ${t(prestige.nameKey)}`:""}`}>
       <span className={styles.postmark} aria-hidden="true" />
       <div className={styles.sheet}>
-        <AssetImage
+        {prestige?<MascotPrestigeMedallion alt={`${t(mascot.appearance.portraitPlaceholderKey)} — ${t(prestige.nameKey)}`} borderAssetKey={prestige.assetKey} className={styles.prestigeMedallion} portraitAssetKey={mascot.appearance.portraitAssetKey} size="large"/>:<AssetImage
           alt={t(mascot.appearance.portraitPlaceholderKey)}
           className={styles.assetFrame}
           height={320}
@@ -38,7 +40,7 @@ export function MascotPortrait({ mascot }: MascotPortraitProps) {
             <span className={styles.mark}>{mascot.name.slice(0, 1)}</span>
             <span className={styles.badge} aria-hidden="true" />
           </div>
-        </AssetImage>
+        </AssetImage>}
         {!hasPortraitAsset && (
           <p className={styles.caption}>{t(mascot.appearance.portraitPlaceholderKey)}</p>
         )}

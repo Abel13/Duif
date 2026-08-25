@@ -3488,6 +3488,7 @@ export type Database = {
         Args: { delivery_id: string }
         Returns: Json
       }
+      get_mascot_flight_state: { Args: { target_mascot_id: string }; Returns: Json }
       get_delivery_postmark_snapshot: {
         Args: { target_delivery_id: string }
         Returns: Json
@@ -3536,6 +3537,7 @@ export type Database = {
         Args: { target_mascot_id: string; destination_key: string; distance_km: number }
         Returns: Json
       }
+      preview_mascot_flight: { Args: { target_mascot_id: string; target_profile_id: string }; Returns: Json }
       preview_origin_postmark: { Args: { target_delivery_id?: string }; Returns: Json }
       get_my_postal_friend_code: {
         Args: never
@@ -3593,6 +3595,7 @@ export type Database = {
           mascot_id: string
           mascot_name: string
           portrait_asset_key: string
+          prestige_asset_key: string
         }[]
       }
       list_my_postal_connections: { Args: never; Returns: Json }
@@ -3753,6 +3756,7 @@ export type Database = {
         Args: { request_id: string; target_instance_id: string }
         Returns: Json
       }
+      select_mascot_prestige_border: { Args: { target_mascot_id: string; target_border_catalog_key: string }; Returns: Json }
       replace_postal_job_offer: {
         Args: { target_mascot_id: string }
         Returns: Json

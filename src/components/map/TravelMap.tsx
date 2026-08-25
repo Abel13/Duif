@@ -74,6 +74,7 @@ export type TravelMapProps = {
   originTitle: string;
   petLabel: string;
   petPortraitAssetKey?: OfficialAssetKey;
+  petPrestigeAssetKey?: OfficialAssetKey;
   petPosition: MapCoordinate;
   placeLabels: MapPlaceLabel[];
   postalTraffic: PostalTrafficPetSnapshot[];
@@ -108,6 +109,7 @@ export function TravelMap({
   originTitle,
   petLabel,
   petPortraitAssetKey,
+  petPrestigeAssetKey,
   petPosition,
   placeLabels,
   postalTraffic,
@@ -229,6 +231,7 @@ export function TravelMap({
         delivery,
         petLabel,
         resolveActiveOfficialAssetPath(petPortraitAssetKey),
+        resolveActiveOfficialAssetPath(petPrestigeAssetKey),
         petPosition,
         () => onPetSelectRef.current(),
       );
@@ -333,6 +336,7 @@ export function TravelMap({
         delivery,
         petLabel,
         resolveActiveOfficialAssetPath(petPortraitAssetKey),
+        resolveActiveOfficialAssetPath(petPrestigeAssetKey),
         petPosition,
         () => onPetSelectRef.current(),
       );
@@ -354,6 +358,7 @@ export function TravelMap({
     if (petElement) {
       petElement.setAttribute("aria-label", petLabel);
       syncPetPortrait(petElement, resolveActiveOfficialAssetPath(petPortraitAssetKey));
+      syncPrestigeFrame(petElement, resolveActiveOfficialAssetPath(petPrestigeAssetKey));
     }
     updateMapProgress(map, delivery, getPetMapPosition(delivery, new Date()));
     if (document.visibilityState === "visible") {
@@ -400,6 +405,7 @@ export function TravelMap({
     onRewardSelect,
     petLabel,
     petPortraitAssetKey,
+    petPrestigeAssetKey,
     petPosition,
     originLabel,
     destinationLabel,
@@ -1144,6 +1150,7 @@ function createPetMarker(
   delivery: Delivery,
   label: string,
   portraitAssetKey: string | undefined,
+  prestigeAssetKey: string | undefined,
   position: MapCoordinate,
   onSelect: () => void,
 ) {
@@ -1154,10 +1161,21 @@ function createPetMarker(
   element.setAttribute("aria-label", label);
   element.addEventListener("click", onSelect);
   syncPetPortrait(element, portraitAssetKey);
+  syncPrestigeFrame(element, prestigeAssetKey);
   updatePetDirection(element, getPetMapPosition(delivery, new Date()).leg, delivery);
   return new maplibregl.Marker({ element })
     .setLngLat(toLngLat(position))
     .addTo(map);
+}
+
+function syncPrestigeFrame(element: HTMLElement, assetPath?: string) {
+  element.querySelector(`.${styles.petPrestige}`)?.remove();
+  if (!assetPath) return;
+  const image = document.createElement("img");
+  image.alt = "";
+  image.className = styles.petPrestige;
+  image.src = assetPath;
+  element.append(image);
 }
 
 function focusMap(

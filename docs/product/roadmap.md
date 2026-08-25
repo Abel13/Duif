@@ -6,9 +6,9 @@ Procedimentos de deploy pertencem a [Operações](../operations/release.md), nã
 
 ## Estado atual
 
-- Milestones 1–56: concluídas localmente.
-- Próxima etapa: planejar e aprovar as decisões pendentes da Milestone 57.
-- Milestones 57–62: planejadas, com pendências explícitas abaixo.
+- Milestones 1–58: concluídas localmente.
+- Próxima etapa: planejar e aprovar as decisões pendentes da Milestone 59.
+- Milestones 59–62: planejadas, com pendências explícitas abaixo.
 
 ## Milestone 56 — Equipamentos funcionais, mochilas e prévia de loadout
 
@@ -62,8 +62,8 @@ gameplay advantage.
 
 ## Milestone 57 — Identidades de skills e domínio contextual
 
-**Estado:** Planned; identities and progression framework approved, some coefficients and triggers
-remain unresolved.
+**Estado:** Concluída localmente. Identidades, progressão, resolução contextual, migração e
+explicações de viagem são autoritativas e versionadas.
 
 **Objetivo:**
 
@@ -83,11 +83,10 @@ skills, and one player-chosen individual skill per mascot.
 - **Nuvem**, safe long-route carrier: `Rota Segura`, `Rota Longa`, `Memória Postal`; individual
   options `Carga Equilibrada`, `Correio de Volta`, or `Olhar Cartográfico`;
 - **Trovão**, fast direct-flight carrier: `Voo Direto`, `Despacho Rápido`, `Instinto de Vento
-  Cruzado`; individual options `Asa Solar`, `Arrancada Urbana`, or `Carga Aerodinâmica`;
+  Cruzado`; individual options `Asa Solar` or `Carga Aerodinâmica`;
 - **Pipoca**, explorer and collector: `Achador Curioso` gives a 15% wider discovery corridor,
   `Coisa Brilhante` improves rarity weight, and `Desvio Feliz` widens the corridor further with a
-  small speed tradeoff; individual options `Plumas Impermeáveis`, `Caminho d'Água`, or `Primeiro
-  Passeio`;
+  small speed tradeoff; individual options `Plumas Impermeáveis` or `Primeiro Passeio`;
 - **Lume**, referral-unlocked night specialist: `Olhos da Noite`, `Vigília Noturna`, and `Voo
   Silencioso`; individual options `Memória Lunar`, `Carga Noturna`, or `Guardiã da Madrugada`;
 - linear, visible effect growth to each skill's explicit maximum, never a permanent species XP
@@ -98,12 +97,9 @@ skills, and one player-chosen individual skill per mascot.
 - manual training, random skill rolls, paid skills, paid respec, hidden bonuses, damage/failure
   mechanics, or species-exclusive collection content.
 
-**Decisões pendentes antes da implementação:**
-
-- exact XP awarded for every trigger and anti-farming rules for repeated trivial routes;
-- final coefficients for several fixed and individual skills, including every climate threshold;
-- whether `Desvio Feliz` changes path geometry or only the discovery corridor and calculated time;
-- localized copy, icons, animation cues, and migration behavior for existing mascot skills.
+**Decisões entregues:** XP contextual por duração, janela anti-farming, coeficientes climáticos,
+`Desvio Feliz` sem alterar a linha do mapa, migração idempotente e aposentadoria compensatória de
+`Arrancada Urbana` e `Caminho d'Água`.
 
 **Critérios de sucesso:**
 
@@ -113,7 +109,8 @@ skills, and one player-chosen individual skill per mascot.
 
 ## Milestone 58 — Níveis de voo, rotas familiares e bordas de prestígio
 
-**Estado:** Planned; primary curves and unlock table approved, account-level unlocks unresolved.
+**Estado:** Concluída localmente. Progressão, alcance, capacidade, familiaridade canônica e bordas
+de prestígio foram implementados; publicação permanece operacional.
 
 **Objetivo:**
 
@@ -145,12 +142,9 @@ long-term visual prestige without introducing a hard progression cap.
 - functional unlocks above level 20, an actual level cap, paid level acceleration, equipment that
   unlocks otherwise unreachable world routes, or familiarity shared across all mascots.
 
-**Decisões pendentes antes da implementação:**
-
-- exact non-capacity unlocks at each level from 1–20 and their relationship to Reputação Postal;
-- border art, titles, accessibility presentation, and whether border selection is automatic or
-  player-selectable after unlock;
-- route-identity migration for existing destinations and dynamically generated job locations.
+**Decisões entregues:** nível de voo controla somente benefícios do mascote; Reputação Postal
+permanece separada. Rotas usam cidades e missões canônicas, históricos ambíguos não contam, e as
+quatro bordas independentes são selecionáveis após o primeiro desbloqueio automático.
 
 **Critérios de sucesso:**
 

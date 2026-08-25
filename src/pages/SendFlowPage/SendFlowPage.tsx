@@ -20,6 +20,7 @@ import {
   getCorrespondenceContentCount,
   getFriendCoordinates,
   getFriendLocationLabel,
+  getReturnReplyRoute,
   getDeliveryStatus,
   getTravelProgress,
   resolveDeliveryPlaceLabel,
@@ -50,6 +51,7 @@ import { useAuth } from "../../integrations/supabase/AuthProvider";
 import { fetchEquipmentData } from "../../integrations/supabase/equipment";
 import { previewMascotSkillModifiers, type SkillPreview } from "../../integrations/supabase/skillPreview";
 import { fetchDeliveryPostmarkSnapshot, previewOriginPostmark, type AuthoritativePostmark } from "../../integrations/supabase/postmarkSnapshot";
+import { previewMascotFlight, type MascotFlightPreview } from "../../integrations/supabase/flightProgression";
 import type { AuthProfile } from "../../integrations/supabase/profile";
 import styles from "./SendFlowPage.module.css";
 
@@ -102,6 +104,7 @@ export function SendFlowPage() {
   const [skillPreviewState,setSkillPreviewState]=useState<"idle"|"loading"|"unavailable">("idle");
   const [replyContextState,setReplyContextState]=useState<"idle"|"loading"|"unavailable">("idle");
   const [postmarkPreview,setPostmarkPreview]=useState<AuthoritativePostmark>();
+  const [flightPreviews,setFlightPreviews]=useState<Record<string,MascotFlightPreview>>({});
 
   useEffect(()=>{if(!requestedReplyId)return;let active=true;setReplyContextState("loading");fetchReturnReplyContext(requestedReplyId).then((value)=>{if(!active)return;setReplyContext(value);setReplyContextState(value?"idle":"unavailable")}).catch(()=>active&&setReplyContextState("unavailable"));return()=>{active=false}},[requestedReplyId]);
   useEffect(()=>{if(!profile){setPostmarkPreview(undefined);return}let active=true;previewOriginPostmark(requestedReplyId??undefined).then((value)=>{if(active)setPostmarkPreview(value)}).catch(()=>{if(active)setPostmarkPreview(undefined)});return()=>{active=false}},[profile,requestedReplyId]);
@@ -126,9 +129,10 @@ export function SendFlowPage() {
   const selectedCorrespondence = availableCorrespondence.find(
     (option) => option.id === selection.correspondenceId,
   );
+  const selectedFlightPreview=selectedMascot?flightPreviews[selectedMascot.id]:undefined;
   const isSelectionComplete = Boolean(selectedFriend && selectedMascot && selectedCorrespondence);
   const isContentValid = isCorrespondenceContentValid(content);
-  const canAdvance = [Boolean(selectedFriend), Boolean(selectedMascot), Boolean(selectedCorrespondence && isContentValid), true, true, false][currentStep];
+  const canAdvance = [Boolean(selectedFriend), Boolean(selectedMascot&&selectedFlightPreview?.eligible), Boolean(selectedCorrespondence && isContentValid), true, true, false][currentStep];
   const selectedPostalStamp = postalStamps.find((stamp) => stamp.id === stampInventoryItemId);
   const previewedPostalStamp = previewStampId === "default" ? undefined : postalStamps.find((stamp) => stamp.id === previewStampId);
 
@@ -172,6 +176,8 @@ export function SendFlowPage() {
     return()=>{active=false};
   },[estimate,selectedFriend,selectedMascot,t]);
 
+  useEffect(()=>{if(!selectedFriend){setFlightPreviews({});return}let active=true;Promise.all(availableMascots.map(async mascot=>[mascot.id,await previewMascotFlight(mascot.id,selectedFriend.id).catch(()=>undefined)] as const)).then(entries=>{if(active)setFlightPreviews(Object.fromEntries(entries.filter((entry):entry is readonly[string,MascotFlightPreview]=>Boolean(entry[1]))))});return()=>{active=false}},[availableMascots,selectedFriend]);
+
   function updateSelection(nextSelection: SendFlowSelection) {
     setSelection((currentSelection) => ({
       ...currentSelection,
@@ -197,7 +203,7 @@ export function SendFlowPage() {
   }
 
   async function handleConfirmSend() {
-    if (!selectedFriend || !selectedMascot || !selectedCorrespondence || isSubmitting) {
+    if (!selectedFriend || !selectedMascot || !selectedCorrespondence || !selectedFlightPreview?.eligible || isSubmitting) {
       return;
     }
 
@@ -321,6 +327,7 @@ export function SendFlowPage() {
                   <span>{t(selectedMascot.speciesKey)}</span>
                   <strong>{selectedMascot.name}</strong>
                   <small>{t("mascot.level")} {selectedMascot.level}</small>
+                  {selectedFlightPreview?<p className={selectedFlightPreview.eligible?styles.hint:styles.error}>{selectedFlightPreview.eligible?t("mascot.routeWithinRange" as never):t("mascot.routeOutOfRange" as never).replace("{distance}",String(selectedFlightPreview.distanceKm)).replace("{range}",String(selectedFlightPreview.maxOneWayKm)).replace("{level}",String(selectedFlightPreview.requiredLevel??20))}</p>:null}
                   <p>{getMascotRouteEffect(
                     selectedMascot,
                     selectedFriend
@@ -456,6 +463,7 @@ export function SendFlowPage() {
                   />
                 </section>
                 <dl className={styles.summaryList}>
+                  {selectedFlightPreview?<><SummaryRow label={t("mascot.familiarity" as never)} value={`${t(`familiarity.${selectedFlightPreview.familiarity.state}` as never)} · ${Math.round((selectedFlightPreview.familiarity.speedMultiplier-1)*100)}%`}/><SummaryRow label={t("mascot.flightRange" as never)} value={`${selectedFlightPreview.distanceKm}/${selectedFlightPreview.maxOneWayKm} km`}/></>:null}
                   <SummaryRow
                     fallback={t("common.unavailable")}
                     label={t("send.selectedFriend")}
@@ -475,14 +483,14 @@ export function SendFlowPage() {
                   {estimate ? <>
                     <SummaryRow label={t("mascot.distance")} value={`${estimate.distanceKm} ${t("units.kilometers")}`} />
                     <SummaryRow label={t("send.preparationTime")} value={formatMinutes(skillPreview?.preparationMinutes ?? estimate.modifiers.preparationMinutes)} />
-                    <SummaryRow label={t("send.outboundDuration")} value={formatDurationHours(skillPreview && selectedMascot ? estimateTravelDurationHours(estimate.distanceKm,estimateMascotSpeedKmh(selectedMascot)*skillPreview.outboundSpeedMultiplier) : estimate.outboundDurationHours)} />
-                    <SummaryRow label={t("send.returnDuration")} value={formatDurationHours(skillPreview && selectedMascot ? estimateTravelDurationHours(estimate.distanceKm,estimateMascotSpeedKmh(selectedMascot)*skillPreview.returnSpeedMultiplier) : estimate.returnDurationHours)} />
+                    <SummaryRow label={t("send.outboundDuration")} value={formatDurationHours(skillPreview && selectedMascot ? estimateTravelDurationHours(estimate.distanceKm,estimateMascotSpeedKmh(selectedMascot)*Math.min(1.25,skillPreview.outboundSpeedMultiplier*(selectedFlightPreview?.familiarity.speedMultiplier??1))) : estimate.outboundDurationHours)} />
+                    <SummaryRow label={t("send.returnDuration")} value={formatDurationHours(skillPreview && selectedMascot ? estimateTravelDurationHours(estimate.distanceKm,estimateMascotSpeedKmh(selectedMascot)*Math.min(1.25,skillPreview.returnSpeedMultiplier*(selectedFlightPreview?.familiarity.speedMultiplier??1))) : estimate.returnDurationHours)} />
                     <SummaryRow label={t("travelWeather.impactRange")} value={t("travelWeather.impactDescription")} />
                   </> : null}
                 </dl>
                 <SkillPreviewSection mascot={selectedMascot} preview={skillPreview} state={skillPreviewState} />
                 <StampButton
-                  disabled={!isSelectionComplete || !isContentValid || isSubmitting || isSendFlowLoading}
+                  disabled={!isSelectionComplete || !selectedFlightPreview?.eligible || !isContentValid || isSubmitting || isSendFlowLoading}
                   onClick={handleConfirmSend}
                 >
                   {isSubmitting ? t("send.sending") : t("send.sendButton")}
@@ -646,14 +654,15 @@ function ReturnReplyFlow({context,contextState,postalStamps,postmarkPreview,prof
   if(contextState==="loading")return <PageShell className={styles.pageShell} hasTopBar><MobileTopBar backTo="/mailbox" title={t("mailbox.returnReplyFlowTitle")}/><SketchPanel title={t("common.loading")}><p>{t("mailbox.returnReplyLoading")}</p></SketchPanel></PageShell>;
   if(!context||contextState==="unavailable"||unavailableReason||context.replyConfirmed||new Date(context.replyDeadline).getTime()<=now)return <PageShell className={styles.pageShell} hasTopBar><MobileTopBar backTo="/mailbox" title={t("mailbox.returnReplyFlowTitle")}/><SketchPanel title={t("mailbox.returnReplyUnavailable")}><p>{t(context?.replyConfirmed||unavailableReason==="confirmed"?"mailbox.returnReplyConfirmed":"mailbox.returnReplyExpired")}</p><Link className={styles.returnLink} to="/mailbox">{t("mailbox.open")}</Link></SketchPanel></PageShell>;
   const replyContext = context;
+  const replyRoute = getReturnReplyRoute(replyContext.originLabel, replyContext.destinationLabel);
   const letterText=content.type==="letter"?content.letterText:""; const selectedStamp=postalStamps.find(item=>item.id===stampId); const previewStamp=postalStamps.find(item=>item.id===previewStampId); const remaining=Math.max(0,new Date(context.replyDeadline).getTime()-now); const remainingLabel=`${Math.floor(remaining/60000)}:${String(Math.floor((remaining%60000)/1000)).padStart(2,"0")}`;
   async function confirm(){if(!letterText.trim()||submitting)return;setSubmitting(true);setError(false);try{await confirmReturnReply(replyContext.deliveryId,letterText,postmark,stampId);setConfirmed(true)}catch{try{const current=await fetchReturnReplyContext(replyContext.deliveryId);if(!current||current.replyConfirmed){setUnavailableReason(current?.replyConfirmed?"confirmed":"expired");return}}catch{/* Preserve the actionable submission error when eligibility cannot be refreshed. */}setError(true)}finally{setSubmitting(false)}}
   if(confirmed)return <PageShell className={styles.pageShell} hasTopBar><MobileTopBar backTo="/mailbox" title={t("mailbox.returnReplyFlowTitle")}/><SketchPanel title={t("mailbox.returnReplyConfirmed")}><p>{t("mailbox.returnReplyConfirmedDescription")}</p><div className={styles.actions}><Link className={styles.primaryLink} to={`/map?deliveryId=${context.deliveryId}`}>{t("mascot.viewTrip")}</Link><Link className={styles.returnLink} to="/mailbox">{t("mailbox.open")}</Link></div></SketchPanel></PageShell>;
   return <PageShell className={styles.pageShell} hasTopBar><MobileTopBar backTo="/mailbox" title={t("mailbox.returnReplyFlowTitle")}/><div className={styles.shell}><div className={styles.replyDeadline}><span>{t("mailbox.returnWindowRemaining")}</span><strong>{remainingLabel}</strong></div><PostalProgress currentStep={step} labels={[t("send.steps.correspondence"),t("send.steps.stamp"),t("send.steps.postmark"),t("send.steps.review")]}/><div className={styles.stepViewport}><div className={styles.flowGrid}>
-    {step===0?<ChoiceSection title={t("mailbox.writeReturnReply")}><CorrespondenceComposer content={content} onChange={setContent} postcards={[]} stickers={[]} senderLocation={context.destinationLabel} senderName={profile?.display_name??t("common.unavailable")}/></ChoiceSection>:null}
+    {step===0?<ChoiceSection title={t("mailbox.writeReturnReply")}><CorrespondenceComposer content={content} onChange={setContent} postcards={[]} stickers={[]} senderLocation={replyRoute.originLabel} senderName={profile?.display_name??t("common.unavailable")}/></ChoiceSection>:null}
     {step===1?<ChoiceSection title={t("send.postalFinishing.stampTitle")}><div className={styles.stampChoices}><StampChoice assetKey={assetKeys.stamps.default} isSelected={!stampId} label={t("send.postalFinishing.defaultStamp")} onPreview={()=>setPreviewStampId("default")} onSelect={()=>setStampId(undefined)}/>{postalStamps.map(item=><StampChoice assetKey={item.assetKey} isSelected={stampId===item.id} key={item.id} label={t(item.nameKey)} onPreview={()=>setPreviewStampId(item.id)} onSelect={()=>setStampId(item.id)}/>)}</div></ChoiceSection>:null}
     {step===2?<ChoiceSection title={t("send.postalFinishing.postmarkTitle")}><PostmarkCustomizer city={profile?.postal_base_city||t("common.unavailable")} country={profile?.postal_base_country||t("common.unavailable")} customization={postmark} date={postmarkPreview?.date} level={reputationLevel} onChange={setPostmark}/></ChoiceSection>:null}
-    {step===3?<SketchPanel className={styles.summaryPanel} title={t("send.summary")} variant="note"><div className={styles.summary}><ReviewContentPreview city={profile?.postal_base_city||t("common.unavailable")} content={content} country={profile?.postal_base_country||t("common.unavailable")} deliveredBy={context.mascotName} destinationLabel={context.originLabel} originLabel={context.destinationLabel} postcards={[]} postmark={postmark} postmarkSnapshot={postmarkPreview} senderName={profile?.display_name??t("common.unavailable")} stampAssetKey={selectedStamp?.assetKey??assetKeys.stamps.default} stickers={[]}/><dl className={styles.summaryList}><SummaryRow label={t("mailbox.toOriginalSender")} value={context.senderName}/><SummaryRow label={t("send.selectedMascot")} value={context.mascotName}/></dl>{error?<p className={styles.error}>{t("mailbox.returnReplySubmitError")}</p>:null}<StampButton disabled={!letterText.trim()||submitting} onClick={()=>void confirm()}>{submitting?t("mailbox.replying"):t("mailbox.sendReturnReply")}</StampButton></div></SketchPanel>:null}
+    {step===3?<SketchPanel className={styles.summaryPanel} title={t("send.summary")} variant="note"><div className={styles.summary}><ReviewContentPreview city={profile?.postal_base_city||t("common.unavailable")} content={content} country={profile?.postal_base_country||t("common.unavailable")} deliveredBy={context.mascotName} destinationLabel={replyRoute.destinationLabel} originLabel={replyRoute.originLabel} postcards={[]} postmark={postmark} postmarkSnapshot={postmarkPreview} senderName={profile?.display_name??t("common.unavailable")} stampAssetKey={selectedStamp?.assetKey??assetKeys.stamps.default} stickers={[]}/><dl className={styles.summaryList}><SummaryRow label={t("mailbox.toOriginalSender")} value={context.senderName}/><SummaryRow label={t("send.selectedMascot")} value={context.mascotName}/></dl>{error?<p className={styles.error}>{t("mailbox.returnReplySubmitError")}</p>:null}<StampButton disabled={!letterText.trim()||submitting} onClick={()=>void confirm()}>{submitting?t("mailbox.replying"):t("mailbox.sendReturnReply")}</StampButton></div></SketchPanel>:null}
   </div></div><nav aria-label={t("send.steps.navigation")} className={styles.stepActions}><button className={styles.backButton} disabled={step===0} onClick={()=>setStep(value=>Math.max(0,value-1))} type="button">{t("send.steps.back")}</button>{step<3?<StampButton disabled={step===0&&!letterText.trim()} onClick={()=>setStep(value=>Math.min(3,value+1))}>{t("send.steps.next")}</StampButton>:null}</nav></div>{previewStampId?<dialog aria-label={t("send.postalFinishing.previewStamp")} className={styles.stampDialog} open><div className={styles.stampDialogPaper}><button className={styles.dialogClose} onClick={()=>setPreviewStampId(undefined)} type="button">{t("send.postalFinishing.closeStampPreview")}</button><AssetImage alt={previewStamp?t(previewStamp.nameKey):t("send.postalFinishing.defaultStamp")} assetKey={previewStamp?.assetKey??assetKeys.stamps.default} className={styles.stampDialogArt}><span aria-hidden="true" /></AssetImage></div></dialog>:null}</PageShell>;
 }
 

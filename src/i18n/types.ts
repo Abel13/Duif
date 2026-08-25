@@ -256,8 +256,11 @@ export type TranslationDictionary = {
     chooseMascot: string;
     bottomNav: string;
     loadingCatalog: string;
+    flightRange:string; naturalSlots:string; flightCapReached:string; nextFlightMilestone:string; unlockAtLevel:string;routeWithinRange:string;routeOutOfRange:string;familiarity:string;
     skillNotice: { title: string; description: string; retiredDescription: string; waterPathRetiredDescription: string; open: string; dialogTitle: string; choose: string; transfer: string; transferPreview: string; close: string };
   };
+  prestige:{firstHorizon:{name:string;description:string};routeAtlas:{name:string;description:string};letterSky:{name:string;description:string};nestAmongStars:{name:string;description:string}};
+  familiarity:{new:string;known:string;familiar:string;mastered:string};
   nestHub: {
     eyebrow: string; title: string; tagline: string; currencySummary: string; seeds: string; crystals: string; settingsSoon: string; defaultAvatar: string; profileName: string; nestName: string; nestOf: string; location: string; levelZero: string; xpZero: string; sections: string; profileTitle: string; profileDescription: string; mascotTitle: string; mascotDescription: string; mailboxTitle: string; mailboxDescription: string; atNest: string; traveling: string; newCorrespondence: string; travelingTitle: string; noTravelTitle: string; noTravelDescription: string;
   };
@@ -1163,6 +1166,26 @@ export type TranslationKey =
   | "mascot.distance"
   | "mascot.status"
   | "mascot.visualPreview"
+  | "mascot.flightRange"
+  | "mascot.naturalSlots"
+  | "mascot.flightCapReached"
+  | "mascot.nextFlightMilestone"
+  | "mascot.unlockAtLevel"
+  | "mascot.routeWithinRange"
+  | "mascot.routeOutOfRange"
+  | "mascot.familiarity"
+  | "familiarity.new"
+  | "familiarity.known"
+  | "familiarity.familiar"
+  | "familiarity.mastered"
+  | "prestige.firstHorizon.name"
+  | "prestige.firstHorizon.description"
+  | "prestige.routeAtlas.name"
+  | "prestige.routeAtlas.description"
+  | "prestige.letterSky.name"
+  | "prestige.letterSky.description"
+  | "prestige.nestAmongStars.name"
+  | "prestige.nestAmongStars.description"
   | "mascot.selectedMascot"
   | "mascot.chooseMascot"
   | "mascot.bottomNav"

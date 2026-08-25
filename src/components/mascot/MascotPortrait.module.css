@@ -170,6 +170,8 @@
   border-radius: 999px;
 }
 
+.prestigeMedallion{filter:drop-shadow(.4rem .55rem 0 rgba(46,42,36,.16))}
+
 @media (max-width: 360px) {
   .postmark {
     opacity: 0.42;

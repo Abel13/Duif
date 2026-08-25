@@ -104,6 +104,9 @@ export type MascotTravelModifiers = {
   skillMitigations?: Record<string, number>;
   skillEffects?: Array<{ skillId: string; level: number; state: "active" | "inactive"; reason: string; weatherDependent?: boolean; impact?: { kind: string; value: number; duration?: number } }>;
   weatherMayChange?: boolean;
+  flightRulesVersion?: number;
+  routeIdentity?: { version: 3; origin: string; destination: string; pairKey: string; originSource: string; destinationSource: string };
+  familiarity?: { state: "new" | "known" | "familiar" | "mastered"; completedCount: number; speedMultiplier: number; nextAt?: number };
 };
 
 export type TutorialTravelBoost = {
@@ -326,6 +329,10 @@ export type MascotAppearance = {
   portraitAssetKey?: OfficialAssetKey;
 };
 
+export type PrestigeBorder = { assetKey:string; catalogKey:string; descriptionKey:TranslationKey; minimumLevel:number; nameKey:TranslationKey; selected:boolean; unlocked:boolean };
+export type MascotFlightState = { level:number; xp:number; nextLevelXp:number; maxOneWayKm:number; naturalSlots:number; functionalCapReached:boolean; selectedBorderKey?:string; borders:PrestigeBorder[] };
+export type MascotFlightPreview = { rulesVersion:58; distanceKm:number; eligible:boolean; requiredLevel?:number; maxOneWayKm:number; naturalSlots:number; routePairKey?:string; familiarity:{state:"new"|"known"|"familiar"|"mastered";completedCount:number;speedMultiplier:number;nextAt?:number} };
+
 export type Mascot = {
   id: string;
   name: string;
@@ -333,6 +340,7 @@ export type Mascot = {
   level: number;
   xp: number;
   nextLevelXp: number;
+  flightState?: MascotFlightState;
   attributes: MascotAttributeSet;
   trait: MascotTrait;
   equipment: EquipmentItem[];

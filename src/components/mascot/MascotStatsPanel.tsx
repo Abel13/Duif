@@ -34,6 +34,7 @@ export function MascotStatsPanel({ mascot }: MascotStatsPanelProps) {
         </div>
       </div>
       <dl className={styles.attributes}>
+        {mascot.flightState?<><div className={styles.attribute}><dt>{t("mascot.flightRange" as never)}</dt><dd>{mascot.flightState.maxOneWayKm} km</dd></div><div className={styles.attribute}><dt>{t("mascot.naturalSlots" as never)}</dt><dd>{mascot.flightState.naturalSlots}</dd></div></>:null}
         {attributes.map(([labelKey, value]) => (
           <div className={styles.attribute} key={labelKey}>
             <dt>{t(labelKey)}</dt>

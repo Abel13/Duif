@@ -7,6 +7,9 @@ import { I18nProvider } from "./i18n";
 import "./styles/reset.css";
 import "./styles/theme.css";
 import "./styles/globals.css";
+import { registerAutomaticPwaUpdates } from "./app/registerAutomaticPwaUpdates";
+
+registerAutomaticPwaUpdates();
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>

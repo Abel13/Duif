@@ -69,6 +69,12 @@ export const assetKeys = {
   profile: { defaultSilhouette: "profile.avatar.defaultSilhouette" },
   textures: { postalPaperWash: "texture.postalPaperWash" },
   postalMarks: { postalCancel: "postalMark.postalCancel", routeDoodle: "postalMark.routeDoodle" },
+  prestige: {
+    firstHorizon: "prestige.border.firstHorizon",
+    routeAtlas: "prestige.border.routeAtlas",
+    letterSky: "prestige.border.letterSky",
+    nestAmongStars: "prestige.border.nestAmongStars",
+  },
 } as const;
 
 type NestedValues<T> = T extends string ? T : { [K in keyof T]: NestedValues<T[K]> }[keyof T];
@@ -77,7 +83,7 @@ export type OfficialAssetKey = string;
 export type OfficialAssetType =
   | "mascotPortrait" | "equipmentIcon" | "rewardThumbnail" | "collectibleThumbnail"
   | "navigationIcon" | "mapControl" | "mapPin" | "currencyIcon" | "shopArtwork"
-  | "texture" | "postalMark" | "postcardArtwork" | "nestArtwork";
+  | "texture" | "postalMark" | "postcardArtwork" | "nestArtwork" | "prestigeBorder";
 
 export type OfficialAssetVersion = {
   key: OfficialAssetKey;
@@ -104,7 +110,7 @@ export type OfficialAssetManifestRow = {
 
 const assetTypes = new Set<OfficialAssetType>([
   "mascotPortrait", "equipmentIcon", "rewardThumbnail", "collectibleThumbnail",
-  "navigationIcon", "mapControl", "mapPin", "currencyIcon", "shopArtwork", "texture", "postalMark", "postcardArtwork", "nestArtwork",
+  "navigationIcon", "mapControl", "mapPin", "currencyIcon", "shopArtwork", "texture", "postalMark", "postcardArtwork", "nestArtwork", "prestigeBorder",
 ]);
 const assetKeyPattern = /^[a-z][a-zA-Z0-9]*(\.[a-zA-Z0-9]+)+$/;
 

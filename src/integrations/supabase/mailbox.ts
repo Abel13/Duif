@@ -123,6 +123,7 @@ export type ActivePostalVisitorRow = {
   mascot_id: string;
   mascot_name: string;
   portrait_asset_key: string | null;
+  prestige_asset_key?: string | null;
 };
 
 export type ActivePostalVisitor = {
@@ -132,6 +133,7 @@ export type ActivePostalVisitor = {
   mascotId: string;
   mascotName: string;
   portraitAssetKey?: OfficialAssetKey;
+  prestigeAssetKey?: OfficialAssetKey;
 };
 
 export function mapActivePostalVisitor(row: ActivePostalVisitorRow): ActivePostalVisitor {
@@ -142,6 +144,7 @@ export function mapActivePostalVisitor(row: ActivePostalVisitorRow): ActivePosta
     mascotId: row.mascot_id,
     mascotName: row.mascot_name,
     portraitAssetKey: isOfficialAssetKey(row.portrait_asset_key) ? row.portrait_asset_key : undefined,
+    prestigeAssetKey: isOfficialAssetKey(row.prestige_asset_key) ? row.prestige_asset_key : undefined,
   };
 }
 

@@ -121,16 +121,24 @@ cada uma tiver sido realmente ativada.
 | 9 | 1.450 |
 | 10 | 1.950 |
 
-Uma ativação deve conceder aproximadamente 8–20 XP conforme duração e intensidade. O valor exato
-por gatilho e os controles contra repetição de rotas triviais permanecem pendentes no [roadmap](./roadmap.md).
+Uma ativação concede `8/12/16/20 XP` para viagens calculadas de até 30, 31–90, 91–240 e acima de
+240 minutos, com mínimo de 10 minutos. Por mascote e par canônico em 24 horas, três ativações são
+integrais, duas valem metade arredondada para cima e as seguintes geram `0 XP` explicável.
 Os efeitos crescem linearmente: um teto de 10% equivale normalmente a 1% por nível; 15%, a 1,5%;
 mitigação de 50%, a 5%; e redução de 20%, a 2%. Efeitos de raridade alteram o peso da chance-base,
 nunca pontos percentuais diretos nem garantia de recompensa rara.
 
 Cada espécie possui um traço inato sem nível, duas skills fixas e uma skill individual escolhida no
 nível 5 do mascote. Há uma troca individual gratuita antes do nível 10 do mascote; depois disso a
-escolha é definitiva e não pode ser refeita com Cristais. A biblioteca aprovada e suas pendências
-estão no [roadmap ativo](./roadmap.md).
+escolha é definitiva e não pode ser refeita com Cristais. A biblioteca aprovada e suas regras
+versionadas estão no [roadmap ativo](./roadmap.md).
+
+## Bordas de prestígio
+
+As bordas são estritamente visuais e pertencem ao mascote. `Primeiro Horizonte`, `Atlas de Rotas`,
+`Céu de Cartas` e `Ninho entre Estrelas` desbloqueiam nos níveis 20, 30, 40 e 50. A maior borda já
+elegível é escolhida automaticamente na primeira vez; depois, novos desbloqueios não substituem a
+escolha manual. Bordas nunca modificam alcance, slots, velocidade, XP, drops ou skills.
 
 ## Familiaridade de rota
 

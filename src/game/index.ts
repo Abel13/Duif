@@ -22,6 +22,7 @@ export {
 } from "./inventory";
 export type { GroupedInventoryItem } from "./inventory";
 export { formatPostalLocationLabel, resolveDeliveryPlaceLabel, type PostalLocationParts } from "./locationLabels";
+export { getReturnReplyRoute, type ReturnReplyRoute } from "./returnReplyRoute";
 export {
   createMapPlaceLabelsGeoJson,
   createDeliveryRouteGeoJson,
@@ -165,11 +166,14 @@ export type {
   InventoryItem,
   LetterContent,
   Mascot,
+  MascotFlightPreview,
+  MascotFlightState,
   MascotAppearance,
   MascotAttributeSet,
   MascotTrait,
   MascotTravelModifiers,
   Player,
+  PrestigeBorder,
   PostcardContent,
   OwnedPostcard,
   OwnedSticker,

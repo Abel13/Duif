@@ -365,8 +365,8 @@ Approved mascot identities for the planned skill redesign:
   at mascot level 5. Skills level only through contextual use, never manual or paid training.
 - Pipoca improves the efficiency of collection but never owns species-exclusive discoveries;
   every discovery remains obtainable with any mascot.
-- Complete skill names, individual choices, approved maxima, and explicitly unresolved triggers
-  são planejados no [roadmap](./roadmap.md) e detalhados em [Progressão e XP](./progression.md).
+- Complete skill names, individual choices, approved maxima, and contextual triggers are versioned
+  in the backend and documented in [Progressão e XP](./progression.md).
 
 Preparation snapshot compatibility:
 

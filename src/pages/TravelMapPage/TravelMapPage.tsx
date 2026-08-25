@@ -4,6 +4,7 @@ import { Binoculars, Clock, CloudSun, Compass, Gauge, Package, Signpost, Traffic
 
 import { AppBottomNav } from "../../components/layout";
 import { TravelMap } from "../../components/map/TravelMap";
+import { MascotPrestigeMedallion } from "../../components/mascot/MascotPrestigeMedallion";
 import { AssetImage, ItemCard, SketchPanel, TravelStatusLabel, TravelWeatherBadge } from "../../components/ui";
 import {
   assetKeys,
@@ -467,6 +468,7 @@ export function TravelMapPage() {
             originTitle={t("mascot.origin")}
             petLabel={displayMascot?.name ?? t("common.unavailable")}
             petPortraitAssetKey={displayMascot?.appearance.portraitAssetKey}
+            petPrestigeAssetKey={displayMascot?.flightState?.borders.find((border)=>border.selected)?.assetKey}
             placeLabels={displayedPlaceLabels}
             petPosition={petPosition.coordinates}
             postalTraffic={postalTraffic}
@@ -494,7 +496,7 @@ export function TravelMapPage() {
                 title={t("mailbox.openVisitorLetter")}
                 to={`/mailbox?deliveryId=${visitor.deliveryId}`}
               >
-                <AssetImage alt="" assetKey={visitor.portraitAssetKey} className={styles.visitorPortrait}><span aria-hidden="true" /></AssetImage>
+                <MascotPrestigeMedallion alt={visitor.mascotName} borderAssetKey={visitor.prestigeAssetKey} className={styles.visitorPortrait} portraitAssetKey={visitor.portraitAssetKey} size="small" />
                 <span>{getPostalVisitorMinutes(visitor.departsAt, now.getTime())} min</span>
               </Link>
             ))}

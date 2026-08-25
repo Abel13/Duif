@@ -14,6 +14,7 @@ import {
 } from "./catalogMappers";
 import type { Database } from "./database.types";
 import type { TravelWeatherSummary } from "../../game/travelWeather";
+import { fetchMascotFlightState, type MascotFlightState } from "./flightProgression";
 
 export type PlayerMascotRow = Database["public"]["Tables"]["player_mascots"]["Row"];
 export type DeliveryRow = Database["public"]["Tables"]["deliveries"]["Row"];
@@ -244,19 +245,21 @@ export async function fetchAuthenticatedMascots(profileId: string): Promise<Masc
   const mascotIds = mascotRows.map((mascotRow) => mascotRow.id);
   const templateIds = [...new Set(mascotRows.map((mascotRow) => mascotRow.template_id))];
 
-  const [{ data: deliveryRows }, { data: speciesRows }, skillStates] = await Promise.all([
+  const [{ data: deliveryRows }, { data: speciesRows }, skillStates, flightStates] = await Promise.all([
     supabase.from("deliveries").select("*").in("mascot_id", mascotIds),
     supabase.from("mascot_templates").select("id, species_key").eq("status", "active").in("id", templateIds),
     Promise.all(mascotIds.map(async (mascotId) => {
       const { data } = await supabase.rpc("get_mascot_skill_state", { target_mascot_id: mascotId });
       return [mascotId, data] as const;
     })),
+    Promise.all(mascotIds.map(async(mascotId)=>[mascotId,await fetchMascotFlightState(mascotId).catch(()=>undefined)] as const)),
   ]);
 
   const skillStateByMascotId = new Map(skillStates);
+  const flightStateByMascotId = new Map<string,MascotFlightState|undefined>(flightStates);
   return composeAuthenticatedMascots({
     deliveryRows: deliveryRows ?? [],
     mascotRows,
     speciesRows: speciesRows ?? [],
-  }).map((mascot) => applySkillState(mascot, skillStateByMascotId.get(mascot.id)));
+  }).map((mascot) => ({...applySkillState(mascot, skillStateByMascotId.get(mascot.id)),flightState:flightStateByMascotId.get(mascot.id)}));
 }

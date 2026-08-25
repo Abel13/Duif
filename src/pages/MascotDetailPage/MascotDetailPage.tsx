@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { AppBottomNav, PageShell } from "../../components/layout";
 import { MascotLoadoutEditor } from "../../components/mascot/MascotLoadoutEditor";
 import { MascotPortraitNavigator } from "../../components/mascot/MascotPortraitNavigator";
+import { MascotPrestigeSelector } from "../../components/mascot/MascotPrestigeSelector";
 import { MascotSkillsPanel } from "../../components/mascot/MascotSkillsPanel";
 import { MascotSkillNotice } from "../../components/mascot/MascotSkillNotice";
 import { MascotStatsPanel } from "../../components/mascot/MascotStatsPanel";
@@ -25,7 +26,7 @@ import styles from "./MascotDetailPage.module.css";
 export function MascotDetailPage() {
   const { mascotId } = useParams();
   const navigate = useNavigate();
-  const { isLoading, mascots } = useMascotCatalog();
+  const { isLoading, mascots, reload } = useMascotCatalog();
   const { t } = useTranslation();
   const storedMascotId = useMemo(
     () => readStoredNestMascotId(typeof window === "undefined" ? undefined : window.localStorage),
@@ -153,6 +154,7 @@ export function MascotDetailPage() {
                 <span style={{ background: mascot.appearance.primaryColor }} />
                 <span style={{ background: mascot.appearance.accentColor }} />
               </div>
+              <MascotPrestigeSelector mascot={mascot} onChanged={reload}/>
             </SketchPanel>
 
             <SketchPanel title={t("mascot.skills")}>
