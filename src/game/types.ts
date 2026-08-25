@@ -92,6 +92,7 @@ export type DeliveryStatus =
 
 export type MascotTravelModifiers = {
   version: 1 | 2 | 3;
+  skillRulesVersion?: number;
   preparationMinutes: number;
   outboundSpeedMultiplier: number;
   returnSpeedMultiplier: number;
@@ -101,7 +102,7 @@ export type MascotTravelModifiers = {
   isLongRoute: boolean;
   skillContext?: Record<string, boolean | number | string>;
   skillMitigations?: Record<string, number>;
-  skillEffects?: Array<{ skillId: string; level: number; state: "active" | "inactive"; reason: string; weatherDependent?: boolean }>;
+  skillEffects?: Array<{ skillId: string; level: number; state: "active" | "inactive"; reason: string; weatherDependent?: boolean; impact?: { kind: string; value: number; duration?: number } }>;
   weatherMayChange?: boolean;
 };
 
@@ -337,6 +338,12 @@ export type Mascot = {
     chosenSkillId?: string;
     freeChangeUsed: boolean;
     migrationPending: boolean;
+    pendingTransfer?: {
+      kind: "urbanStartRetired" | "waterPathRetired";
+      sourceSkillId: string;
+      sourceTotalXp: number;
+      targets: Array<{ skillId: string; level: number; xp: number; nextLevelXp: number }>;
+    };
   };
   appearance: MascotAppearance;
   currentDelivery?: Delivery;

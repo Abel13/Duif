@@ -256,6 +256,7 @@ export type TranslationDictionary = {
     chooseMascot: string;
     bottomNav: string;
     loadingCatalog: string;
+    skillNotice: { title: string; description: string; retiredDescription: string; waterPathRetiredDescription: string; open: string; dialogTitle: string; choose: string; transfer: string; transferPreview: string; close: string };
   };
   nestHub: {
     eyebrow: string; title: string; tagline: string; currencySummary: string; seeds: string; crystals: string; settingsSoon: string; defaultAvatar: string; profileName: string; nestName: string; nestOf: string; location: string; levelZero: string; xpZero: string; sections: string; profileTitle: string; profileDescription: string; mascotTitle: string; mascotDescription: string; mailboxTitle: string; mailboxDescription: string; atNest: string; traveling: string; newCorrespondence: string; travelingTitle: string; noTravelTitle: string; noTravelDescription: string;
@@ -632,6 +633,11 @@ export type TranslationDictionary = {
     waterPath: { name: string; description: string; };
     waterproofFeathers: { name: string; description: string; };
     firstTrip: { name: string; description: string; };
+    nightVigil: { name: string; description: string; };
+    silentFlight: { name: string; description: string; };
+    lunarMemory: { name: string; description: string; };
+    nightLoad: { name: string; description: string; };
+    dawnGuardian: { name: string; description: string; };
   };
   delivery: {
     progress: string;
@@ -1161,6 +1167,16 @@ export type TranslationKey =
   | "mascot.chooseMascot"
   | "mascot.bottomNav"
   | "mascot.loadingCatalog"
+  | "mascot.skillNotice.title"
+  | "mascot.skillNotice.description"
+  | "mascot.skillNotice.retiredDescription"
+  | "mascot.skillNotice.waterPathRetiredDescription"
+  | "mascot.skillNotice.open"
+  | "mascot.skillNotice.dialogTitle"
+  | "mascot.skillNotice.choose"
+  | "mascot.skillNotice.transfer"
+  | "mascot.skillNotice.transferPreview"
+  | "mascot.skillNotice.close"
   | "send.startAction"
   | "send.eyebrow"
   | "send.title"
@@ -1415,6 +1431,11 @@ export type TranslationKey =
   | "skills.waterPath.name" | "skills.waterPath.description"
   | "skills.waterproofFeathers.name" | "skills.waterproofFeathers.description"
   | "skills.firstTrip.name" | "skills.firstTrip.description"
+  | "skills.nightVigil.name" | "skills.nightVigil.description"
+  | "skills.silentFlight.name" | "skills.silentFlight.description"
+  | "skills.lunarMemory.name" | "skills.lunarMemory.description"
+  | "skills.nightLoad.name" | "skills.nightLoad.description"
+  | "skills.dawnGuardian.name" | "skills.dawnGuardian.description"
   | "delivery.progress"
   | "delivery.remainingTime"
   | "delivery.routePreview"

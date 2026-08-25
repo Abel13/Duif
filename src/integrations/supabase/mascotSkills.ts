@@ -19,3 +19,17 @@ export async function resolveSoftLandingMigration(mascotId: string, skillId: "sk
   });
   if (error) throw error;
 }
+
+export async function resolveRetiredUrbanStartTransfer(mascotId: string, skillId: "skill-trovao-solar-wing" | "skill-trovao-aerodynamic-load") {
+  const supabase = getSupabaseClient();
+  if (!supabase) throw new Error("Supabase is unavailable");
+  const { error } = await supabase.rpc("resolve_retired_urban_start_transfer", { target_mascot_id: mascotId, target_skill_id: skillId });
+  if (error) throw error;
+}
+
+export async function resolveRetiredWaterPathTransfer(mascotId: string, skillId: "skill-pipoca-waterproof-feathers" | "skill-pipoca-first-trip") {
+  const supabase = getSupabaseClient();
+  if (!supabase) throw new Error("Supabase is unavailable");
+  const { error } = await supabase.rpc("resolve_retired_water_path_transfer", { target_mascot_id: mascotId, target_skill_id: skillId });
+  if (error) throw error;
+}

@@ -3,7 +3,7 @@ import { mapSkillPreviewPayload } from "./skillPreview";
 
 describe("skill preview mapper",()=>{
   it("accepts explicit v3 effects and drops malformed entries",()=>{
-    expect(mapSkillPreviewPayload({weatherMayChange:true,skillEffects:[{skillId:"skill-trovao-crosswind",level:4,state:"active",reason:"snapshot",weatherDependent:true},{skillId:3}]})).toEqual({weatherMayChange:true,skillEffects:[{skillId:"skill-trovao-crosswind",level:4,state:"active",reason:"snapshot",weatherDependent:true}]});
+    expect(mapSkillPreviewPayload({version:3,skillRulesVersion:59,preparationMinutes:4,outboundSpeedMultiplier:1,returnSpeedMultiplier:1,discoveryRadiusMultiplier:1,rarityWeightMultiplier:1,weatherMayChange:true,skillEffects:[{skillId:"skill-trovao-crosswind",level:4,state:"active",reason:"snapshot",weatherDependent:true},{skillId:3}]})).toEqual({version:3,skillRulesVersion:59,preparationMinutes:4,outboundSpeedMultiplier:1,returnSpeedMultiplier:1,discoveryRadiusMultiplier:1,rarityWeightMultiplier:1,weatherMayChange:true,skillEffects:[{skillId:"skill-trovao-crosswind",level:4,state:"active",reason:"snapshot",weatherDependent:true}]});
   });
   it("rejects payloads without an effects array",()=>expect(mapSkillPreviewPayload({version:3})).toBeUndefined());
 });

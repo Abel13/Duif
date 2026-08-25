@@ -1,6 +1,7 @@
-.banner { display:grid; gap:var(--space-2); }
-.banner p { margin:0; color:var(--color-postal-brown); }
-.dialog { width:min(34rem,calc(100vw - 2rem)); max-height:calc(100dvh - 2rem); padding:0; border:0; background:transparent; }
+.banner { display:grid; gap:var(--space-2); padding:var(--space-3); border:1px dashed rgb(139 94 60/.48); background:var(--color-paper-light); }
+.banner h3,.banner p { margin:0; }
+.banner p { color:var(--color-postal-brown); }
+.dialog { width:min(34rem,calc(100vw - 2rem)); max-height:calc(100dvh - 2rem); padding:0; border:0; background:transparent; z-index:1000; }
 .dialog::backdrop { background:rgb(46 42 36/.72); }
 .paper { display:grid; gap:var(--space-3); max-height:calc(100dvh - 2rem); overflow:auto; padding:var(--space-4); border:3px double var(--color-postal-brown); border-radius:.35rem .7rem .45rem .8rem; background:var(--color-paper); box-shadow:var(--shadow-paper-lifted); }
 .paper h2,.paper h3,.paper p { margin:0; }.paper ul { display:grid; gap:var(--space-3); padding:0; margin:0; list-style:none; }.paper li { display:grid; gap:var(--space-2); padding:var(--space-3); border:1px dashed rgb(139 94 60/.48); }.close { justify-self:end; width:2.75rem; height:2.75rem; border:1px solid var(--color-postal-brown); background:var(--color-paper-light); color:var(--color-ink); font:inherit; font-size:1.4rem; cursor:pointer; }

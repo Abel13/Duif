@@ -70,7 +70,7 @@ export function deriveMascotTravelModifiers(
 export function getDeliveryTravelModifiers(
   modifiers: MascotTravelModifiers | undefined,
 ): MascotTravelModifiers {
-  return modifiers?.version === 1 || modifiers?.version === 2
+  return modifiers?.version === 1 || modifiers?.version === 2 || modifiers?.version === 3
     ? modifiers
     : NEUTRAL_TRAVEL_MODIFIERS;
 }

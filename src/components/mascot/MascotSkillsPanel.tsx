@@ -6,12 +6,17 @@ type MascotSkillsPanelProps = {
   skills: Skill[];
 };
 
+export function getVisibleMascotSkills(skills: Skill[]) {
+  return skills.filter((skill) => skill.category !== "individual" || skill.isSelected === true);
+}
+
 export function MascotSkillsPanel({ skills }: MascotSkillsPanelProps) {
   const { t } = useTranslation();
+  const visibleSkills = getVisibleMascotSkills(skills);
 
   return (
     <ul className={styles.list}>
-      {skills.map((skill) => (
+      {visibleSkills.map((skill) => (
         <li className={styles.skill} key={skill.id}>
           <span className={styles.name}>{t(skill.nameKey)}</span>
           <span className={styles.level}>

@@ -3520,6 +3520,14 @@ export type Database = {
         Args: { target_mascot_id: string; target_skill_id: string }
         Returns: undefined
       }
+      resolve_retired_urban_start_transfer: {
+        Args: { target_mascot_id: string; target_skill_id: string }
+        Returns: undefined
+      }
+      resolve_retired_water_path_transfer: {
+        Args: { target_mascot_id: string; target_skill_id: string }
+        Returns: undefined
+      }
       preview_mascot_skill_modifiers: {
         Args: { target_mascot_id: string; destination_key: string; distance_km: number }
         Returns: Json

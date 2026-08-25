@@ -19,7 +19,7 @@ export type PlayerMascotRow = Database["public"]["Tables"]["player_mascots"]["Ro
 export type DeliveryRow = Database["public"]["Tables"]["deliveries"]["Row"];
 export type MascotSpeciesRow = Pick<MascotTemplateRow, "id" | "species_key">;
 
-type MascotSkillStatePayload = { skills?: unknown; chosenSkillId?: unknown; freeChangeUsed?: unknown; migrationPending?: unknown };
+type MascotSkillStatePayload = { skills?: unknown; chosenSkillId?: unknown; freeChangeUsed?: unknown; migrationPending?: unknown; pendingTransfer?: unknown };
 
 function getMascotPublicId(row: PlayerMascotRow) {
   return row.id;
@@ -205,10 +205,20 @@ function applySkillState(mascot: Mascot, value: unknown): Mascot {
   if (!Array.isArray(skills)) return mascot;
   try {
     const source = value as MascotSkillStatePayload;
+    const pendingTransferSource = source.pendingTransfer && typeof source.pendingTransfer === "object" && !Array.isArray(source.pendingTransfer)
+      ? source.pendingTransfer as Record<string, unknown> : undefined;
+    const pendingTargets = Array.isArray(pendingTransferSource?.targets) ? pendingTransferSource.targets.flatMap((target) => {
+      if (!target || typeof target !== "object" || Array.isArray(target)) return [];
+      const candidate=target as Record<string,unknown>;
+      return typeof candidate.skillId==="string"&&typeof candidate.level==="number"&&typeof candidate.xp==="number"&&typeof candidate.nextLevelXp==="number"
+        ? [{skillId:candidate.skillId,level:candidate.level,xp:candidate.xp,nextLevelXp:candidate.nextLevelXp}] : [];
+    }) : [];
     return { ...mascot, skills: mapSkills(skills as never, mascot.skills), skillState: {
       chosenSkillId: typeof source.chosenSkillId === "string" ? source.chosenSkillId : undefined,
       freeChangeUsed: source.freeChangeUsed === true,
       migrationPending: source.migrationPending === true,
+      pendingTransfer: (pendingTransferSource?.kind==="urbanStartRetired"||pendingTransferSource?.kind==="waterPathRetired")&&typeof pendingTransferSource.sourceSkillId==="string"&&typeof pendingTransferSource.sourceTotalXp==="number"
+        ? {kind:pendingTransferSource.kind,sourceSkillId:pendingTransferSource.sourceSkillId,sourceTotalXp:pendingTransferSource.sourceTotalXp,targets:pendingTargets} : undefined,
     } };
   } catch {
     return mascot;

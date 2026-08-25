@@ -464,9 +464,9 @@ export function SendFlowPage() {
                   <SummaryRow label={t("send.postalFinishing.summaryLabel")} value={`${stampInventoryItemId ? t(postalStamps.find((stamp) => stamp.id === stampInventoryItemId)?.nameKey ?? "send.postalFinishing.defaultStamp") : t("send.postalFinishing.defaultStamp")} · ${t(`send.postalFinishing.models.${postmark.model}`)} / ${t(`send.postalFinishing.colors.${postmark.color}`)}`} />
                   {estimate ? <>
                     <SummaryRow label={t("mascot.distance")} value={`${estimate.distanceKm} ${t("units.kilometers")}`} />
-                    <SummaryRow label={t("send.preparationTime")} value={formatMinutes(estimate.modifiers.preparationMinutes)} />
-                    <SummaryRow label={t("send.outboundDuration")} value={formatDurationHours(estimate.outboundDurationHours)} />
-                    <SummaryRow label={t("send.returnDuration")} value={formatDurationHours(estimate.returnDurationHours)} />
+                    <SummaryRow label={t("send.preparationTime")} value={formatMinutes(skillPreview?.preparationMinutes ?? estimate.modifiers.preparationMinutes)} />
+                    <SummaryRow label={t("send.outboundDuration")} value={formatDurationHours(skillPreview && selectedMascot ? estimateTravelDurationHours(estimate.distanceKm,estimateMascotSpeedKmh(selectedMascot)*skillPreview.outboundSpeedMultiplier) : estimate.outboundDurationHours)} />
+                    <SummaryRow label={t("send.returnDuration")} value={formatDurationHours(skillPreview && selectedMascot ? estimateTravelDurationHours(estimate.distanceKm,estimateMascotSpeedKmh(selectedMascot)*skillPreview.returnSpeedMultiplier) : estimate.returnDurationHours)} />
                     <SummaryRow label={t("travelWeather.impactRange")} value={t("travelWeather.impactDescription")} />
                   </> : null}
                 </dl>
@@ -973,7 +973,7 @@ function ConfirmationPanel({
 function skillPreviewFromDelivery(delivery: Delivery): SkillPreview | undefined {
   const modifiers=delivery.travelModifiers;
   if(modifiers?.version!==3||!modifiers.skillEffects)return undefined;
-  return {weatherMayChange:modifiers.weatherMayChange===true,skillEffects:modifiers.skillEffects.flatMap((effect)=>
+  return {version:3,skillRulesVersion:modifiers.skillRulesVersion,preparationMinutes:modifiers.preparationMinutes,outboundSpeedMultiplier:modifiers.outboundSpeedMultiplier,returnSpeedMultiplier:modifiers.returnSpeedMultiplier,discoveryRadiusMultiplier:modifiers.discoveryRadiusMultiplier,rarityWeightMultiplier:modifiers.rarityWeightMultiplier,weatherMayChange:modifiers.weatherMayChange===true,skillEffects:modifiers.skillEffects.flatMap((effect)=>
     (effect.reason==="snapshot"||effect.reason==="conditionNotMet")
       ? [{...effect,reason:effect.reason,weatherDependent:effect.weatherDependent===true}]
       : [])};
@@ -985,9 +985,15 @@ function SkillPreviewSection({mascot,preview,state}:{mascot?:Mascot;preview?:Ski
     <h3>{t("send.skillPreview.title")}</h3>
     {state==="loading"?<p>{t("send.skillPreview.loading")}</p>:null}
     {state==="unavailable"?<p>{t("send.skillPreview.unavailable")}</p>:null}
-    {preview?<ul>{preview.skillEffects.map((effect)=>{const skill=mascot?.skills.find((candidate)=>candidate.id===effect.skillId);return <li key={effect.skillId}><strong>{skill?t(skill.nameKey):effect.skillId}</strong><span>{effect.state==="active"?t(effect.weatherDependent?"send.skillPreview.weatherDependent":"send.skillPreview.active"):t("send.skillPreview.inactive")}</span><small>{t(`send.skillPreview.reasons.${effect.reason}` as TranslationKey)}</small></li>})}</ul>:null}
+    {preview?<ul>{preview.skillEffects.map((effect)=>{const skill=mascot?.skills.find((candidate)=>candidate.id===effect.skillId);return <li key={effect.skillId}><strong>{skill?t(skill.nameKey):effect.skillId}</strong><span>{effect.state==="active"?t(effect.weatherDependent?"send.skillPreview.weatherDependent":"send.skillPreview.active"):t("send.skillPreview.inactive")}</span>{effect.impact?<small>{formatSkillImpact(effect.impact)}</small>:null}<small>{t(`send.skillPreview.reasons.${effect.reason}` as TranslationKey)}</small></li>})}</ul>:null}
     {preview?.weatherMayChange?<p className={styles.hint}>{t("send.skillPreview.weatherNotice")}</p>:null}
   </section>;
+}
+
+function formatSkillImpact(impact:{kind:string;value:number;duration?:number}) {
+  if(impact.kind==="preparationMinutes")return `${impact.value.toFixed(1)} min`;
+  const value=`${impact.value>=0?"+":""}${Math.round(impact.value*1000)/10}%`;
+  return impact.duration===undefined?value:`${value} · +${Math.round(impact.duration*1000)/10}%`;
 }
 
 function formatDurationHours(durationHours: number) {
