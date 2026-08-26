@@ -165,6 +165,9 @@ Postcards:
   art plan; the current catalog does not fabricate city art.
 - Permanent city/event cards and finite paid-art copies are different ownership modes. Sending a
   permanent unlocked card never decrements it; sending a paid-art card consumes one granted copy.
+- Every Lugar Memorável has one paired official postcard. The first eligible passage that
+  unlocks the place also unlocks that permanent postcard for the mascot owner's profile,
+  idempotently. It can be sent without being consumed.
 - User-uploaded photo postcards are excluded from the first commercial shop prototype.
 - May include a short written message on the back. The current prototype uses 180
   characters.
@@ -578,6 +581,21 @@ backend when the delivery is created:
 
 Deliveries created before this version keep `route_discovery_version = null`. They receive no
 backfill and continue using the local visual fallback, preserving their historical outcome.
+
+### Lugares Memoráveis
+
+Lugares Memoráveis são descobertas permanentes do perfil, separadas da carga de rota. Em novas
+viagens não tutoriais, o backend materializa pontos a até 25 km da ida e desbloqueia o lugar no
+instante estimado da passagem. O retorno não duplica o encontro e viagens anteriores à versão da
+regra não recebem backfill.
+
+Somente o dono do mascote desbloqueia o lugar. Lugares bloqueados não são enviados ao cliente; os
+desbloqueados permanecem disponíveis no mapa para todos os mascotes do perfil. Na primeira
+passagem, o mesmo ato concede de forma idempotente o cartão postal oficial permanente vinculado ao
+lugar. O cartão não ocupa carga, não é consumido ao enviar e não pode ser concedido novamente.
+
+Além desse cartão pareado, Lugares Memoráveis não concedem inventário, XP, Reputação Postal,
+moeda, bônus de rota ou acesso exclusivo.
 
 ## Shop and Monetization Rules
 

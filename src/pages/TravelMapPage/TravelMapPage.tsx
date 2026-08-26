@@ -1,6 +1,6 @@
 import { useMemo, useState, useEffect, useRef, type MouseEvent, type ReactNode } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { AirTrafficControl, Binoculars, Clock, CloudSun, Compass, Gauge, Package, Signpost, X } from "@phosphor-icons/react";
+import { AirTrafficControl, Binoculars, Clock, CloudSun, Compass, Gauge, MapPin, Package, Signpost, X } from "@phosphor-icons/react";
 
 import { AppBottomNav } from "../../components/layout";
 import { TravelMap } from "../../components/map/TravelMap";
@@ -38,6 +38,7 @@ import {
   type RouteDiscoveryEventOrigin,
   type RouteDiscoveryVisualState,
   type TravelLeg,
+  type WorldLandmark,
 } from "../../game";
 import { useTravelVisualTheme } from "../../game/useTravelVisualTheme";
 import { usePostalTraffic } from "../../game/usePostalTraffic";
@@ -46,6 +47,7 @@ import { useMascotCatalog } from "../../game/useMascotCatalog";
 import { useAuth } from "../../integrations/supabase/AuthProvider";
 import { usePostalFriends } from "../../integrations/supabase/usePostalFriends";
 import { fetchActivePostalVisitors, getPostalVisitorMinutes, type ActivePostalVisitor } from "../../integrations/supabase/mailbox";
+import { acknowledgeWorldLandmark, reconcileWorldLandmarks } from "../../integrations/supabase/worldLandmarks";
 import { type TranslationKey, useTranslation } from "../../i18n";
 import styles from "./TravelMapPage.module.css";
 import { isMapCameraTargetDisabled } from "../../components/map/travelMapCamera";
@@ -77,6 +79,9 @@ export function TravelMapPage() {
   const [trafficDialogOpen, setTrafficDialogOpen] = useState(false);
   const [discoveryDialogOpen, setDiscoveryDialogOpen] = useState(false);
   const [postalVisitors, setPostalVisitors] = useState<ActivePostalVisitor[]>([]);
+  const [landmarks,setLandmarks]=useState<WorldLandmark[]>([]);
+  const [selectedLandmark,setSelectedLandmark]=useState<WorldLandmark>();
+  const [landmarkDialogOpen,setLandmarkDialogOpen]=useState(false);
   const [newVisitorIds, setNewVisitorIds] = useState<Set<string>>(() => new Set());
   const tripStatusTriggerRef = useRef<HTMLElement | null>(null);
   const highlightTimersRef = useRef<Map<string, number>>(new Map());
@@ -225,6 +230,17 @@ export function TravelMapPage() {
       document.removeEventListener("visibilitychange", refreshWhenVisible);
     };
   }, []);
+
+  useEffect(()=>{
+    let stale=false;
+    const refresh=async()=>{try{const next=await reconcileWorldLandmarks();if(!stale)setLandmarks(next);}catch{/* Keep the map usable while reconciliation retries. */}};
+    void refresh();
+    const interval=window.setInterval(refresh,liveTickMs);
+    const visible=()=>{if(document.visibilityState==="visible")void refresh();};
+    document.addEventListener("visibilitychange",visible);
+    window.addEventListener("focus",refresh);
+    return()=>{stale=true;window.clearInterval(interval);document.removeEventListener("visibilitychange",visible);window.removeEventListener("focus",refresh);};
+  },[profile?.id]);
 
   useEffect(() => {
     const updateTrafficClock = () => {
@@ -402,6 +418,17 @@ export function TravelMapPage() {
     setTrafficDialogOpen(true);
   }
 
+  function selectLandmark(catalogKey:string){
+    const landmark=landmarks.find((item)=>item.catalogKey===catalogKey); if(!landmark)return;
+    setFollowMascot(false);setSelection({kind:"landmark",landmarkKey:catalogKey});
+    setFocusTarget({kind:"landmark",landmarkKey:catalogKey});setSelectedLandmark(landmark);setLandmarkDialogOpen(true);
+  }
+
+  async function acknowledgeLandmark(landmark:WorldLandmark){
+    setLandmarks((items)=>items.map((item)=>item.catalogKey===landmark.catalogKey?{...item,announcementPending:false}:item));
+    try{await acknowledgeWorldLandmark(landmark.catalogKey);}catch{/* Durable state is reconciled on the next refresh. */}
+  }
+
   function closeRewardDetails() {
     setFollowMascot(false);
     setSelection(null);
@@ -463,6 +490,7 @@ export function TravelMapPage() {
             onPetSelect={() => openTripStatus()}
             onRewardDiscoveries={handleRewardDiscoveries}
             onRewardSelect={selectReward}
+            onLandmarkSelect={selectLandmark}
             onTrafficSelect={selectTraffic}
             onViewportChange={updatePostalTrafficAnchor}
             originLabel={originLabel}
@@ -476,6 +504,8 @@ export function TravelMapPage() {
             rewardLabels={rewardLabels}
             rewardStates={rewardStates}
             rewards={completedMap ? [] : rewards}
+            landmarks={landmarks}
+            landmarkLabels={Object.fromEntries(landmarks.map((item)=>[item.catalogKey,t(item.nameKey)]))}
             selection={selection}
             showRouteLabels={journeyPhase === "traveling"}
             visualTheme={visualTheme}
@@ -486,7 +516,7 @@ export function TravelMapPage() {
           <div className={styles.mapTravelStatus}><TravelStatusLabel mascotName={displayMascot.name} statusLabel={t(`delivery.status.${status}`)}/></div>
         ) : null}
 
-        {(activePostalVisitors.length > 0 || (journeyPhase === "traveling" && displayMascot && (delivery.segmentedTravel || visiblePostalTraffic.length > 0 || rewards.length > 0))) ? (
+        {(activePostalVisitors.length > 0 || (journeyPhase === "traveling" && displayMascot && (landmarks.length > 0 || delivery.segmentedTravel || visiblePostalTraffic.length > 0 || rewards.length > 0))) ? (
           <nav aria-label={t("map.activeMapTools")} className={styles.activeMapTools}>
             {activePostalVisitors.map((visitor) => (
               <Link
@@ -504,6 +534,7 @@ export function TravelMapPage() {
             {journeyPhase === "traveling" && displayMascot && delivery.segmentedTravel ? <TravelWeatherBadge baseSpeedKmh={delivery.animalSpeedKmh} isDay={!visualTheme.isNight} mascotName={displayMascot.name} summary={delivery.segmentedTravel} /> : null}
             {journeyPhase === "traveling" && visiblePostalTraffic.length > 0 ? <button aria-label={t("postalTraffic.title")} className={styles.activeToolButton} onClick={() => setTrafficDialogOpen(true)} title={t("postalTraffic.title")} type="button"><AirTrafficControl aria-hidden="true" weight="duotone" /><span>{visiblePostalTraffic.length}</span></button> : null}
             {journeyPhase === "traveling" && rewards.length > 0 ? <button aria-label={t("map.discoveries")} className={styles.activeToolButton} data-new={newDiscoveryIds.size > 0 || undefined} onClick={() => { closeRewardDetails(); setDiscoveryDialogOpen(true); }} title={t("map.discoveries")} type="button"><Binoculars aria-hidden="true" weight="duotone" /><span>{discoveredCount}/{rewards.length}</span></button> : null}
+            {journeyPhase==="traveling"&&landmarks.length>0?<button aria-label={t("map.landmarks.title")} className={styles.activeToolButton} data-new={landmarks.some((item)=>item.announcementPending)||undefined} onClick={()=>{setSelectedLandmark(landmarks[0]);setLandmarkDialogOpen(true);}} title={t("map.landmarks.title")} type="button"><MapPin aria-hidden="true" weight="duotone"/><span>{landmarks.length}</span></button>:null}
           </nav>
         ) : null}
 
@@ -515,6 +546,8 @@ export function TravelMapPage() {
               : `${discoveryToast.length} ${t("map.discoveries")}`}</span>
           </div>
         ) : null}
+
+        {landmarks.find((item)=>item.announcementPending) ? <LandmarkBanner landmark={landmarks.find((item)=>item.announcementPending)!} onDismiss={acknowledgeLandmark} onOpen={(landmark)=>{void acknowledgeLandmark(landmark);selectLandmark(landmark.catalogKey);}}/>:null}
 
         {finishedDeliveries.length > 0 ? (
           <div className={styles.finishedDeliveryAlert} role="status">
@@ -593,6 +626,7 @@ export function TravelMapPage() {
 
         {trafficDialogOpen?<PostalTrafficDialog onClose={()=>setTrafficDialogOpen(false)} onSelect={selectTraffic} onShowList={closeTrafficDetails} postalTraffic={visiblePostalTraffic} rangeState={selectedTrafficRange} selectedTraffic={selectedTraffic}/>:null}
         {discoveryDialogOpen?<RouteDiscoveryDialog discoveredCount={discoveredCount} onClose={()=>setDiscoveryDialogOpen(false)} onSelect={selectReward} onShowList={closeRewardDetails} rewardStates={rewardStates} rewards={rewards} selectedReward={selectedReward} sourceLabel={t(delivery.routeDiscoveryVersion?"map.persistedRewards":"map.mockedRewards")}/>:null}
+        {landmarkDialogOpen&&selectedLandmark?<LandmarkDialog landmark={selectedLandmark} landmarks={landmarks} onClose={()=>{setLandmarkDialogOpen(false);setSelection(null);}} onSelect={selectLandmark}/>:null}
 
         {tripStatusOpen && journeyPhase !== "completed" ? (
           <TripStatusDialog
@@ -752,6 +786,10 @@ function PostalTrafficContent({
     </>
   );
 }
+
+function LandmarkBanner({landmark,onDismiss,onOpen}:{landmark:WorldLandmark;onDismiss:(landmark:WorldLandmark)=>void;onOpen:(landmark:WorldLandmark)=>void}){const{t}=useTranslation();return <aside className={styles.landmarkBanner} role="status"><AssetImage alt="" assetKey={landmark.assetKey} className={styles.landmarkBannerImage}><span aria-hidden="true"/></AssetImage><div><strong>{t("map.landmarks.discovered")}</strong><span>{t(landmark.nameKey)}</span></div><button onClick={()=>onOpen(landmark)} type="button">{t("map.landmarks.learnMore")}</button><button aria-label={t("map.landmarks.dismiss")} onClick={()=>onDismiss(landmark)} type="button"><X aria-hidden="true"/></button></aside>}
+
+function LandmarkDialog({landmark,landmarks,onClose,onSelect}:{landmark:WorldLandmark;landmarks:WorldLandmark[];onClose:()=>void;onSelect:(key:string)=>void}){const{t}=useTranslation();const ref=useRef<HTMLDialogElement>(null);useEffect(()=>ref.current?.showModal(),[]);return <dialog aria-labelledby="landmark-dialog-title" className={styles.trafficDialog} onClick={(event)=>{if(event.target===event.currentTarget)ref.current?.close();}} onClose={onClose} ref={ref}><section className={`${styles.trafficDialogPaper} ${styles.landmarkPaper}`}><header><div><span>{t("map.landmarks.discovered")}</span><h2 id="landmark-dialog-title">{t(landmark.nameKey)}</h2></div><button aria-label={t("map.landmarks.close")} onClick={()=>ref.current?.close()} type="button"><X aria-hidden="true"/></button></header><AssetImage alt={t(landmark.nameKey)} assetKey={landmark.assetKey} className={styles.landmarkArtwork}><span aria-hidden="true"/></AssetImage><p>{t(landmark.descriptionKey)}</p><dl><div><dt>{t("map.landmarks.category")}</dt><dd>{t(`map.landmarks.${landmark.category}` as TranslationKey)}</dd></div><div><dt>{t("mascot.destination")}</dt><dd>{[landmark.city,landmark.region,landmark.countryCode].filter(Boolean).join(", ")}</dd></div></dl>{landmarks.length>1?<nav aria-label={t("map.landmarks.title")} className={styles.landmarkThumbnailList}>{landmarks.map((item)=><button aria-current={item.catalogKey===landmark.catalogKey?"true":undefined} aria-label={t(item.nameKey)} className={styles.landmarkThumbnailButton} key={item.catalogKey} onClick={()=>onSelect(item.catalogKey)} title={t(item.nameKey)} type="button"><AssetImage alt="" assetKey={item.assetKey} className={styles.landmarkThumbnail}><span aria-hidden="true"/></AssetImage></button>)}</nav>:null}</section></dialog>}
 
 function PostalTrafficDialog({onClose,onSelect,onShowList,postalTraffic,rangeState,selectedTraffic}:{onClose:()=>void;onSelect:(id:string)=>void;onShowList:()=>void;postalTraffic:PostalTrafficPetSnapshot[];rangeState:PostalTrafficRangeState;selectedTraffic?:PostalTrafficPetSnapshot}){
   const {t}=useTranslation(); const ref=useRef<HTMLDialogElement>(null);

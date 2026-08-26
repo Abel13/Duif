@@ -1,5 +1,32 @@
 # Assets
 
+## Catálogos editoriais
+
+O snapshot documental de 25 de agosto de 2026 está dividido em três documentos de revisão:
+
+- [inventário mestre e dívida visual](asset-inventory.md);
+- [catálogo visual regional proposto](regional-visual-catalog.md);
+- [catálogo proposto de 50 marcos mundiais](world-landmark-catalog.md).
+
+Eles registram o estado observado e propostas futuras, mas não substituem o Official Asset
+Registry como fonte do runtime. Uma entrada `proposta` não está aprovada para produção.
+
+Para a produção ilustrada futura:
+
+- cartões devem ser ilustrações rasterizadas em WebP 3:2;
+- selos regionais e marcos devem ser WebP com fundo transparente;
+- marcos usam apresentação de sticker ilustrado, com recorte orgânico, borda clara de papel e
+  silhueta reconhecível, conforme o [catálogo mundial](world-landmark-catalog.md), sem se tornarem
+  adesivos de correspondência ou itens de inventário;
+- cada Lugar Memorável exige um par de assets antes da publicação: sticker transparente para o
+  mapa e frente de cartão postal WebP 3:2. Publicar somente um deles deixa o lugar incompleto;
+- nenhuma dessas ilustrações novas deve ser produzida em SVG;
+- cada asset precisa de brief aprovado antes da criação, com composição, referências permitidas,
+  licença/origem, dimensões, orçamento, área segura e alt text;
+- todo lote deve ser pequeno, validado nos tamanhos e superfícies reais e submetido a aprovação
+  humana entre catálogo, geração, otimização e publicação;
+- nenhuma arte deve ser publicada ou integrada apenas porque aparece nos catálogos editoriais.
+
 This document defines the first asset pipeline conventions for DUIF.
 
 ## Asset Timing Strategy
@@ -44,6 +71,7 @@ Use stable public paths under `public/assets/`:
 - `maps/` for future lightweight map overlays, labels, stamps, or texture details.
 - `stamps/` for reusable postal marks, cancellation marks, and collectible stamp art.
 - `tutorial/postcards/` for the larger, inspectable tutorial postcard artwork.
+- `postcards/landmarks/` for 3:2 postcard fronts paired with Lugares Memoráveis.
 - `tutorial/stamps/` for tutorial-only collectible seals.
 - `nest/` for modular Ninho hub artwork.
 
@@ -140,9 +168,13 @@ versions. Current versions remain packaged under `public/assets/`; the schema al
 packaged and future Storage locations. Runtime screens load one active public manifest and never
 persist or construct free-form art paths.
 
-The registry contains 42 identities: 41 active versions and the unused `route-doodle-mark`
-archived. PWA icons, the brand logo, and fonts remain outside the runtime registry because they
-must work before Supabase, authentication, or onboarding has loaded.
+The audited local registry contains 64 identities: 62 with an active version, while
+`currency.icon.stamp` and `postalMark.routeDoodle` are only archived. The latter still has its
+historical file in the repository. The production registry must be
+checked independently; the prestige-path drift found by the audit is repaired by a later,
+idempotent migration recorded in the [asset inventory](asset-inventory.md). PWA icons, the brand
+logo, and fonts remain outside the
+runtime registry because they must work before Supabase, authentication, or onboarding has loaded.
 
 The administrative flow provides `/admin/assets` to accounts with the server-verified `duif_role=admin` app
 metadata. It uploads new files to private staging, validates them in the `asset-studio` Edge

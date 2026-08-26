@@ -1,5 +1,7 @@
 export { assetKeys, isOfficialAssetKey, parseOfficialAssetManifest, resolveActiveOfficialAssetPath, resolveOfficialAssetPath } from "./assets";
 export type { OfficialAssetKey, OfficialAssetManifest, OfficialAssetType, OfficialAssetVersion } from "./assets";
+export { parseWorldLandmarksPayload } from "./worldLandmarks";
+export type { WorldLandmark, WorldLandmarkCategory } from "./worldLandmarks";
 export { defaultPostmarkCustomization, isPostmarkCustomizationUnlocked, postmarkColors, postmarkModels } from "./postmarks";
 export { effectiveSpeedKmh, geographicVisualTheme, isDayAtCoordinates, isDayAtLongitude, localDateAtTimeZone, meteorologicalSeason } from "./travelWeather";
 export type { PostmarkColorId, PostmarkCustomization, PostmarkModelId } from "./postmarks";

@@ -11,7 +11,20 @@ export const ptBR = {
   app: {
     title: "DUIF",
   },
-  officialPostcards: { base: { name: "Cartão DUIF", description: "O cartão-base permanente para toda correspondência." } },
+  landmarks: { christTheRedeemer: {
+    name: "Cristo Redentor",
+    description: "No alto do Corcovado, o Cristo Redentor observa o Rio de Janeiro entre montanhas e mar. Inaugurado em 1931, tornou-se um dos símbolos mais reconhecidos do Brasil.",
+    alt: "Sticker ilustrado do Cristo Redentor sobre o Corcovado.",
+  }, masp: {
+    name: "MASP",
+    description: "Suspenso sobre o vão livre da Avenida Paulista, o edifício do MASP tornou-se uma das obras mais reconhecidas de Lina Bo Bardi e um símbolo da arquitetura de São Paulo.",
+    alt: "Sticker ilustrado do MASP com sua estrutura vermelha e vão livre.",
+  } },
+  officialPostcards: {
+    base: { name: "Cartão DUIF", description: "O cartão-base permanente para toda correspondência." },
+    christTheRedeemer: { name: "Cartão do Cristo Redentor", description: "Um cartão postal permanente conquistado ao passar pelo Cristo Redentor.", alt: "Cartão postal ilustrado do Cristo Redentor com o Rio de Janeiro ao fundo." },
+    masp: { name: "Cartão do MASP", description: "Um cartão postal permanente conquistado ao passar pelo MASP.", alt: "Cartão postal ilustrado do MASP na Avenida Paulista." },
+  },
   officialStickers: { sunStamp: { description: "Um adesivo solar para iluminar a correspondência." }, blueEnvelope: { description: "Um pequeno envelope azul de rota." }, routeSpark: { description: "Uma faísca encontrada nas primeiras rotas." } },
   pwaInstall: {
     eyebrow: "Entrega especial",
@@ -542,6 +555,18 @@ export const ptBR = {
     },
   },
   map: {
+    landmarks: {
+      title: "Lugares Memoráveis",
+      discovered: "Lugar Memorável descoberto",
+      newTitle: "Uma nova paisagem entrou no seu mapa",
+      newDescription: "Seu mensageiro passou perto de um Lugar Memorável.",
+      learnMore: "Conhecer o lugar",
+      dismiss: "Agora não",
+      close: "Fechar lugar",
+      category: "Categoria",
+      cultural: "Cultural",
+      empty: "Nenhum Lugar Memorável descoberto ainda.",
+    },
     eyebrow: "Mapa postal",
     title: "Viagem em tempo real",
     subtitle:

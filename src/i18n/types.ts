@@ -21,7 +21,12 @@ export type TranslationDictionary = {
   app: {
     title: string;
   };
-  officialPostcards: { base: { name: string; description: string } };
+  landmarks: { christTheRedeemer: { name: string; description: string; alt: string }; masp: { name: string; description: string; alt: string } };
+  officialPostcards: {
+    base: { name: string; description: string };
+    christTheRedeemer: { name: string; description: string; alt: string };
+    masp: { name: string; description: string; alt: string };
+  };
   officialStickers: { sunStamp: { description: string }; blueEnvelope: { description: string }; routeSpark: { description: string } };
   pwaInstall: {
     eyebrow: string;
@@ -404,6 +409,18 @@ export type TranslationDictionary = {
     };
   };
   map: {
+    landmarks: {
+      title: string;
+      discovered: string;
+      newTitle: string;
+      newDescription: string;
+      learnMore: string;
+      dismiss: string;
+      close: string;
+      category: string;
+      cultural: string;
+      empty: string;
+    };
     eyebrow: string;
     title: string;
     subtitle: string;
@@ -896,6 +913,8 @@ export type TranslationDictionary = {
 };
 
 export type TranslationKey =
+  | "landmarks.christTheRedeemer.name" | "landmarks.christTheRedeemer.description" | "landmarks.christTheRedeemer.alt" | "landmarks.masp.name" | "landmarks.masp.description" | "landmarks.masp.alt"
+  | "map.landmarks.title" | "map.landmarks.discovered" | "map.landmarks.newTitle" | "map.landmarks.newDescription" | "map.landmarks.learnMore" | "map.landmarks.dismiss" | "map.landmarks.close" | "map.landmarks.category" | "map.landmarks.cultural" | "map.landmarks.empty"
   | "send.skillPreview.title" | "send.skillPreview.loading" | "send.skillPreview.unavailable" | "send.skillPreview.active" | "send.skillPreview.inactive" | "send.skillPreview.weatherDependent" | "send.skillPreview.weatherNotice" | "send.skillPreview.reasons.snapshot" | "send.skillPreview.reasons.conditionNotMet"
   | "functionalEquipment.shopTitle" | "functionalEquipment.shopDescription" | "functionalEquipment.balance" | "functionalEquipment.buy" | "functionalEquipment.buying" | "functionalEquipment.purchaseError"
   | "functionalEquipment.loadoutDescription" | "functionalEquipment.lockedDuringTravel" | "functionalEquipment.backpackSlot" | "functionalEquipment.utilitySlot" | "functionalEquipment.none"
@@ -1731,6 +1750,12 @@ export type TranslationKey =
   | "geonamesAdmin.refreshStarted"
   | "officialPostcards.base.name"
   | "officialPostcards.base.description"
+  | "officialPostcards.christTheRedeemer.name"
+  | "officialPostcards.christTheRedeemer.description"
+  | "officialPostcards.christTheRedeemer.alt"
+  | "officialPostcards.masp.name"
+  | "officialPostcards.masp.description"
+  | "officialPostcards.masp.alt"
   | "officialStickers.sunStamp.description"
   | "officialStickers.blueEnvelope.description"
   | "officialStickers.routeSpark.description"

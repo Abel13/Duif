@@ -1,16 +1,16 @@
 # Roadmap ativo
 
 Este arquivo é a única fonte para sequência, escopo, decisões pendentes e estado do trabalho atual.
-As Milestones 1–55 estão preservadas no [histórico do roadmap](../history/roadmap-milestones-1-55.md).
+As etapas anteriores estão preservadas no [histórico do roadmap](../history/roadmap-milestones-1-55.md).
 Procedimentos de deploy pertencem a [Operações](../operations/release.md), não ao roadmap.
 
 ## Estado atual
 
-- Milestones 1–58: concluídas localmente.
-- Próxima etapa: planejar e aprovar as decisões pendentes da Milestone 59.
-- Milestones 59–65: planejadas, com pendências explícitas abaixo.
+- Concluídas localmente: equipamentos funcionais, identidades de skills e níveis de voo.
+- Próxima etapa: revisar e aprovar a documentação de `Planejamento e produção do catálogo visual`.
+- Demais etapas abaixo: planejadas, com pendências explícitas em cada seção.
 
-## Milestone 56 — Equipamentos funcionais, mochilas e prévia de loadout
+## Equipamentos funcionais, mochilas e prévia de loadout
 
 **Estado:** Concluída localmente. Catálogo, economia, loadout, durabilidade e integração climática
 foram implementados; publicação permanece um procedimento operacional separado.
@@ -60,7 +60,7 @@ gameplay advantage.
 - the preview matches the dispatched modifier snapshot;
 - every route remains possible without purchasing or equipping an optional item.
 
-## Milestone 57 — Identidades de skills e domínio contextual
+## Identidades de skills e domínio contextual
 
 **Estado:** Concluída localmente. Identidades, progressão, resolução contextual, migração e
 explicações de viagem são autoritativas e versionadas.
@@ -107,7 +107,7 @@ skills, and one player-chosen individual skill per mascot.
 - skill XP and effects are auditable, snapshotted, capped, and explained in the trip result;
 - every discovery remains obtainable with any mascot even when Pipoca obtains it more efficiently.
 
-## Milestone 58 — Níveis de voo, rotas familiares e bordas de prestígio
+## Níveis de voo, rotas familiares e bordas de prestígio
 
 **Estado:** Concluída localmente. Progressão, alcance, capacidade, familiaridade canônica e bordas
 de prestígio foram implementados; publicação permanece operacional.
@@ -153,59 +153,105 @@ quatro bordas independentes são selecionáveis após o primeiro desbloqueio aut
 - progression beyond available border art never blocks travel or leveling;
 - a coordinate refresh cannot silently erase familiarity with a persistent destination.
 
-## Milestone 59 — Diário de viagem, descobertas e consumíveis
+## Planejamento e produção do catálogo visual
 
-**Estado:** Planned; collection roles approved, content catalog and drop tables unresolved.
+**Estado:** Catálogo em revisão, com execução-piloto autorizada. Cristo Redentor é o primeiro marco
+produzido e integrado; os outros 49 permanecem propostas e exigem autorização própria.
 
 **Objetivo:**
 
-Turn route findings into a permanent per-mascot travel journal and a controlled source of useful
-consumables without confusing discoveries with inventory items or official postcards.
+Consolidar a infraestrutura já entregue em `Real Asset Pipeline`, `Art Direction Asset Slice`,
+`Official Asset Registry` e `Administrative Asset Studio` num inventário revisável, mapear toda a
+dívida existente e aprovar a fila editorial antes de qualquer nova produção visual.
 
 **Inclui:**
 
-- `Diário de Viagem` inside each mascot profile rather than a new primary Album surface;
-- permanent discovery records containing official illustration, localized description, approximate
-  region, mascot, date, and rarity;
-- initial rarities Common, Uncommon, and Rare; `Special` describes event/mission origin rather than
-  a fourth superior rarity;
-- discoveries never occupying travel slots and never being consumed;
-- permanent non-consumable findings are unique per player; if a resolved finding is already owned
-  or pending in another delivery, nothing is granted, with no reroll or substitute compensation;
-- a discovery optionally unlocking a related permanent official postcard while remaining a
-  distinct journal record;
-- the permanent simple base postcard, city postcards unlocked when a mascot passes through that
-  city, and event postcards unlocked by their mission;
-- paid postcard art modeled as finite consumable copies in future packs, while unlocked official
-  postcards remain permanent;
-- `Lanche Revigorante` found on routes, granted by jobs, and later purchasable with Seeds: common
-  `+5%` and uncommon/special `+10%`, one per journey, selected and consumed at confirmed dispatch,
-  occupying no slot and affecting outbound and return within the global speed cap;
-- found snacks remaining pending delivery rewards and entering inventory only at final collection;
-- the tutorial's `Impulso da Primeira Viagem` remaining a separate automatic, non-inventory
-  modifier despite using related acceleration visual language.
+- inventário único de todos os assets utilizados, provisórios, ausentes, duplicados, arquivados e
+  planejados, ligado às chaves estáveis do Official Asset Registry;
+- catálogo regional com cidades priorizadas por Ninhos de produção quando a fonte for autorizada,
+  todas as capitais brasileiras, cartões urbanos e selos permanentes propostos;
+- catálogo nominal de 50 marcos mundiais específicos, com cobertura geográfica equilibrada,
+  coordenadas públicas, composição, alt text e revisão editorial, sem priorização por cidades de
+  usuários;
+- produção pareada obrigatória de cada Lugar Memorável: sticker transparente do mapa e frente de
+  cartão postal 3:2, desbloqueada permanentemente na primeira passagem elegível;
+- classificação de cada lacuna por superfície, etapa dependente, impacto para o jogador,
+  frequência de exibição, tamanho necessário, locale, estado e prioridade;
+- auditoria visual das telas atuais para identificar placeholders, fallbacks inadequados, estilos
+  inconsistentes, imagens ausentes, baixa resolução, recortes ruins e referências obsoletas;
+- matriz de cobertura por família: mascotes, retratos, mapas, correspondências, selos, carimbos,
+  cartões, adesivos, equipamentos, recompensas, loja, eventos, medalhas, prestígio, clima e UI;
+- orçamento explícito de produção e peso por etapa antes que novas funcionalidades dependentes
+  de arte sejam aprovadas para implementação;
+- definição documental de lotes de produção pequenos e priorizados; a criação, otimização,
+  publicação e integração desses lotes pertencem a uma execução posterior explicitamente
+  autorizada;
+- brief padronizado por asset com objetivo, contexto de uso, direção visual, composição, paleta,
+  dimensões, área segura, transparência, variantes, texto alternativo e referências permitidas;
+- definição do formato por função: WebP/AVIF para ilustrações rasterizadas e texturas, Phosphor para
+  affordances convencionais e SVG somente quando a linguagem vetorial fizer parte do sistema já
+  aprovado, sem introduzir ornamentos vetoriais que destoem da arte ilustrada;
+- processo rastreável de criação, revisão visual em contexto real, ajustes, otimização, validação de
+  acessibilidade, aprovação e publicação usando o Administrative Asset Studio existente;
+- versionamento sem sobrescrever arquivos históricos, com ativação, rollback e fallback oficial
+  por chave estável;
+- páginas de verificação que mostrem cada asset nos tamanhos e superfícies reais em mobile e
+  desktop, incluindo fundos claros, escuros, mapa e recortes circulares quando aplicável;
+- critérios objetivos para resolução, proporção, tamanho de arquivo, transparência, área segura,
+  legibilidade, contraste, autoria, licença e consistência com a linguagem postal ilustrada;
+- relatório de cobertura e fila de produção atualizado por lote, sem transformar o roadmap em um
+  gerenciador duplicado de arquivos;
+- remoção segura de referências e arquivos experimentais não publicados que não serão usados,
+  preservando versões históricas efetivamente referenciadas;
+- documentação do fluxo operacional para que novos eventos, cartões ou recompensas possam planejar
+  sua demanda visual antes da implementação funcional.
 
 **Fora de escopo:**
 
-- player-uploaded journal art, exclusive discoveries obtainable only by Pipoca, Crystal-purchased
-  route power, consuming unlocked city/event postcards, or activating found items before return.
+- redesenhar a identidade visual do DUIF, substituir automaticamente todos os assets existentes,
+  criar arte sem brief aprovado, introduzir uma nova biblioteca de ícones, publicar rascunhos em
+  produção ou implementar as funcionalidades que apenas dependem dos assets planejados;
+- usar SVG como solução padrão para ilustrações detalhadas, adicionar assets grandes sem orçamento
+  ou manter arquivos sem chave, origem, licença e superfície de uso conhecidas;
+- reimplementar o Registry, o manifest, o Asset Studio ou o pipeline técnico já concluído;
+- durante a fase documental atual: gerar, editar, remover ou publicar imagens; alterar Registry,
+  manifest, banco, frontend, mapa, desbloqueios ou fazer deploy.
 
 **Decisões pendentes antes da implementação:**
 
-- discovery taxonomy, launch illustrations/text, regional coverage, and exact rarity/drop tables;
-- how city passage is determined for long route segments and how retroactive city unlocks work;
-- snack stack limits, Seed prices, job quantities, event variants, and whether the `+10%` version
-  should be named `Especial` or receive a different product name;
-- the precise visual distinction between a snack modifier and the tutorial-only boost.
+- quem aprova direção visual, conteúdo, acessibilidade e publicação final de cada lote?
+- qual é a capacidade real de produção por semana ou ciclo e quais ferramentas/fontes de arte serão
+  autorizadas?
+- quais assets atuais são placeholders aceitáveis e quais devem ser tratados como defeitos de
+  produção imediatos?
+- qual será a prioridade entre dívida visual atual, cartões postais, medalhas de evento, bordas de
+  prestígio, clima sazonal e conteúdo futuro?
+- quais limites máximos de arquivo e dimensões serão adotados por família além dos orçamentos gerais
+  já documentados?
+- quais superfícies exigem variantes próprias e quais podem reutilizar o mesmo asset com recorte ou
+  responsividade?
+- o acompanhamento da fila viverá no Asset Studio, em documento operacional ou em ferramenta
+  externa; qual será a fonte única do estado de produção?
+- quais verificações visuais poderão ser automatizadas e quais exigirão aprovação humana em
+  dispositivos reais?
+- como registrar autoria, licença e uso de geração assistida para cada versão publicada?
 
 **Critérios de sucesso:**
 
-- journal records, postcard unlocks, pending findings, inventory grants, and snack consumption are
-  separate and idempotent backend operations;
-- collection cannot grant a found snack or other reward twice;
-- the UI never implies that a permanent discovery record occupies inventory or travel capacity.
+- a fase documental termina somente quando os três catálogos em `docs/design` forem revisados e
+  suas decisões pendentes tiverem responsáveis claros;
+- todo asset ativo ou planejado possui chave, estado, origem conhecida ou lacuna explícita,
+  superfícies, requisitos técnicos e prioridade rastreáveis;
+- nenhuma etapa dependente de arte inicia sem catálogo mínimo, briefs aprovados e capacidade de
+  produção identificada;
+- os primeiros lotes eliminam referências quebradas e placeholders prioritários antes de ampliar o
+  volume de conteúdo;
+- numa execução futura, assets aprovados serão verificados nas superfícies reais, versionados e
+  publicados pelo fluxo existente sem sobrescrever referências históricas;
+- o orçamento de download e a legibilidade mobile não pioram com a substituição de placeholders;
+- arquivos descartados e referências mortas não permanecem no repositório ou no manifest ativo.
 
-## Milestone 60 — Encontros locais, segurança de amizade e moderação
+## Encontros locais, segurança de amizade e moderação
 
 **Estado:** Planned; discovery and privacy rules approved, moderation operations unresolved.
 
@@ -263,7 +309,155 @@ intentional friendship requests.
 - report and block remain independent, auditable operations with no punishment based only on report
   volume.
 
-## Milestone 61 — Push notifications e privacidade de entregas
+## Ninho visitável, público e para amigos
+
+**Estado:** Planejada; a fantasia, a tela cheia e a separação de visibilidade foram aprovadas. O
+modelo editorial, os limites de composição e a matriz final de privacidade ainda precisam de
+revisão antes da implementação.
+
+**Objetivo:**
+
+Transformar o Ninho em um espaço pessoal ilustrado e visitável, customizável pelo dono em tela
+cheia, que expresse a história dos mascotes sem revelar localização, correspondência ou inventário
+privado. Visitantes desconhecidos e amigos aceitos recebem visões diferentes da mesma cena,
+sempre determinadas pelo backend.
+
+**Inclui:**
+
+- uma experiência full screen própria para visualizar e editar o Ninho, preservando acesso claro
+  para voltar às superfícies principais da aplicação;
+- customização do cenário completo por meio de assets oficiais possuídos ou liberados:
+  - background;
+  - piso ou base visual quando o tema exigir;
+  - móveis e objetos decorativos;
+  - retratos oficiais dos mascotes;
+  - lembranças de viagens, cartões, selos, medalhas, troféus e descobertas elegíveis;
+  - pontos de destaque para itens especiais de eventos;
+- nenhuma imagem enviada pelo usuário nesta etapa; “foto do mascote” significa retrato oficial do
+  mascote ou composição produzida pelo próprio jogo;
+- um documento de cena backend-authoritative com versão, tema, background, itens, ordem de
+  camadas, posição, escala, rotação permitida, variante responsiva e regras de visibilidade;
+- validação autoritativa de posse, elegibilidade, quantidade, limites de escala, área segura e
+  orçamento máximo de objetos antes de salvar ou publicar uma composição;
+- edição exclusiva do dono, com arrastar, selecionar, mover entre camadas, remover da cena,
+  restaurar e pré-visualizar as três perspectivas sem consumir nem excluir o item possuído;
+- salvamento explícito com rascunho privado e versão publicada estável, impedindo que visitantes
+  vejam uma composição parcialmente editada;
+- três níveis de visibilidade para a cena e seus itens elegíveis:
+  - `owner`: visível somente ao dono durante edição ou uso privado;
+  - `friends`: visível ao dono e a amizades aceitas;
+  - `public`: visível também por contratos públicos sanitizados já autorizados;
+- um padrão seguro em que novos itens entram como `owner` até o jogador escolher outra
+  visibilidade; alterar amizade, bloquear alguém ou tornar o Ninho privado tem efeito imediato na
+  leitura, sem reescrever a composição;
+- a resposta pública contém somente o documento visual sanitizado necessário para renderizar a
+  cena; não inclui inventário completo, IDs internos sensíveis, coordenadas, caixa postal,
+  correspondências, rotas, horários, saldos ou itens ocultos;
+- acesso de amigos condicionado à amizade ainda aceita; desfazer amizade rebaixa imediatamente a
+  pessoa à visão pública disponível, e bloqueio remove todo acesso entre as partes;
+- integração futura com o perfil público sanitizado e a lista de amigos, sem criar uma forma de
+  enumerar Ninhos desconhecidos pelo mapa ou por busca arbitrária;
+- o mesmo conjunto publicado de itens nas duas experiências responsivas, com duas composições
+  persistidas:
+  - `mobile`, vertical e pensada para toque;
+  - `desktop`, horizontal e com maior área de respiro;
+- visibilidade, posse, identidade e conteúdo do item são compartilhados entre as variantes; apenas
+  posição, escala, rotação e camada podem variar;
+- quando apenas uma variante tiver sido organizada, gerar uma composição inicial determinística
+  para a outra, mantê-la como rascunho e pedir revisão do dono antes de publicá-la;
+- safe areas e âncoras normalizadas em vez de coordenadas fixas de pixels, preservando composição
+  entre larguras, densidades e barras do navegador;
+- itens ocultos de uma audiência não deixam informação clicável, alt text, hotspot ou payload
+  residual; a composição restante mantém layout próprio, sem revelar o contorno do item oculto;
+- acessibilidade com ordem de leitura editorial separada da ordem visual, nome/descrição dos itens,
+  navegação por teclado, seleção visível, zoom de interface e alternativa estática para qualquer
+  transição;
+- carregamento progressivo e orçamento por cena, com miniaturas na edição e assets finais apenas
+  quando necessários; falhas individuais usam fallback sem invalidar o Ninho inteiro;
+- versionamento de assets por chave oficial, preservando versões históricas quando uma composição
+  publicada depender delas;
+- prévia do dono para `Público`, `Amigos` e `Somente eu`, usando o mesmo contrato sanitizado que
+  será entregue a cada audiência;
+- registro auditável de publicação e mudanças de visibilidade, sem expor ao visitante o histórico
+  de edições.
+
+**Superfícies previstas:**
+
+- dono: entrada principal pelo Ninho, alternando entre modo de visita e modo de edição;
+- amigo aceito: ação `Visitar Ninho` no perfil/lista de amigos, sujeita à privacidade;
+- não amigo autorizado: ação no perfil público sanitizado, somente quando a descoberta desse
+  perfil já for permitida pelas regras de encontros;
+- compartilhamento externo por URL pública não faz parte da primeira versão.
+
+**Dependências:**
+
+- `Planejamento e produção do catálogo visual`, para inventário, briefs, backgrounds, objetos,
+  lembranças e orçamentos reais;
+- `Encontros locais, segurança de amizade e moderação`, para audiência pública, amizade, bloqueio,
+  relatório e perfil sanitizado;
+- Registry e manifest oficiais para todas as identidades visuais publicáveis;
+- catálogo autoritativo de itens possuídos, recompensas, cartões, medalhas e prestígio.
+
+**Fora de escopo:**
+
+- localização exata do Ninho, planta baseada na casa real, endereço, clima deduzido da residência,
+  rota privada ou presença em tempo real do jogador;
+- uploads de fotos, desenhos, textos livres, placas editáveis ou qualquer conteúdo público criado
+  pelo usuário;
+- chat, recados, livro de visitas, reações, curtidas, contagem pública de visitas, ranking de
+  decoração ou feed de Ninhos;
+- visita simultânea, avatares controláveis, multiplayer em tempo real, física, iluminação 3D,
+  canvas pesado ou editor sem limites;
+- compra de espaço funcional, bônus de gameplay pela decoração, acesso ao inventário alheio ou
+  transferência de itens durante uma visita;
+- composições com conjuntos diferentes de itens por dispositivo; mobile e desktop reorganizam a
+  mesma seleção publicada.
+
+**Decisões pendentes antes da implementação:**
+
+- o Ninho inteiro terá uma visibilidade-base com exceções por item, ou cada item exigirá sempre uma
+  escolha explícita? Como comunicar isso sem tornar a edição burocrática?
+- quais categorias podem ser públicas, quais podem ser apenas de amigos e quais devem permanecer
+  sempre privadas, especialmente medalhas de evento, cartões recebidos e lembranças associadas a
+  outra pessoa?
+- cartões e lembranças mostrarão somente a frente oficial ou também metadados como cidade, data e
+  mascote? Conteúdo de correspondência deve continuar sempre excluído;
+- quantos objetos simultâneos cada variante suporta no primeiro lançamento e quais limites mudam
+  por classe de dispositivo?
+- quais transformações cada família permite: escala livre dentro de limites, rotação discreta,
+  espelhamento ou encaixe em pontos predeterminados?
+- o background é uma peça única ou pode combinar parede, piso e janela? Quantas camadas estruturais
+  justificam o custo de assets e a complexidade do editor?
+- haverá um mascote principal presente na cena, vários mascotes no Ninho ou apenas retratos? Como
+  representar mascotes viajando sem revelar sua viagem a visitantes?
+- visitantes verão sempre a versão publicada mais recente ou o dono poderá manter versões
+  sazonais salvas e alternar entre elas?
+- amigos poderão denunciar o Ninho diretamente mesmo sem texto ou upload? Quais categorias e
+  evidências o fluxo de moderação deverá armazenar?
+- qual será a política para itens que perdem elegibilidade, são arquivados no Registry ou passam a
+  ter restrição editorial depois de publicados?
+- o fallback automático entre mobile e desktop pode ser publicado pelo dono sem editar, ou a
+  revisão das duas variantes será obrigatória?
+- haverá prévia de tamanho intermediário para tablets ou apenas interpolação segura entre as duas
+  composições aprovadas?
+
+**Critérios de sucesso:**
+
+- dono, amigo aceito e visitante público recebem apenas os itens autorizados para sua audiência;
+- bloquear, desfazer amizade ou restringir o Ninho revoga acesso imediatamente e não depende de
+  cache inseguro no cliente;
+- nenhuma resposta de visita permite inferir coordenada, correspondência, inventário oculto ou
+  atividade em tempo real;
+- uma mesma seleção de itens produz composições legíveis e intencionais em mobile e desktop sem
+  rolagem horizontal, sobreposição acidental ou elementos inalcançáveis;
+- edição incompleta nunca substitui a versão publicada, e salvamentos repetidos são idempotentes;
+- somente assets possuídos, elegíveis, versionados e dentro dos limites podem ser publicados;
+- a cena continua utilizável com asset ausente, conexão lenta, movimento reduzido e navegação por
+  teclado;
+- o editor mantém desempenho aceitável no orçamento mobile aprovado e não carrega assets ocultos
+  para a audiência atual.
+
+## Push notifications e privacidade de entregas
 
 **Estado:** Planned; notification moments are approved, platform/provider operations unresolved.
 
@@ -312,7 +506,7 @@ private content, precise location, or route information on a device lock screen.
 - unsubscribed, denied, or invalid installations do not block gameplay or in-app notifications;
 - deep links re-check the authenticated user's authorization before showing any correspondence.
 
-## Milestone 62 — Atmosfera sazonal e efeitos climáticos
+## Atmosfera sazonal e efeitos climáticos
 
 **Estado:** Planned; visual direction and performance boundaries approved, final asset catalog unresolved.
 
@@ -352,14 +546,15 @@ effects that preserve map readability, accessibility, and mobile performance.
 
 **Critérios de sucesso:**
 
-- season, day/night, and weather always match the selected segment snapshot from Milestone 55;
+- season, day/night, and weather always match the selected segment snapshot from `Segmented
+  Travel, Weather, And Automatic Adversities`;
 - routes, markers, labels, zoom controls, and active-map tools remain readable in every condition;
 - mobile rendering remains responsive and loads no inactive seasonal or weather asset;
 - reduced-motion mode contains no looping particles or flashes;
 - changing or reconnecting during a segment produces the same deterministic visual state without
   changing authoritative travel timing or rewards.
 
-## Milestone 63 — Eventos postais encadeados e destinos mundiais
+## Eventos postais encadeados e destinos mundiais
 
 **Estado:** Planejada; fantasia central aprovada, regras de participação, classificação e operação
 administrativa pendentes.
@@ -387,7 +582,8 @@ e conquistam cartões postais e medalhas exclusivas do evento.
 - reserva do item no despacho e consumo idempotente somente pela entrega válida, com recuperação
   segura quando uma operação falhar antes da criação da viagem;
 - cartões postais oficiais próprios de cada ponto ou etapa, concedidos de forma idempotente após a
-  primeira conclusão elegível e integrados ao modelo permanente de cartões da M59;
+  primeira conclusão elegível e integrados ao modelo permanente de cartões de `Diário de viagem,
+  descobertas e consumíveis`;
 - progresso por jogador e por evento, incluindo etapas disponíveis, em viagem, concluídas,
   respostas abertas, cartões conquistados e encerramento da campanha;
 - classificação autoritativa e auditável por evento, com snapshots de resultado, tratamento de
@@ -408,7 +604,7 @@ e conquistam cartões postais e medalhas exclusivas do evento.
 - snapshots versionados de regras e conteúdo no início de cada participação/entrega, para que uma
   edição administrativa permitida não reescreva viagens ou resultados históricos;
 - contratos para futuras notificações de início, etapa liberada e encerramento, respeitando as
-  preferências e regras de privacidade da M61.
+  preferências e regras de privacidade de `Push notifications e privacidade de entregas`.
 
 **Fora de escopo:**
 
@@ -477,7 +673,7 @@ e conquistam cartões postais e medalhas exclusivas do evento.
 - páginas públicas de evento e classificação não revelam coordenadas precisas, trajetos privados,
   conteúdo postal fechado ou outros dados não autorizados dos jogadores.
 
-## Milestone 64 — Tutorial dos menus inferiores
+## Tutorial dos menus inferiores
 
 **Estado:** Planejada; superfícies e princípios aprovados, sequência e momento de ativação pendentes.
 
@@ -542,8 +738,8 @@ explicando, dentro do contexto do jogo, quando usar `Ninho`, `Coleção`, `Mapa`
   moeda ou cosmético não criará pressão para executar o tutorial?
 - a Loja deve aparecer no tutorial inicial ou somente depois de o jogador obter Sementes e entender
   a economia básica?
-- como a etapa de Coleção deve se comportar quando a M59 ainda não estiver implementada ou quando o
-  jogador não possuir nenhum item além das recompensas iniciais?
+- como a etapa de Coleção deve se comportar antes de `Diário de viagem, descobertas e consumíveis`
+  ou quando o jogador não possuir nenhum item além das recompensas iniciais?
 - a Ajuda que permite rever o tutorial ficará no perfil, em configurações ou em um futuro centro de
   ajuda compartilhado?
 - quais eventos mínimos de telemetria são realmente necessários e qual será o período de retenção?
@@ -562,7 +758,7 @@ explicando, dentro do contexto do jogo, quando usar `Ninho`, `Coleção`, `Mapa`
 - nenhuma etapa usa texto hardcoded, revela dados privados ou depende de animação para ser
   compreendida.
 
-## Milestone 65 — Pacotes de Sementes encontrados em rota
+## Pacotes de Sementes encontrados em rota
 
 **Estado:** Planejada; conceito e autoridade aprovados, probabilidades, quantidades e limites
 pendentes.
@@ -653,3 +849,168 @@ sorte do mascote, resultado determinístico e proteção contra repetição ou f
 - o saldo só muda depois da coleta válida e permanece conciliável com o ledger;
 - testes determinísticos cobrem ausência e presença de encontro, limites de sorte, distribuição de
   pacotes, anti-farming, concorrência e idempotência.
+
+## Diário de viagem, descobertas e consumíveis
+
+**Estado:** Planejada e adiada até a conclusão de `Planejamento e produção do catálogo visual`;
+catálogo de conteúdo e tabelas de obtenção pendentes.
+
+**Objetivo:**
+
+Transformar achados de rota em um diário permanente por mascote e em uma fonte controlada de
+consumíveis úteis, sem confundir descobertas com inventário ou cartões postais oficiais.
+
+**Inclui:**
+
+- `Diário de Viagem` dentro do perfil de cada mascote, em vez de uma nova superfície primária no
+  menu inferior;
+- registros permanentes contendo ilustração oficial, descrição localizada, região aproximada,
+  mascote, data e raridade;
+- raridades iniciais Comum, Incomum e Rara; `Especial` identifica origem de evento ou missão, não
+  uma quarta raridade superior;
+- descobertas que nunca ocupam slots de viagem e nunca são consumidas;
+- achados permanentes e não consumíveis únicos por jogador; se o resultado já estiver possuído ou
+  pendente em outra entrega, nada é concedido, sem novo sorteio ou compensação;
+- descoberta que pode desbloquear um cartão postal permanente relacionado sem deixar de existir
+  como registro distinto no Diário;
+- cartão-base simples permanente, cartões de cidade desbloqueados pela passagem do mascote e
+  cartões de evento desbloqueados pela respectiva missão;
+- artes pagas de cartão modeladas futuramente como cópias consumíveis finitas, enquanto cartões
+  oficiais desbloqueados permanecem permanentes;
+- `Lanche Revigorante` encontrado em rotas, concedido por trabalhos e futuramente comprado com
+  Sementes: comum `+5%` e incomum/especial `+10%`, um por viagem, selecionado e consumido no despacho
+  confirmado, sem ocupar slot e afetando ida e volta dentro do teto global de velocidade;
+- lanches encontrados permanecendo como recompensa pendente e entrando no inventário somente na
+  coleta final;
+- `Impulso da Primeira Viagem` do tutorial permanecendo um modificador automático e separado do
+  inventário, apesar da linguagem visual relacionada à aceleração.
+
+**Fora de escopo:**
+
+- arte de Diário enviada por jogadores, descobertas exclusivas apenas para Pipoca, poder de rota
+  comprado com Crystals, consumo de cartões de cidade/evento desbloqueados ou uso de itens
+  encontrados antes do retorno;
+- iniciar produção em massa de ilustrações antes de `Planejamento e produção do catálogo visual`
+  aprovar catálogo mínimo, briefs, prioridades e capacidade de produção.
+
+**Decisões pendentes antes da implementação:**
+
+- taxonomia das descobertas, ilustrações/textos de lançamento, cobertura regional e tabelas exatas
+  de raridade e obtenção;
+- como a passagem por cidade será determinada em segmentos longos e como funcionarão desbloqueios
+  retroativos;
+- limites de estoque dos lanches, preços em Sementes, quantidades em trabalhos, variantes de evento
+  e nome final da versão de `+10%`;
+- distinção visual precisa entre um lanche do inventário e o impulso exclusivo do tutorial;
+- qual catálogo mínimo aprovado em `Planejamento e produção do catálogo visual` justifica
+  implementar o Diário sem voltar a criar uma fila visual desproporcional ao retorno para o
+  jogador.
+
+**Critérios de sucesso:**
+
+- registros do Diário, cartões desbloqueados, achados pendentes, concessões ao inventário e consumo
+  de lanches são operações separadas e idempotentes;
+- a coleta não concede duas vezes um lanche ou outra recompensa;
+- a interface nunca sugere que um registro permanente ocupa inventário ou capacidade de viagem;
+- nenhuma descoberta entra no catálogo funcional sem asset final aprovado e publicado pelo fluxo
+  definido em `Planejamento e produção do catálogo visual`.
+
+## Cartões postais com foto
+
+**Estado:** Planejada; experiência principal aprovada, origem das imagens, moderação e retenção
+pendentes.
+
+**Objetivo:**
+
+Permitir que o jogador envie um cartão postal cuja frente use uma foto escolhida por ele no lugar
+de uma mensagem textual, preservando acabamento postal, surpresa, privacidade e segurança.
+
+**Inclui:**
+
+- uma variante explícita de cartão postal `photo`, separada dos cartões oficiais ilustrados e sem
+  substituir ou alterar seus catálogos e saldos;
+- escolha mutuamente exclusiva no fluxo de composição: foto ou mensagem textual, conforme a regra
+  aprovada, sem manter texto oculto junto da imagem;
+- captura ou seleção de imagem somente após consentimento claro do remetente e explicação de quem
+  poderá vê-la, por quanto tempo será mantida e como poderá ser denunciada ou removida;
+- upload direto para armazenamento privado por URL assinada e escopo temporário, sem transportar o
+  arquivo bruto pelo cliente ou por RPCs de banco;
+- validação autoritativa de formato, tamanho, dimensões, integridade, propriedade e estado de
+  moderação antes de permitir o despacho;
+- normalização no servidor com correção de orientação, remoção de EXIF e outros metadados,
+  redimensionamento, compressão e geração de uma versão final no enquadramento aprovado do cartão;
+- prévia de recorte 3:2 dentro do cartão real, com controles acessíveis de posição e zoom, sem
+  permitir que conteúdo importante fique sob selo, carimbo ou área segura;
+- snapshot persistente da versão processada, dimensões, hash, proprietário, consentimento,
+  moderação e acabamento postal usado no envio;
+- acesso à foto limitado ao remetente, destinatário autorizado e equipe de moderação, usando URLs
+  assinadas de curta duração e revalidação de sessão;
+- surpresa preservada: a notificação e a listagem fechada não revelam miniatura, remetente ou
+  conteúdo antes da abertura autorizada;
+- visualização na Caixa Postal como cartão, com fallback seguro quando a imagem estiver em análise,
+  indisponível, removida ou não puder ser carregada;
+- denúncia vinculada à correspondência recebida, bloqueio do remetente, ocultação imediata para o
+  denunciante e fila administrativa auditável para análise e remoção;
+- remoção administrativa capaz de revogar acesso à imagem sem apagar a evidência mínima necessária
+  à auditoria, sem reescrever outros dados da entrega;
+- estados claros de upload, processamento, análise, aprovado, rejeitado, cancelado e removido, sem
+  criar uma entrega enquanto a imagem ainda não estiver elegível;
+- limpeza idempotente de uploads abandonados e derivados órfãos, com política de retenção separada
+  para conteúdo entregue, removido e evidência de moderação;
+- traduções completas, texto alternativo fornecido pelo remetente ou fallback acessível neutro e
+  controles utilizáveis por teclado e leitor de tela;
+- métricas operacionais restritas a volume, falhas, tempo de processamento/moderação, denúncias e
+  remoções, sem analisar ou reutilizar o conteúdo das fotos para publicidade ou treinamento.
+
+**Fora de escopo:**
+
+- galeria pública, feed de fotos, descoberta por usuários desconhecidos, comentários, curtidas,
+  marcações, reconhecimento facial, localização por metadados, filtros sociais, edição avançada,
+  vídeos, GIFs animados, arquivos RAW ou envio de múltiplas imagens no mesmo cartão;
+- tornar a foto um asset oficial reutilizável, publicá-la no Asset Studio, vendê-la, negociá-la ou
+  permitir que outro jogador a encaminhe;
+- despacho antes da aprovação exigida, acesso por URL pública permanente ou confiança exclusiva em
+  validação/moderação feita no dispositivo.
+
+**Dúvidas pendentes antes da implementação:**
+
+- a primeira versão aceitará câmera, galeria ou ambas; quais navegadores e PWAs móveis precisam de
+  suporte específico?
+- quais formatos de entrada serão aceitos e quais limites de bytes, pixels, proporção e duração de
+  upload serão adotados?
+- a moderação será automática antes do envio, humana, híbrida ou baseada em análise posterior; qual
+  provedor, política, custo e tempo máximo são aceitáveis?
+- o remetente poderá escrever texto alternativo livre; como esse texto será moderado e qual fallback
+  será mostrado quando não houver descrição?
+- haverá uma moldura oficial única, escolha entre molduras desbloqueadas ou uso da arte de um cartão
+  oficial como base para a foto?
+- cartões com foto serão gratuitos, consumirão uma cópia de cartão, Sementes, Crystals ou terão um
+  limite por período?
+- qual idade mínima, consentimento, política de conteúdo, termos de uso e aviso de direitos sobre a
+  imagem serão necessários antes do upload?
+- por quanto tempo a foto entregue ficará disponível ao remetente e destinatário; exclusão da conta,
+  desfazer amizade ou bloqueio devem removê-la de quais superfícies?
+- o destinatário poderá apagar somente da própria Caixa Postal sem remover a cópia do remetente?
+- qual evidência deve ser preservada após denúncia ou remoção, por quanto tempo e com quais papéis
+  administrativos autorizados?
+- a foto será moderada novamente se regras ou modelos de segurança mudarem?
+- a funcionalidade será liberada para todos, por Reputação Postal, por evento, por teste controlado
+  ou somente após histórico mínimo de amizade?
+- como tratar uma aprovação que expira ou é revogada entre a revisão final e a confirmação do
+  despacho?
+
+**Critérios de sucesso:**
+
+- nenhuma foto pode ser enviada, aberta ou reutilizada por alguém que não seja remetente,
+  destinatário autorizado ou moderador em atividade auditada;
+- arquivos publicados não contêm EXIF, coordenadas ou metadados originais e respeitam orçamento de
+  resolução e download mobile;
+- upload repetido, reconexão ou confirmação duplicada não cria arquivos órfãos, múltiplas cobranças
+  nem mais de uma correspondência;
+- conteúdo rejeitado ou removido nunca aparece por fallback de cache, URL antiga, miniatura ou
+  snapshot do cliente;
+- denúncia e bloqueio funcionam sem exigir que o destinatário continue visualizando a imagem;
+- a ausência de texto não quebra leitores, prévias, listagem, carimbo, selo, resposta ou histórico
+  da correspondência;
+- testes cobrem autorização, URLs expiradas, EXIF, formatos inválidos, processamento, moderação,
+  remoção, bloqueio, retenção, movimento reduzido e layouts mobile.

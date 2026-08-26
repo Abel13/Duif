@@ -12,10 +12,12 @@ export type MapFocusTarget =
   | { kind: "origin" }
   | { kind: "destination" }
   | { kind: "reward"; rewardId: string }
+  | { kind: "landmark"; landmarkKey: string }
   | { kind: "traffic"; trafficId: string };
 
 export type MapSelection =
   | { kind: "reward"; rewardId: string }
+  | { kind: "landmark"; landmarkKey: string }
   | { kind: "traffic"; trafficId: string }
   | null;
 export type MapMotionPreference = "full" | "reduced";

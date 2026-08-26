@@ -31,6 +31,7 @@ import {
   type MapPlaceLabel,
 } from "../../game/mapTravel";
 import type { Delivery } from "../../game/types";
+import type { WorldLandmark } from "../../game/worldLandmarks";
 import { assetKeys, resolveActiveOfficialAssetPath, type OfficialAssetKey } from "../../game/assets";
 import { useOfficialAssets } from "../../integrations/supabase/OfficialAssetProvider";
 import styles from "./TravelMap.module.css";
@@ -81,6 +82,8 @@ export type TravelMapProps = {
   rewardLabels: Record<string, string>;
   rewardStates: Record<string, RouteDiscoveryVisualState>;
   rewards: RouteRewardDiscovery[];
+  landmarks?: WorldLandmark[];
+  landmarkLabels?: Record<string,string>;
   selection: MapSelection;
   showRouteLabels: boolean;
   visualTheme?: { isNight: boolean; season: "summer" | "autumn" | "winter" | "spring" };
@@ -90,6 +93,7 @@ export type TravelMapProps = {
     origin: RouteDiscoveryEventOrigin,
   ) => void;
   onRewardSelect: (rewardId: string) => void;
+  onLandmarkSelect?: (landmarkKey: string) => void;
   onPetSelect: () => void;
   onTrafficSelect: (trafficId: string) => void;
   onViewportChange: (anchor: PostalTrafficQueryAnchor) => void;
@@ -116,12 +120,15 @@ export function TravelMap({
   rewardLabels,
   rewardStates,
   rewards,
+  landmarks=[],
+  landmarkLabels={},
   selection,
   showRouteLabels,
   visualTheme,
   onFollowChange,
   onRewardDiscoveries,
   onRewardSelect,
+  onLandmarkSelect=()=>undefined,
   onPetSelect,
   onTrafficSelect,
   onViewportChange,
@@ -133,6 +140,7 @@ export function TravelMap({
   const routeEndpointMarkerRefs = useRef<Map<string, maplibregl.Marker>>(new Map());
   const rewardMarkerRefs = useRef<Map<string, maplibregl.Marker>>(new Map());
   const trafficMarkerRefs = useRef<Map<string, maplibregl.Marker>>(new Map());
+  const landmarkMarkerRefs = useRef<Map<string, maplibregl.Marker>>(new Map());
   const isLoadedRef = useRef(false);
   const focusTargetRef = useRef(focusTarget);
   const followMascotRef = useRef(followMascot);
@@ -264,6 +272,7 @@ export function TravelMap({
         !deliveryCompleted,
       );
       syncRewardMarkerVisibility(map, rewardMarkerRefs.current);
+      syncLandmarkMarkers(map,landmarkMarkerRefs.current,landmarks,landmarkLabels,selectionRef.current,onLandmarkSelect);
       syncPostalTrafficMarkers(
         map,
         trafficMarkerRefs.current,
@@ -279,7 +288,7 @@ export function TravelMap({
         new Date(),
       );
       syncCompletedDeliveryMap(map, deliveryCompleted, rewardMarkerRefs.current);
-      focusMap(map, focusTargetRef.current, delivery, petPosition, rewards, postalTraffic);
+      focusMap(map, focusTargetRef.current, delivery, petPosition, rewards, postalTraffic, landmarks);
       if (!map.isMoving()) emitViewport(map, onViewportChangeRef.current);
     });
 
@@ -294,14 +303,16 @@ export function TravelMap({
     });
     map.on("zoom", () => {
       syncRewardMarkerVisibility(map, rewardMarkerRefs.current);
+      syncLandmarkVisibility(map,landmarkMarkerRefs.current,landmarks);
     });
-    map.on("moveend", () => emitViewport(map, onViewportChangeRef.current));
+    map.on("moveend", () => { emitViewport(map, onViewportChangeRef.current); syncLandmarkVisibility(map,landmarkMarkerRefs.current,landmarks); });
 
     return () => {
       petMarkerRef.current?.remove();
       removeMarkers(routeEndpointMarkerRefs.current);
       removeMarkers(rewardMarkerRefs.current);
       removePostalTrafficMarkers(trafficMarkerRefs.current);
+      removeMarkers(landmarkMarkerRefs.current);
       map.remove();
       petMarkerRef.current = null;
       mapRef.current = null;
@@ -382,6 +393,7 @@ export function TravelMap({
       onRewardSelect,
     );
     syncRewardMarkerVisibility(map, rewardMarkerRefs.current);
+    syncLandmarkMarkers(map,landmarkMarkerRefs.current,landmarks,landmarkLabels,selection,onLandmarkSelect);
     syncPostalTrafficMarkers(
       map,
       trafficMarkerRefs.current,
@@ -414,6 +426,8 @@ export function TravelMap({
     rewardLabels,
     rewardStates,
     rewards,
+    landmarks,
+    landmarkLabels,
     selection,
   ]);
 
@@ -499,8 +513,8 @@ export function TravelMap({
       return;
     }
 
-    focusMap(map, focusTarget, delivery, petPosition, rewards, postalTraffic);
-  }, [delivery.id, focusTarget]);
+    focusMap(map, focusTarget, delivery, petPosition, rewards, postalTraffic, landmarks);
+  }, [delivery.id, focusTarget, landmarks]);
 
   return (
     <div className={styles.mapFrame}>
@@ -890,6 +904,40 @@ function removeMarkers(markers: Map<string, maplibregl.Marker>) {
   markers.clear();
 }
 
+function syncLandmarkMarkers(map:maplibregl.Map,markers:Map<string,maplibregl.Marker>,landmarks:WorldLandmark[],labels:Record<string,string>,selection:MapSelection,onSelect:(key:string)=>void){
+  const active=new Set(landmarks.map((item)=>item.catalogKey));
+  markers.forEach((marker,key)=>{if(!active.has(key)){marker.remove();markers.delete(key);}});
+  landmarks.forEach((landmark)=>{
+    let marker=markers.get(landmark.catalogKey);
+    if(!marker){
+      const button=document.createElement("button"); button.type="button"; button.className=styles.landmarkMarker;
+      button.addEventListener("click",()=>onSelect(landmark.catalogKey));
+      const image=document.createElement("img"); image.alt=""; image.draggable=false;
+      const path=resolveActiveOfficialAssetPath(landmark.assetKey); if(path) image.src=path;
+      image.addEventListener("error",()=>button.dataset.imageError="true"); button.append(image);
+      marker=new maplibregl.Marker({element:button,anchor:"center"}).setLngLat(toLngLat(landmark.coordinates)).addTo(map); markers.set(landmark.catalogKey,marker);
+    }
+    const element=marker.getElement(); const image=element.querySelector("img");const path=resolveActiveOfficialAssetPath(landmark.assetKey);if(image&&path&&image.getAttribute("src")!==path){image.setAttribute("src",path);delete element.dataset.imageError;} element.setAttribute("aria-label",labels[landmark.catalogKey]??landmark.city);element.title=labels[landmark.catalogKey]??landmark.city;element.setAttribute("aria-pressed",String(selection?.kind==="landmark"&&selection.landmarkKey===landmark.catalogKey));
+    element.style.width=`${landmark.iconSizePx}px`; element.style.height=`${landmark.iconSizePx}px`;
+  });
+  syncLandmarkVisibility(map,markers,landmarks);
+}
+
+export function isLandmarkFullyVisible(map:Pick<maplibregl.Map,"getZoom"|"project"|"getContainer">,landmark:WorldLandmark){
+  if(map.getZoom()<landmark.minimumZoom) return false;
+  const point=map.project(toLngLat(landmark.coordinates)); const half=landmark.iconSizePx/2+4; const container=map.getContainer();
+  return point.x>=half&&point.y>=half&&point.x<=container.clientWidth-half&&point.y<=container.clientHeight-half;
+}
+
+function syncLandmarkVisibility(map:maplibregl.Map,markers:Map<string,maplibregl.Marker>,landmarks:WorldLandmark[]){
+  const byKey=new Map(landmarks.map((item)=>[item.catalogKey,item]));
+  const visibleBoxes:Array<{left:number;right:number;top:number;bottom:number}>=[];
+  markers.forEach((marker,key)=>{const landmark=byKey.get(key); if(!landmark)return; const point=map.project(toLngLat(landmark.coordinates));const half=landmark.iconSizePx/2+4;const box={left:point.x-half,right:point.x+half,top:point.y-half,bottom:point.y+half};
+    const collides=visibleBoxes.some((other)=>box.left<other.right&&box.right>other.left&&box.top<other.bottom&&box.bottom>other.top);
+    const visible=isLandmarkFullyVisible(map,landmark)&&!collides; marker.getElement().hidden=!visible; marker.getElement().setAttribute("aria-hidden",String(!visible)); if(visible)visibleBoxes.push(box);
+  });
+}
+
 function syncRewardMarkerVisibility(
   map: maplibregl.Map,
   markers: Map<string, maplibregl.Marker>,
@@ -1185,6 +1233,7 @@ function focusMap(
   petPosition: MapCoordinate,
   rewards: RouteRewardDiscovery[],
   traffic: PostalTrafficPetSnapshot[],
+  landmarks: WorldLandmark[],
 ) {
   const duration = window.matchMedia("(prefers-reduced-motion: reduce)").matches
     ? 0
@@ -1201,6 +1250,12 @@ function focusMap(
       maxZoom: 15,
       padding: getRouteFitPadding(map.getContainer().clientWidth, map.getContainer().clientHeight),
     });
+    return;
+  }
+
+  if(target.kind==="landmark") {
+    const landmark=landmarks.find((item)=>item.catalogKey===target.landmarkKey);
+    if(landmark) map.easeTo({center:toLngLat(landmark.coordinates),duration,zoom:Math.max(Number(landmark.minimumZoom),map.getZoom())});
     return;
   }
 

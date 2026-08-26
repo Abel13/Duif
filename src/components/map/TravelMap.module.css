@@ -498,3 +498,48 @@
     transform: translateX(-50%);
   }
 }
+.landmarkMarker {
+  appearance: none;
+  z-index: 2;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  filter: drop-shadow(0 3px 2px rgba(54, 42, 28, 0.28));
+}
+
+.landmarkMarker img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform-origin: center;
+  transition: transform 160ms ease, opacity 160ms ease;
+}
+
+.landmarkMarker:hover img,
+.landmarkMarker:focus-visible img,
+.landmarkMarker[aria-pressed="true"] img {
+  transform: scale(1.12);
+}
+
+.landmarkMarker:focus-visible {
+  border-radius: 50%;
+  outline: 2px dashed var(--color-ink, #4b4034);
+  outline-offset: 3px;
+}
+
+.landmarkMarker[data-image-error="true"] {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landmarkMarker img {
+    transition: none;
+  }
+
+  .landmarkMarker:hover img,
+  .landmarkMarker:focus-visible img {
+    transform: none;
+  }
+}

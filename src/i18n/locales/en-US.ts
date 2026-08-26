@@ -11,7 +11,20 @@ export const enUS = {
   app: {
     title: "DUIF",
   },
-  officialPostcards: { base: { name: "DUIF Postcard", description: "The permanent base postcard for every correspondence." } },
+  landmarks: { christTheRedeemer: {
+    name: "Christ the Redeemer",
+    description: "High above Corcovado, Christ the Redeemer overlooks Rio de Janeiro between mountains and sea. Inaugurated in 1931, it became one of Brazil’s most recognizable symbols.",
+    alt: "Illustrated sticker of Christ the Redeemer atop Corcovado.",
+  }, masp: {
+    name: "MASP",
+    description: "Suspended above its open span on Avenida Paulista, the MASP building became one of Lina Bo Bardi’s most recognizable works and a symbol of São Paulo architecture.",
+    alt: "Illustrated sticker of MASP with its red structure and open span.",
+  } },
+  officialPostcards: {
+    base: { name: "DUIF Postcard", description: "The permanent base postcard for every correspondence." },
+    christTheRedeemer: { name: "Christ the Redeemer Postcard", description: "A permanent postcard earned by passing Christ the Redeemer.", alt: "Illustrated postcard of Christ the Redeemer overlooking Rio de Janeiro." },
+    masp: { name: "MASP Postcard", description: "A permanent postcard earned by passing MASP.", alt: "Illustrated postcard of MASP on Avenida Paulista." },
+  },
   officialStickers: { sunStamp: { description: "A sunny sticker to brighten correspondence." }, blueEnvelope: { description: "A small blue route envelope." }, routeSpark: { description: "A spark found along the first routes." } },
   pwaInstall: {
     eyebrow: "Special delivery",
@@ -465,6 +478,18 @@ export const enUS = {
     },
   },
   map: {
+    landmarks: {
+      title: "Memorable Places",
+      discovered: "Memorable Place discovered",
+      newTitle: "A new sight has joined your map",
+      newDescription: "Your courier passed near a Memorable Place.",
+      learnMore: "Explore the place",
+      dismiss: "Not now",
+      close: "Close place",
+      category: "Category",
+      cultural: "Cultural",
+      empty: "No Memorable Places discovered yet.",
+    },
     eyebrow: "Postal map",
     title: "Real-time trip",
     subtitle:

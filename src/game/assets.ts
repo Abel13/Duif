@@ -75,6 +75,7 @@ export const assetKeys = {
     letterSky: "prestige.border.letterSky",
     nestAmongStars: "prestige.border.nestAmongStars",
   },
+  landmarks: { christTheRedeemer: "landmark.christTheRedeemer.artwork", masp: "landmark.masp.artwork" },
 } as const;
 
 type NestedValues<T> = T extends string ? T : { [K in keyof T]: NestedValues<T[K]> }[keyof T];
@@ -83,7 +84,7 @@ export type OfficialAssetKey = string;
 export type OfficialAssetType =
   | "mascotPortrait" | "equipmentIcon" | "rewardThumbnail" | "collectibleThumbnail"
   | "navigationIcon" | "mapControl" | "mapPin" | "currencyIcon" | "shopArtwork"
-  | "texture" | "postalMark" | "postcardArtwork" | "nestArtwork" | "prestigeBorder";
+  | "texture" | "postalMark" | "postcardArtwork" | "nestArtwork" | "prestigeBorder" | "landmarkArtwork";
 
 export type OfficialAssetVersion = {
   key: OfficialAssetKey;
@@ -110,7 +111,7 @@ export type OfficialAssetManifestRow = {
 
 const assetTypes = new Set<OfficialAssetType>([
   "mascotPortrait", "equipmentIcon", "rewardThumbnail", "collectibleThumbnail",
-  "navigationIcon", "mapControl", "mapPin", "currencyIcon", "shopArtwork", "texture", "postalMark", "postcardArtwork", "nestArtwork", "prestigeBorder",
+  "navigationIcon", "mapControl", "mapPin", "currencyIcon", "shopArtwork", "texture", "postalMark", "postcardArtwork", "nestArtwork", "prestigeBorder", "landmarkArtwork",
 ]);
 const assetKeyPattern = /^[a-z][a-zA-Z0-9]*(\.[a-zA-Z0-9]+)+$/;
 
@@ -155,5 +156,5 @@ export function setActiveOfficialAssetManifest(manifest: OfficialAssetManifest) 
 }
 
 export function resolveActiveOfficialAssetPath(key?: OfficialAssetKey) {
-  return resolveOfficialAssetPath(activeManifest, key);
+  return resolveOfficialAssetPath(activeManifest,key);
 }

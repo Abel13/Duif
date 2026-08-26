@@ -3794,6 +3794,11 @@ export type Database = {
         Args: { reference_time?: string }
         Returns: number
       }
+      reconcile_my_world_landmarks: { Args: never; Returns: Json }
+      acknowledge_world_landmark: {
+        Args: { target_catalog_key: string }
+        Returns: boolean
+      }
       respond_to_postal_friend_request: {
         Args: { friendship_id: string; should_accept: boolean }
         Returns: {
@@ -3941,6 +3946,8 @@ export type Database = {
         | "postalMark"
         | "postcardArtwork"
         | "nestArtwork"
+        | "prestigeBorder"
+        | "landmarkArtwork"
       onboarding_stage:
         | "welcome"
         | "travel"
@@ -4118,6 +4125,8 @@ export const Constants = {
         "postalMark",
         "postcardArtwork",
         "nestArtwork",
+        "prestigeBorder",
+        "landmarkArtwork",
       ],
       onboarding_stage: [
         "welcome",
