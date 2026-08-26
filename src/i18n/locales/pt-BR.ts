@@ -966,6 +966,7 @@ export const ptBR = {
       routeMarks: "Marcas de viagem",
     },
     sources: {
+      homeNest: "Ninho de origem",
       starterKit: "Kit inicial",
       routeReward: "Recompensa de rota",
       statePassage: "Passagem por estado",

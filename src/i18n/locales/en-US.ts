@@ -884,6 +884,7 @@ export const enUS = {
       routeMarks: "Travel marks",
     },
     sources: {
+      homeNest: "Home Nest",
       starterKit: "Starter kit",
       routeReward: "Route reward",
       statePassage: "State passage",

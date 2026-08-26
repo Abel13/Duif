@@ -775,6 +775,7 @@ export type TranslationDictionary = {
       routeMarks: string;
     };
     sources: {
+      homeNest: string;
       starterKit: string;
       routeReward: string;
       statePassage: string;
@@ -1596,6 +1597,7 @@ export type TranslationKey =
   | "inventory.categories.stamps"
   | "inventory.categories.keepsakes"
   | "inventory.categories.routeMarks"
+  | "inventory.sources.homeNest"
   | "inventory.sources.starterKit"
   | "inventory.sources.routeReward"
   | "inventory.sources.statePassage"

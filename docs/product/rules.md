@@ -582,6 +582,15 @@ backend when the delivery is created:
 Deliveries created before this version keep `route_discovery_version = null`. They receive no
 backfill and continue using the local visual fallback, preserving their historical outcome.
 
+### Colecionáveis do Ninho de origem
+
+Ao concluir a criação do Ninho, o perfil recebe automaticamente o cartão postal oficial da sua
+cidade, quando essa cidade possui um cartão ativo no catálogo. Ninhos localizados no Brasil também
+recebem o selo do estado que contém suas coordenadas canônicas. Essas concessões pertencem ao
+perfil, são permanentes e idempotentes: visitas ou rotas posteriores não duplicam o mesmo cartão ou
+selo. Contas já concluídas recebem os colecionáveis por backfill usando o GeoName ID e as
+coordenadas persistidas do Ninho; dados ausentes ou não canônicos não são inferidos por texto.
+
 ### Lugares Memoráveis
 
 Lugares Memoráveis são descobertas permanentes do perfil, separadas da carga de rota. Em novas
