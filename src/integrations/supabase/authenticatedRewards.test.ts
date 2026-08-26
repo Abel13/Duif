@@ -110,6 +110,8 @@ const routeDiscoveryRow: DeliveryRouteDiscoveryRow = {
   created_at: "2026-07-18T20:00:00.000Z",
   delivery_id: deliveryRow.id,
   distance_from_route_km: 0,
+  encounter_latitude: null,
+  encounter_longitude: null,
   id: "00000000-0000-4000-8000-000000002001",
   inventory_item_id: null,
   reward_item_id: routePointRow.reward_item_id,
@@ -169,6 +171,14 @@ describe("authenticated reward mappers", () => {
       regionLabel: "locations.londrina",
       routeProgress: 0,
     });
+  });
+
+  it("uses the authoritative state-entry coordinate when a polygon discovery provides one", () => {
+    expect(mapPersistedRouteDiscovery({
+      discoveryRow: { ...routeDiscoveryRow, encounter_latitude: -23.5, encounter_longitude: -45.2 },
+      itemRow: rewardItemRow,
+      pointRow: routePointRow,
+    }).coordinates).toEqual({ latitude: -23.5, longitude: -45.2 });
   });
 
   it("maps only versioned, server-resolved progression awards", () => {

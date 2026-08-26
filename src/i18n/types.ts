@@ -1,4 +1,9 @@
 export type Locale = "pt-BR" | "en-US";
+export type RegionalStampKey = "acre" | "alagoas" | "amapa" | "amazonas" | "bahia" | "ceara" |
+  "distritoFederal" | "espiritoSanto" | "goias" | "maranhao" | "matoGrosso" | "matoGrossoDoSul" |
+  "minasGerais" | "para" | "paraiba" | "parana" | "pernambuco" | "piaui" | "rioDeJaneiro" |
+  "rioGrandeDoNorte" | "rioGrandeDoSul" | "rondonia" | "roraima" | "santaCatarina" | "saoPaulo" |
+  "sergipe" | "tocantins";
 
 export type TranslationDictionary = {
   functionalEquipment: {
@@ -27,6 +32,7 @@ export type TranslationDictionary = {
     christTheRedeemer: { name: string; description: string; alt: string };
     masp: { name: string; description: string; alt: string };
   };
+  regionalStamps: Record<RegionalStampKey, { name: string; description: string; alt: string }>;
   officialStickers: { sunStamp: { description: string }; blueEnvelope: { description: string }; routeSpark: { description: string } };
   pwaInstall: {
     eyebrow: string;
@@ -541,6 +547,10 @@ export type TranslationDictionary = {
       completed: string;
     };
     regions: {
+      acreBrazil: string;
+      alagoasBrazil: string;
+      amapaBrazil: string;
+      amazonasBrazil: string;
       paranaBrazil: string;
       rioGrandeDoSulBrazil: string;
       santaCatarinaBrazil: string;
@@ -548,8 +558,22 @@ export type TranslationDictionary = {
       distritoFederalBrazil: string;
       minasGeraisBrazil: string;
       espiritoSantoBrazil: string;
+      rioDeJaneiroBrazil: string;
+      saoPauloBrazil: string;
       bahiaBrazil: string;
+      cearaBrazil: string;
+      maranhaoBrazil: string;
+      matoGrossoBrazil: string;
+      matoGrossoDoSulBrazil: string;
+      paraBrazil: string;
+      paraibaBrazil: string;
       pernambucoBrazil: string;
+      piauiBrazil: string;
+      rioGrandeDoNorteBrazil: string;
+      rondoniaBrazil: string;
+      roraimaBrazil: string;
+      sergipeBrazil: string;
+      tocantinsBrazil: string;
     };
   };
   species: {
@@ -747,6 +771,7 @@ export type TranslationDictionary = {
     sources: {
       starterKit: string;
       routeReward: string;
+      statePassage: string;
       longRouteFind: string;
     };
   };
@@ -1426,6 +1451,24 @@ export type TranslationKey =
   | "postalTraffic.regions.espiritoSantoBrazil"
   | "postalTraffic.regions.bahiaBrazil"
   | "postalTraffic.regions.pernambucoBrazil"
+  | "postalTraffic.regions.acreBrazil"
+  | "postalTraffic.regions.alagoasBrazil"
+  | "postalTraffic.regions.amapaBrazil"
+  | "postalTraffic.regions.amazonasBrazil"
+  | "postalTraffic.regions.cearaBrazil"
+  | "postalTraffic.regions.maranhaoBrazil"
+  | "postalTraffic.regions.matoGrossoBrazil"
+  | "postalTraffic.regions.matoGrossoDoSulBrazil"
+  | "postalTraffic.regions.paraBrazil"
+  | "postalTraffic.regions.paraibaBrazil"
+  | "postalTraffic.regions.piauiBrazil"
+  | "postalTraffic.regions.rioDeJaneiroBrazil"
+  | "postalTraffic.regions.rioGrandeDoNorteBrazil"
+  | "postalTraffic.regions.rondoniaBrazil"
+  | "postalTraffic.regions.roraimaBrazil"
+  | "postalTraffic.regions.saoPauloBrazil"
+  | "postalTraffic.regions.sergipeBrazil"
+  | "postalTraffic.regions.tocantinsBrazil"
   | "species.carrierPigeon"
   | "species.messengerFalcon"
   | "species.mailDuck"
@@ -1549,6 +1592,7 @@ export type TranslationKey =
   | "inventory.categories.routeMarks"
   | "inventory.sources.starterKit"
   | "inventory.sources.routeReward"
+  | "inventory.sources.statePassage"
   | "inventory.sources.longRouteFind"
   | "shop.eyebrow"
   | "shop.title"
@@ -1756,6 +1800,22 @@ export type TranslationKey =
   | "officialPostcards.masp.name"
   | "officialPostcards.masp.description"
   | "officialPostcards.masp.alt"
+  | "regionalStamps.espiritoSanto.name"
+  | "regionalStamps.espiritoSanto.description"
+  | "regionalStamps.espiritoSanto.alt"
+  | "regionalStamps.minasGerais.name"
+  | "regionalStamps.minasGerais.description"
+  | "regionalStamps.minasGerais.alt"
+  | "regionalStamps.parana.name"
+  | "regionalStamps.parana.description"
+  | "regionalStamps.parana.alt"
+  | "regionalStamps.rioDeJaneiro.name"
+  | "regionalStamps.rioDeJaneiro.description"
+  | "regionalStamps.rioDeJaneiro.alt"
+  | "regionalStamps.saoPaulo.name"
+  | "regionalStamps.saoPaulo.description"
+  | "regionalStamps.saoPaulo.alt"
+  | `regionalStamps.${RegionalStampKey}.${"name" | "description" | "alt"}`
   | "officialStickers.sunStamp.description"
   | "officialStickers.blueEnvelope.description"
   | "officialStickers.routeSpark.description"

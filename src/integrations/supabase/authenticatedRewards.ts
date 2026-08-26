@@ -133,7 +133,10 @@ export function mapPersistedRouteDiscovery({
   pointRow: RouteRewardPointRow;
 }): RouteRewardDiscovery {
   return {
-    coordinates: { latitude: pointRow.latitude, longitude: pointRow.longitude },
+    coordinates: {
+      latitude: discoveryRow.encounter_latitude ?? pointRow.latitude,
+      longitude: discoveryRow.encounter_longitude ?? pointRow.longitude,
+    },
     descriptionKey: requireTranslationKey(pointRow.description_key, "route point description key"),
     discovered: false,
     distanceFromRouteKm: discoveryRow.distance_from_route_km,

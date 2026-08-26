@@ -131,6 +131,33 @@ próxima versão.
 
 | Arquivo/identidade | Referência e uso | Estado | Ação recomendada |
 |---|---|---|---|
+| `stamps/states/acre.webp` · `stamp.state.acre.front` | selo estadual · 171×256 · 23.372 B | ativo-verificado | manter |
+| `stamps/states/alagoas.webp` · `stamp.state.alagoas.front` | selo estadual · 171×256 · 27.694 B | ativo-verificado | manter |
+| `stamps/states/amapa.webp` · `stamp.state.amapa.front` | selo estadual · 171×256 · 29.024 B | ativo-verificado | manter |
+| `stamps/states/amazonas.webp` · `stamp.state.amazonas.front` | selo estadual · 171×256 · 30.156 B | ativo-verificado | manter |
+| `stamps/states/bahia.webp` · `stamp.state.bahia.front` | selo estadual · 171×256 · 29.678 B | ativo-verificado | manter |
+| `stamps/states/ceara.webp` · `stamp.state.ceara.front` | selo estadual · 171×256 · 27.720 B | ativo-verificado | manter |
+| `stamps/states/distrito-federal.webp` · `stamp.state.distritoFederal.front` | selo distrital · 171×256 · 24.124 B | ativo-verificado | manter |
+| `stamps/states/espirito-santo.webp` · `stamp.state.espiritoSanto.front` | selo estadual · 171×256 · 27.372 B | ativo-verificado | manter |
+| `stamps/states/goias.webp` · `stamp.state.goias.front` | selo estadual · 171×256 · 27.632 B | ativo-verificado | manter |
+| `stamps/states/maranhao.webp` · `stamp.state.maranhao.front` | selo estadual · 171×256 · 23.540 B | ativo-verificado | manter |
+| `stamps/states/mato-grosso.webp` · `stamp.state.matoGrosso.front` | selo estadual · 171×256 · 26.166 B | ativo-verificado | manter |
+| `stamps/states/mato-grosso-do-sul.webp` · `stamp.state.matoGrossoDoSul.front` | selo estadual · 171×256 · 27.492 B | ativo-verificado | manter |
+| `stamps/states/minas-gerais.webp` · `stamp.state.minasGerais.front` | selo estadual · 171×256 · 28.030 B | ativo-verificado | manter |
+| `stamps/states/para.webp` · `stamp.state.para.front` | selo estadual · 171×256 · 26.804 B | ativo-verificado | manter |
+| `stamps/states/paraiba.webp` · `stamp.state.paraiba.front` | selo estadual · 171×256 · 28.550 B | ativo-verificado | manter |
+| `stamps/states/parana.webp` · `stamp.state.parana.front` | selo estadual · 171×256 · 28.908 B | ativo-verificado | manter |
+| `stamps/states/pernambuco.webp` · `stamp.state.pernambuco.front` | selo estadual · 171×256 · 27.990 B | ativo-verificado | manter |
+| `stamps/states/piaui.webp` · `stamp.state.piaui.front` | selo estadual · 171×256 · 26.644 B | ativo-verificado | manter |
+| `stamps/states/rio-de-janeiro.webp` · `stamp.state.rioDeJaneiro.front` | selo estadual · 171×256 · 27.366 B | ativo-verificado | manter |
+| `stamps/states/rio-grande-do-norte.webp` · `stamp.state.rioGrandeDoNorte.front` | selo estadual · 171×256 · 26.440 B | ativo-verificado | manter |
+| `stamps/states/rio-grande-do-sul.webp` · `stamp.state.rioGrandeDoSul.front` | selo estadual · 171×256 · 26.452 B | ativo-verificado | manter |
+| `stamps/states/rondonia.webp` · `stamp.state.rondonia.front` | selo estadual · 171×256 · 29.310 B | ativo-verificado | manter |
+| `stamps/states/roraima.webp` · `stamp.state.roraima.front` | selo estadual · 171×256 · 26.986 B | ativo-verificado | manter |
+| `stamps/states/santa-catarina.webp` · `stamp.state.santaCatarina.front` | selo estadual · 171×256 · 25.868 B | ativo-verificado | manter |
+| `stamps/states/sao-paulo.webp` · `stamp.state.saoPaulo.front` | selo estadual · 171×256 · 20.408 B | ativo-verificado | manter |
+| `stamps/states/sergipe.webp` · `stamp.state.sergipe.front` | selo estadual · 171×256 · 27.682 B | ativo-verificado | manter |
+| `stamps/states/tocantins.webp` · `stamp.state.tocantins.front` | selo estadual · 171×256 · 24.650 B | ativo-verificado | manter |
 | `icons/icon-192.png` | manifest PWA · 192² · 75.5 KB | ativo-verificado | manter |
 | `icons/icon-512.png` | manifest PWA · 512² · 513.4 KB | ativo-revisar | reotimizar em lote próprio |
 | `icons/icon-maskable-512.png` | manifest PWA · 512² · 305.3 KB | ativo-revisar | validar área segura e orçamento |
@@ -153,7 +180,7 @@ esteja aprovado. Toda linha nova inferida permanece `proposta`.
 | Navegação | 5 / 5 | nenhum asset novo aprovado | tutorial de menus reutiliza ícones atuais | baixa · tutorial complementar | baixo | nenhuma decisão visual |
 | Mapa e controles | 6 / 6 | 50 Lugares Memoráveis como stickers ilustrados e fichas futuras | estados de colisão/desbloqueio (`proposta`) | alta · catálogo mundial | alto | briefs, fidelidade cultural e leitura em tamanho mínimo |
 | Ninho | 3 / 3 | backgrounds, móveis, objetos, molduras e lembranças para o Ninho visitável | estados vazios e variantes responsivas do editor (`proposta`) | alta · Ninho visitável | alto | catálogo, orçamento da cena e matriz de privacidade |
-| Cartas, cartões, selos, carimbos e adesivos | 6 / 6 | cartões urbanos/eventuais, selos regionais e um cartão 3:2 para cada Lugar Memorável | cartões do Cristo e MASP ainda ausentes; acabamentos adicionais (`proposta`) | alta · catálogos regional/mundial | alto | briefs, licenças e catálogo |
+| Cartas, cartões, selos, carimbos e adesivos | 33 / 33 | cartões urbanos/eventuais e um cartão 3:2 para cada Lugar Memorável | acabamentos adicionais (`proposta`) | alta · catálogos regional/mundial | alto | briefs, licenças e catálogo |
 | Loja | 9 / 9 | arte comercial final após economia | duas miniaturas de cartão não são frentes 3:2 | média · loja | alto | catálogo/precificação não finais |
 | Perfil | 1 / 1 | cosméticos futuros | avatar padrão em maior resolução (`proposta`) | baixa · perfil | baixo | decidir se necessário |
 | Prestígio | 4 / 4 | níveis futuros após N50 | validar a correção de caminhos após release | média · M58 | baixo | aplicar migration pelo processo operacional |

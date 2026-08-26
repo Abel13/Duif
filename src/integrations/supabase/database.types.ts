@@ -612,6 +612,8 @@ export type Database = {
           created_at: string
           delivery_id: string
           distance_from_route_km: number
+          encounter_latitude: number | null
+          encounter_longitude: number | null
           id: string
           inventory_item_id: string | null
           reward_item_id: string
@@ -623,6 +625,8 @@ export type Database = {
           created_at?: string
           delivery_id: string
           distance_from_route_km: number
+          encounter_latitude?: number | null
+          encounter_longitude?: number | null
           id: string
           inventory_item_id?: string | null
           reward_item_id: string
@@ -634,6 +638,8 @@ export type Database = {
           created_at?: string
           delivery_id?: string
           distance_from_route_km?: number
+          encounter_latitude?: number | null
+          encounter_longitude?: number | null
           id?: string
           inventory_item_id?: string | null
           reward_item_id?: string
