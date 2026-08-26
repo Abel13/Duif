@@ -12,6 +12,7 @@ do $$
 declare
   first_record public.account_onboarding;
   repeated_record public.account_onboarding;
+  stale_record public.account_onboarding;
 begin
   first_record := public.begin_or_resume_onboarding();
   repeated_record := public.begin_or_resume_onboarding();
@@ -25,10 +26,15 @@ begin
     raise exception 'Repeated advance did not preserve the current stage';
   end if;
 
+  stale_record := public.advance_account_onboarding('welcome', 'discoveries');
+  if stale_record.stage <> 'travel' then
+    raise exception 'Stale transition did not return the authoritative stage';
+  end if;
+
   begin
-    perform public.advance_account_onboarding('welcome', 'discoveries');
-    raise exception 'Invalid or stale transition was accepted';
-  exception when invalid_parameter_value or serialization_failure then null;
+    perform public.advance_account_onboarding('travel', 'returnCollection');
+    raise exception 'Invalid transition from the current stage was accepted';
+  exception when invalid_parameter_value then null;
   end;
 
   perform public.advance_account_onboarding('travel', 'discoveries');
