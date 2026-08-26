@@ -86,6 +86,8 @@ export const enUS = {
   common: {
     loading: "Loading",
     unavailable: "Unavailable",
+    loadError: "We couldn't load this content.",
+    retry: "Try again",
   },
   notFound: {
     eyebrow: "Misrouted letter",

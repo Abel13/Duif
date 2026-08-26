@@ -60,6 +60,8 @@ export type TranslationDictionary = {
   common: {
     loading: string;
     unavailable: string;
+    loadError: string;
+    retry: string;
   };
   notFound: {
     eyebrow: string;
@@ -1106,6 +1108,8 @@ export type TranslationKey =
   | "pwaInstall.install"
   | "common.loading"
   | "common.unavailable"
+  | "common.loadError"
+  | "common.retry"
   | "notFound.eyebrow"
   | "notFound.title"
   | "notFound.description"

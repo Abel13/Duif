@@ -87,6 +87,8 @@ export const ptBR = {
   common: {
     loading: "Carregando",
     unavailable: "Indisponível",
+    loadError: "Não foi possível carregar este conteúdo.",
+    retry: "Tentar novamente",
   },
   notFound: {
     eyebrow: "Carta extraviada",
