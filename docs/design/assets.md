@@ -60,9 +60,7 @@ accept real art without layout rewrites.
 Use stable public paths under `public/assets/`:
 
 - `icons/` for app icons and small brand assets.
-- `mascots/portraits/` for current player mascot portraits.
-- `mascots/public/` for app-defined public mascot portraits without owner identity.
-- `friends/mascots/` for friend mascot portraits.
+- `mascots/portraits/` for every official mascot portrait, independent of ownership or surface.
 - `items/thumbnails/` for inventory, reward, and collectible thumbnails.
 - `equipment/icons/` for equipment icons.
 - `navigation/` for small bottom-navigation icon assets.
@@ -81,12 +79,13 @@ Keep large source files outside `public/` so they are not copied into the produc
 
 ## Ninho Hub Artwork
 
-The Ninho hub uses three decorative, modular `480×640` WebP illustrations under
+The Ninho hub uses modular WebP illustrations under
 `public/assets/nest/`:
 
 - `profile-nook.webp` for the personal profile entry;
 - `mascot-roost.webp` for the mascot entry;
 - `mailbox.webp` for the mailbox entry.
+- `available-jobs.webp` for the available postal jobs entry.
 
 They are registered as active `nestArtwork` assets at version 1, are intentionally decorative
 (`alt=""`), and retain the CSS paper fallback if the official manifest or file is unavailable.
@@ -218,8 +217,8 @@ The first art-direction validation slice added:
   - `public/assets/mascots/portraits/nuvem.webp` (`640x640`, about `59KB`);
   - `public/assets/mascots/portraits/trovao.webp` (`640x640`, about `68KB`);
   - `public/assets/mascots/portraits/pipoca.webp` (`640x640`, about `64KB`).
-- Friend mascot portrait:
-  - `public/assets/friends/mascots/aurora.webp` (`512x512`, about `57KB`).
+- Additional official mascot portrait:
+  - `public/assets/mascots/portraits/aurora.webp` (`512x512`, about `57KB`).
 - Equipment icons:
   - `canvas-postal-bag.webp`;
   - `blue-route-scarf.webp`;
@@ -283,18 +282,13 @@ The read-only shop catalog slice includes:
 - `public/assets/shop/thumbnails/brass-nest-plaque.webp`;
 - `public/assets/shop/thumbnails/airmail-profile-ribbon.webp`.
 
-These catalog thumbnails are AI-generated watercolor-and-ink assets exported as `256x256`
-WebP files. They are prototype illustrations only: names, fictional prices, descriptions,
-and accessible interactions remain in HTML and translated copy. Every thumbnail stays below
-`60KB` and retains a CSS fallback in the shop UI.
+These catalog assets are AI-generated watercolor-and-ink WebPs. Stickers and ornaments use
+transparent `256x256` canvases; postcards use their complete `1200x800` (3:2) artwork. Names,
+prices, descriptions, and accessible interactions remain in HTML and translated copy.
 
-The currency naming pass adds two code-native balance marks:
-
-- `public/assets/currency/seed.svg` for common-currency Sementes/Seeds;
-- `public/assets/currency/crystal.svg` for premium-currency Cristais/Crystals.
-
-Both marks follow the visual rules in `docs/design/visual-direction.md`. They are decorative beside
-an accessible localized currency name and must retain a lightweight CSS fallback.
+Currency balances use the Phosphor `CoffeeBean` icon for Sementes/Seeds and `SketchLogo` for
+Cristais/Crystals. The retired packaged SVG versions remain archived only in the Registry.
+Both icons are decorative beside an accessible localized currency name.
 
 The active tutorial item is:
 
@@ -327,11 +321,11 @@ a CSS fallback if an image fails to load.
 
 The public postal-traffic set includes three portraits:
 
-- `public/assets/friends/mascots/maple.webp`;
-- `public/assets/mascots/public/bento.webp`;
-- `public/assets/mascots/public/oliva.webp`.
+- `public/assets/mascots/portraits/maple.webp`;
+- `public/assets/mascots/portraits/bento.webp`;
+- `public/assets/mascots/portraits/oliva.webp`.
 
-The AI-generated watercolor-and-ink portraits are `256x256` WebP files of about `8KB` each.
+The AI-generated watercolor-and-ink portraits are `640x640` WebP files.
 They use an integrated paper background, remain safe inside circular map crops, and retain the
 same CSS fallback used by the traffic list and detail panel. Aurora continues using her existing
 official portrait.

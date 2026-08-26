@@ -26,10 +26,10 @@ Resumo auditado:
 - `postcard.landmark.masp.front` possui arte WebP 3:2 de 1200×800 e 202.524 bytes no mesmo
   diretório, publicado no Registry e concedido permanentemente no desbloqueio do MASP;
 
-- 68 identidades no Registry local: 66 com versão ativa e duas somente arquivadas;
-- 66 versões ativas apontam para arquivos presentes após a correção idempotente das quatro
+- 99 identidades no Registry local após as migrations pendentes: 97 com versão ativa e duas somente arquivadas;
+- 97 versões ativas apontam para arquivos presentes após a correção idempotente das quatro
   referências de prestígio;
-- 69 arquivos visuais de runtime em `public/assets`, além de fontes e sentinelas de diretório;
+- 100 arquivos visuais de runtime em `public/assets`, além de fontes e sentinelas de diretório;
 - nenhuma chave duplicada em `assetKeys`; identidades funcionais como item ativo e avatar usam os
   tipos genéricos `equipmentIcon` e `nestArtwork` do Registry;
 - `.DS_Store` é um órfão conhecido; nada foi removido nesta auditoria.
@@ -64,8 +64,8 @@ próxima versão.
 |---|---|---|---|---|---|---|
 | `activeItem.firstJourneyBoost` | equipmentIcon · v1 ativa | `items/active/first-journey-boost.webp` · WebP · 192² · 9.4 KB | item ativo, inventário/recompensa | tradução do item; cartão CSS | coerente; documentar autoria | ativo-verificado |
 | `collectible.firstJourneyStamp` | collectibleThumbnail · v1 ativa | `tutorial/stamps/first-journey.webp` · WebP · 256² · 16 KB | tutorial e Álbum | nome do selo; raridade/texto | aprovado no tutorial; preservar | ativo-verificado |
-| `currency.icon.crystal` | currencyIcon · v2 ativa; v1 arquivada | `currency/crystal.svg` · SVG 64² · 818 B | saldos, loja | decorativo; valor textual | linguagem vetorial de UI já aprovada | ativo-verificado |
-| `currency.icon.seed` | currencyIcon · v1 ativa | `currency/seed.svg` · SVG 64² · 727 B | saldos, loja | decorativo; valor textual | linguagem vetorial de UI já aprovada | ativo-verificado |
+| `currency.icon.crystal` | currencyIcon · v1–2 arquivadas | removido; Phosphor `SketchLogo` no runtime | nenhum consumidor | valor textual e ícone acessório | histórico no Registry | arquivado |
+| `currency.icon.seed` | currencyIcon · v1 arquivada | removido; Phosphor `CoffeeBean` no runtime | nenhum consumidor | valor textual e ícone acessório | histórico no Registry | arquivado |
 | `currency.icon.stamp` | currencyIcon · v1 arquivada | arquivo histórico ausente | nenhum consumidor atual | valor textual | confirmar retenção do registro | arquivado |
 | `equipment.functional.largeBackpack` | equipmentIcon · v1 ativa | `equipment/functional/large-backpack.webp` · 192² · 5.6 KB | equipamento/loja/loadout | nome/descrição; cartão CSS | funcional e leve | ativo-verificado |
 | `equipment.functional.mediumBackpack` | equipmentIcon · v1 ativa | `equipment/functional/medium-backpack.webp` · 192² · 4.1 KB | equipamento/loja/loadout | nome/descrição; cartão CSS | funcional e leve | ativo-verificado |
@@ -87,12 +87,12 @@ próxima versão.
 | `map.control.overview` | mapControl · v1 ativa | `map/controls/overview.webp` · 256² · 11.8 KB | visão geral do mapa | rótulo real; botão CSS | legível; manter | ativo-verificado |
 | `map.pin.destination` | mapPin · v1 ativa | `map/pins/destination.webp` · 256² · 10.3 KB | marcador de destino | label do mapa; pin CSS | verificar colisão em zoom baixo | ativo-verificado |
 | `map.pin.nest` | mapPin · v1 ativa | `map/pins/nest.webp` · 256² · 12.4 KB | marcador do Ninho | label do mapa; pin CSS | verificar colisão em zoom baixo | ativo-verificado |
-| `mascot.portrait.aurora` | mascotPortrait · v1 ativa | `friends/mascots/aurora.webp` · 512² · 58.3 KB | amigo/listas/mapa | nome do mascote; cores CSS | bom slice público | ativo-verificado |
-| `mascot.portrait.bento` | mascotPortrait · v1 ativa | `mascots/public/bento.webp` · 256² · 7.5 KB | visitante/perfil público | nome; cores CSS | baixa resolução para perfil grande | ativo-revisar |
+| `mascot.portrait.aurora` | mascotPortrait · v2 ativa; v1 arquivada | `mascots/portraits/aurora.webp` · 512² · 58.3 KB | amigo/listas/mapa | nome do mascote; cores CSS | centralizado sem alteração visual | ativo-verificado |
+| `mascot.portrait.bento` | mascotPortrait · v2 ativa; v1 arquivada | `mascots/portraits/bento.webp` · 640² · 67.5 KB | visitante/perfil público | nome; cores CSS | retrato oficial regenerado | ativo-verificado |
 | `mascot.portrait.lume` | mascotPortrait · v1 ativa | `mascots/portraits/lume.webp` · 640² · 111.3 KB | perfil, seleção, mapa | nome; cores CSS | dentro do orçamento | ativo-verificado |
-| `mascot.portrait.maple` | mascotPortrait · v1 ativa | `friends/mascots/maple.webp` · 256² · 5.8 KB | amigo/listas/mapa | nome; cores CSS | baixa resolução para perfil grande | ativo-revisar |
+| `mascot.portrait.maple` | mascotPortrait · v2 ativa; v1 arquivada | `mascots/portraits/maple.webp` · 640² · 59.5 KB | amigo/listas/mapa | nome; cores CSS | retrato oficial regenerado | ativo-verificado |
 | `mascot.portrait.nuvem` | mascotPortrait · v1 ativa | `mascots/portraits/nuvem.webp` · 640² · 60.8 KB | perfil, seleção, mapa | nome; cores CSS | aprovado | ativo-verificado |
-| `mascot.portrait.oliva` | mascotPortrait · v1 ativa | `mascots/public/oliva.webp` · 256² · 5.3 KB | visitante/perfil público | nome; cores CSS | baixa resolução para perfil grande | ativo-revisar |
+| `mascot.portrait.oliva` | mascotPortrait · v2 ativa; v1 arquivada | `mascots/portraits/oliva.webp` · 640² · 59.1 KB | visitante/perfil público | nome; cores CSS | retrato oficial regenerado | ativo-verificado |
 | `mascot.portrait.pipoca` | mascotPortrait · v1 ativa | `mascots/portraits/pipoca.webp` · 640² · 65.3 KB | perfil, seleção, mapa | nome; cores CSS | aprovado | ativo-verificado |
 | `mascot.portrait.trovao` | mascotPortrait · v1 ativa | `mascots/portraits/trovao.webp` · 640² · 69.3 KB | perfil, seleção, mapa | nome; cores CSS | aprovado | ativo-verificado |
 | `navigation.icon.collection` | navigationIcon · v1 ativa | `navigation/collection.webp` · 160² · 8.3 KB | menu inferior | label/aria real; botão CSS | aprovado | ativo-verificado |
@@ -101,29 +101,34 @@ próxima versão.
 | `navigation.icon.nest` | navigationIcon · v1 ativa | `navigation/nest.webp` · 160² · 7.4 KB | menu inferior | label/aria real; botão CSS | aprovado | ativo-verificado |
 | `navigation.icon.shop` | navigationIcon · v1 ativa | `navigation/shop.webp` · 160² · 6.8 KB | menu inferior | label/aria real; botão CSS | aprovado | ativo-verificado |
 | `nest.artwork.mailbox` | nestArtwork · v1 ativa | `nest/mailbox.webp` · 480×640 · 45.7 KB | Ninho/Caixa Postal | decorativo; papel CSS | aprovado | ativo-verificado |
+| `nest.artwork.availableJobs` | nestArtwork · v1 ativa | `nest/available-jobs.webp` · 480×640 · 81.3 KB | Ninho/trabalhos | alt traduzido; papel CSS | quadro integrado ao Ninho | ativo-verificado |
 | `nest.artwork.mascotRoost` | nestArtwork · v1 ativa | `nest/mascot-roost.webp` · 480×640 · 57.3 KB | Ninho/mascotes | decorativo; papel CSS | aprovado | ativo-verificado |
 | `nest.artwork.profileNook` | nestArtwork · v1 ativa | `nest/profile-nook.webp` · 480×640 · 51.5 KB | Ninho/perfil | decorativo; papel CSS | aprovado | ativo-verificado |
 | `postalMark.postalCancel` | postalMark · v1 ativa | `textures/postal-cancel-mark.webp` · 256² · 6.7 KB | correspondência/carimbo | decorativo; CSS | aprovado | ativo-verificado |
 | `postalMark.routeDoodle` | postalMark · v1 arquivada | `textures/route-doodle-mark.webp` · 256² · 3.8 KB | somente histórico | decorativo | arquivo sem manifest ativo; preservar até revisão | arquivado |
 | `postcard.base.front` | postcardArtwork · v1 ativa | `postcards/duif-base.webp` · 900×600 · 156.8 KB no arquivo; 12.2 KB no Registry local | compositor, caixa postal, Álbum | alt traduzido; cartão CSS | metadado local divergente; conferir produção | ativo-revisar |
+| `postcard.city.1819729.front` | postcardArtwork · v1 ativa | `postcards/cities/hong-kong.webp` · 1200×800 · 162.4 KB | compositor, caixa postal, Álbum | nome/descrição/alt traduzidos; cartão CSS | visita canônica a Hong Kong | ativo-verificado |
+| `postcard.city.3456166.front` | postcardArtwork · v1 ativa | `postcards/cities/nova-friburgo.webp` · 1200×800 · 173.3 KB | compositor, caixa postal, Álbum | nome/descrição/alt traduzidos; cartão CSS | visita canônica a Nova Friburgo | ativo-verificado |
+| `postcard.city.3457952.front` | postcardArtwork · v1 ativa | `postcards/cities/manhuacu.webp` · 1200×800 · 150.3 KB | compositor, caixa postal, Álbum | nome/descrição/alt traduzidos; cartão CSS | visita canônica a Manhuaçu | ativo-verificado |
+| `postcard.city.3458449.front` | postcardArtwork · v1 ativa | `postcards/cities/londrina.webp` · 1200×800 · 173.7 KB | compositor, caixa postal, Álbum | nome/descrição/alt traduzidos; cartão CSS | visita canônica a Londrina | ativo-verificado |
 | `postcard.inaugural.front` | postcardArtwork · v1 ativa | `tutorial/postcards/inaugural-front.webp` · 1024×683 · 151 KB | tutorial e Álbum | alt traduzido; cartão CSS | aprovado | ativo-verificado |
 | `prestige.border.firstHorizon` | prestigeBorder · v3 ativa; v1–2 arquivadas/ausentes | `prestige/first-horizon.webp` · 512² · 49.3 KB | retratos com prestígio | descrição acessível; sem borda | referência corrigida; validar após release | ativo-verificado |
 | `prestige.border.letterSky` | prestigeBorder · v3 ativa; v1–2 arquivadas/ausentes | `prestige/letter-sky.webp` · 512² · 56.4 KB | retratos com prestígio | descrição acessível; sem borda | referência corrigida; validar após release | ativo-verificado |
 | `prestige.border.nestAmongStars` | prestigeBorder · v3 ativa; v1–2 arquivadas/ausentes | `prestige/nest-among-stars.webp` · 512² · 59.4 KB | retratos com prestígio | descrição acessível; sem borda | referência corrigida; validar após release | ativo-verificado |
 | `prestige.border.routeAtlas` | prestigeBorder · v3 ativa; v1–2 arquivadas/ausentes | `prestige/route-atlas.webp` · 512² · 55.9 KB | retratos com prestígio | descrição acessível; sem borda | referência corrigida; validar após release | ativo-verificado |
 | `profile.avatar.defaultSilhouette` | nestArtwork · v1 ativa | `profile/default-silhouette.webp` · 256² · 6.5 KB | perfil/Ninho | alt traduzido; iniciais CSS | neutro e funcional | ativo-verificado |
-| `reward.thumbnail.atlanticBadge` | rewardThumbnail · v1 ativa | `items/thumbnails/atlantic-badge.webp` · 256² · 16.9 KB | descoberta/coleção | nome/raridade; cartão CSS | slice atual | ativo-verificado |
-| `reward.thumbnail.blueAirmailLabel` | rewardThumbnail · v1 ativa | `items/thumbnails/blue-airmail-label.webp` · 256² · 16.4 KB | descoberta/coleção | nome/raridade; cartão CSS | slice atual | ativo-verificado |
-| `reward.thumbnail.goldenCompassPin` | rewardThumbnail · v1 ativa | `items/thumbnails/golden-compass-pin.webp` · 256² · 15.0 KB | descoberta/coleção | nome/raridade; cartão CSS | slice atual | ativo-verificado |
-| `reward.thumbnail.wornRouteStamp` | rewardThumbnail · v1 ativa | `items/thumbnails/worn-route-stamp.webp` · 256² · 16.5 KB | descoberta/coleção | nome/raridade; cartão CSS | slice atual | ativo-verificado |
-| `shop.thumbnail.airmailProfileRibbon` | shopArtwork · v1 ativa | `shop/thumbnails/airmail-profile-ribbon.webp` · 256² · 7.1 KB | loja/perfil | nome/descrição; cartão CSS | mock comercial; revisar antes de venda real | ativo-revisar |
-| `shop.thumbnail.blueEnvelopeSticker` | shopArtwork · v1 ativa | `shop/thumbnails/blue-envelope-sticker.webp` · 256² · 6.2 KB | loja/adesivos | nome/descrição; cartão CSS | mock comercial | ativo-revisar |
-| `shop.thumbnail.brassNestPlaque` | shopArtwork · v1 ativa | `shop/thumbnails/brass-nest-plaque.webp` · 256² · 6.9 KB | loja/Ninho | nome/descrição; cartão CSS | mock comercial | ativo-revisar |
-| `shop.thumbnail.coastalTownPostcard` | shopArtwork · v1 ativa | `shop/thumbnails/coastal-town-postcard.webp` · 256² · 7.6 KB | loja/cartões | nome/descrição; cartão CSS | miniatura não substitui arte 3:2 | placeholder-substituir |
+| `reward.thumbnail.atlanticBadge` | rewardThumbnail · v1–2 arquivadas | arquivo runtime removido | somente histórico sem novo desbloqueio | texto histórico preservado | recompensa de Rolândia retirada | arquivado |
+| `reward.thumbnail.blueAirmailLabel` | rewardThumbnail · v2 ativa; v1 arquivada | `items/thumbnails/blue-airmail-label.webp` · 256² · 15.0 KB | selo raro/coleção | nome/raridade; cartão CSS | recorte transparente postal | ativo-verificado |
+| `reward.thumbnail.goldenCompassPin` | rewardThumbnail · v2 ativa; v1 arquivada | `items/thumbnails/golden-compass-pin.webp` · 256² · 13.8 KB | selo raro/coleção | nome/raridade; cartão CSS | recorte transparente postal | ativo-verificado |
+| `reward.thumbnail.wornRouteStamp` | rewardThumbnail · v2 ativa; v1 arquivada | `items/thumbnails/worn-route-stamp.webp` · 256² · 18.2 KB | selo/coleção | nome/raridade; cartão CSS | recorte transparente utilizável | ativo-verificado |
+| `shop.thumbnail.airmailProfileRibbon` | shopArtwork · v2 ativa; v1 arquivada | `shop/thumbnails/airmail-profile-ribbon.webp` · 256² · 13.8 KB | loja/perfil | nome/descrição; cartão CSS | moldura transparente pronta | ativo-verificado |
+| `shop.thumbnail.blueEnvelopeSticker` | shopArtwork · v2 ativa; v1 arquivada | `shop/thumbnails/blue-envelope-sticker.webp` · 256² · 15.2 KB | loja/adesivos | nome/descrição; cartão CSS | adesivo recortado | ativo-verificado |
+| `shop.thumbnail.brassNestPlaque` | shopArtwork · v2 ativa; v1 arquivada | `shop/thumbnails/brass-nest-plaque.webp` · 256² · 17.4 KB | loja/Ninho | nome/descrição; cartão CSS | ornamento transparente | ativo-verificado |
+| `shop.thumbnail.coastalTownPostcard` | shopArtwork · v2 ativa; v1 arquivada | `shop/thumbnails/coastal-town-postcard.webp` · 1200×800 · 202.7 KB | loja/cartões | nome/descrição; cartão CSS | arte integral 3:2 | ativo-verificado |
 | `shop.thumbnail.crimsonCourierScarf` | shopArtwork · v1 ativa | `shop/thumbnails/crimson-courier-scarf.webp` · 256² · 6.2 KB | loja/equipamento | nome/descrição; cartão CSS | mock comercial | ativo-revisar |
-| `shop.thumbnail.lanternFestivalPostcard` | shopArtwork · v1 ativa | `shop/thumbnails/lantern-festival-postcard.webp` · 256² · 10.5 KB | loja/cartões | nome/descrição; cartão CSS | miniatura não substitui arte 3:2 | placeholder-substituir |
+| `shop.thumbnail.lanternFestivalPostcard` | shopArtwork · v2 ativa; v1 arquivada | `shop/thumbnails/lantern-festival-postcard.webp` · 1200×800 · 257.8 KB | loja/cartões | nome/descrição; cartão CSS | arte integral 3:2 | ativo-verificado |
 | `shop.thumbnail.meadowPostCap` | shopArtwork · v1 ativa | `shop/thumbnails/meadow-post-cap.webp` · 256² · 5.7 KB | loja/equipamento | nome/descrição; cartão CSS | mock comercial | ativo-revisar |
-| `shop.thumbnail.sunnyRouteSticker` | shopArtwork · v1 ativa | `shop/thumbnails/sunny-route-sticker.webp` · 256² · 4.3 KB | loja/adesivos | nome/descrição; cartão CSS | mock comercial | ativo-revisar |
+| `shop.thumbnail.sunnyRouteSticker` | shopArtwork · v2 ativa; v1 arquivada | `shop/thumbnails/sunny-route-sticker.webp` · 256² · 8.9 KB | loja/adesivos | nome/descrição; cartão CSS | adesivo recortado | ativo-verificado |
 | `stamp.default.front` | collectibleThumbnail · v1 ativa | `stamps/duif-default.webp` · 172×256 · 23.5 KB | compositor/correspondência | alt traduzido; selo CSS | aprovado | ativo-verificado |
 | `texture.postalPaperWash` | texture · v1 ativa | `textures/postal-paper-wash.webp` · 512² · 20.8 KB | fundos postais | decorativo; cor CSS | aprovado | ativo-verificado |
 
@@ -180,7 +185,7 @@ esteja aprovado. Toda linha nova inferida permanece `proposta`.
 | Navegação | 5 / 5 | nenhum asset novo aprovado | tutorial de menus reutiliza ícones atuais | baixa · tutorial complementar | baixo | nenhuma decisão visual |
 | Mapa e controles | 6 / 6 | 50 Lugares Memoráveis como stickers ilustrados e fichas futuras | estados de colisão/desbloqueio (`proposta`) | alta · catálogo mundial | alto | briefs, fidelidade cultural e leitura em tamanho mínimo |
 | Ninho | 3 / 3 | backgrounds, móveis, objetos, molduras e lembranças para o Ninho visitável | estados vazios e variantes responsivas do editor (`proposta`) | alta · Ninho visitável | alto | catálogo, orçamento da cena e matriz de privacidade |
-| Cartas, cartões, selos, carimbos e adesivos | 33 / 33 | cartões urbanos/eventuais e um cartão 3:2 para cada Lugar Memorável | acabamentos adicionais (`proposta`) | alta · catálogos regional/mundial | alto | briefs, licenças e catálogo |
+| Cartas, cartões, selos, carimbos e adesivos | 37 / 37 | cartões urbanos/eventuais restantes e um cartão 3:2 para cada novo Lugar Memorável | acabamentos adicionais (`proposta`) | alta · catálogos regional/mundial | alto | briefs, licenças e catálogo |
 | Loja | 9 / 9 | arte comercial final após economia | duas miniaturas de cartão não são frentes 3:2 | média · loja | alto | catálogo/precificação não finais |
 | Perfil | 1 / 1 | cosméticos futuros | avatar padrão em maior resolução (`proposta`) | baixa · perfil | baixo | decidir se necessário |
 | Prestígio | 4 / 4 | níveis futuros após N50 | validar a correção de caminhos após release | média · M58 | baixo | aplicar migration pelo processo operacional |

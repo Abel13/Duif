@@ -31,7 +31,16 @@ export const assetKeys = {
   activeItems: {
     firstJourneyBoost: "activeItem.firstJourneyBoost",
   },
-  postcards: { baseFront: "postcard.base.front", inauguralFront: "postcard.inaugural.front" },
+  postcards: {
+    baseFront: "postcard.base.front",
+    inauguralFront: "postcard.inaugural.front",
+    cities: {
+      hongKong: "postcard.city.1819729.front",
+      londrina: "postcard.city.3458449.front",
+      manhuacu: "postcard.city.3457952.front",
+      novaFriburgo: "postcard.city.3456166.front",
+    },
+  },
   stamps: {
     default: "stamp.default.front",
     states: {
@@ -69,13 +78,11 @@ export const assetKeys = {
     wornRouteStamp: "reward.thumbnail.wornRouteStamp",
     blueAirmailLabel: "reward.thumbnail.blueAirmailLabel",
     goldenCompassPin: "reward.thumbnail.goldenCompassPin",
-    atlanticBadge: "reward.thumbnail.atlanticBadge",
   },
   navigation: {
     nest: "navigation.icon.nest", collection: "navigation.icon.collection",
     map: "navigation.icon.map", friends: "navigation.icon.friends", shop: "navigation.icon.shop",
   },
-  currency: { seed: "currency.icon.seed", crystal: "currency.icon.crystal" },
   mapControls: {
     overview: "map.control.overview", mascot: "map.control.mascot",
     origin: "map.control.origin", destination: "map.control.destination",
@@ -93,6 +100,7 @@ export const assetKeys = {
   },
   jobs: { postalBoard: "jobs.artwork.postalBoard" },
   nest: {
+    availableJobs: "nest.artwork.availableJobs",
     profileNook: "nest.artwork.profileNook",
     mascotRoost: "nest.artwork.mascotRoost",
     mailbox: "nest.artwork.mailbox",

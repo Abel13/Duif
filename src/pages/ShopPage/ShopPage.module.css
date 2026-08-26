@@ -124,6 +124,14 @@
   object-fit: cover;
 }
 
+.postcardImage {
+  aspect-ratio: 3 / 2;
+}
+
+.postcardImage img {
+  object-fit: contain;
+}
+
 .assetFallback {
   width: 66%;
   aspect-ratio: 1;
@@ -188,25 +196,14 @@
 }
 
 .currencyIcon {
-  display: grid;
   width: 1.5rem;
   height: 1.5rem;
-  place-items: center;
+  color: var(--color-postal-brown);
 }
 
-.currencyIcon img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-.currencyFallback {
-  width: 1rem;
-  height: 1rem;
-  border: 2px dashed var(--color-postal-brown);
-  background: var(--color-paper);
-  transform: rotate(4deg);
+.currencyIcon[data-currency="crystals"] {
+  color: var(--color-postal-blue);
+  filter: drop-shadow(0 1px 0 var(--color-rare-gold));
 }
 
 .srOnly {

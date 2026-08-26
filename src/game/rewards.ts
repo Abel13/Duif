@@ -13,7 +13,7 @@ const rewardItems: RewardItem[] = [
     id: "reward-blue-airmail-label",
     nameKey: "rewards.items.blueAirmailLabel.name",
     descriptionKey: "rewards.items.blueAirmailLabel.description",
-    rarity: "uncommon",
+    rarity: "rare",
     thumbnailAssetKey: assetKeys.rewards.blueAirmailLabel,
   },
   {

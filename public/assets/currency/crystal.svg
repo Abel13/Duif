@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
-  <title id="title">Cristal</title>
-  <path fill="#6f91a8" stroke="#2e2a24" stroke-width="3" stroke-linejoin="round" d="m14 23 9-13h18l9 13-18 34-18-34Z"/>
-  <path fill="#a9c0cc" stroke="#2e2a24" stroke-width="2" stroke-linejoin="round" d="m14 23 9-13 9 13H14Zm18 0 9-13 9 13H32Z"/>
-  <path fill="#d7e3e8" stroke="#2e2a24" stroke-width="2" stroke-linejoin="round" d="M23 10h18l-9 13-9-13Z"/>
-  <path fill="#8eacbc" stroke="#2e2a24" stroke-width="2" stroke-linejoin="round" d="m14 23 18 34V23H14Z"/>
-  <path fill="#f7f1e3" fill-opacity=".72" d="m36 15 5-2 5 8h-8l-2-6Z"/>
-  <path fill="none" stroke="#c49a4a" stroke-width="2.5" stroke-linecap="round" d="m51 8 .8 4.2L56 13l-4.2.8L51 18l-.8-4.2L46 13l4.2-.8L51 8Z"/>
-</svg>

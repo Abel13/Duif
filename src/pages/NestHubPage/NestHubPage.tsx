@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { CaretRight, GearSix } from "@phosphor-icons/react";
+import { CaretRight, CoffeeBean, GearSix, SketchLogo } from "@phosphor-icons/react";
 
 import { AppBottomNav, PageShell } from "../../components/layout";
 import { AssetImage } from "../../components/ui";
@@ -58,14 +58,8 @@ export function NestHubPage() {
             className={styles.currencyRow}
             aria-label={t("nestHub.currencySummary")}
           >
-            <Currency
-              assetKey={assetKeys.currency.seed}
-              label={t("nestHub.seeds")}
-            />
-            <Currency
-              assetKey={assetKeys.currency.crystal}
-              label={t("nestHub.crystals")}
-            />
+            <Currency currency="seeds" label={t("nestHub.seeds")} />
+            <Currency currency="crystals" label={t("nestHub.crystals")} />
             <span
               className={styles.settings}
               aria-label={t("nestHub.settingsSoon")}
@@ -132,7 +126,7 @@ export function NestHubPage() {
             onClick={() => navigate("/mascots")}
           />
           <HubCard
-            assetKey={assetKeys.nest.mascotRoost}
+            assetKey={assetKeys.nest.availableJobs}
             description={t("postalJobs.description")}
             title={t("postalJobs.title")}
             onClick={() => navigate("/jobs")}
@@ -174,12 +168,11 @@ export function NestHubPage() {
   );
 }
 
-function Currency({ assetKey, label }: { assetKey: string; label: string }) {
+function Currency({ currency, label }: { currency: "seeds" | "crystals"; label: string }) {
+  const Icon = currency === "seeds" ? CoffeeBean : SketchLogo;
   return (
-    <span className={styles.currency}>
-      <AssetImage alt="" assetKey={assetKey} loading="eager">
-        <span />
-      </AssetImage>
+    <span className={styles.currency} data-currency={currency}>
+      <Icon aria-hidden="true" size={23} weight="duotone" />
       <strong>0</strong>
       <small>{label}</small>
     </span>

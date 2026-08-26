@@ -155,8 +155,10 @@ quatro bordas independentes são selecionáveis após o primeiro desbloqueio aut
 
 ## Planejamento e produção do catálogo visual
 
-**Estado:** Catálogo em revisão, com execução-piloto autorizada. Cristo Redentor é o primeiro marco
-produzido e integrado; os outros 49 permanecem propostas e exigem autorização própria.
+**Estado:** Catálogo em revisão, com primeiros lotes autorizados e integrados. Cristo Redentor e
+MASP possuem o par completo de Lugar Memorável; os 27 selos territoriais brasileiros e os cartões
+urbanos de Manhuaçu, Londrina, Nova Friburgo e Hong Kong estão produzidos. Os demais cartões e
+Lugares Memoráveis permanecem propostas e exigem autorização própria.
 
 **Objetivo:**
 

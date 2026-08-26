@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
+import { CoffeeBean, SketchLogo } from "@phosphor-icons/react";
 
 import { AppBottomNav, PageShell } from "../../components/layout";
 import { EquipmentArtwork } from "../../components/mascot/MascotLoadoutEditor";
@@ -119,10 +120,10 @@ function ShopItemCard({
     <article className={styles.card}>
       <AssetImage
         alt={itemName}
-        className={styles.cardImage}
-        height={256}
+        className={`${styles.cardImage} ${item.category === "postcards" ? styles.postcardImage : ""}`}
+        height={item.category === "postcards" ? 800 : 256}
         assetKey={item.thumbnailAssetKey}
-        width={256}
+        width={item.category === "postcards" ? 1200 : 256}
       >
         <span className={styles.assetFallback} aria-hidden="true" />
       </AssetImage>
@@ -199,10 +200,10 @@ function ShopItemDialog({
           )}
           <AssetImage
             alt={itemName}
-            className={styles.dialogItemImage}
-            height={256}
+            className={`${styles.dialogItemImage} ${item.category === "postcards" ? styles.postcardImage : ""}`}
+            height={item.category === "postcards" ? 800 : 256}
             assetKey={item.thumbnailAssetKey}
-            width={256}
+            width={item.category === "postcards" ? 1200 : 256}
           >
             <span className={styles.assetFallback} aria-hidden="true" />
           </AssetImage>
@@ -241,18 +242,17 @@ function ShopItemDialog({
 function CurrencyIcon({ currency }: { currency: ShopCatalogItem["currency"] }) {
   const { t } = useTranslation();
   const label = t(`shop.currencies.${currency}`);
+  const Icon = currency === "seeds" ? CoffeeBean : SketchLogo;
 
   return (
     <span className={styles.currencyMark} title={label}>
-      <AssetImage
-        alt=""
+      <Icon
+        aria-hidden="true"
         className={styles.currencyIcon}
-        height={32}
-        assetKey={currency === "seeds" ? assetKeys.currency.seed : assetKeys.currency.crystal}
-        width={32}
-      >
-        <span className={styles.currencyFallback} aria-hidden="true" />
-      </AssetImage>
+        data-currency={currency}
+        size={24}
+        weight="duotone"
+      />
       <span className={styles.srOnly}>{label}</span>
     </span>
   );

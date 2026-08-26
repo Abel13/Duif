@@ -40,9 +40,9 @@ describe("inventory helpers", () => {
 
     expect(counts.all).toBe(mockInventoryItems.length);
     expect(counts.equipment).toBe(2);
-    expect(counts.stamps).toBe(1);
-    expect(counts.keepsakes).toBe(1);
-    expect(counts.routeMarks).toBe(1);
+    expect(counts.stamps).toBe(3);
+    expect(counts.keepsakes).toBe(0);
+    expect(counts.routeMarks).toBe(0);
   });
 
   it("groups repeat collection rewards while keeping equipment as separate instances", () => {
@@ -90,9 +90,10 @@ describe("inventory helpers", () => {
 
   it("counts grouped boxes by category and summarizes distinct and acquired items", () => {
     const items = groupInventoryItems([
-      ...mockInventoryItems.map((item) =>
-        item.category === "stamps" ? { ...item, rewardItemId: "reward-worn-route-stamp" } : item,
-      ),
+      ...mockInventoryItems.map((item) => ({
+        ...item,
+        rewardItemId: item.id.replace("inventory-", "reward-"),
+      })),
       {
         ...mockInventoryItems[2],
         id: "inventory-worn-route-stamp-second",
@@ -101,9 +102,10 @@ describe("inventory helpers", () => {
       },
     ]);
     const counts = getInventoryCategoryCounts([
-      ...mockInventoryItems.map((item) =>
-        item.category === "stamps" ? { ...item, rewardItemId: "reward-worn-route-stamp" } : item,
-      ),
+      ...mockInventoryItems.map((item) => ({
+        ...item,
+        rewardItemId: item.id.replace("inventory-", "reward-"),
+      })),
       {
         ...mockInventoryItems[2],
         id: "inventory-worn-route-stamp-second",
@@ -113,12 +115,12 @@ describe("inventory helpers", () => {
     const summary = getInventorySummary(items);
 
     expect(counts.all).toBe(mockInventoryItems.length);
-    expect(counts.stamps).toBe(1);
+    expect(counts.stamps).toBe(3);
     expect(summary.distinctTotal).toBe(mockInventoryItems.length);
     expect(summary.acquiredTotal).toBe(mockInventoryItems.length + 1);
     expect(summary.equipped).toBe(2);
     expect(summary.rarityCounts.common).toBe(3);
-    expect(summary.rarityCounts.uncommon).toBe(2);
-    expect(summary.rarityCounts.rare).toBe(1);
+    expect(summary.rarityCounts.uncommon).toBe(1);
+    expect(summary.rarityCounts.rare).toBe(2);
   });
 });

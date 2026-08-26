@@ -24,6 +24,12 @@ export const enUS = {
     base: { name: "DUIF Postcard", description: "The permanent base postcard for every correspondence." },
     christTheRedeemer: { name: "Christ the Redeemer Postcard", description: "A permanent postcard earned by passing Christ the Redeemer.", alt: "Illustrated postcard of Christ the Redeemer overlooking Rio de Janeiro." },
     masp: { name: "MASP Postcard", description: "A permanent postcard earned by passing MASP.", alt: "Illustrated postcard of MASP on Avenida Paulista." },
+    cities: {
+      manhuacu: { name: "Manhuaçu Postcard", description: "A permanent postcard earned by completing a journey to Manhuaçu.", alt: "Manhuaçu illustrated among mountains, coffee fields, and Zona da Mata mist." },
+      londrina: { name: "Londrina Postcard", description: "A permanent postcard earned by completing a journey to Londrina.", alt: "Londrina illustrated by Lake Igapó with red soil and coffee branches." },
+      novaFriburgo: { name: "Nova Friburgo Postcard", description: "A permanent postcard earned by completing a journey to Nova Friburgo.", alt: "Nova Friburgo illustrated among mountains, mist, and hydrangeas." },
+      hongKong: { name: "Hong Kong Postcard", description: "A permanent postcard earned by completing a journey to Hong Kong.", alt: "Victoria Harbour illustrated between mountains, skyscrapers, and boats." },
+    },
   },
   regionalStamps: {
     acre: { name: "Acre Stamp", description: "Earned by crossing Acre on a postal route.", alt: "Illustrated Acre stamp with rubber tree, river, and riverside home." },

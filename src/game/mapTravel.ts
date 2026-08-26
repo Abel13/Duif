@@ -156,34 +156,6 @@ export const mockRouteRewardPoints: RouteRewardPoint[] = [
   },
   {
     coordinates: {
-      latitude: -23.2758,
-      longitude: -51.2797,
-    },
-    descriptionKey: "map.rewards.cambeSouvenir.description",
-    eligibilityRadiusKm: 18,
-    id: "route-reward-cambe-souvenir",
-    kind: "souvenir",
-    rarity: "common",
-    regionKind: "state",
-    regionLabel: "Cambé, PR, Brasil",
-    titleKey: "map.rewards.cambeSouvenir.name",
-  },
-  {
-    coordinates: {
-      latitude: -23.3103,
-      longitude: -51.3692,
-    },
-    descriptionKey: "map.rewards.rolandiaBadge.description",
-    eligibilityRadiusKm: 18,
-    id: "route-reward-rolandia-badge",
-    kind: "badge",
-    rarity: "uncommon",
-    regionKind: "country",
-    regionLabel: "Rolândia, PR, Brasil",
-    titleKey: "map.rewards.rolandiaBadge.name",
-  },
-  {
-    coordinates: {
       latitude: -23.415,
       longitude: -51.4245,
     },

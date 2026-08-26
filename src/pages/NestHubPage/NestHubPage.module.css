@@ -34,9 +34,14 @@
   background: var(--color-paper-light);
   font-size: 0.78rem;
 }
-.currency img {
+.currency svg {
   width: 1.45rem;
   height: 1.45rem;
+  color: var(--color-postal-brown);
+}
+.currency[data-currency="crystals"] svg {
+  color: var(--color-postal-blue);
+  filter: drop-shadow(0 1px 0 var(--color-rare-gold));
 }
 .currency small {
   color: var(--color-ink-soft);

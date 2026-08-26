@@ -31,6 +31,12 @@ export type TranslationDictionary = {
     base: { name: string; description: string };
     christTheRedeemer: { name: string; description: string; alt: string };
     masp: { name: string; description: string; alt: string };
+    cities: {
+      manhuacu: { name: string; description: string; alt: string };
+      londrina: { name: string; description: string; alt: string };
+      novaFriburgo: { name: string; description: string; alt: string };
+      hongKong: { name: string; description: string; alt: string };
+    };
   };
   regionalStamps: Record<RegionalStampKey, { name: string; description: string; alt: string }>;
   officialStickers: { sunStamp: { description: string }; blueEnvelope: { description: string }; routeSpark: { description: string } };
@@ -1800,6 +1806,18 @@ export type TranslationKey =
   | "officialPostcards.masp.name"
   | "officialPostcards.masp.description"
   | "officialPostcards.masp.alt"
+  | "officialPostcards.cities.manhuacu.name"
+  | "officialPostcards.cities.manhuacu.description"
+  | "officialPostcards.cities.manhuacu.alt"
+  | "officialPostcards.cities.londrina.name"
+  | "officialPostcards.cities.londrina.description"
+  | "officialPostcards.cities.londrina.alt"
+  | "officialPostcards.cities.novaFriburgo.name"
+  | "officialPostcards.cities.novaFriburgo.description"
+  | "officialPostcards.cities.novaFriburgo.alt"
+  | "officialPostcards.cities.hongKong.name"
+  | "officialPostcards.cities.hongKong.description"
+  | "officialPostcards.cities.hongKong.alt"
   | "regionalStamps.espiritoSanto.name"
   | "regionalStamps.espiritoSanto.description"
   | "regionalStamps.espiritoSanto.alt"

@@ -46,12 +46,12 @@ describe("mock reward collection", () => {
       storage,
     });
 
-    expect(routeDiscoveries).toHaveLength(6);
-    expect(first.inventory).toHaveLength(7);
-    expect(second.inventory).toHaveLength(7);
+    expect(routeDiscoveries).toHaveLength(4);
+    expect(first.inventory).toHaveLength(5);
+    expect(second.inventory).toHaveLength(5);
     expect(first.inventory.filter((item) => item.category === "stamps")).toHaveLength(1);
-    expect(first.inventory.filter((item) => item.category === "routeMarks")).toHaveLength(1);
-    expect(new Set(first.inventory.map((item) => item.id)).size).toBe(7);
+    expect(first.inventory.filter((item) => item.category === "routeMarks")).toHaveLength(0);
+    expect(new Set(first.inventory.map((item) => item.id)).size).toBe(5);
   });
 
   it("falls back safely for malformed session data", () => {

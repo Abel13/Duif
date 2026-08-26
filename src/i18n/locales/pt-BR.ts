@@ -24,6 +24,12 @@ export const ptBR = {
     base: { name: "Cartão DUIF", description: "O cartão-base permanente para toda correspondência." },
     christTheRedeemer: { name: "Cartão do Cristo Redentor", description: "Um cartão postal permanente conquistado ao passar pelo Cristo Redentor.", alt: "Cartão postal ilustrado do Cristo Redentor com o Rio de Janeiro ao fundo." },
     masp: { name: "Cartão do MASP", description: "Um cartão postal permanente conquistado ao passar pelo MASP.", alt: "Cartão postal ilustrado do MASP na Avenida Paulista." },
+    cities: {
+      manhuacu: { name: "Cartão de Manhuaçu", description: "Um cartão postal permanente conquistado ao concluir uma viagem para Manhuaçu.", alt: "Manhuaçu ilustrada entre montanhas, cafezais e a neblina da Zona da Mata." },
+      londrina: { name: "Cartão de Londrina", description: "Um cartão postal permanente conquistado ao concluir uma viagem para Londrina.", alt: "Londrina ilustrada junto ao Lago Igapó, com terra vermelha e ramos de café." },
+      novaFriburgo: { name: "Cartão de Nova Friburgo", description: "Um cartão postal permanente conquistado ao concluir uma viagem para Nova Friburgo.", alt: "Nova Friburgo ilustrada entre montanhas, neblina e hortênsias." },
+      hongKong: { name: "Cartão de Hong Kong", description: "Um cartão postal permanente conquistado ao concluir uma viagem para Hong Kong.", alt: "Victoria Harbour ilustrado entre montanhas, arranha-céus e embarcações." },
+    },
   },
   regionalStamps: {
     acre: { name: "Selo do Acre", description: "Conquistado ao atravessar o Acre em uma rota postal.", alt: "Selo ilustrado do Acre com seringueira, rio e casa ribeirinha." },

@@ -40,14 +40,14 @@ ordem abaixo é apenas editorial. Nenhuma contagem ou associação com perfis fo
 
 | Cidade · região · GeoName ID | Coordenada pública | Chave futura do cartão | Tema, composição e referência permitida | Alt text preliminar | Prioridade/status |
 |---|---|---|---|---|---|
-| Manhuaçu · Minas Gerais · Brasil · `3457952` | -20.25806, -42.03361 | `postcard.city.3457952.front` | cartão: relevo da Zona da Mata, cafezais, luz de serra e arquitetura urbana sem eleger propriedade privada | Manhuaçu ilustrada entre montanhas e cafezais da Zona da Mata | primeira/proposta |
-| Londrina · Paraná · Brasil · `3458449` | -23.31028, -51.16278 | `postcard.city.3458449.front` | cartão: Lago Igapó, terra vermelha, café e horizonte urbano | Londrina ilustrada junto ao Lago Igapó, com terra vermelha e cafezais | primeira/proposta |
-| Nova Friburgo · Rio de Janeiro · Brasil · `3456166` | -22.28194, -42.53111 | `postcard.city.3456166.front` | cartão: serra, neblina, flores e casario visto em conjunto | Nova Friburgo ilustrada entre montanhas, neblina e flores | primeira/proposta |
-| Hong Kong · Hong Kong · `1819729` | 22.27832, 114.17469 | `postcard.city.1819729.front` | cartão: Victoria Harbour, relevo, ferry genérico sem marca e densidade vertical | Porto e horizonte vertical de Hong Kong vistos entre as montanhas | primeira/proposta e revisão cultural |
+| Manhuaçu · Minas Gerais · Brasil · `3457952` | -20.25806, -42.03361 | `postcard.city.3457952.front` | cartão: relevo da Zona da Mata, cafezais, luz de serra e arquitetura urbana sem eleger propriedade privada | Manhuaçu ilustrada entre montanhas e cafezais da Zona da Mata | produzido/ativo |
+| Londrina · Paraná · Brasil · `3458449` | -23.31028, -51.16278 | `postcard.city.3458449.front` | cartão: Lago Igapó, terra vermelha, café e horizonte urbano | Londrina ilustrada junto ao Lago Igapó, com terra vermelha e cafezais | produzido/ativo |
+| Nova Friburgo · Rio de Janeiro · Brasil · `3456166` | -22.28194, -42.53111 | `postcard.city.3456166.front` | cartão: serra, neblina, flores e casario visto em conjunto | Nova Friburgo ilustrada entre montanhas, neblina e flores | produzido/ativo |
+| Hong Kong · Hong Kong · `1819729` | 22.27832, 114.17469 | `postcard.city.1819729.front` | cartão: Victoria Harbour, relevo, ferry genérico sem marca e densidade vertical | Porto e horizonte vertical de Hong Kong vistos entre as montanhas | produzido/ativo · revisão cultural concluída |
 
-O primeiro lote de cartões deve escolher **uma** dessas cidades. Selos territoriais formam uma
-fila própria e marcos não participam desse critério. A escolha entre as quatro cidades ainda exige
-aprovação editorial; não deve ser inferida por população ou pela ordem da consulta.
+O primeiro lote foi concluído para as quatro cidades. Cada cartão é desbloqueado uma única vez
+quando uma viagem não tutorial termina no destino canônico `city:<GeoName ID>`; nomes e
+coordenadas aproximadas não são aceitos como prova da visita.
 
 ## Capitais brasileiras
 
