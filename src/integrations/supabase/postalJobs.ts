@@ -6,12 +6,20 @@ export type PostalJobOffer = {
   replacementsRemaining: number;
 };
 
-type Rpc = (name: string, args: Record<string, unknown>) => PromiseLike<{ data: unknown; error: unknown }>;
-
-function clientRpc(): Rpc {
+function postalJobsClient() {
   const client = getSupabaseClient();
   if (!client) throw new Error("Supabase is not configured");
-  return client.rpc as unknown as Rpc;
+  return client;
+}
+
+function reportPostalJobFailure(operation: string, error: unknown) {
+  const details = typeof error === "object" && error !== null
+    ? error as { code?: unknown; status?: unknown }
+    : {};
+  console.error(`[postal-jobs] ${operation} failed`, {
+    code: typeof details.code === "string" ? details.code : "unknown",
+    status: typeof details.status === "number" ? details.status : undefined,
+  });
 }
 
 function offerFrom(value: unknown): PostalJobOffer {
@@ -22,25 +30,29 @@ function offerFrom(value: unknown): PostalJobOffer {
 }
 
 export async function fetchPostalJobOffer(mascotId: string) {
-  const { data, error } = await clientRpc()("postal_job_offer_payload", { target_mascot_id: mascotId });
-  if (error) throw error;
-  return offerFrom(data);
+  const { data, error } = await postalJobsClient().rpc("postal_job_offer_payload", { target_mascot_id: mascotId });
+  if (error) { reportPostalJobFailure("fetchOffer", error); throw error; }
+  try { return offerFrom(data); } catch (invalidResponse) { reportPostalJobFailure("fetchOffer", invalidResponse); throw invalidResponse; }
 }
 
 export async function replacePostalJobOffer(mascotId: string) {
-  const { data, error } = await clientRpc()("replace_postal_job_offer", { target_mascot_id: mascotId });
-  if (error) throw error;
-  return offerFrom(data);
+  const { data, error } = await postalJobsClient().rpc("replace_postal_job_offer", { target_mascot_id: mascotId });
+  if (error) { reportPostalJobFailure("replaceOffer", error); throw error; }
+  try { return offerFrom(data); } catch (invalidResponse) { reportPostalJobFailure("replaceOffer", invalidResponse); throw invalidResponse; }
 }
 
 export async function acceptPostalJobOffer(offerId: string) {
-  const { data, error } = await clientRpc()("accept_postal_job_offer", { target_offer_id: offerId });
-  if (error) throw error;
+  const { data, error } = await postalJobsClient().rpc("accept_postal_job_offer", { target_offer_id: offerId });
+  if (error) { reportPostalJobFailure("acceptOffer", error); throw error; }
   return data;
 }
 
 export async function dispatchPostalJob(offerId: string) {
-  const { data, error } = await clientRpc()("dispatch_postal_job", { target_offer_id: offerId });
-  if (error || !data || typeof data !== "object") throw error ?? new Error("Postal job dispatch failed");
+  const { data, error } = await postalJobsClient().rpc("dispatch_postal_job", { target_offer_id: offerId });
+  if (error || !data || typeof data !== "object") {
+    const failure = error ?? new Error("Postal job dispatch failed");
+    reportPostalJobFailure("dispatchOffer", failure);
+    throw failure;
+  }
   return data as { id: string };
 }
