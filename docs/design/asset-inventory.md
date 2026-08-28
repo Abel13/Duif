@@ -43,14 +43,12 @@ Resumo auditado:
    produção continua pertencendo ao processo operacional.
 2. `postalMark.routeDoodle` e `currency.icon.stamp` estão arquivados. O primeiro ainda possui
    arquivo histórico; o segundo não. Nenhum dos dois deve voltar ao manifest sem decisão.
-3. Os PNGs PWA de 512 px excedem o orçamento genérico de 300 KB e o Apple touch icon mede
-   161×163, apesar de a documentação esperar 180×180. São ativos de boot, fora do Registry, e
-   precisam de revisão específica, não de remoção automática.
+3. Os PNGs PWA foram corrigidos preservando a arte: os arquivos de 512 px foram compactados para
+   permanecer abaixo do orçamento de 300 KB e o Apple touch icon foi normalizado para 180×180.
 4. `.DS_Store` está em `public/assets` e seria copiado para o build. É candidato a remoção numa
    execução posterior autorizada.
-5. O Registry local registra 12.212 bytes para `postcard.base.front`, mas a migration e o arquivo
-   presente registram 156.788 bytes. O manifest materializado deve ser corrigido somente após
-   conferir produção.
+5. `postcard.base.front` foi conferido no Registry materializado: os 156.788 bytes registrados
+   correspondem exatamente ao arquivo empacotado. Não há correção de banco pendente.
 
 ## Inventário do Registry
 
@@ -106,7 +104,7 @@ próxima versão.
 | `nest.artwork.profileNook` | nestArtwork · v1 ativa | `nest/profile-nook.webp` · 480×640 · 51.5 KB | Ninho/perfil | decorativo; papel CSS | aprovado | ativo-verificado |
 | `postalMark.postalCancel` | postalMark · v1 ativa | `textures/postal-cancel-mark.webp` · 256² · 6.7 KB | correspondência/carimbo | decorativo; CSS | aprovado | ativo-verificado |
 | `postalMark.routeDoodle` | postalMark · v1 arquivada | `textures/route-doodle-mark.webp` · 256² · 3.8 KB | somente histórico | decorativo | arquivo sem manifest ativo; preservar até revisão | arquivado |
-| `postcard.base.front` | postcardArtwork · v1 ativa | `postcards/duif-base.webp` · 900×600 · 156.8 KB no arquivo; 12.2 KB no Registry local | compositor, caixa postal, Álbum | alt traduzido; cartão CSS | metadado local divergente; conferir produção | ativo-revisar |
+| `postcard.base.front` | postcardArtwork · v1 ativa | `postcards/duif-base.webp` · 900×600 · 156.8 KB | compositor, caixa postal, Álbum | alt traduzido; cartão CSS | arquivo e Registry conferidos | ativo-verificado |
 | `postcard.city.1819729.front` | postcardArtwork · v1 ativa | `postcards/cities/hong-kong.webp` · 1200×800 · 162.4 KB | compositor, caixa postal, Álbum | nome/descrição/alt traduzidos; cartão CSS | visita canônica a Hong Kong | ativo-verificado |
 | `postcard.city.3456166.front` | postcardArtwork · v1 ativa | `postcards/cities/nova-friburgo.webp` · 1200×800 · 173.3 KB | compositor, caixa postal, Álbum | nome/descrição/alt traduzidos; cartão CSS | visita canônica a Nova Friburgo | ativo-verificado |
 | `postcard.city.3457952.front` | postcardArtwork · v1 ativa | `postcards/cities/manhuacu.webp` · 1200×800 · 150.3 KB | compositor, caixa postal, Álbum | nome/descrição/alt traduzidos; cartão CSS | visita canônica a Manhuaçu | ativo-verificado |
@@ -164,9 +162,9 @@ próxima versão.
 | `stamps/states/sergipe.webp` · `stamp.state.sergipe.front` | selo estadual · 171×256 · 27.682 B | ativo-verificado | manter |
 | `stamps/states/tocantins.webp` · `stamp.state.tocantins.front` | selo estadual · 171×256 · 24.650 B | ativo-verificado | manter |
 | `icons/icon-192.png` | manifest PWA · 192² · 75.5 KB | ativo-verificado | manter |
-| `icons/icon-512.png` | manifest PWA · 512² · 513.4 KB | ativo-revisar | reotimizar em lote próprio |
-| `icons/icon-maskable-512.png` | manifest PWA · 512² · 305.3 KB | ativo-revisar | validar área segura e orçamento |
-| `icons/apple-touch-icon.png` | HTML/iOS · 161×163 · 54.5 KB | ativo-revisar | produzir export exato 180² após brief |
+| `icons/icon-512.png` | manifest PWA · 512² · 153.7 KB | ativo-verificado | arte preservada e compactada |
+| `icons/icon-maskable-512.png` | manifest PWA · 512² · 106.8 KB | ativo-verificado | área segura preservada e compactada |
+| `icons/apple-touch-icon.png` | HTML/iOS · 180² · 59.1 KB | ativo-verificado | export quadrado para iOS |
 | cinco arquivos `.woff2` em `fonts/` | `@font-face` de boot e escrita postal | ativo-verificado | manter fora do Registry |
 | `.gitkeep` em quatro diretórios | preservação estrutural, não vai ao manifest visual | placeholder-aceitável | manter ou remover só com limpeza autorizada |
 | `public/assets/.DS_Store` | nenhuma referência; copiado pelo build | candidato-a-remoção | remover em mudança posterior explícita |
