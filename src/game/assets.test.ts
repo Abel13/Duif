@@ -102,6 +102,49 @@ describe("official asset manifest", () => {
     artwork.forEach(([key, path]) => expect(resolveOfficialAssetPath(manifest, key)).toBe(path));
   });
 
+  it("resolves every published city postcard in the reviewed capital batches", () => {
+    const artwork = [
+      [assetKeys.postcards.cities.saoPaulo, "/assets/postcards/cities/sao-paulo.webp"],
+      [assetKeys.postcards.cities.rioDeJaneiro, "/assets/postcards/cities/rio-de-janeiro.webp"],
+      [assetKeys.postcards.cities.beloHorizonte, "/assets/postcards/cities/belo-horizonte.webp"],
+      [assetKeys.postcards.cities.salvador, "/assets/postcards/cities/salvador.webp"],
+      [assetKeys.postcards.cities.fortaleza, "/assets/postcards/cities/fortaleza.webp"],
+      [assetKeys.postcards.cities.manaus, "/assets/postcards/cities/manaus.webp"],
+      [assetKeys.postcards.cities.brasilia, "/assets/postcards/cities/brasilia.webp"],
+      [assetKeys.postcards.cities.curitiba, "/assets/postcards/cities/curitiba.webp"],
+      [assetKeys.postcards.cities.recife, "/assets/postcards/cities/recife.webp"],
+      [assetKeys.postcards.cities.goiania, "/assets/postcards/cities/goiania.webp"],
+      [assetKeys.postcards.cities.belem, "/assets/postcards/cities/belem.webp"],
+      [assetKeys.postcards.cities.portoAlegre, "/assets/postcards/cities/porto-alegre.webp"],
+      [assetKeys.postcards.cities.maceio, "/assets/postcards/cities/maceio.webp"],
+      [assetKeys.postcards.cities.saoLuis, "/assets/postcards/cities/sao-luis.webp"],
+      [assetKeys.postcards.cities.campoGrande, "/assets/postcards/cities/campo-grande.webp"],
+      [assetKeys.postcards.cities.natal, "/assets/postcards/cities/natal.webp"],
+      [assetKeys.postcards.cities.teresina, "/assets/postcards/cities/teresina.webp"],
+      [assetKeys.postcards.cities.joaoPessoa, "/assets/postcards/cities/joao-pessoa.webp"],
+      [assetKeys.postcards.cities.aracaju, "/assets/postcards/cities/aracaju.webp"],
+      [assetKeys.postcards.cities.cuiaba, "/assets/postcards/cities/cuiaba.webp"],
+      [assetKeys.postcards.cities.portoVelho, "/assets/postcards/cities/porto-velho.webp"],
+      [assetKeys.postcards.cities.macapa, "/assets/postcards/cities/macapa.webp"],
+      [assetKeys.postcards.cities.florianopolis, "/assets/postcards/cities/florianopolis.webp"],
+      [assetKeys.postcards.cities.boaVista, "/assets/postcards/cities/boa-vista.webp"],
+      [assetKeys.postcards.cities.rioBranco, "/assets/postcards/cities/rio-branco.webp"],
+      [assetKeys.postcards.cities.vitoria, "/assets/postcards/cities/vitoria.webp"],
+      [assetKeys.postcards.cities.palmas, "/assets/postcards/cities/palmas.webp"],
+    ] as const;
+    const manifest = parseOfficialAssetManifest(artwork.map(([key, packaged_path]) => ({
+      ...row,
+      packaged_path,
+      width: 1200,
+      height: 800,
+      byte_size: 180000,
+      alt_text_key: "officialPostcards.cities.saoPaulo.alt",
+      official_assets: { asset_key: key, asset_type: "postcardArtwork" },
+    })));
+
+    artwork.forEach(([key, path]) => expect(resolveOfficialAssetPath(manifest, key)).toBe(path));
+  });
+
   it("resolves the three registered starter equipment icons", () => {
     const equipment = [
       [assetKeys.equipment.featherCharm, "/assets/equipment/icons/feather-charm.webp"],

@@ -39,10 +39,37 @@ export type TranslationDictionary = {
     iguazuDevilsThroat: { name: string; description: string; alt: string };
     machuPicchu: { name: string; description: string; alt: string };
     cities: {
+      aracaju: { name: string; description: string; alt: string };
+      beloHorizonte: { name: string; description: string; alt: string };
+      belem: { name: string; description: string; alt: string };
+      boaVista: { name: string; description: string; alt: string };
+      brasilia: { name: string; description: string; alt: string };
+      campoGrande: { name: string; description: string; alt: string };
+      cuiaba: { name: string; description: string; alt: string };
+      curitiba: { name: string; description: string; alt: string };
+      florianopolis: { name: string; description: string; alt: string };
+      fortaleza: { name: string; description: string; alt: string };
+      goiania: { name: string; description: string; alt: string };
+      joaoPessoa: { name: string; description: string; alt: string };
+      macapa: { name: string; description: string; alt: string };
+      maceio: { name: string; description: string; alt: string };
       manhuacu: { name: string; description: string; alt: string };
       londrina: { name: string; description: string; alt: string };
+      natal: { name: string; description: string; alt: string };
       novaFriburgo: { name: string; description: string; alt: string };
       hongKong: { name: string; description: string; alt: string };
+      manaus: { name: string; description: string; alt: string };
+      palmas: { name: string; description: string; alt: string };
+      portoAlegre: { name: string; description: string; alt: string };
+      portoVelho: { name: string; description: string; alt: string };
+      recife: { name: string; description: string; alt: string };
+      rioBranco: { name: string; description: string; alt: string };
+      rioDeJaneiro: { name: string; description: string; alt: string };
+      salvador: { name: string; description: string; alt: string };
+      saoLuis: { name: string; description: string; alt: string };
+      saoPaulo: { name: string; description: string; alt: string };
+      teresina: { name: string; description: string; alt: string };
+      vitoria: { name: string; description: string; alt: string };
     };
   };
   regionalStamps: Record<RegionalStampKey, { name: string; description: string; alt: string }>;
@@ -1838,6 +1865,53 @@ export type TranslationKey =
   | "officialPostcards.cities.hongKong.name"
   | "officialPostcards.cities.hongKong.description"
   | "officialPostcards.cities.hongKong.alt"
+  | "officialPostcards.cities.saoPaulo.name"
+  | "officialPostcards.cities.saoPaulo.description"
+  | "officialPostcards.cities.saoPaulo.alt"
+  | "officialPostcards.cities.rioDeJaneiro.name"
+  | "officialPostcards.cities.rioDeJaneiro.description"
+  | "officialPostcards.cities.rioDeJaneiro.alt"
+  | "officialPostcards.cities.beloHorizonte.name"
+  | "officialPostcards.cities.beloHorizonte.description"
+  | "officialPostcards.cities.beloHorizonte.alt"
+  | "officialPostcards.cities.salvador.name"
+  | "officialPostcards.cities.salvador.description"
+  | "officialPostcards.cities.salvador.alt"
+  | "officialPostcards.cities.fortaleza.name"
+  | "officialPostcards.cities.fortaleza.description"
+  | "officialPostcards.cities.fortaleza.alt"
+  | "officialPostcards.cities.manaus.name"
+  | "officialPostcards.cities.manaus.description"
+  | "officialPostcards.cities.manaus.alt"
+  | "officialPostcards.cities.brasilia.name"
+  | "officialPostcards.cities.brasilia.description"
+  | "officialPostcards.cities.brasilia.alt"
+  | "officialPostcards.cities.curitiba.name"
+  | "officialPostcards.cities.curitiba.description"
+  | "officialPostcards.cities.curitiba.alt"
+  | "officialPostcards.cities.recife.name"
+  | "officialPostcards.cities.recife.description"
+  | "officialPostcards.cities.recife.alt"
+  | "officialPostcards.cities.goiania.name"
+  | "officialPostcards.cities.goiania.description"
+  | "officialPostcards.cities.goiania.alt"
+  | "officialPostcards.cities.belem.name" | "officialPostcards.cities.belem.description" | "officialPostcards.cities.belem.alt"
+  | "officialPostcards.cities.portoAlegre.name" | "officialPostcards.cities.portoAlegre.description" | "officialPostcards.cities.portoAlegre.alt"
+  | "officialPostcards.cities.maceio.name" | "officialPostcards.cities.maceio.description" | "officialPostcards.cities.maceio.alt"
+  | "officialPostcards.cities.saoLuis.name" | "officialPostcards.cities.saoLuis.description" | "officialPostcards.cities.saoLuis.alt"
+  | "officialPostcards.cities.campoGrande.name" | "officialPostcards.cities.campoGrande.description" | "officialPostcards.cities.campoGrande.alt"
+  | "officialPostcards.cities.natal.name" | "officialPostcards.cities.natal.description" | "officialPostcards.cities.natal.alt"
+  | "officialPostcards.cities.teresina.name" | "officialPostcards.cities.teresina.description" | "officialPostcards.cities.teresina.alt"
+  | "officialPostcards.cities.joaoPessoa.name" | "officialPostcards.cities.joaoPessoa.description" | "officialPostcards.cities.joaoPessoa.alt"
+  | "officialPostcards.cities.aracaju.name" | "officialPostcards.cities.aracaju.description" | "officialPostcards.cities.aracaju.alt"
+  | "officialPostcards.cities.cuiaba.name" | "officialPostcards.cities.cuiaba.description" | "officialPostcards.cities.cuiaba.alt"
+  | "officialPostcards.cities.portoVelho.name" | "officialPostcards.cities.portoVelho.description" | "officialPostcards.cities.portoVelho.alt"
+  | "officialPostcards.cities.macapa.name" | "officialPostcards.cities.macapa.description" | "officialPostcards.cities.macapa.alt"
+  | "officialPostcards.cities.florianopolis.name" | "officialPostcards.cities.florianopolis.description" | "officialPostcards.cities.florianopolis.alt"
+  | "officialPostcards.cities.boaVista.name" | "officialPostcards.cities.boaVista.description" | "officialPostcards.cities.boaVista.alt"
+  | "officialPostcards.cities.rioBranco.name" | "officialPostcards.cities.rioBranco.description" | "officialPostcards.cities.rioBranco.alt"
+  | "officialPostcards.cities.vitoria.name" | "officialPostcards.cities.vitoria.description" | "officialPostcards.cities.vitoria.alt"
+  | "officialPostcards.cities.palmas.name" | "officialPostcards.cities.palmas.description" | "officialPostcards.cities.palmas.alt"
   | "regionalStamps.espiritoSanto.name"
   | "regionalStamps.espiritoSanto.description"
   | "regionalStamps.espiritoSanto.alt"
