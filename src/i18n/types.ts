@@ -26,11 +26,18 @@ export type TranslationDictionary = {
   app: {
     title: string;
   };
-  landmarks: { christTheRedeemer: { name: string; description: string; alt: string }; masp: { name: string; description: string; alt: string } };
+  landmarks: {
+    christTheRedeemer: { name: string; description: string; alt: string };
+    masp: { name: string; description: string; alt: string };
+    iguazuDevilsThroat: { name: string; description: string; alt: string };
+    machuPicchu: { name: string; description: string; alt: string };
+  };
   officialPostcards: {
     base: { name: string; description: string };
     christTheRedeemer: { name: string; description: string; alt: string };
     masp: { name: string; description: string; alt: string };
+    iguazuDevilsThroat: { name: string; description: string; alt: string };
+    machuPicchu: { name: string; description: string; alt: string };
     cities: {
       manhuacu: { name: string; description: string; alt: string };
       londrina: { name: string; description: string; alt: string };
@@ -948,6 +955,7 @@ export type TranslationDictionary = {
 
 export type TranslationKey =
   | "landmarks.christTheRedeemer.name" | "landmarks.christTheRedeemer.description" | "landmarks.christTheRedeemer.alt" | "landmarks.masp.name" | "landmarks.masp.description" | "landmarks.masp.alt"
+  | "landmarks.iguazuDevilsThroat.name" | "landmarks.iguazuDevilsThroat.description" | "landmarks.iguazuDevilsThroat.alt" | "landmarks.machuPicchu.name" | "landmarks.machuPicchu.description" | "landmarks.machuPicchu.alt"
   | "map.landmarks.title" | "map.landmarks.discovered" | "map.landmarks.newTitle" | "map.landmarks.newDescription" | "map.landmarks.learnMore" | "map.landmarks.dismiss" | "map.landmarks.close" | "map.landmarks.category" | "map.landmarks.cultural" | "map.landmarks.empty"
   | "send.skillPreview.title" | "send.skillPreview.loading" | "send.skillPreview.unavailable" | "send.skillPreview.active" | "send.skillPreview.inactive" | "send.skillPreview.weatherDependent" | "send.skillPreview.weatherNotice" | "send.skillPreview.reasons.snapshot" | "send.skillPreview.reasons.conditionNotMet"
   | "functionalEquipment.shopTitle" | "functionalEquipment.shopDescription" | "functionalEquipment.balance" | "functionalEquipment.buy" | "functionalEquipment.buying" | "functionalEquipment.purchaseError"
@@ -1812,6 +1820,12 @@ export type TranslationKey =
   | "officialPostcards.masp.name"
   | "officialPostcards.masp.description"
   | "officialPostcards.masp.alt"
+  | "officialPostcards.iguazuDevilsThroat.name"
+  | "officialPostcards.iguazuDevilsThroat.description"
+  | "officialPostcards.iguazuDevilsThroat.alt"
+  | "officialPostcards.machuPicchu.name"
+  | "officialPostcards.machuPicchu.description"
+  | "officialPostcards.machuPicchu.alt"
   | "officialPostcards.cities.manhuacu.name"
   | "officialPostcards.cities.manhuacu.description"
   | "officialPostcards.cities.manhuacu.alt"

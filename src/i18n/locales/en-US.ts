@@ -19,11 +19,21 @@ export const enUS = {
     name: "MASP",
     description: "Suspended above its open span on Avenida Paulista, the MASP building became one of Lina Bo Bardi’s most recognizable works and a symbol of São Paulo architecture.",
     alt: "Illustrated sticker of MASP with its red structure and open span.",
+  }, iguazuDevilsThroat: {
+    name: "Devil’s Throat",
+    description: "On the border between Brazil and Argentina, Devil’s Throat forms a broad arc of waterfalls surrounded by Atlantic Forest and the mist of Iguaçu Falls.",
+    alt: "Illustrated sticker of Devil’s Throat surrounded by Atlantic Forest.",
+  }, machuPicchu: {
+    name: "Machu Picchu",
+    description: "Among the mountains of the Peruvian Andes, Machu Picchu preserves terraces, paths, and stone structures of the Inca civilization in a landscape of great cultural value.",
+    alt: "Illustrated sticker of Machu Picchu with terraces and Andean mountains.",
   } },
   officialPostcards: {
     base: { name: "DUIF Postcard", description: "The permanent base postcard for every correspondence." },
     christTheRedeemer: { name: "Christ the Redeemer Postcard", description: "A permanent postcard earned by passing Christ the Redeemer.", alt: "Illustrated postcard of Christ the Redeemer overlooking Rio de Janeiro." },
     masp: { name: "MASP Postcard", description: "A permanent postcard earned by passing MASP.", alt: "Illustrated postcard of MASP on Avenida Paulista." },
+    iguazuDevilsThroat: { name: "Devil’s Throat Postcard", description: "A permanent postcard earned by passing Devil’s Throat.", alt: "Illustrated postcard of Devil’s Throat among waterfalls, forest, and mist." },
+    machuPicchu: { name: "Machu Picchu Postcard", description: "A permanent postcard earned by passing Machu Picchu.", alt: "Illustrated postcard of Machu Picchu among terraces and Andean mountains." },
     cities: {
       manhuacu: { name: "Manhuaçu Postcard", description: "A permanent postcard earned by completing a journey to Manhuaçu.", alt: "Manhuaçu illustrated among mountains, coffee fields, and Zona da Mata mist." },
       londrina: { name: "Londrina Postcard", description: "A permanent postcard earned by completing a journey to Londrina.", alt: "Londrina illustrated by Lake Igapó with red soil and coffee branches." },

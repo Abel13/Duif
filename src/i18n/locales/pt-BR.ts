@@ -19,11 +19,21 @@ export const ptBR = {
     name: "MASP",
     description: "Suspenso sobre o vão livre da Avenida Paulista, o edifício do MASP tornou-se uma das obras mais reconhecidas de Lina Bo Bardi e um símbolo da arquitetura de São Paulo.",
     alt: "Sticker ilustrado do MASP com sua estrutura vermelha e vão livre.",
+  }, iguazuDevilsThroat: {
+    name: "Garganta do Diabo",
+    description: "Na fronteira entre Brasil e Argentina, a Garganta do Diabo forma um amplo arco de quedas cercado pela Mata Atlântica e pela névoa das Cataratas do Iguaçu.",
+    alt: "Sticker ilustrado da Garganta do Diabo cercada pela Mata Atlântica.",
+  }, machuPicchu: {
+    name: "Machu Picchu",
+    description: "Entre montanhas dos Andes peruanos, Machu Picchu preserva terraços, caminhos e construções de pedra da civilização inca em uma paisagem de grande valor cultural.",
+    alt: "Sticker ilustrado de Machu Picchu com terraços e montanhas andinas.",
   } },
   officialPostcards: {
     base: { name: "Cartão DUIF", description: "O cartão-base permanente para toda correspondência." },
     christTheRedeemer: { name: "Cartão do Cristo Redentor", description: "Um cartão postal permanente conquistado ao passar pelo Cristo Redentor.", alt: "Cartão postal ilustrado do Cristo Redentor com o Rio de Janeiro ao fundo." },
     masp: { name: "Cartão do MASP", description: "Um cartão postal permanente conquistado ao passar pelo MASP.", alt: "Cartão postal ilustrado do MASP na Avenida Paulista." },
+    iguazuDevilsThroat: { name: "Cartão da Garganta do Diabo", description: "Um cartão postal permanente conquistado ao passar pela Garganta do Diabo.", alt: "Cartão postal ilustrado da Garganta do Diabo entre quedas d’água, mata e névoa." },
+    machuPicchu: { name: "Cartão de Machu Picchu", description: "Um cartão postal permanente conquistado ao passar por Machu Picchu.", alt: "Cartão postal ilustrado de Machu Picchu entre terraços e montanhas dos Andes." },
     cities: {
       manhuacu: { name: "Cartão de Manhuaçu", description: "Um cartão postal permanente conquistado ao concluir uma viagem para Manhuaçu.", alt: "Manhuaçu ilustrada entre montanhas, cafezais e a neblina da Zona da Mata." },
       londrina: { name: "Cartão de Londrina", description: "Um cartão postal permanente conquistado ao concluir uma viagem para Londrina.", alt: "Londrina ilustrada junto ao Lago Igapó, com terra vermelha e ramos de café." },

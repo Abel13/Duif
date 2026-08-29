@@ -114,7 +114,12 @@ export const assetKeys = {
     letterSky: "prestige.border.letterSky",
     nestAmongStars: "prestige.border.nestAmongStars",
   },
-  landmarks: { christTheRedeemer: "landmark.christTheRedeemer.artwork", masp: "landmark.masp.artwork" },
+  landmarks: {
+    christTheRedeemer: "landmark.christTheRedeemer.artwork",
+    masp: "landmark.masp.artwork",
+    iguazuDevilsThroat: "landmark.iguazuDevilsThroat.artwork",
+    machuPicchu: "landmark.machuPicchu.artwork",
+  },
 } as const;
 
 type NestedValues<T> = T extends string ? T : { [K in keyof T]: NestedValues<T[K]> }[keyof T];

@@ -4,23 +4,39 @@ do $$
 declare landmark public.world_landmark_catalog; asset_version record; catalog_count integer; asset_count integer;
 begin
   select count(*) into catalog_count from public.world_landmark_catalog
-  where catalog_key in ('landmark.christ-the-redeemer','landmark.masp') and active;
-  if catalog_count<>2 then raise exception 'Both memorable places must be active'; end if;
+  where catalog_key in ('landmark.christ-the-redeemer','landmark.masp','landmark.iguazu-devils-throat','landmark.machu-picchu') and active;
+  if catalog_count<>4 then raise exception 'All published memorable places must be active'; end if;
   select * into strict landmark from public.world_landmark_catalog where catalog_key='landmark.christ-the-redeemer';
   if landmark.eligibility_radius_km<>25 or landmark.minimum_zoom<>8 or landmark.icon_size_px<>56
     or landmark.postcard_catalog_key<>'postcard-landmark-christ-the-redeemer' then raise exception 'Christ catalog contract is invalid'; end if;
   select * into strict landmark from public.world_landmark_catalog where catalog_key='landmark.masp';
   if landmark.eligibility_radius_km<>25 or landmark.minimum_zoom<>8 or landmark.icon_size_px<>56
     or landmark.postcard_catalog_key<>'postcard-landmark-masp' then raise exception 'MASP catalog contract is invalid'; end if;
+  select * into strict landmark from public.world_landmark_catalog where catalog_key='landmark.iguazu-devils-throat';
+  if landmark.eligibility_radius_km<>25 or landmark.minimum_zoom<>8 or landmark.icon_size_px<>56
+    or landmark.postcard_catalog_key<>'postcard-landmark-iguazu-devils-throat'
+    or landmark.category<>'natural' then raise exception 'Iguazu catalog contract is invalid'; end if;
+  select * into strict landmark from public.world_landmark_catalog where catalog_key='landmark.machu-picchu';
+  if landmark.eligibility_radius_km<>25 or landmark.minimum_zoom<>8 or landmark.icon_size_px<>56
+    or landmark.postcard_catalog_key<>'postcard-landmark-machu-picchu'
+    or landmark.category<>'cultural' then raise exception 'Machu Picchu catalog contract is invalid'; end if;
   select v.* into strict asset_version from public.official_asset_versions v join public.official_assets a on a.id=v.asset_id where a.asset_key='landmark.christTheRedeemer.artwork' and v.status='active';
   if asset_version.mime_type<>'image/webp' or asset_version.width<>256 or asset_version.height<>256 or asset_version.byte_size>61440 then raise exception 'Landmark asset exceeds its contract'; end if;
   select count(*) into asset_count from public.official_asset_versions v join public.official_assets a on a.id=v.asset_id
-  where v.status='active' and a.asset_key in ('landmark.christTheRedeemer.artwork','landmark.masp.artwork','postcard.landmark.christTheRedeemer.front','postcard.landmark.masp.front');
-  if asset_count<>4 then raise exception 'Memorable place asset pair is incomplete'; end if;
+  where v.status='active' and a.asset_key in (
+    'landmark.christTheRedeemer.artwork','landmark.masp.artwork',
+    'landmark.iguazuDevilsThroat.artwork','landmark.machuPicchu.artwork',
+    'postcard.landmark.christTheRedeemer.front','postcard.landmark.masp.front',
+    'postcard.landmark.iguazuDevilsThroat.front','postcard.landmark.machuPicchu.front'
+  );
+  if asset_count<>8 then raise exception 'Memorable place asset pair is incomplete'; end if;
   if exists(select 1 from public.official_asset_versions v join public.official_assets a on a.id=v.asset_id
     where v.status='active' and a.asset_key like 'postcard.landmark.%' and (v.width<>1200 or v.height<>800 or v.byte_size>262144)) then
     raise exception 'Memorable-place postcard exceeds its contract';
   end if;
+  if exists(select 1 from public.official_asset_versions v join public.official_assets a on a.id=v.asset_id
+    where v.status='active' and a.asset_key in ('postcard.landmark.iguazuDevilsThroat.front','postcard.landmark.machuPicchu.front')
+      and v.byte_size>184320) then raise exception 'New memorable-place postcard exceeds the editorial budget'; end if;
   if to_regprocedure('public.reconcile_my_world_landmarks()') is null or to_regprocedure('public.acknowledge_world_landmark(text)') is null then raise exception 'Landmark RPCs are missing'; end if;
 end $$;
 

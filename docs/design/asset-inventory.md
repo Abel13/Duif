@@ -25,11 +25,14 @@ Resumo auditado:
   desbloqueio do Cristo Redentor;
 - `postcard.landmark.masp.front` possui arte WebP 3:2 de 1200×800 e 202.524 bytes no mesmo
   diretório, publicado no Registry e concedido permanentemente no desbloqueio do MASP;
+- `landmark.iguazuDevilsThroat.artwork` e `landmark.machuPicchu.artwork` são stickers WebP
+  transparentes de 256×256, acompanhados de cartões 3:2 e integrados ao mesmo desbloqueio permanente;
 
-- 99 identidades no Registry local após as migrations pendentes: 97 com versão ativa e duas somente arquivadas;
-- 97 versões ativas apontam para arquivos presentes após a correção idempotente das quatro
+- 104 identidades no Registry local após as migrations pendentes: 99 com versão ativa e cinco sem
+  versão ativa;
+- 99 versões ativas apontam para arquivos presentes após a correção idempotente das quatro
   referências de prestígio;
-- 100 arquivos visuais de runtime em `public/assets`, além de fontes e sentinelas de diretório;
+- 104 arquivos visuais de runtime em `public/assets`, além de fontes e sentinelas de diretório;
 - nenhuma chave duplicada em `assetKeys`; identidades funcionais como item ativo e avatar usam os
   tipos genéricos `equipmentIcon` e `nestArtwork` do Registry;
 - `.DS_Store` é um órfão conhecido; nada foi removido nesta auditoria.
@@ -79,6 +82,10 @@ próxima versão.
 | `equipment.icon.travelCap` | equipmentIcon · v1 ativa | `equipment/icons/travel-cap.webp` · 192² · 7.8 KB | inventário/equipamento | nome/raridade; silhueta CSS | slice atual | ativo-verificado |
 | `equipment.icon.urgentBadge` | equipmentIcon · v1 ativa | `equipment/icons/urgent-badge.webp` · 192² · 8.5 KB | inventário/equipamento | nome/raridade; silhueta CSS | slice atual | ativo-verificado |
 | `jobs.artwork.postalBoard` | shopArtwork · v1 ativa | `jobs/postal-board.webp` · 256² · 30.8 KB | quadro de trabalhos | alt traduzido; papel CSS | adequado; manter | ativo-verificado |
+| `landmark.christTheRedeemer.artwork` | landmarkArtwork · v1 ativa | `landmarks/christ-the-redeemer.webp` · 256² · 12.8 KB | mapa/ficha | nome, descrição e alt traduzidos | sticker aprovado | ativo-verificado |
+| `landmark.iguazuDevilsThroat.artwork` | landmarkArtwork · v1 ativa | `landmarks/iguazu-devils-throat.webp` · 256² · 23.5 KB | mapa/ficha | nome, descrição e alt traduzidos | sticker aprovado | ativo-verificado |
+| `landmark.machuPicchu.artwork` | landmarkArtwork · v1 ativa | `landmarks/machu-picchu.webp` · 256² · 20.3 KB | mapa/ficha | nome, descrição e alt traduzidos | sticker aprovado | ativo-verificado |
+| `landmark.masp.artwork` | landmarkArtwork · v1 ativa | `landmarks/masp.webp` · 256² · 15.7 KB | mapa/ficha | nome, descrição e alt traduzidos | sticker aprovado | ativo-verificado |
 | `map.control.destination` | mapControl · v1 ativa | `map/controls/destination.webp` · 256² · 8.1 KB | controle de destino | rótulo real; botão CSS | legível; manter | ativo-verificado |
 | `map.control.mascot` | mapControl · v1 ativa | `map/controls/mascot.webp` · 256² · 8.5 KB | controle do mascote | rótulo real; botão CSS | legível; manter | ativo-verificado |
 | `map.control.origin` | mapControl · v1 ativa | `map/controls/origin.webp` · 256² · 11.2 KB | controle de origem | rótulo real; botão CSS | legível; manter | ativo-verificado |
@@ -110,6 +117,10 @@ próxima versão.
 | `postcard.city.3457952.front` | postcardArtwork · v1 ativa | `postcards/cities/manhuacu.webp` · 1200×800 · 150.3 KB | compositor, caixa postal, Álbum | nome/descrição/alt traduzidos; cartão CSS | visita canônica a Manhuaçu | ativo-verificado |
 | `postcard.city.3458449.front` | postcardArtwork · v1 ativa | `postcards/cities/londrina.webp` · 1200×800 · 173.7 KB | compositor, caixa postal, Álbum | nome/descrição/alt traduzidos; cartão CSS | visita canônica a Londrina | ativo-verificado |
 | `postcard.inaugural.front` | postcardArtwork · v1 ativa | `tutorial/postcards/inaugural-front.webp` · 1024×683 · 151 KB | tutorial e Álbum | alt traduzido; cartão CSS | aprovado | ativo-verificado |
+| `postcard.landmark.christTheRedeemer.front` | postcardArtwork · v1 ativa | `postcards/landmarks/christ-the-redeemer.webp` · 1200×800 · 138.3 KB | compositor, caixa postal, Álbum | nome/descrição/alt | par do lugar | ativo-verificado |
+| `postcard.landmark.iguazuDevilsThroat.front` | postcardArtwork · v1 ativa | `postcards/landmarks/iguazu-devils-throat.webp` · 1200×800 · 173.2 KB | compositor, caixa postal, Álbum | nome/descrição/alt | par do lugar | ativo-verificado |
+| `postcard.landmark.machuPicchu.front` | postcardArtwork · v1 ativa | `postcards/landmarks/machu-picchu.webp` · 1200×800 · 183.6 KB | compositor, caixa postal, Álbum | nome/descrição/alt | par do lugar | ativo-verificado |
+| `postcard.landmark.masp.front` | postcardArtwork · v1 ativa | `postcards/landmarks/masp.webp` · 1200×800 · 202.5 KB | compositor, caixa postal, Álbum | nome/descrição/alt | par do lugar | ativo-verificado |
 | `prestige.border.firstHorizon` | prestigeBorder · v3 ativa; v1–2 arquivadas/ausentes | `prestige/first-horizon.webp` · 512² · 49.3 KB | retratos com prestígio | descrição acessível; sem borda | referência corrigida; validar após release | ativo-verificado |
 | `prestige.border.letterSky` | prestigeBorder · v3 ativa; v1–2 arquivadas/ausentes | `prestige/letter-sky.webp` · 512² · 56.4 KB | retratos com prestígio | descrição acessível; sem borda | referência corrigida; validar após release | ativo-verificado |
 | `prestige.border.nestAmongStars` | prestigeBorder · v3 ativa; v1–2 arquivadas/ausentes | `prestige/nest-among-stars.webp` · 512² · 59.4 KB | retratos com prestígio | descrição acessível; sem borda | referência corrigida; validar após release | ativo-verificado |

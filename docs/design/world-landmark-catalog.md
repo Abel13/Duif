@@ -1,7 +1,7 @@
 # Catálogo proposto de marcos mundiais
 
-> Proposta editorial para revisão — 25 de agosto de 2026. As 50 entradas abaixo não autorizam
-> geração de arte, publicação, desbloqueio ou alteração do mapa.
+> Catálogo editorial iniciado em 25 de agosto de 2026. Entradas marcadas como ativas foram
+> aprovadas e integradas; as demais continuam propostas sem autorização automática de produção.
 
 ## Princípios
 
@@ -73,14 +73,15 @@ assets atuais antes de publicar a versão no Registry.
 
 ## Proposta nominal de 50 marcos
 
-Todas as entradas têm raio futuro fixo de **25 km** e status `proposta-em-revisão`.
+Todas as entradas usam raio fixo de **25 km** quando publicadas. As não marcadas como ativas
+permanecem `proposta-em-revisão`.
 
 | # | Chave proposta · marco | Local · coordenada pública | Categoria · justificativa e descrição | Referência e composição sugerida | Alt text preliminar | Prioridade |
 |---:|---|---|---|---|---|---|
 | 1 | `landmark.christ-the-redeemer` · Cristo Redentor · **ativo** | Rio de Janeiro, RJ, Brasil · -22.95192, -43.21049 | cultural · ícone brasileiro em paisagem singular; monumento no alto do Corcovado | sticker oficial em aquarela e tinta; silhueta, base do Corcovado e vegetação contida | Sticker ilustrado do Cristo Redentor sobre o Corcovado | produzido |
 | 2 | `landmark.masp` · MASP · **ativo** | São Paulo, SP, Brasil · -23.56142, -46.65588 | arquitetônico · museu de reconhecimento internacional e vão livre marcante na Avenida Paulista | aquarela e tinta; volume suspenso, pilares vermelhos e vão livre, sem marcas de exposições | Sticker ilustrado do MASP com sua estrutura vermelha e vão livre | ativo no catálogo autoritativo |
-| 3 | `landmark.iguazu-devils-throat` · Garganta do Diabo | Foz do Iguaçu, Paraná, Brasil/Argentina · -25.69526, -54.43667 | natural · catarata transfronteiriça excepcional; grande arco de quedas e névoa | UNESCO/parques oficiais para fatos; água em ferradura, mata e névoa | Quedas da Garganta do Diabo cercadas pela mata | alta |
-| 4 | `landmark.machu-picchu` · Machu Picchu | Cusco, Peru · -13.16314, -72.54496 | cultural · sítio andino de alcance mundial; terraços e montanhas | UNESCO e imagens licenciadas; terraços em diagonal, pico ao fundo | Ruínas e terraços de Machu Picchu entre montanhas verdes | alta |
+| 3 | `landmark.iguazu-devils-throat` · Garganta do Diabo · **ativo** | Foz do Iguaçu, Paraná, Brasil/Argentina · -25.69526, -54.43667 | natural · catarata transfronteiriça excepcional; grande arco de quedas e névoa | sticker oficial em aquarela e tinta; água em ferradura, mata e névoa | Sticker ilustrado da Garganta do Diabo cercada pela Mata Atlântica | produzido |
+| 4 | `landmark.machu-picchu` · Machu Picchu · **ativo** | Cusco, Peru · -13.16314, -72.54496 | cultural · sítio andino de alcance mundial; terraços e montanhas | sticker oficial respeitoso em aquarela e tinta; terraços em diagonal e Huayna Picchu | Sticker ilustrado de Machu Picchu com terraços e montanhas andinas | produzido |
 | 5 | `landmark.salar-de-uyuni` · Salar de Uyuni | Potosí, Bolívia · -20.13378, -67.48913 | natural · paisagem mineral mundialmente reconhecida; horizonte espelhado e hexágonos de sal | serviço geográfico boliviano/imagens abertas; ilha de cactos distante e reflexo | Horizonte espelhado do Salar de Uyuni | média |
 | 6 | `landmark.perito-moreno-glacier` · Glaciar Perito Moreno | Santa Cruz, Argentina · -50.49673, -73.13766 | natural · massa glacial acessível e distinta; parede azul sobre lago | parque nacional e imagens licenciadas; gelo frontal, lago e montanhas | Parede azul do Glaciar Perito Moreno diante do lago | média |
 | 7 | `landmark.torres-del-paine` · Torres del Paine | Magallanes, Chile · -50.94231, -73.40679 | natural · silhueta montanhosa inequívoca; três torres sobre lago | parque/UNESCO para fatos; torres, lago turquesa e guanaco discreto | Torres graníticas do Paine sobre um lago azul | média |
@@ -128,28 +129,31 @@ Todas as entradas têm raio futuro fixo de **25 km** e status `proposta-em-revis
 | 49 | `landmark.heart-reef` · Heart Reef | Queensland, Austrália · -19.77515, 149.24754 | natural · formação específica na Grande Barreira; recife em forma de coração | parque marinho/UNESCO; vista aérea estilizada sem operador turístico | Pequeno recife em forma de coração nas águas azuis | média |
 | 50 | `landmark.milford-sound-mitre-peak` · Mitre Peak | Southland, Nova Zelândia · -44.67161, 167.92563 | natural · fiorde específico e pico reconhecível; montanha sobre água escura | DOC/Te Wahipounamu e imagens licenciadas | Mitre Peak refletido nas águas de Milford Sound | média |
 
-## Comportamento do primeiro marco implementado
+## Comportamento dos lugares implementados
 
-- O Cristo Redentor é desbloqueado durante a passagem de uma nova rota não tutorial a até 25 km;
-  os demais registros permanecem propostas sem implementação.
+- Cristo Redentor, MASP, Garganta do Diabo e Machu Picchu são desbloqueados durante a passagem de
+  uma nova rota não tutorial a até 25 km; os demais registros permanecem propostas.
 - O marco só aparece para o jogador depois do desbloqueio; antes disso não há silhueta, pista ou
   contagem que revele sua posição.
 - Tocar no marco abre uma ficha informativa editorial, sem expor coordenadas privadas de rotas.
 - O mapa renderiza o marco somente quando o zoom comporta a imagem inteira e o mecanismo de
   colisão encontra espaço. Não há agrupamento, pilha, contador ou sobreposição.
-- O primeiro marco usa zoom mínimo 8, mantendo o sticker fora de visões continentais e estaduais.
+- Os lugares publicados usam zoom mínimo 8, mantendo os stickers fora de visões continentais e
+  estaduais.
 - Se dois marcos competirem pelo mesmo espaço, prioridade visual determinística escolhe um; o
   outro aparece em zoom posterior.
 - O asset é ornamental e não concede bônus funcional por si só.
 - A primeira passagem também deve liberar o cartão postal oficial permanente do lugar. Essa
   concessão é única por perfil e não consome o cartão ao enviá-lo.
 
-## Pares visuais pendentes
+## Pares visuais publicados
 
 | Lugar Memorável | Sticker do mapa | Cartão postal permanente |
 |---|---|---|
 | Cristo Redentor | `landmark.christTheRedeemer.artwork` · ativo | `postcard.landmark.christTheRedeemer.front` · ativo e concedido no desbloqueio |
 | MASP | `landmark.masp.artwork` · ativo | `postcard.landmark.masp.front` · ativo e concedido no desbloqueio |
+| Garganta do Diabo | `landmark.iguazuDevilsThroat.artwork` · ativo | `postcard.landmark.iguazuDevilsThroat.front` · ativo e concedido no desbloqueio |
+| Machu Picchu | `landmark.machuPicchu.artwork` · ativo | `postcard.landmark.machuPicchu.front` · ativo e concedido no desbloqueio |
 
 Todo próximo brief deve contemplar os dois assets. O sticker privilegia silhueta e leitura entre
 40–56 px; o cartão usa composição horizontal 3:2 adequada à inspeção e ao envio postal.

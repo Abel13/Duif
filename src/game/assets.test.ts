@@ -82,6 +82,26 @@ describe("official asset manifest", () => {
       .toBe("/assets/profile/default-silhouette.webp");
   });
 
+  it("resolves every published memorable-place sticker by its stable key", () => {
+    const artwork = [
+      [assetKeys.landmarks.christTheRedeemer, "/assets/landmarks/christ-the-redeemer.webp"],
+      [assetKeys.landmarks.masp, "/assets/landmarks/masp.webp"],
+      [assetKeys.landmarks.iguazuDevilsThroat, "/assets/landmarks/iguazu-devils-throat.webp"],
+      [assetKeys.landmarks.machuPicchu, "/assets/landmarks/machu-picchu.webp"],
+    ] as const;
+    const manifest = parseOfficialAssetManifest(artwork.map(([key, packaged_path]) => ({
+      ...row,
+      packaged_path,
+      width: 256,
+      height: 256,
+      byte_size: 24000,
+      alt_text_key: "landmarks.christTheRedeemer.alt",
+      official_assets: { asset_key: key, asset_type: "landmarkArtwork" },
+    })));
+
+    artwork.forEach(([key, path]) => expect(resolveOfficialAssetPath(manifest, key)).toBe(path));
+  });
+
   it("resolves the three registered starter equipment icons", () => {
     const equipment = [
       [assetKeys.equipment.featherCharm, "/assets/equipment/icons/feather-charm.webp"],
