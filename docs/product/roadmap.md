@@ -119,8 +119,8 @@ long-term visual prestige without introducing a hard progression cap.
 
 **Inclui:**
 
-- the existing flight XP formula `ceil(100 × level^1.35)` for every next level, continuing above
-  level 20;
+- the calibrated flight XP curve documented in [Progressão e XP](./progression.md), continuing
+  above level 20;
 - functional unlocks ending at level 20 while numeric progression continues indefinitely;
 - approved maximum one-way distance and natural slots:
   `L1 25km/3`, `L2 50/3`, `L3 100/3`, `L4 180/3`, `L5 300/4`, `L6 500/4`,

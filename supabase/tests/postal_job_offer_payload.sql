@@ -72,6 +72,44 @@ begin
 end;
 $$;
 
+reset role;
+do $$
+declare
+  payload jsonb;
+  previous_keys text[];
+  offered_key text;
+  iteration integer;
+begin
+  perform set_config('request.jwt.claim.sub','10000000-0000-4000-8000-000000000001',true);
+  update public.postal_job_cycles
+  set completed_at=now()
+  where profile_id='00000000-0000-4000-8000-000000000001'
+    and mascot_id='00000000-0000-4000-8000-000000000203'
+    and completed_at is null;
+
+  for iteration in 1..9 loop
+    select coalesce(array_agg(template_catalog_key),array[]::text[]) into previous_keys
+    from (
+      select offer.template_catalog_key
+      from public.postal_job_offers offer
+      join public.postal_job_cycles cycle on cycle.id=offer.cycle_id
+      where cycle.mascot_id='00000000-0000-4000-8000-000000000203'
+      order by offer.created_at desc,offer.id desc limit 8
+    ) recent;
+    payload:=public.postal_job_offer_payload('00000000-0000-4000-8000-000000000203');
+    offered_key:=payload#>>'{offer,template_catalog_key}';
+    if offered_key=any(previous_keys) then
+      raise exception 'offer % repeated one of the eight most recent templates',offered_key;
+    end if;
+    update public.postal_job_cycles
+    set completed_at=now()
+    where profile_id='00000000-0000-4000-8000-000000000001'
+      and mascot_id='00000000-0000-4000-8000-000000000203'
+      and completed_at is null;
+  end loop;
+end;
+$$;
+
 select set_config('request.jwt.claim.sub','',true);
 do $$
 begin

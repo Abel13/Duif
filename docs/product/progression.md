@@ -57,10 +57,19 @@ Os bônus são situacionais e acumulam multiplicativamente quando aplicáveis: p
 
 `XP final do mascote = XP base × multiplicadores aplicáveis`
 
-A curva aprovada é `XP para o próximo nível = ceil(100 × nível^1,35)`. Ela continua crescendo
-depois do nível 20; não existe hard cap. São necessários aproximadamente 45.752 XP acumulados para
-chegar ao nível 20. A progressão funcional termina nesse nível e, acima dele, o número continua
-subindo para conceder apenas bordas visuais publicadas a cada dez níveis.
+Até o nível 20, o XP para o próximo nível é, por nível, `34, 85, 147, 216, 293, 375, 463, 558,
+662, 780, 915, 1076, 1274, 1524, 1847, 2268, 2819, 3541, 4483, 5707`. Do nível 21 em diante,
+continua `ceil(100 × nível^1,35)`. Assim, a curva alcança a fórmula anterior no nível 20 sem um
+degrau; não existe hard cap. A progressão funcional termina nesse nível e, acima dele, o número
+continua subindo para conceder apenas bordas visuais publicadas a cada dez níveis.
+
+### Trabalhos oficiais
+
+Um mascote neutro no nível 1 e 0 XP chega ao nível 10 em 48 trabalhos oficiais, que concedem
+`30 / 75 / 150 XP` nas faixas 1–4, 5–9 e 10+. O catálogo ativo tem 80 trabalhos: 24 nas faixas
+1–4, 40 nas faixas 5–9 e 16 no nível 10+. Ao gerar uma oferta, o sistema exclui os oito últimos
+templates oferecidos ao mesmo mascote — inclusive os trocados — e só usa o fallback normal quando
+não houver outra opção compatível.
 
 ### Alcance de Voo e capacidade natural
 
