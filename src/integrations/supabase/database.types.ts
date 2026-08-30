@@ -2883,6 +2883,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      accept_exclusive_postal_mission: {
+        Args: { target_mission_id: string }
+        Returns: Json
+      }
       accept_postal_job_offer: {
         Args: { target_offer_id: string }
         Returns: Json
@@ -3467,6 +3471,10 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      dispatch_exclusive_postal_mission: {
+        Args: { target_mission_id: string }
+        Returns: Json
+      }
       ensure_my_referral_invitation: {
         Args: never
         Returns: {
@@ -3724,6 +3732,23 @@ export type Database = {
       postal_job_offer_payload: {
         Args: { target_mascot_id: string }
         Returns: Json
+      }
+      list_exclusive_postal_missions: {
+        Args: never
+        Returns: {
+          cargo_slots: number
+          copy: Json | null
+          destination_country_code: string | null
+          destination_name: string | null
+          distance_km: number | null
+          expires_at: string
+          id: string
+          mascot_id: string
+          mascot_name: string
+          mascot_xp: number
+          seed_reward: number
+          status: string
+        }[]
       }
       preview_mascot_loadout: {
         Args: {

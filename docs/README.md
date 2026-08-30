@@ -46,6 +46,7 @@ categorias devem criar links, não copiar status, regras ou procedimentos.
 - [Reset de dados de jogadores](./operations/player-data-reset.md)
 - [Reset de XP](./operations/xp-reset.md)
 - [Viagens segmentadas e clima](./operations/segmented-travel-weather.md)
+- [Missões exclusivas diárias](./operations/exclusive-postal-missions.md)
 
 ## Histórico
 

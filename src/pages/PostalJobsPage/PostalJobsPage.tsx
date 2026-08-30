@@ -6,17 +6,29 @@ import { AssetImage, StampButton } from "../../components/ui";
 import { assetKeys } from "../../game";
 import { useMascotCatalog } from "../../game/useMascotCatalog";
 import { type TranslationKey, useTranslation } from "../../i18n";
+import { acceptExclusivePostalMission, dispatchExclusivePostalMission, fetchExclusivePostalMissions, type ExclusivePostalMission } from "../../integrations/supabase/exclusivePostalMissions";
 import { acceptPostalJobOffer, dispatchPostalJob, fetchPostalJobOffer, replacePostalJobOffer } from "../../integrations/supabase/postalJobs";
 import { initialPostalJobOfferStates, markPostalJobOfferFailed, markPostalJobOfferLoading, markPostalJobOfferReady, type PostalJobOfferStates } from "./postalJobOfferState";
 import styles from "./PostalJobsPage.module.css";
 
 export function PostalJobsPage() {
   const { mascots, isLoading } = useMascotCatalog();
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const navigate = useNavigate();
   const [offerStates, setOfferStates] = useState<PostalJobOfferStates>({});
   const [busy, setBusy] = useState<string>();
   const [error, setError] = useState(false);
+  const [exclusiveMissions, setExclusiveMissions] = useState<ExclusivePostalMission[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    void fetchExclusivePostalMissions().then((missions) => {
+      if (!cancelled) setExclusiveMissions(missions);
+    }).catch(() => {
+      if (!cancelled) setError(true);
+    });
+    return () => { cancelled = true; };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -69,8 +81,41 @@ export function PostalJobsPage() {
     } catch { setError(true); } finally { setBusy(undefined); }
   }
 
+  async function acceptExclusive(mission: ExclusivePostalMission) {
+    setBusy(mission.id); setError(false);
+    try {
+      await acceptExclusivePostalMission(mission.id);
+      setExclusiveMissions((current) => current.map((item) => item.id === mission.id ? { ...item, status: "accepted" } : item));
+    } catch { setError(true); } finally { setBusy(undefined); }
+  }
+
+  async function dispatchExclusive(mission: ExclusivePostalMission) {
+    setBusy(mission.id); setError(false);
+    try {
+      const delivery = await dispatchExclusivePostalMission(mission.id);
+      navigate(`/map?mascotId=${mission.mascotId}&deliveryId=${delivery.id}`);
+    } catch { setError(true); } finally { setBusy(undefined); }
+  }
+
   return <PageShell><main className={styles.page}>
     <header><AssetImage alt={t("postalJobs.artworkAlt")} assetKey={assetKeys.jobs.postalBoard} className={styles.artwork} loading="eager"><i /></AssetImage><span>{t("postalJobs.eyebrow")}</span><h1>{t("postalJobs.title")}</h1><p>{t("postalJobs.description")}</p></header>
+    {exclusiveMissions.length > 0 ? <section className={styles.exclusiveList} aria-labelledby="exclusive-missions-title">
+      <div className={styles.exclusiveHeading}><span>{t("exclusiveMissions.eyebrow")}</span><h2 id="exclusive-missions-title">{t("exclusiveMissions.title")}</h2></div>
+      {exclusiveMissions.map((mission) => {
+        const copy = mission.copy?.[locale] ?? mission.copy?.["pt-BR"];
+        const expiry = new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(new Date(mission.expiresAt));
+        return <article className={styles.exclusiveMission} key={mission.id}>
+          <div className={styles.exclusiveStamp}>{t("exclusiveMissions.badge")}</div>
+          <p className={styles.mascotName}>{mission.mascotName}</p>
+          <h3>{copy?.title ?? mission.destinationName}</h3>
+          {copy ? <p>{copy.story}</p> : null}
+          <dl><div><dt>{t("exclusiveMissions.destination")}</dt><dd>{mission.destinationName} · {mission.destinationCountryCode}</dd></div><div><dt>{t("postalJobs.distance")}</dt><dd>{mission.distanceKm} km</dd></div><div><dt>{t("exclusiveMissions.expires")}</dt><dd>{expiry}</dd></div></dl>
+          {mission.status === "expired" ? <p className={styles.expired}>{t("exclusiveMissions.expired")}</p>
+            : mission.status === "accepted" ? <StampButton disabled={busy === mission.id || Boolean(mascots.find((mascot) => mascot.id === mission.mascotId)?.currentDelivery)} onClick={() => void dispatchExclusive(mission)}>{t("exclusiveMissions.depart")}</StampButton>
+              : <StampButton disabled={busy === mission.id} onClick={() => void acceptExclusive(mission)}>{t("exclusiveMissions.accept")}</StampButton>}
+        </article>;
+      })}
+    </section> : null}
     {isLoading ? <p>{t("common.loading")}</p> : <section className={styles.list}>{mascots.map((mascot) => {
       const state = offerStates[mascot.id] ?? { status: "loading" };
       const job = state.status === "ready" ? state.offer : undefined;
@@ -83,6 +128,6 @@ export function PostalJobsPage() {
         </> : <p>{t("common.loading")}</p>}
       </article>;
     })}</section>}
-    {error ? <p className={styles.error}>{t("postalJobs.error")}</p> : null}
+    {error ? <p className={styles.error}>{t("exclusiveMissions.error")}</p> : null}
   </main></PageShell>;
 }
