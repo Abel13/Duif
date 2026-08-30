@@ -112,7 +112,7 @@ export function PostalJobsPage() {
           <dl><div><dt>{t("exclusiveMissions.destination")}</dt><dd>{mission.destinationName} · {mission.destinationCountryCode}</dd></div><div><dt>{t("postalJobs.distance")}</dt><dd>{mission.distanceKm} km</dd></div><div><dt>{t("exclusiveMissions.expires")}</dt><dd>{expiry}</dd></div></dl>
           {mission.status === "expired" ? <p className={styles.expired}>{t("exclusiveMissions.expired")}</p>
             : mission.status === "accepted" ? <StampButton disabled={busy === mission.id || Boolean(mascots.find((mascot) => mascot.id === mission.mascotId)?.currentDelivery)} onClick={() => void dispatchExclusive(mission)}>{t("exclusiveMissions.depart")}</StampButton>
-              : <StampButton disabled={busy === mission.id} onClick={() => void acceptExclusive(mission)}>{t("exclusiveMissions.accept")}</StampButton>}
+              : <StampButton disabled={busy === mission.id || Boolean(mascots.find((mascot) => mascot.id === mission.mascotId)?.currentDelivery)} onClick={() => void acceptExclusive(mission)}>{t("exclusiveMissions.accept")}</StampButton>}
         </article>;
       })}
     </section> : null}

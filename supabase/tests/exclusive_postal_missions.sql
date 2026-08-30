@@ -29,6 +29,10 @@ begin
   if position('Route exceeds mascot flight range' in function_body)=0 or position('Mission cargo does not fit' in function_body)=0 then
     raise exception 'exclusive dispatch does not revalidate gameplay';
   end if;
+  select pg_get_functiondef('public.accept_exclusive_postal_mission(uuid)'::regprocedure) into function_body;
+  if position('Mascot is unavailable' in function_body)=0 or position('for update' in function_body)=0 then
+    raise exception 'exclusive acceptance does not protect a mascot in flight';
+  end if;
   select pg_get_functiondef('public.claim_exclusive_postal_mission_generations(integer)'::regprocedure) into function_body;
   if position('cargo_slots integer' in function_body)=0 or position('auth.role()<>''service_role''' in function_body)=0 then
     raise exception 'generator claim does not expose only the authorized mission limit';
