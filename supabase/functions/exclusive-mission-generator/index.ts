@@ -62,7 +62,7 @@ async function generateMission(mission: ClaimedMission) {
             "pt-BR": { type: "object", additionalProperties: false, required: ["title", "story"], properties: { title: { type: "string" }, story: { type: "string" } } },
             "en-US": { type: "object", additionalProperties: false, required: ["title", "story"], properties: { title: { type: "string" }, story: { type: "string" } } },
           },
-        } },
+        } } },
       }),
     });
     if (!apiResponse.ok) throw new Error(`openai_http_${apiResponse.status}`);
