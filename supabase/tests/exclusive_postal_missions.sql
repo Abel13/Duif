@@ -16,7 +16,8 @@ begin
     raise exception 'exclusive missions need one open offer per mascot';
   end if;
   if not exists(select 1 from pg_proc where pronamespace='public'::regnamespace and proname='prepare_exclusive_postal_missions')
-    or not exists(select 1 from pg_proc where pronamespace='public'::regnamespace and proname='dispatch_exclusive_postal_mission') then
+    or not exists(select 1 from pg_proc where pronamespace='public'::regnamespace and proname='dispatch_exclusive_postal_mission')
+    or not exists(select 1 from pg_proc where pronamespace='public'::regnamespace and proname='get_exclusive_postal_mission_dossier') then
     raise exception 'exclusive mission authority is missing';
   end if;
   select pg_get_functiondef('public.prepare_exclusive_postal_missions(timestamptz,integer)'::regprocedure) into function_body;
@@ -34,8 +35,12 @@ begin
     raise exception 'exclusive acceptance does not protect a mascot in flight';
   end if;
   select pg_get_functiondef('public.claim_exclusive_postal_mission_generations(integer)'::regprocedure) into function_body;
-  if position('cargo_slots integer' in function_body)=0 or position('auth.role()<>''service_role''' in function_body)=0 then
-    raise exception 'generator claim does not expose only the authorized mission limit';
+  if position('cargo_slots integer' in function_body)=0 or position('template_catalog_key text' in function_body)=0 or position('contact_catalog_key text' in function_body)=0 or position('cargo_key text' in function_body)=0 or position('auth.role()<>''service_role''' in function_body)=0 then
+    raise exception 'generator claim does not expose the authorized quest context';
+  end if;
+  select pg_get_functiondef('public.get_exclusive_postal_mission_dossier(uuid)'::regprocedure) into function_body;
+  if position('profile.auth_user_id=auth.uid()' in function_body)=0 then
+    raise exception 'mission dossier does not restrict reads to its owner';
   end if;
   if not exists(select 1 from pg_trigger where tgname='exclusive_postal_mission_credit_on_completion' and not tgisinternal) then
     raise exception 'exclusive mission reward trigger is missing';
@@ -60,5 +65,45 @@ begin
     raise exception 'an expired mission did not become eligible on the next local day';
   end if;
 end $$;
+
+do $$
+declare mission record; candidate jsonb; city public.geonames_cities;
+begin
+  select * into mission from public.exclusive_postal_missions
+  where mascot_id='00000000-0000-4000-8000-000000000902' and status='pending'
+  order by created_at desc limit 1;
+  select value into candidate from jsonb_array_elements(mission.candidate_destinations) limit 1;
+  select * into city from public.geonames_cities where geoname_id=(candidate->>'id')::bigint;
+  update public.exclusive_postal_missions set
+    status='offered', destination_geoname_id=city.geoname_id, destination_name=city.name, destination_country_code=city.country_code,
+    destination_latitude=city.latitude, destination_longitude=city.longitude, distance_km=(candidate->>'distanceKm')::numeric,
+    copy=jsonb_build_object('pt-BR',jsonb_build_object('title','A lente antes do turno','briefing','Aline precisa da lente polida porque o mecanismo de sinais perdeu sua peça de reposição.','outboundObjective','Entregue a lente polida ao responsável do posto para recompor o mecanismo de sinais.','returnRecord','A lente foi encaixada e a contramarca deve voltar ao ninho.'),'en-US',jsonb_build_object('title','The lens before the watch','briefing','Aline needs the polished lens because the signal mechanism lost its replacement part.','outboundObjective','Deliver the polished lens to the post steward so the signal mechanism can be restored.','returnRecord','The lens was fitted and the countermark must return to the nest.'))
+  where id=mission.id;
+  perform set_config('duif.test.exclusive_mission_id',mission.id::text,true);
+end $$;
+
+set local role authenticated;
+select set_config('request.jwt.claim.sub','10000000-0000-4000-8000-000000000901',true);
+do $$
+declare mission_id uuid; delivery public.deliveries;
+begin
+  mission_id:=current_setting('duif.test.exclusive_mission_id')::uuid;
+  perform public.accept_exclusive_postal_mission(mission_id);
+  delivery:=public.dispatch_exclusive_postal_mission(mission_id);
+  if (select count(*) from public.get_exclusive_postal_mission_dossier(delivery.id))<>1 then
+    raise exception 'mission dossier was not available to its owner';
+  end if;
+  perform set_config('duif.test.exclusive_delivery_id',delivery.id::text,true);
+end $$;
+select set_config('request.jwt.claim.sub','10000000-0000-4000-8000-000000009999',true);
+do $$
+declare target_delivery_id uuid;
+begin
+  target_delivery_id:=current_setting('duif.test.exclusive_delivery_id')::uuid;
+  if (select count(*) from public.get_exclusive_postal_mission_dossier(target_delivery_id))<>0 then
+    raise exception 'mission dossier was exposed to a different account';
+  end if;
+end $$;
+reset role;
 
 rollback;

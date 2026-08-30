@@ -108,7 +108,7 @@ export function PostalJobsPage() {
           <div className={styles.exclusiveStamp}>{t("exclusiveMissions.badge")}</div>
           <p className={styles.mascotName}>{mission.mascotName}</p>
           <h3>{copy?.title ?? mission.destinationName}</h3>
-          {copy ? <p>{copy.story}</p> : null}
+          {copy ? <><p>{copy.briefing}</p><p><strong>{t("exclusiveMissions.objective")}:</strong> {copy.outboundObjective}</p></> : null}
           <dl><div><dt>{t("exclusiveMissions.destination")}</dt><dd>{mission.destinationName} · {mission.destinationCountryCode}</dd></div><div><dt>{t("postalJobs.distance")}</dt><dd>{mission.distanceKm} km</dd></div><div><dt>{t("exclusiveMissions.expires")}</dt><dd>{expiry}</dd></div></dl>
           {mission.status === "expired" ? <p className={styles.expired}>{t("exclusiveMissions.expired")}</p>
             : mission.status === "accepted" ? <StampButton disabled={busy === mission.id || Boolean(mascots.find((mascot) => mascot.id === mission.mascotId)?.currentDelivery)} onClick={() => void dispatchExclusive(mission)}>{t("exclusiveMissions.depart")}</StampButton>

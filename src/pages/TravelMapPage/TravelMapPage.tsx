@@ -1,6 +1,6 @@
 import { useMemo, useState, useEffect, useRef, type MouseEvent, type ReactNode } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { AirTrafficControl, Binoculars, Clock, CloudSun, Compass, Gauge, MapPin, Package, Signpost, X } from "@phosphor-icons/react";
+import { AirTrafficControl, Binoculars, Clock, CloudSun, Compass, Gauge, MapPin, Package, Scroll, Signpost, X } from "@phosphor-icons/react";
 
 import { AppBottomNav } from "../../components/layout";
 import { TravelMap } from "../../components/map/TravelMap";
@@ -48,6 +48,7 @@ import { useAuth } from "../../integrations/supabase/AuthProvider";
 import { usePostalFriends } from "../../integrations/supabase/usePostalFriends";
 import { fetchActivePostalVisitors, getPostalVisitorMinutes, type ActivePostalVisitor } from "../../integrations/supabase/mailbox";
 import { acknowledgeWorldLandmark, reconcileWorldLandmarks } from "../../integrations/supabase/worldLandmarks";
+import { fetchExclusiveMissionDossier, type ExclusiveMissionDossier } from "../../integrations/supabase/exclusivePostalMissions";
 import { type TranslationKey, useTranslation } from "../../i18n";
 import styles from "./TravelMapPage.module.css";
 import { isMapCameraTargetDisabled } from "../../components/map/travelMapCamera";
@@ -76,6 +77,8 @@ export function TravelMapPage() {
   const [selectedTrafficSnapshot, setSelectedTrafficSnapshot] = useState<PostalTrafficPetSnapshot>();
   const [selectedMascotId, setSelectedMascotId] = useState(defaultMascotId);
   const [tripStatusOpen, setTripStatusOpen] = useState(false);
+  const [missionDossier, setMissionDossier] = useState<ExclusiveMissionDossier>();
+  const [missionDossierOpen, setMissionDossierOpen] = useState(false);
   const [trafficDialogOpen, setTrafficDialogOpen] = useState(false);
   const [discoveryDialogOpen, setDiscoveryDialogOpen] = useState(false);
   const [postalVisitors, setPostalVisitors] = useState<ActivePostalVisitor[]>([]);
@@ -84,6 +87,7 @@ export function TravelMapPage() {
   const [landmarkDialogOpen,setLandmarkDialogOpen]=useState(false);
   const [newVisitorIds, setNewVisitorIds] = useState<Set<string>>(() => new Set());
   const tripStatusTriggerRef = useRef<HTMLElement | null>(null);
+  const missionDossierTriggerRef = useRef<HTMLElement | null>(null);
   const highlightTimersRef = useRef<Map<string, number>>(new Map());
   const visitorHighlightTimersRef = useRef<Map<string, number>>(new Map());
   const knownVisitorIdsRef = useRef<Set<string>>(new Set());
@@ -376,6 +380,16 @@ export function TravelMapPage() {
     return () => mobileQuery.removeEventListener("change", openOnceOnMobile);
   }, [delivery.id, journeyPhase]);
 
+  useEffect(() => {
+    let stale = false;
+    setMissionDossier(undefined);
+    setMissionDossierOpen(false);
+    void fetchExclusiveMissionDossier(delivery.id).then((dossier) => {
+      if (!stale) setMissionDossier(dossier);
+    }).catch(() => undefined);
+    return () => { stale = true; };
+  }, [delivery.id]);
+
   function handleRewardDiscoveries(rewardIds: string[], _origin: RouteDiscoveryEventOrigin) {
     if (rewardIds.length === 0) return;
     setRuntimeDiscoveryIds((current) => new Set([...current, ...rewardIds]));
@@ -465,6 +479,17 @@ export function TravelMapPage() {
     window.requestAnimationFrame(() => tripStatusTriggerRef.current?.focus());
   }
 
+  function openMissionDossier(trigger?: HTMLElement) {
+    missionDossierTriggerRef.current = trigger
+      ?? (document.activeElement instanceof HTMLElement ? document.activeElement : null);
+    setMissionDossierOpen(true);
+  }
+
+  function closeMissionDossier() {
+    setMissionDossierOpen(false);
+    window.requestAnimationFrame(() => missionDossierTriggerRef.current?.focus());
+  }
+
   return (
     <main className={styles.page}>
       <section className={styles.stage} aria-busy={isLoading || collectionState.isLoading || isTrafficLoading}>
@@ -516,7 +541,7 @@ export function TravelMapPage() {
           <div className={styles.mapTravelStatus}><TravelStatusLabel mascotName={displayMascot.name} statusLabel={t(`delivery.status.${status}`)}/></div>
         ) : null}
 
-        {(activePostalVisitors.length > 0 || (journeyPhase === "traveling" && displayMascot && (landmarks.length > 0 || delivery.segmentedTravel || visiblePostalTraffic.length > 0 || rewards.length > 0))) ? (
+        {(activePostalVisitors.length > 0 || (journeyPhase === "traveling" && displayMascot && (landmarks.length > 0 || delivery.segmentedTravel || visiblePostalTraffic.length > 0 || rewards.length > 0)) || (missionDossier && journeyPhase !== "completed")) ? (
           <nav aria-label={t("map.activeMapTools")} className={styles.activeMapTools}>
             {activePostalVisitors.map((visitor) => (
               <Link
@@ -532,6 +557,7 @@ export function TravelMapPage() {
               </Link>
             ))}
             {journeyPhase === "traveling" && displayMascot && delivery.segmentedTravel ? <TravelWeatherBadge baseSpeedKmh={delivery.animalSpeedKmh} isDay={!visualTheme.isNight} mascotName={displayMascot.name} summary={delivery.segmentedTravel} /> : null}
+            {missionDossier && journeyPhase !== "completed" ? <button aria-label={t("exclusiveMissions.dossier")} className={styles.activeToolButton} onClick={(event) => openMissionDossier(event.currentTarget)} title={t("exclusiveMissions.dossier")} type="button"><Scroll aria-hidden="true" weight="duotone" /></button> : null}
             {journeyPhase === "traveling" && visiblePostalTraffic.length > 0 ? <button aria-label={t("postalTraffic.title")} className={styles.activeToolButton} onClick={() => setTrafficDialogOpen(true)} title={t("postalTraffic.title")} type="button"><AirTrafficControl aria-hidden="true" weight="duotone" /><span>{visiblePostalTraffic.length}</span></button> : null}
             {journeyPhase === "traveling" && rewards.length > 0 ? <button aria-label={t("map.discoveries")} className={styles.activeToolButton} data-new={newDiscoveryIds.size > 0 || undefined} onClick={() => { closeRewardDetails(); setDiscoveryDialogOpen(true); }} title={t("map.discoveries")} type="button"><Binoculars aria-hidden="true" weight="duotone" /><span>{discoveredCount}/{rewards.length}</span></button> : null}
             {journeyPhase==="traveling"&&landmarks.length>0?<button aria-label={t("map.landmarks.title")} className={styles.activeToolButton} data-new={landmarks.some((item)=>item.announcementPending)||undefined} onClick={()=>{setSelectedLandmark(landmarks[0]);setLandmarkDialogOpen(true);}} title={t("map.landmarks.title")} type="button"><MapPin aria-hidden="true" weight="duotone"/><span>{landmarks.length}</span></button>:null}
@@ -627,6 +653,7 @@ export function TravelMapPage() {
         {trafficDialogOpen?<PostalTrafficDialog onClose={()=>setTrafficDialogOpen(false)} onSelect={selectTraffic} onShowList={closeTrafficDetails} postalTraffic={visiblePostalTraffic} rangeState={selectedTrafficRange} selectedTraffic={selectedTraffic}/>:null}
         {discoveryDialogOpen?<RouteDiscoveryDialog discoveredCount={discoveredCount} onClose={()=>setDiscoveryDialogOpen(false)} onSelect={selectReward} onShowList={closeRewardDetails} rewardStates={rewardStates} rewards={rewards} selectedReward={selectedReward} sourceLabel={t(delivery.routeDiscoveryVersion?"map.persistedRewards":"map.mockedRewards")}/>:null}
         {landmarkDialogOpen&&selectedLandmark?<LandmarkDialog landmark={selectedLandmark} landmarks={landmarks} onClose={()=>{setLandmarkDialogOpen(false);setSelection(null);}} onSelect={selectLandmark}/>:null}
+        {missionDossierOpen && missionDossier ? <MissionDossierDialog dossier={missionDossier} onClose={closeMissionDossier} returned={journeyPhase === "returned"} /> : null}
 
         {tripStatusOpen && journeyPhase !== "completed" ? (
           <TripStatusDialog
@@ -1058,6 +1085,37 @@ function TripStatusDialog({
 
 function VisualFact({icon,label,value}:{icon:ReactNode;label:string;value:string}){
   return <article className={styles.tripVisualFact}>{icon}<div><span>{label}</span><strong>{value}</strong></div></article>;
+}
+
+function MissionDossierDialog({ dossier, onClose, returned }: { dossier: ExclusiveMissionDossier; onClose: () => void; returned: boolean }) {
+  const { locale, t } = useTranslation();
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const copy = dossier.copy[locale] ?? dossier.copy["pt-BR"];
+  const currentLabel = returned ? t("exclusiveMissions.returnRecord") : t("exclusiveMissions.objective");
+  const currentText = returned ? copy.returnRecord : copy.outboundObjective;
+
+  useEffect(() => dialogRef.current?.showModal(), []);
+
+  function handleBackdropClick(event: MouseEvent<HTMLDialogElement>) {
+    if (event.target === event.currentTarget) dialogRef.current?.close();
+  }
+
+  return <dialog aria-labelledby="mission-dossier-title" className={styles.trafficDialog} onClick={handleBackdropClick} onClose={onClose} ref={dialogRef}>
+    <section className={`${styles.trafficDialogPaper} ${styles.missionDossierPaper}`}>
+      <header>
+        <div><span>{t("exclusiveMissions.dossier")}</span><h2 id="mission-dossier-title">{copy.title}</h2></div>
+        <button aria-label={t("exclusiveMissions.closeDossier")} onClick={() => dialogRef.current?.close()} type="button"><X aria-hidden="true" /></button>
+      </header>
+      <section className={styles.missionDossierSection} aria-labelledby="mission-dossier-briefing">
+        <h3 id="mission-dossier-briefing">{t("exclusiveMissions.briefing")}</h3>
+        <p>{copy.briefing}</p>
+      </section>
+      <section className={styles.missionDossierSection} aria-labelledby="mission-dossier-current">
+        <h3 id="mission-dossier-current">{currentLabel}</h3>
+        <p>{currentText}</p>
+      </section>
+    </section>
+  </dialog>;
 }
 
 function RouteDiscoveryDialog({discoveredCount,onClose,onSelect,onShowList,rewardStates,rewards,selectedReward,sourceLabel}:{discoveredCount:number;onClose:()=>void;onSelect:(id:string)=>void;onShowList:()=>void;rewardStates:Record<string,RouteDiscoveryVisualState>;rewards:RouteRewardDiscovery[];selectedReward?:RouteRewardDiscovery;sourceLabel:string}){

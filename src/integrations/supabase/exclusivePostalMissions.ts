@@ -1,5 +1,7 @@
 import { getSupabaseClient } from "./client";
 
+export type ExclusiveMissionQuest = { title: string; briefing: string; outboundObjective: string; returnRecord: string };
+
 export type ExclusivePostalMission = {
   id: string;
   mascotId: string;
@@ -12,8 +14,10 @@ export type ExclusivePostalMission = {
   cargoSlots: number;
   seedReward: number;
   mascotXp: number;
-  copy: { "pt-BR": { title: string; story: string }; "en-US": { title: string; story: string } } | null;
+  copy: { "pt-BR": ExclusiveMissionQuest; "en-US": ExclusiveMissionQuest } | null;
 };
+
+export type ExclusiveMissionDossier = { missionId: string; deliveryId: string; copy: NonNullable<ExclusivePostalMission["copy"]> };
 
 function clientOrThrow() {
   const client = getSupabaseClient();
@@ -39,15 +43,16 @@ function missionFrom(value: unknown): ExclusivePostalMission {
   };
 }
 
-function isCopy(value: unknown): value is ExclusivePostalMission["copy"] {
+function isCopy(value: unknown): value is NonNullable<ExclusivePostalMission["copy"]> {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;
   const copy = value as Record<string, unknown>;
   return isLocaleCopy(copy["pt-BR"]) && isLocaleCopy(copy["en-US"]);
 }
 
-function isLocaleCopy(value: unknown): value is { title: string; story: string } {
+function isLocaleCopy(value: unknown): value is ExclusiveMissionQuest {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value)
-    && typeof (value as { title?: unknown }).title === "string" && typeof (value as { story?: unknown }).story === "string";
+    && typeof (value as { title?: unknown }).title === "string" && typeof (value as { briefing?: unknown }).briefing === "string"
+    && typeof (value as { outboundObjective?: unknown }).outboundObjective === "string" && typeof (value as { returnRecord?: unknown }).returnRecord === "string";
 }
 
 export async function fetchExclusivePostalMissions() {
@@ -55,6 +60,16 @@ export async function fetchExclusivePostalMissions() {
   if (error) throw error;
   if (!Array.isArray(data)) throw new Error("Invalid exclusive mission list");
   return data.map(missionFrom);
+}
+
+export async function fetchExclusiveMissionDossier(deliveryId: string): Promise<ExclusiveMissionDossier | undefined> {
+  const { data, error } = await clientOrThrow().rpc("get_exclusive_postal_mission_dossier", { target_delivery_id: deliveryId });
+  if (error) throw error;
+  const row = Array.isArray(data) ? data[0] : undefined;
+  if (!row || typeof row !== "object") return undefined;
+  const value = row as Record<string, unknown>;
+  if (typeof value.mission_id !== "string" || typeof value.delivery_id !== "string" || !isCopy(value.copy)) return undefined;
+  return { missionId: value.mission_id, deliveryId: value.delivery_id, copy: value.copy };
 }
 
 export async function acceptExclusivePostalMission(missionId: string) {

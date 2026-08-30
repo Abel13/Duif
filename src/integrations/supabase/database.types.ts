@@ -3750,6 +3750,14 @@ export type Database = {
           status: string
         }[]
       }
+      get_exclusive_postal_mission_dossier: {
+        Args: { target_delivery_id: string }
+        Returns: {
+          copy: Json
+          delivery_id: string
+          mission_id: string
+        }[]
+      }
       preview_mascot_loadout: {
         Args: {
           backpack_instance_id: string
