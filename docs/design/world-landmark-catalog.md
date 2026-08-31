@@ -1,7 +1,32 @@
-# Catálogo proposto de marcos mundiais
+# Catálogo editorial de Lugares Memoráveis
 
 > Catálogo editorial iniciado em 25 de agosto de 2026. Entradas marcadas como ativas foram
 > aprovadas e integradas; as demais continuam propostas sem autorização automática de produção.
+
+## Status consolidado e fontes de verdade
+
+Lugares Memoráveis são uma família própria de descobertas mundiais. Não pertencem ao catálogo
+regional, não são definidos pelas cidades com Ninhos e não acompanham os lotes de cartões urbanos.
+A seleção considera reconhecimento internacional, localização pública verificável, representação
+cultural responsável e leitura no mapa — nunca a distribuição de jogadores ou cidades de um lote
+de cartões.
+
+| Dado | Fonte de verdade |
+|---|---|
+| Comportamento, desbloqueio, privacidade e recompensas | [regras do produto](../product/rules.md#lugares-memoráveis) |
+| Chaves, versões e assets publicados no runtime | Official Asset Registry |
+| Seleção editorial, candidatos, briefs e revisão cultural | este catálogo |
+| Arquivos existentes, dimensões e dívida visual | [inventário mestre](asset-inventory.md) |
+| Estado e ordem das iniciativas de produto | [roadmap](../product/roadmap.md#planejamento-e-produção-do-catálogo-visual) |
+
+Há 50 entradas catalogadas: Cristo Redentor, MASP, Garganta do Diabo e Machu Picchu estão ativos;
+as outras 46 permanecem propostas. Cada lote futuro é definido e aprovado de forma independente,
+com seus próprios briefs, fontes licenciadas e validação no mapa. A capacidade geral de revisão de
+até 50 assets por semana não autoriza nem define automaticamente um lote de Lugares Memoráveis.
+
+Cada Lugar Memorável aprovado exige o par completo: um sticker ilustrado transparente para o mapa
+e a frente 3:2 de seu cartão postal permanente. O detalhe dos itens publicados, candidatos,
+prioridades e revisões obrigatórias permanece neste documento.
 
 ## Princípios
 
@@ -71,7 +96,7 @@ zoom de descoberta, ficha informativa e fundo noturno/sazonal. A aprovação pre
 silhueta, fidelidade, respeito cultural, transparência, borda inteira, contraste e coerência com os
 assets atuais antes de publicar a versão no Registry.
 
-## Proposta nominal de 50 marcos
+## Proposta nominal de 50 Lugares Memoráveis
 
 Todas as entradas usam raio fixo de **25 km** quando publicadas. As não marcadas como ativas
 permanecem `proposta-em-revisão`.
@@ -140,7 +165,7 @@ permanecem `proposta-em-revisão`.
   colisão encontra espaço. Não há agrupamento, pilha, contador ou sobreposição.
 - Os lugares publicados usam zoom mínimo 8, mantendo os stickers fora de visões continentais e
   estaduais.
-- Se dois marcos competirem pelo mesmo espaço, prioridade visual determinística escolhe um; o
+- Se dois Lugares Memoráveis competirem pelo mesmo espaço, prioridade visual determinística escolhe um; o
   outro aparece em zoom posterior.
 - O asset é ornamental e não concede bônus funcional por si só.
 - A primeira passagem também deve liberar o cartão postal oficial permanente do lugar. Essa

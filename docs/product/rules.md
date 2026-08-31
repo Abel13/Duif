@@ -606,6 +606,10 @@ lugar. O cartão não ocupa carga, não é consumido ao enviar e não pode ser c
 Além desse cartão pareado, Lugares Memoráveis não concedem inventário, XP, Reputação Postal,
 moeda, bônus de rota ou acesso exclusivo.
 
+Os critérios editoriais, candidatos e briefs dessa família ficam no [catálogo de Lugares
+Memoráveis](../design/world-landmark-catalog.md). Ele não altera as regras acima, nem torna uma
+entrada proposta disponível no runtime.
+
 ## Shop and Monetization Rules
 
 The shop may eventually include cosmetics, social content, optional boosts, fuel, and two

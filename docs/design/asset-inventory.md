@@ -167,6 +167,24 @@ próxima versão.
 | `shop.thumbnail.sunnyRouteSticker` | shopArtwork · v2 ativa; v1 arquivada | `shop/thumbnails/sunny-route-sticker.webp` · 256² · 8.9 KB | loja/adesivos | nome/descrição; cartão CSS | adesivo recortado | ativo-verificado |
 | `stamp.default.front` | collectibleThumbnail · v1 ativa | `stamps/duif-default.webp` · 172×256 · 23.5 KB | compositor/correspondência | alt traduzido; selo CSS | aprovado | ativo-verificado |
 | `texture.postalPaperWash` | texture · v1 ativa | `textures/postal-paper-wash.webp` · 512² · 20.8 KB | fundos postais | decorativo; cor CSS | aprovado | ativo-verificado |
+| `texture.mapAtmosphere.season.summer` | texture · v1 ativa | `maps/atmosphere/summer.webp` · 512² · 44.7 KB | dossiê de condições do trecho | decorativo | IA assistida; revisão final pendente | ativo-revisar |
+| `texture.mapAtmosphere.season.autumn` | texture · v1 ativa | `maps/atmosphere/autumn.webp` · 512² · 39.5 KB | dossiê de condições do trecho | decorativo | IA assistida; revisão final pendente | ativo-revisar |
+| `texture.mapAtmosphere.season.winter` | texture · v1 ativa | `maps/atmosphere/winter.webp` · 512² · 37.0 KB | dossiê de condições do trecho | decorativo | IA assistida; revisão final pendente | ativo-revisar |
+| `texture.mapAtmosphere.season.spring` | texture · v1 ativa | `maps/atmosphere/spring.webp` · 512² · 35.0 KB | dossiê de condições do trecho | decorativo | IA assistida; revisão final pendente | ativo-revisar |
+| `texture.mapAtmosphere.weather.drizzle` | texture · v1 ativa | `maps/atmosphere/drizzle.webp` · 512² · 34.7 KB | dossiê de condições do trecho | decorativo | IA assistida; revisão final pendente | ativo-revisar |
+| `texture.mapAtmosphere.weather.rain` | texture · v1 ativa | `maps/atmosphere/rain.webp` · 512² · 41.2 KB | dossiê de condições do trecho | decorativo | IA assistida; revisão final pendente | ativo-revisar |
+| `texture.mapAtmosphere.weather.snowIce` | texture · v1 ativa | `maps/atmosphere/snow-ice.webp` · 512² · 46.6 KB | dossiê de condições do trecho | decorativo | IA assistida; revisão final pendente | ativo-revisar |
+| `texture.mapAtmosphere.weather.storm` | texture · v1 ativa | `maps/atmosphere/storm.webp` · 512² · 22.8 KB | dossiê de condições do trecho | decorativo | IA assistida; revisão final pendente | ativo-revisar |
+| `texture.mapWeatherParticle.season.summerMote` | texture · v1 ativa | `maps/weather-particles/summer-mote.webp` · 256² · 9.8 KB | mapa | decorativo | IA assistida; revisão final pendente | ativo-revisar |
+| `texture.mapWeatherParticle.season.autumnLeaf` | texture · v1 ativa | `maps/weather-particles/autumn-leaf.webp` · 256² · 7.1 KB | mapa | decorativo | IA assistida; revisão final pendente | ativo-revisar |
+| `texture.mapWeatherParticle.season.winterCrystal` | texture · v1 ativa | `maps/weather-particles/winter-crystal.webp` · 256² · 15.5 KB | mapa | decorativo | IA assistida; revisão final pendente | ativo-revisar |
+| `texture.mapWeatherParticle.season.springPetal` | texture · v1 ativa | `maps/weather-particles/spring-petal.webp` · 256² · 7.6 KB | mapa | decorativo | IA assistida; revisão final pendente | ativo-revisar |
+| `texture.mapWeatherParticle.weather.drizzleDrop` | texture · v1 ativa | `maps/weather-particles/drizzle-drop.webp` · 256² · 3.2 KB | mapa | decorativo | IA assistida; revisão final pendente | ativo-revisar |
+| `texture.mapWeatherParticle.weather.fogWisp` | texture · v1 ativa | `maps/weather-particles/fog-wisp.webp` · 256² · 6.8 KB | mapa | decorativo | IA assistida; revisão final pendente | ativo-revisar |
+| `texture.mapWeatherParticle.weather.rainStreak` | texture · v1 ativa | `maps/weather-particles/rain-streak.webp` · 256² · 4.8 KB | mapa | decorativo | IA assistida; revisão final pendente | ativo-revisar |
+| `texture.mapWeatherParticle.weather.snowflake` | texture · v1 ativa | `maps/weather-particles/snowflake.webp` · 256² · 14.9 KB | mapa | decorativo | IA assistida; revisão final pendente | ativo-revisar |
+| `texture.mapWeatherParticle.weather.icePellet` | texture · v1 ativa | `maps/weather-particles/ice-pellet.webp` · 256² · 7.7 KB | mapa | decorativo | IA assistida; revisão final pendente | ativo-revisar |
+| `texture.mapWeatherParticle.weather.stormCloud` | texture · v1 ativa | `maps/weather-particles/storm-cloud.webp` · 256² · 8.3 KB | mapa | decorativo | IA assistida; revisão final pendente | ativo-revisar |
 
 ## Arquivos fora do Registry
 
@@ -208,6 +226,25 @@ próxima versão.
 | `public/assets/.DS_Store` | nenhuma referência; copiado pelo build | candidato-a-remoção | remover em mudança posterior explícita |
 | `textures/route-doodle-mark.webp` | versão arquivada ainda presente | arquivado | preservar até política histórica ser aprovada |
 
+## Triagem de placeholders e defeitos de produção
+
+Auditoria estática em 30 de agosto de 2026. O manifesto e as chaves de assets foram validados por
+`src/game/assets.test.ts` (11 testes aprovados). A inspeção visual em tela real permanece pendente,
+pois não havia navegador local disponível nesta auditoria.
+
+| Caso | Classificação | Decisão/ação |
+|---|---|---|
+| Assets publicados no Registry e suas chaves tipadas | sem defeito estático | manter; nenhum arquivo ativo ausente foi identificado na verificação do manifesto |
+| Silhueta padrão de perfil | placeholder aceitável | estado intencional para perfis sem retrato personalizado; não demanda arte nova |
+| Fallbacks de imagem em cartões, Ninho, mascotes, loja, mapa e carga | placeholder aceitável | são estados de erro ou de dado indisponível; não substituem assets publicados e devem permanecer como proteção técnica |
+| Fallback do mapa e prévia de cidade | placeholder aceitável | comunica indisponibilidade do serviço cartográfico, não ausência de ilustração de produto |
+| Lenço do Correio Carmesim e Boné da Rota Campestre | ativo a revisar | são as únicas artes comerciais marcadas como mock; precisam de aprovação visual antes de serem classificadas como definitivas, mas não há defeito estático que exija retirada imediata |
+| Assets arquivados e `.gitkeep` | fora da triagem de produção | preservar conforme política histórica/estrutural; não aparecem como arte ativa |
+
+Conclusão provisória: nenhum placeholder atual foi classificado como defeito de produção imediato.
+O único julgamento humano pendente é se as duas artes comerciais em revisão são definitivas ou
+precisam ser substituídas.
+
 ## Cobertura e dívida por família
 
 “Inferido” significa que uma tela ou contrato já pede representação visual, mas não que o asset
@@ -219,13 +256,13 @@ esteja aprovado. Toda linha nova inferida permanece `proposta`.
 | Equipamentos | 14 / 14 | novos itens funcionais/eventuais | estados danificado/reparando (`proposta`) | média · equipamentos | médio | decidir reutilização ou variante |
 | Recompensas e itens | 7 / 7 | itens de evento, materiais, Sementes | estados de duplicata/consumo (`proposta`) | alta · eventos/descobertas | alto | taxonomia funcional antes do brief |
 | Navegação | 5 / 5 | nenhum asset novo aprovado | tutorial de menus reutiliza ícones atuais | baixa · tutorial complementar | baixo | nenhuma decisão visual |
-| Mapa e controles | 6 / 6 | 50 Lugares Memoráveis como stickers ilustrados e fichas futuras | estados de colisão/desbloqueio (`proposta`) | alta · catálogo mundial | alto | briefs, fidelidade cultural e leitura em tamanho mínimo |
+| Mapa e controles | 6 / 6 | 46 Lugares Memoráveis propostos, além dos 4 ativos; catálogo e briefs em `world-landmark-catalog.md` | estados de colisão/desbloqueio (`proposta`) | alta · catálogo mundial | alto | briefs, fidelidade cultural e leitura em tamanho mínimo |
 | Ninho | 3 / 3 | backgrounds, móveis, objetos, molduras e lembranças para o Ninho visitável | estados vazios e variantes responsivas do editor (`proposta`) | alta · Ninho visitável | alto | catálogo, orçamento da cena e matriz de privacidade |
 | Cartas, cartões, selos, carimbos e adesivos | 37 / 37 | cartões urbanos/eventuais restantes e um cartão 3:2 para cada novo Lugar Memorável | acabamentos adicionais (`proposta`) | alta · catálogos regional/mundial | alto | briefs, licenças e catálogo |
 | Loja | 9 / 9 | arte comercial final após economia | duas miniaturas de cartão não são frentes 3:2 | média · loja | alto | catálogo/precificação não finais |
 | Perfil | 1 / 1 | cosméticos futuros | avatar padrão em maior resolução (`proposta`) | baixa · perfil | baixo | decidir se necessário |
 | Prestígio | 4 / 4 | níveis futuros após N50 | validar a correção de caminhos após release | média · M58 | baixo | aplicar migration pelo processo operacional |
-| Clima e estações | 0 / 0 | apresentação sazonal/climática prevista | ícones convencionais Phosphor já bastam; overlays (`proposta`) | média · clima | médio | decidir se ilustração agrega valor |
+| Clima e estações | 8 / 8 em revisão | quatro bases sazonais e quatro overlays climáticos no mapa | Ninho permanece fora do escopo; transições noturnas via CSS | média · clima | médio | aprovação visual final em mapa mobile e desktop |
 | Eventos e medalhas | 0 / 0 | destinos, cargas, cartões e medalhas exclusivos | pódio/estado encerrado (`proposta`) | alta · eventos | alto | regras do evento e quantidade por edição |
 | Pacotes de Sementes | 0 / 0 | pacote encontrável respeitando sorte | raridade/abertura (`proposta`) | média · pacotes de Sementes | médio | probabilidades e tipos de pacote |
 | Diário e descobertas | 4 / 4 genéricos | Diário movido ao fim da fila | taxonomia e grande volume (`proposta`) | baixa · Diário | alto | retorno insuficiente; aguardar catálogo |
@@ -234,7 +271,7 @@ esteja aprovado. Toda linha nova inferida permanece `proposta`.
 ## Pendências aprovadas versus propostas
 
 Já aprovadas documentalmente: auditoria completa; cartões urbanos 3:2; selos permanentes por
-estado/região; catálogo de 50 marcos; assets específicos de eventos; pacotes de Sementes; cartão
+estado/região; catálogo de 50 Lugares Memoráveis; assets específicos de eventos; pacotes de Sementes; cartão
 com foto; planejamento de backgrounds e objetos oficiais para o Ninho visitável; preservação de
 históricos; produção em lotes pequenos após aprovação humana.
 
@@ -245,14 +282,17 @@ necessidades não entram em produção sem decisão explícita.
 ## Ordem recomendada para uma produção futura
 
 1. Auditar o Registry de produção e resolver somente as referências quebradas comprovadas.
-2. Fechar o brief e produzir um cartão-piloto para uma das quatro cidades prioritárias.
-3. Validar o cartão em compositor, caixa postal e Álbum nos tamanhos reais; selos territoriais e
-   marcos mundiais seguem lotes independentes.
-4. Produzir os ativos indispensáveis à próxima funcionalidade explicitamente autorizada.
-5. Tratar dívida de baixa resolução e loja somente depois dos fluxos de maior impacto.
-6. Manter Diário e expansão massiva de descobertas no fim da fila.
+2. Validar os cartões urbanos já produzidos em compositor, caixa postal e Álbum nos tamanhos reais;
+   selos territoriais e Lugares Memoráveis seguem lotes independentes.
+3. Produzir os ativos indispensáveis à próxima funcionalidade explicitamente autorizada.
+4. Tratar dívida de baixa resolução e loja somente depois dos fluxos de maior impacto.
+5. Manter Diário e expansão massiva de descobertas no fim da fila.
 
-Decisões ainda necessárias: responsáveis pela aprovação; capacidade por ciclo; fonte e licença de
-cada referência; limites finais por família; primeira cidade entre Manhuaçu, Londrina, Nova
-Friburgo e Hong Kong; primeiro lote de marcos; variantes realmente necessárias; e local único de
-acompanhamento do estado editorial.
+Decisões registradas: a aprovação final de cada lote é feita exclusivamente pelo responsável do
+projeto, sem segundo aprovador obrigatório; a capacidade de revisão e aprovação é de até 50 assets
+finalizados por semana. Os cartões urbanos já produzidos de Manhuaçu, Londrina, Nova Friburgo e
+Hong Kong permanecem uma família separada dos Lugares Memoráveis, que têm planejamento e critérios
+de produção próprios.
+
+Decisões ainda necessárias: fonte e licença de cada referência; limites finais por família;
+variantes realmente necessárias; e local único de acompanhamento do estado editorial.

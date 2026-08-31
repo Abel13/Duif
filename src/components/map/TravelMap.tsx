@@ -44,6 +44,8 @@ import {
   shouldShowMapRewards,
 } from "./travelMapCamera";
 import { postalMapStyle } from "./postalMapStyle";
+import { MapWeatherEffects } from "./MapWeatherEffects";
+import type { TravelWeatherCategory } from "../../game/travelWeather";
 
 const routeSourceId = "duif-route";
 const outboundProgressSourceId = "duif-outbound-progress";
@@ -87,6 +89,7 @@ export type TravelMapProps = {
   selection: MapSelection;
   showRouteLabels: boolean;
   visualTheme?: { isNight: boolean; season: "summer" | "autumn" | "winter" | "spring" };
+  weatherCategory?: TravelWeatherCategory;
   onFollowChange: (follow: boolean) => void;
   onRewardDiscoveries: (
     rewardIds: string[],
@@ -125,6 +128,7 @@ export function TravelMap({
   selection,
   showRouteLabels,
   visualTheme,
+  weatherCategory,
   onFollowChange,
   onRewardDiscoveries,
   onRewardSelect,
@@ -519,6 +523,12 @@ export function TravelMap({
   return (
     <div className={styles.mapFrame}>
       <div className={styles.map} ref={containerRef} />
+      {visualTheme ? <MapWeatherEffects
+        isNight={visualTheme.isNight}
+        motionPreference={motionPreference}
+        season={visualTheme.season}
+        weatherCategory={weatherCategory}
+      /> : null}
       {hasMapError ? (
         <div className={styles.mapFallback}>{fallbackLabel}</div>
       ) : null}

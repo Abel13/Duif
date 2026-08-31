@@ -16,7 +16,7 @@ O jogador evolui por jogar; o mascote, por viajar; e a skill, por ser praticada.
 
 Reputação Postal é a progressão geral da conta. Ela desbloqueia sistemas e expressão social, como amigos, cartões postais, presentes, coleções, decoração e expansões do ninho, slots, cosméticos de perfil, eventos sazonais e outros recursos sociais. Ela não compra poder nem substitui a evolução do mascote.
 
-`XP de Reputação = conclusão + ações + descobertas + marcos`
+`XP de Reputação = conclusão + ações + descobertas + marcos de progressão`
 
 | Ação | XP |
 | --- | ---: |
@@ -38,6 +38,9 @@ A curva recomendada é `XP para o próximo nível = 150 × nível^1,45`. Referê
 ## XP de voo do mascote
 
 Cada mascote evolui separadamente. Seu XP influencia nível, vínculo, pequenos marcos visuais, Alcance de Voo, capacidade futura de carga e acesso a rotas mais longas.
+
+Neste documento, “marcos” são marcos de progressão do jogador ou do mascote; eles não são Lugares
+Memoráveis e não concedem XP por si só.
 
 Para uma entrega completa, `distância total` inclui ida e volta (`distanceKm × 2`). A fórmula base, igual para qualquer espécie, é:
 
@@ -169,4 +172,4 @@ ultrapassar o limite global de velocidade efetiva entre 60% e 125% da velocidade
 
 Após a coleta, o resumo deve separar claramente Reputação Postal, XP de voo do mascote e XP das skills acionadas. Repetir a coleta nunca pode conceder XP novamente.
 
-Não há XP pago, conversão de Cristais em XP, medidor de energia, combustível obrigatório ou equipamento/cosmético que gere vantagem universal de farm. A autoridade da fórmula, dos marcos, das afinidades, dos níveis e das concessões pertence ao backend.
+Não há XP pago, conversão de Cristais em XP, medidor de energia, combustível obrigatório ou equipamento/cosmético que gere vantagem universal de farm. A autoridade da fórmula, dos marcos de progressão, das afinidades, dos níveis e das concessões pertence ao backend.

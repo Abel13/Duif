@@ -173,7 +173,7 @@ dívida existente e aprovar a fila editorial antes de qualquer nova produção v
   planejados, ligado às chaves estáveis do Official Asset Registry;
 - catálogo regional com cidades priorizadas por Ninhos de produção quando a fonte for autorizada,
   todas as capitais brasileiras, cartões urbanos e selos permanentes propostos;
-- catálogo nominal de 50 marcos mundiais específicos, com cobertura geográfica equilibrada,
+- catálogo nominal de 50 Lugares Memoráveis específicos, com cobertura geográfica equilibrada,
   coordenadas públicas, composição, alt text e revisão editorial, sem priorização por cidades de
   usuários;
 - produção pareada obrigatória de cada Lugar Memorável: sticker transparente do mapa e frente de

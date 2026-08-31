@@ -32,7 +32,7 @@
 | Lanche Revigorante | Inventário por quantidade | Sim, ao confirmar partida | Não | Rotas, trabalhos postais e compra futura com Sementes | Modificador da viagem; não ocupa slot |
 | Lembrança / souvenir | Inventário por cópia | Regra futura | Não por enquanto | Descobertas e eventos | Coleção do dono |
 | Material | Inventário por quantidade | Regra futura | Não por enquanto | Descobertas | Coleção do dono |
-| Insígnia | Conquista de conta | Não | Não | Marcos e eventos | Perfil / álbum |
+| Insígnia | Conquista de conta | Não | Não | Marcos de progressão e eventos | Perfil / álbum |
 
 ## Fontes de obtenção
 

@@ -25,8 +25,9 @@ catálogo GeoNames antes da produção.
   pequena do cartão da cidade;
 - selo territorial permanente: `stamp.region.<country-code>.<region-code>.front`, WebP
   transparente, recomendado 256×256, até 60 KB;
-- marcos não pertencem ao catálogo regional e não seguem cidades com usuários; são pontos
-  extremamente conhecidos mundialmente, mantidos no catálogo independente de marcos;
+- Lugares Memoráveis não pertencem ao catálogo regional e não seguem cidades com usuários; são
+  pontos extremamente conhecidos mundialmente, mantidos no [catálogo editorial
+  independente](world-landmark-catalog.md);
 - desbloqueios futuros, ainda não implementados: cartão após visita concluída à cidade; selo após
   visita concluída a qualquer destino da UF;
 - uma cidade produz um cartão próprio, mas reutiliza o selo da UF;

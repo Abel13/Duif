@@ -6,20 +6,29 @@ O snapshot documental de 25 de agosto de 2026 está dividido em três documentos
 
 - [inventário mestre e dívida visual](asset-inventory.md);
 - [catálogo visual regional proposto](regional-visual-catalog.md);
-- [catálogo proposto de 50 marcos mundiais](world-landmark-catalog.md).
+- [catálogo editorial de Lugares Memoráveis](world-landmark-catalog.md).
 
 Eles registram o estado observado e propostas futuras, mas não substituem o Official Asset
 Registry como fonte do runtime. Uma entrada `proposta` não está aprovada para produção.
 
+Lugares Memoráveis são uma família independente dos cartões urbanos e dos selos regionais. O
+catálogo correspondente concentra sua seleção, enquanto as regras de desbloqueio e privacidade
+permanecem nas [regras do produto](../product/rules.md#lugares-memoráveis).
+
 Para a produção ilustrada futura:
 
 - cartões devem ser ilustrações rasterizadas em WebP 3:2;
-- selos regionais e marcos devem ser WebP com fundo transparente;
-- marcos usam apresentação de sticker ilustrado, com recorte orgânico, borda clara de papel e
+- selos regionais e assets de Lugares Memoráveis devem ser WebP com fundo transparente;
+- Lugares Memoráveis usam apresentação de sticker ilustrado, com recorte orgânico, borda clara de papel e
   silhueta reconhecível, conforme o [catálogo mundial](world-landmark-catalog.md), sem se tornarem
   adesivos de correspondência ou itens de inventário;
 - cada Lugar Memorável exige um par de assets antes da publicação: sticker transparente para o
   mapa e frente de cartão postal WebP 3:2. Publicar somente um deles deixa o lugar incompleto;
+- o dossiê de condições do trecho usa texturas decorativas WebP transparentes, quadradas, até
+  512×512 e 80 KB: uma base para cada estação e um overlay para garoa, chuva, neve/gelo ou
+  tempestade. Elas são decorativas, sem texto, e não aparecem sobre o mapa;
+- assets de atmosfera podem usar IA assistida, desde que o Studio registre a proveniência e o
+  responsável do projeto aprove a versão final antes do deploy;
 - nenhuma dessas ilustrações novas deve ser produzida em SVG;
 - cada asset precisa de brief aprovado antes da criação, com composição, referências permitidas,
   licença/origem, dimensões, orçamento, área segura e alt text;
@@ -66,7 +75,9 @@ Use stable public paths under `public/assets/`:
 - `navigation/` for small bottom-navigation icon assets.
 - `currency/` for the standardized Stamp and Crystal balance icons.
 - `textures/` for small paper or stamp textures.
-- `maps/` for future lightweight map overlays, labels, stamps, or texture details.
+- `maps/` for lightweight map overlays, labels, stamps, or texture details.
+- `maps/atmosphere/` for the transparent seasonal and weather layers rendered in the segment-conditions dossier.
+- `maps/weather-particles/` for independently animated seasonal and weather particles on the map.
 - `stamps/` for reusable postal marks, cancellation marks, and collectible stamp art.
 - `tutorial/postcards/` for the larger, inspectable tutorial postcard artwork.
 - `postcards/landmarks/` for 3:2 postcard fronts paired with Lugares Memoráveis.
@@ -74,6 +85,11 @@ Use stable public paths under `public/assets/`:
 - `nest/` for modular Ninho hub artwork.
 
 Keep asset names lowercase and hyphenated, such as `nuvem.webp` or `worn-route-stamp.webp`.
+
+`maps/weather-particles/` contains transparent, independently animated WebP particles for the
+map's seasons and conditions. They are Official Asset Registry textures, with IA-assisted origin
+and project-owner final approval required. The raster layers in `maps/atmosphere/` remain
+exclusive to the segment-conditions dossier.
 
 Keep large source files outside `public/` so they are not copied into the production build. Source-only app icons currently live under `assets-source/icons/`, while optimized runtime icons live under `public/assets/icons/`.
 

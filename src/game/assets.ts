@@ -133,7 +133,39 @@ export const assetKeys = {
     mailbox: "nest.artwork.mailbox",
   },
   profile: { defaultSilhouette: "profile.avatar.defaultSilhouette" },
-  textures: { postalPaperWash: "texture.postalPaperWash" },
+  textures: {
+    postalPaperWash: "texture.postalPaperWash",
+    mapAtmosphere: {
+      seasons: {
+        summer: "texture.mapAtmosphere.season.summer",
+        autumn: "texture.mapAtmosphere.season.autumn",
+        winter: "texture.mapAtmosphere.season.winter",
+        spring: "texture.mapAtmosphere.season.spring",
+      },
+      weather: {
+        drizzle: "texture.mapAtmosphere.weather.drizzle",
+        rain: "texture.mapAtmosphere.weather.rain",
+        snowIce: "texture.mapAtmosphere.weather.snowIce",
+        storm: "texture.mapAtmosphere.weather.storm",
+      },
+    },
+    mapWeatherParticles: {
+      seasons: {
+        summerMote: "texture.mapWeatherParticle.season.summerMote",
+        autumnLeaf: "texture.mapWeatherParticle.season.autumnLeaf",
+        winterCrystal: "texture.mapWeatherParticle.season.winterCrystal",
+        springPetal: "texture.mapWeatherParticle.season.springPetal",
+      },
+      weather: {
+        drizzleDrop: "texture.mapWeatherParticle.weather.drizzleDrop",
+        fogWisp: "texture.mapWeatherParticle.weather.fogWisp",
+        rainStreak: "texture.mapWeatherParticle.weather.rainStreak",
+        snowflake: "texture.mapWeatherParticle.weather.snowflake",
+        icePellet: "texture.mapWeatherParticle.weather.icePellet",
+        stormCloud: "texture.mapWeatherParticle.weather.stormCloud",
+      },
+    },
+  },
   postalMarks: { postalCancel: "postalMark.postalCancel", routeDoodle: "postalMark.routeDoodle" },
   prestige: {
     firstHorizon: "prestige.border.firstHorizon",

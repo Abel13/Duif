@@ -534,6 +534,7 @@ export function TravelMapPage() {
             selection={selection}
             showRouteLabels={journeyPhase === "traveling"}
             visualTheme={visualTheme}
+            weatherCategory={journeyPhase === "traveling" ? delivery.segmentedTravel?.currentWeather.category : undefined}
           />
         </div>
 

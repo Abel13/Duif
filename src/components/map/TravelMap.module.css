@@ -79,6 +79,11 @@
   right: var(--space-3);
 }
 
+.map :global(.maplibregl-marker),
+.map :global(.maplibregl-control-container) {
+  z-index: 3;
+}
+
 .map :global(.maplibregl-ctrl-group) {
   overflow: hidden;
   border: 1px solid rgba(46, 42, 36, 0.34);
@@ -400,7 +405,7 @@
 
 .labels {
   position: absolute;
-  z-index: 2;
+  z-index: 3;
   right: var(--space-3);
   bottom: calc(10rem + env(safe-area-inset-bottom));
   left: var(--space-3);
@@ -453,6 +458,7 @@
 
 .centerControl {
   position: absolute;
+  z-index: 3;
   bottom: calc(10.5rem + env(safe-area-inset-bottom));
   left: 50%;
   width: min(15rem, calc(100vw - 10rem));
