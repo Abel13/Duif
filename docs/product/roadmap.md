@@ -156,10 +156,14 @@ quatro bordas independentes são selecionáveis após o primeiro desbloqueio aut
 ## Planejamento e produção do catálogo visual
 
 **Estado:** Catálogo em revisão, com primeiros lotes autorizados e integrados. Cristo Redentor,
-MASP, Garganta do Diabo e Machu Picchu possuem o par completo de Lugar Memorável; os 27 selos
-territoriais brasileiros e os cartões urbanos de Manhuaçu, Londrina, Nova Friburgo e Hong Kong
-estão produzidos. Os demais cartões e Lugares Memoráveis permanecem propostas e exigem
-autorização própria.
+MASP, Garganta do Diabo, Machu Picchu, Salar de Uyuni, Glaciar Perito Moreno, Torres del Paine,
+Salto Ángel e Ahu Tongariki possuem o par completo de Lugar Memorável; os 27 selos
+territoriais brasileiros, os cartões das 27 capitais brasileiras e os cartões urbanos de Manhuaçu,
+Londrina, Nova Friburgo e Hong Kong estão produzidos e ativos. Após auditoria visual, 23 cartões
+urbanos foram redesenhados com marcos reconhecíveis como foco principal: os sete primeiros
+(Teresina, Aracaju, Campo Grande, Cuiabá, Curitiba, João Pessoa e Macapá) e mais 16 cartões de
+prioridade alta ou média. Outros cartões regionais permanecem propostas e exigem autorização própria;
+os 50 Lugares Memoráveis foram publicados com seus pares de assets.
 
 **Objetivo:**
 
@@ -172,7 +176,7 @@ dívida existente e aprovar a fila editorial antes de qualquer nova produção v
 - inventário único de todos os assets utilizados, provisórios, ausentes, duplicados, arquivados e
   planejados, ligado às chaves estáveis do Official Asset Registry;
 - catálogo regional com cidades priorizadas por Ninhos de produção quando a fonte for autorizada,
-  todas as capitais brasileiras, cartões urbanos e selos permanentes propostos;
+  cobertura produzida das 27 capitais brasileiras, cartões urbanos e selos permanentes propostos;
 - catálogo nominal de 50 Lugares Memoráveis específicos, com cobertura geográfica equilibrada,
   coordenadas públicas, composição, alt text e revisão editorial, sem priorização por cidades de
   usuários;
