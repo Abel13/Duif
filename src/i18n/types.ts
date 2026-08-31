@@ -31,6 +31,52 @@ export type TranslationDictionary = {
     masp: { name: string; description: string; alt: string };
     iguazuDevilsThroat: { name: string; description: string; alt: string };
     machuPicchu: { name: string; description: string; alt: string };
+    salarDeUyuni: { name: string; description: string; alt: string };
+    peritoMorenoGlacier: { name: string; description: string; alt: string };
+    torresDelPaine: { name: string; description: string; alt: string };
+    angelFalls: { name: string; description: string; alt: string };
+    ahuTongariki: { name: string; description: string; alt: string };
+    statueOfLiberty: { name: string; description: string; alt: string };
+    goldenGateBridge: { name: string; description: string; alt: string };
+    grandCanyonMatherPoint: { name: string; description: string; alt: string };
+    chichenItzaKukulkan: { name: string; description: string; alt: string };
+    teotihuacanSunPyramid: { name: string; description: string; alt: string };
+    niagaraHorseshoeFalls: { name: string; description: string; alt: string };
+    mirafloresLocks: { name: string; description: string; alt: string };
+    tikalTempleOne: { name: string; description: string; alt: string };
+    eiffelTower: { name: string; description: string; alt: string };
+    colosseum: { name: string; description: string; alt: string };
+    alhambraComares: { name: string; description: string; alt: string };
+    elizabethTower: { name: string; description: string; alt: string };
+    acropolisParthenon: { name: string; description: string; alt: string };
+    neuschwansteinCastle: { name: string; description: string; alt: string };
+    charlesBridge: { name: string; description: string; alt: string };
+    montSaintMichel: { name: string; description: string; alt: string };
+    matterhorn: { name: string; description: string; alt: string };
+    stonehenge: { name: string; description: string; alt: string };
+    gizaGreatPyramid: { name: string; description: string; alt: string };
+    tableMountain: { name: string; description: string; alt: string };
+    victoriaFallsDevilsCataract: { name: string; description: string; alt: string };
+    kilimanjaroUhuruPeak: { name: string; description: string; alt: string };
+    hassanIIMosque: { name: string; description: string; alt: string };
+    lalibelaBeteGiyorgis: { name: string; description: string; alt: string };
+    greatMosqueDjenne: { name: string; description: string; alt: string };
+    avenueOfBaobabs: { name: string; description: string; alt: string };
+    greatZimbabwe: { name: string; description: string; alt: string };
+    greatWallBadaling: { name: string; description: string; alt: string };
+    tajMahal: { name: string; description: string; alt: string };
+    fushimiInariSenbonTorii: { name: string; description: string; alt: string };
+    angkorWat: { name: string; description: string; alt: string };
+    borobudur: { name: string; description: string; alt: string };
+    potalaPalace: { name: string; description: string; alt: string };
+    forbiddenCityMeridianGate: { name: string; description: string; alt: string };
+    himejiCastle: { name: string; description: string; alt: string };
+    halongBayThienCung: { name: string; description: string; alt: string };
+    baganAnandaTemple: { name: string; description: string; alt: string };
+    twelveApostles: { name: string; description: string; alt: string };
+    uluru: { name: string; description: string; alt: string };
+    heartReef: { name: string; description: string; alt: string };
+    mitrePeak: { name: string; description: string; alt: string };
   };
   officialPostcards: {
     base: { name: string; description: string };
@@ -38,6 +84,52 @@ export type TranslationDictionary = {
     masp: { name: string; description: string; alt: string };
     iguazuDevilsThroat: { name: string; description: string; alt: string };
     machuPicchu: { name: string; description: string; alt: string };
+    salarDeUyuni: { name: string; description: string; alt: string };
+    peritoMorenoGlacier: { name: string; description: string; alt: string };
+    torresDelPaine: { name: string; description: string; alt: string };
+    angelFalls: { name: string; description: string; alt: string };
+    ahuTongariki: { name: string; description: string; alt: string };
+    statueOfLiberty: { name: string; description: string; alt: string };
+    goldenGateBridge: { name: string; description: string; alt: string };
+    grandCanyonMatherPoint: { name: string; description: string; alt: string };
+    chichenItzaKukulkan: { name: string; description: string; alt: string };
+    teotihuacanSunPyramid: { name: string; description: string; alt: string };
+    niagaraHorseshoeFalls: { name: string; description: string; alt: string };
+    mirafloresLocks: { name: string; description: string; alt: string };
+    tikalTempleOne: { name: string; description: string; alt: string };
+    eiffelTower: { name: string; description: string; alt: string };
+    colosseum: { name: string; description: string; alt: string };
+    alhambraComares: { name: string; description: string; alt: string };
+    elizabethTower: { name: string; description: string; alt: string };
+    acropolisParthenon: { name: string; description: string; alt: string };
+    neuschwansteinCastle: { name: string; description: string; alt: string };
+    charlesBridge: { name: string; description: string; alt: string };
+    montSaintMichel: { name: string; description: string; alt: string };
+    matterhorn: { name: string; description: string; alt: string };
+    stonehenge: { name: string; description: string; alt: string };
+    gizaGreatPyramid: { name: string; description: string; alt: string };
+    tableMountain: { name: string; description: string; alt: string };
+    victoriaFallsDevilsCataract: { name: string; description: string; alt: string };
+    kilimanjaroUhuruPeak: { name: string; description: string; alt: string };
+    hassanIIMosque: { name: string; description: string; alt: string };
+    lalibelaBeteGiyorgis: { name: string; description: string; alt: string };
+    greatMosqueDjenne: { name: string; description: string; alt: string };
+    avenueOfBaobabs: { name: string; description: string; alt: string };
+    greatZimbabwe: { name: string; description: string; alt: string };
+    greatWallBadaling: { name: string; description: string; alt: string };
+    tajMahal: { name: string; description: string; alt: string };
+    fushimiInariSenbonTorii: { name: string; description: string; alt: string };
+    angkorWat: { name: string; description: string; alt: string };
+    borobudur: { name: string; description: string; alt: string };
+    potalaPalace: { name: string; description: string; alt: string };
+    forbiddenCityMeridianGate: { name: string; description: string; alt: string };
+    himejiCastle: { name: string; description: string; alt: string };
+    halongBayThienCung: { name: string; description: string; alt: string };
+    baganAnandaTemple: { name: string; description: string; alt: string };
+    twelveApostles: { name: string; description: string; alt: string };
+    uluru: { name: string; description: string; alt: string };
+    heartReef: { name: string; description: string; alt: string };
+    mitrePeak: { name: string; description: string; alt: string };
     cities: {
       aracaju: { name: string; description: string; alt: string };
       beloHorizonte: { name: string; description: string; alt: string };
@@ -984,6 +1076,25 @@ export type TranslationDictionary = {
 export type TranslationKey =
   | "landmarks.christTheRedeemer.name" | "landmarks.christTheRedeemer.description" | "landmarks.christTheRedeemer.alt" | "landmarks.masp.name" | "landmarks.masp.description" | "landmarks.masp.alt"
   | "landmarks.iguazuDevilsThroat.name" | "landmarks.iguazuDevilsThroat.description" | "landmarks.iguazuDevilsThroat.alt" | "landmarks.machuPicchu.name" | "landmarks.machuPicchu.description" | "landmarks.machuPicchu.alt"
+  | "landmarks.salarDeUyuni.name" | "landmarks.salarDeUyuni.description" | "landmarks.salarDeUyuni.alt" | "landmarks.peritoMorenoGlacier.name" | "landmarks.peritoMorenoGlacier.description" | "landmarks.peritoMorenoGlacier.alt"
+  | "landmarks.torresDelPaine.name" | "landmarks.torresDelPaine.description" | "landmarks.torresDelPaine.alt" | "landmarks.angelFalls.name" | "landmarks.angelFalls.description" | "landmarks.angelFalls.alt" | "landmarks.ahuTongariki.name" | "landmarks.ahuTongariki.description" | "landmarks.ahuTongariki.alt"
+  | "landmarks.statueOfLiberty.name" | "landmarks.statueOfLiberty.description" | "landmarks.statueOfLiberty.alt" | "landmarks.goldenGateBridge.name" | "landmarks.goldenGateBridge.description" | "landmarks.goldenGateBridge.alt" | "landmarks.grandCanyonMatherPoint.name" | "landmarks.grandCanyonMatherPoint.description" | "landmarks.grandCanyonMatherPoint.alt" | "landmarks.chichenItzaKukulkan.name" | "landmarks.chichenItzaKukulkan.description" | "landmarks.chichenItzaKukulkan.alt"
+  | "landmarks.teotihuacanSunPyramid.name" | "landmarks.teotihuacanSunPyramid.description" | "landmarks.teotihuacanSunPyramid.alt" | "landmarks.niagaraHorseshoeFalls.name" | "landmarks.niagaraHorseshoeFalls.description" | "landmarks.niagaraHorseshoeFalls.alt" | "landmarks.mirafloresLocks.name" | "landmarks.mirafloresLocks.description" | "landmarks.mirafloresLocks.alt" | "landmarks.tikalTempleOne.name" | "landmarks.tikalTempleOne.description" | "landmarks.tikalTempleOne.alt"
+  | "landmarks.eiffelTower.name" | "landmarks.eiffelTower.description" | "landmarks.eiffelTower.alt" | "landmarks.colosseum.name" | "landmarks.colosseum.description" | "landmarks.colosseum.alt" | "landmarks.alhambraComares.name" | "landmarks.alhambraComares.description" | "landmarks.alhambraComares.alt" | "landmarks.elizabethTower.name" | "landmarks.elizabethTower.description" | "landmarks.elizabethTower.alt"
+  | "landmarks.acropolisParthenon.name" | "landmarks.acropolisParthenon.description" | "landmarks.acropolisParthenon.alt" | "landmarks.neuschwansteinCastle.name" | "landmarks.neuschwansteinCastle.description" | "landmarks.neuschwansteinCastle.alt" | "landmarks.charlesBridge.name" | "landmarks.charlesBridge.description" | "landmarks.charlesBridge.alt" | "landmarks.montSaintMichel.name" | "landmarks.montSaintMichel.description" | "landmarks.montSaintMichel.alt"
+  | "landmarks.matterhorn.name" | "landmarks.matterhorn.description" | "landmarks.matterhorn.alt" | "landmarks.stonehenge.name" | "landmarks.stonehenge.description" | "landmarks.stonehenge.alt" | "landmarks.gizaGreatPyramid.name" | "landmarks.gizaGreatPyramid.description" | "landmarks.gizaGreatPyramid.alt" | "landmarks.tableMountain.name" | "landmarks.tableMountain.description" | "landmarks.tableMountain.alt"
+  | "landmarks.victoriaFallsDevilsCataract.name" | "landmarks.victoriaFallsDevilsCataract.description" | "landmarks.victoriaFallsDevilsCataract.alt" | "landmarks.kilimanjaroUhuruPeak.name" | "landmarks.kilimanjaroUhuruPeak.description" | "landmarks.kilimanjaroUhuruPeak.alt" | "landmarks.hassanIIMosque.name" | "landmarks.hassanIIMosque.description" | "landmarks.hassanIIMosque.alt" | "landmarks.lalibelaBeteGiyorgis.name" | "landmarks.lalibelaBeteGiyorgis.description" | "landmarks.lalibelaBeteGiyorgis.alt"
+  | "landmarks.greatMosqueDjenne.name" | "landmarks.greatMosqueDjenne.description" | "landmarks.greatMosqueDjenne.alt" | "landmarks.avenueOfBaobabs.name" | "landmarks.avenueOfBaobabs.description" | "landmarks.avenueOfBaobabs.alt" | "landmarks.greatZimbabwe.name" | "landmarks.greatZimbabwe.description" | "landmarks.greatZimbabwe.alt" | "landmarks.greatWallBadaling.name" | "landmarks.greatWallBadaling.description" | "landmarks.greatWallBadaling.alt"
+  | "landmarks.tajMahal.name" | "landmarks.tajMahal.description" | "landmarks.tajMahal.alt" | "landmarks.fushimiInariSenbonTorii.name" | "landmarks.fushimiInariSenbonTorii.description" | "landmarks.fushimiInariSenbonTorii.alt" | "landmarks.angkorWat.name" | "landmarks.angkorWat.description" | "landmarks.angkorWat.alt" | "landmarks.borobudur.name" | "landmarks.borobudur.description" | "landmarks.borobudur.alt"
+ | "landmarks.potalaPalace.name" | "landmarks.potalaPalace.description" | "landmarks.potalaPalace.alt"
+ | "landmarks.baganAnandaTemple.name" | "landmarks.baganAnandaTemple.description" | "landmarks.baganAnandaTemple.alt"
+ | "landmarks.twelveApostles.name" | "landmarks.twelveApostles.description" | "landmarks.twelveApostles.alt"
+ | "landmarks.uluru.name" | "landmarks.uluru.description" | "landmarks.uluru.alt"
+ | "landmarks.heartReef.name" | "landmarks.heartReef.description" | "landmarks.heartReef.alt"
+ | "landmarks.mitrePeak.name" | "landmarks.mitrePeak.description" | "landmarks.mitrePeak.alt"
+ | "landmarks.forbiddenCityMeridianGate.name" | "landmarks.forbiddenCityMeridianGate.description" | "landmarks.forbiddenCityMeridianGate.alt"
+ | "landmarks.himejiCastle.name" | "landmarks.himejiCastle.description" | "landmarks.himejiCastle.alt"
+ | "landmarks.halongBayThienCung.name" | "landmarks.halongBayThienCung.description" | "landmarks.halongBayThienCung.alt"
   | "map.landmarks.title" | "map.landmarks.discovered" | "map.landmarks.newTitle" | "map.landmarks.newDescription" | "map.landmarks.learnMore" | "map.landmarks.dismiss" | "map.landmarks.close" | "map.landmarks.category" | "map.landmarks.cultural" | "map.landmarks.empty"
   | "send.skillPreview.title" | "send.skillPreview.loading" | "send.skillPreview.unavailable" | "send.skillPreview.active" | "send.skillPreview.inactive" | "send.skillPreview.weatherDependent" | "send.skillPreview.weatherNotice" | "send.skillPreview.reasons.snapshot" | "send.skillPreview.reasons.conditionNotMet"
   | "functionalEquipment.shopTitle" | "functionalEquipment.shopDescription" | "functionalEquipment.balance" | "functionalEquipment.buy" | "functionalEquipment.buying" | "functionalEquipment.purchaseError"
@@ -1856,6 +1967,28 @@ export type TranslationKey =
   | "officialPostcards.machuPicchu.name"
   | "officialPostcards.machuPicchu.description"
   | "officialPostcards.machuPicchu.alt"
+  | "officialPostcards.salarDeUyuni.name" | "officialPostcards.salarDeUyuni.description" | "officialPostcards.salarDeUyuni.alt"
+  | "officialPostcards.peritoMorenoGlacier.name" | "officialPostcards.peritoMorenoGlacier.description" | "officialPostcards.peritoMorenoGlacier.alt"
+  | "officialPostcards.torresDelPaine.name" | "officialPostcards.torresDelPaine.description" | "officialPostcards.torresDelPaine.alt"
+  | "officialPostcards.angelFalls.name" | "officialPostcards.angelFalls.description" | "officialPostcards.angelFalls.alt"
+  | "officialPostcards.ahuTongariki.name" | "officialPostcards.ahuTongariki.description" | "officialPostcards.ahuTongariki.alt"
+  | "officialPostcards.statueOfLiberty.name" | "officialPostcards.statueOfLiberty.description" | "officialPostcards.statueOfLiberty.alt" | "officialPostcards.goldenGateBridge.name" | "officialPostcards.goldenGateBridge.description" | "officialPostcards.goldenGateBridge.alt" | "officialPostcards.grandCanyonMatherPoint.name" | "officialPostcards.grandCanyonMatherPoint.description" | "officialPostcards.grandCanyonMatherPoint.alt" | "officialPostcards.chichenItzaKukulkan.name" | "officialPostcards.chichenItzaKukulkan.description" | "officialPostcards.chichenItzaKukulkan.alt"
+  | "officialPostcards.teotihuacanSunPyramid.name" | "officialPostcards.teotihuacanSunPyramid.description" | "officialPostcards.teotihuacanSunPyramid.alt" | "officialPostcards.niagaraHorseshoeFalls.name" | "officialPostcards.niagaraHorseshoeFalls.description" | "officialPostcards.niagaraHorseshoeFalls.alt" | "officialPostcards.mirafloresLocks.name" | "officialPostcards.mirafloresLocks.description" | "officialPostcards.mirafloresLocks.alt" | "officialPostcards.tikalTempleOne.name" | "officialPostcards.tikalTempleOne.description" | "officialPostcards.tikalTempleOne.alt"
+  | "officialPostcards.eiffelTower.name" | "officialPostcards.eiffelTower.description" | "officialPostcards.eiffelTower.alt" | "officialPostcards.colosseum.name" | "officialPostcards.colosseum.description" | "officialPostcards.colosseum.alt" | "officialPostcards.alhambraComares.name" | "officialPostcards.alhambraComares.description" | "officialPostcards.alhambraComares.alt" | "officialPostcards.elizabethTower.name" | "officialPostcards.elizabethTower.description" | "officialPostcards.elizabethTower.alt"
+  | "officialPostcards.acropolisParthenon.name" | "officialPostcards.acropolisParthenon.description" | "officialPostcards.acropolisParthenon.alt" | "officialPostcards.neuschwansteinCastle.name" | "officialPostcards.neuschwansteinCastle.description" | "officialPostcards.neuschwansteinCastle.alt" | "officialPostcards.charlesBridge.name" | "officialPostcards.charlesBridge.description" | "officialPostcards.charlesBridge.alt" | "officialPostcards.montSaintMichel.name" | "officialPostcards.montSaintMichel.description" | "officialPostcards.montSaintMichel.alt"
+  | "officialPostcards.matterhorn.name" | "officialPostcards.matterhorn.description" | "officialPostcards.matterhorn.alt" | "officialPostcards.stonehenge.name" | "officialPostcards.stonehenge.description" | "officialPostcards.stonehenge.alt" | "officialPostcards.gizaGreatPyramid.name" | "officialPostcards.gizaGreatPyramid.description" | "officialPostcards.gizaGreatPyramid.alt" | "officialPostcards.tableMountain.name" | "officialPostcards.tableMountain.description" | "officialPostcards.tableMountain.alt"
+  | "officialPostcards.victoriaFallsDevilsCataract.name" | "officialPostcards.victoriaFallsDevilsCataract.description" | "officialPostcards.victoriaFallsDevilsCataract.alt" | "officialPostcards.kilimanjaroUhuruPeak.name" | "officialPostcards.kilimanjaroUhuruPeak.description" | "officialPostcards.kilimanjaroUhuruPeak.alt" | "officialPostcards.hassanIIMosque.name" | "officialPostcards.hassanIIMosque.description" | "officialPostcards.hassanIIMosque.alt" | "officialPostcards.lalibelaBeteGiyorgis.name" | "officialPostcards.lalibelaBeteGiyorgis.description" | "officialPostcards.lalibelaBeteGiyorgis.alt"
+  | "officialPostcards.greatMosqueDjenne.name" | "officialPostcards.greatMosqueDjenne.description" | "officialPostcards.greatMosqueDjenne.alt" | "officialPostcards.avenueOfBaobabs.name" | "officialPostcards.avenueOfBaobabs.description" | "officialPostcards.avenueOfBaobabs.alt" | "officialPostcards.greatZimbabwe.name" | "officialPostcards.greatZimbabwe.description" | "officialPostcards.greatZimbabwe.alt" | "officialPostcards.greatWallBadaling.name" | "officialPostcards.greatWallBadaling.description" | "officialPostcards.greatWallBadaling.alt"
+  | "officialPostcards.tajMahal.name" | "officialPostcards.tajMahal.description" | "officialPostcards.tajMahal.alt" | "officialPostcards.fushimiInariSenbonTorii.name" | "officialPostcards.fushimiInariSenbonTorii.description" | "officialPostcards.fushimiInariSenbonTorii.alt" | "officialPostcards.angkorWat.name" | "officialPostcards.angkorWat.description" | "officialPostcards.angkorWat.alt" | "officialPostcards.borobudur.name" | "officialPostcards.borobudur.description" | "officialPostcards.borobudur.alt"
+ | "officialPostcards.potalaPalace.name" | "officialPostcards.potalaPalace.description" | "officialPostcards.potalaPalace.alt"
+ | "officialPostcards.baganAnandaTemple.name" | "officialPostcards.baganAnandaTemple.description" | "officialPostcards.baganAnandaTemple.alt"
+ | "officialPostcards.twelveApostles.name" | "officialPostcards.twelveApostles.description" | "officialPostcards.twelveApostles.alt"
+ | "officialPostcards.uluru.name" | "officialPostcards.uluru.description" | "officialPostcards.uluru.alt"
+ | "officialPostcards.heartReef.name" | "officialPostcards.heartReef.description" | "officialPostcards.heartReef.alt"
+ | "officialPostcards.mitrePeak.name" | "officialPostcards.mitrePeak.description" | "officialPostcards.mitrePeak.alt"
+ | "officialPostcards.forbiddenCityMeridianGate.name" | "officialPostcards.forbiddenCityMeridianGate.description" | "officialPostcards.forbiddenCityMeridianGate.alt"
+ | "officialPostcards.himejiCastle.name" | "officialPostcards.himejiCastle.description" | "officialPostcards.himejiCastle.alt"
+ | "officialPostcards.halongBayThienCung.name" | "officialPostcards.halongBayThienCung.description" | "officialPostcards.halongBayThienCung.alt"
   | "officialPostcards.cities.manhuacu.name"
   | "officialPostcards.cities.manhuacu.description"
   | "officialPostcards.cities.manhuacu.alt"
