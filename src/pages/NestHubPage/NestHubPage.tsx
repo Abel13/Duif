@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { CaretRight, CoffeeBean, GearSix, SketchLogo } from "@phosphor-icons/react";
 
 import { AppBottomNav, PageShell } from "../../components/layout";
+import { MascotPrestigeMedallion } from "../../components/mascot/MascotPrestigeMedallion";
 import { AssetImage } from "../../components/ui";
 import {
   assetKeys,
@@ -225,13 +226,13 @@ function TravelRow({
   const { t } = useTranslation();
   return (
     <button className={styles.travelRow} type="button" onClick={onClick}>
-      <AssetImage
+      <MascotPrestigeMedallion
         alt=""
-        assetKey={mascot.appearance.portraitAssetKey}
+        borderAssetKey={mascot.flightState?.borders.find((border) => border.selected)?.assetKey}
         className={styles.travelPortrait}
-      >
-        <span />
-      </AssetImage>
+        portraitAssetKey={mascot.appearance.portraitAssetKey}
+        size="small"
+      />
       <span>
         <strong>{mascot.name}</strong>
         <small>

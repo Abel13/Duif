@@ -1175,7 +1175,9 @@ function updatePetDirection(
 }
 
 function syncPetPortrait(element: HTMLElement, portraitAssetKey?: string) {
-  const currentImage = element.querySelector<HTMLImageElement>("img");
+  const currentImage = element.querySelector<HTMLImageElement>(
+    `.${styles.petPortrait}`,
+  );
 
   if (!portraitAssetKey) {
     currentImage?.remove();

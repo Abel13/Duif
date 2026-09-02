@@ -578,13 +578,13 @@ export function TravelMapPage() {
 
         {finishedDeliveries.length > 0 ? (
           <div className={styles.finishedDeliveryAlert} role="status">
-            <AssetImage
+            <MascotPrestigeMedallion
               alt=""
+              borderAssetKey={finishedDeliveries[0]!.mascot.flightState?.borders.find((border) => border.selected)?.assetKey}
               className={styles.finishedDeliveryMark}
-              assetKey={finishedDeliveries[0]!.mascot.appearance.portraitAssetKey}
-            >
-              <span className={styles.finishedDeliveryMarkFallback} aria-hidden="true" />
-            </AssetImage>
+              portraitAssetKey={finishedDeliveries[0]!.mascot.appearance.portraitAssetKey}
+              size="small"
+            />
             <div>
               <strong>{t("map.deliveryFinished")}</strong>
               <span>{finishedDeliveries.length === 1
@@ -1024,13 +1024,13 @@ function TripStatusDialog({
     >
       <div className={styles.tripStatusDialogPaper}>
         <header className={styles.tripStatusHeader}>
-          <AssetImage
+          <MascotPrestigeMedallion
             alt={displayMascot?.name ?? ""}
+            borderAssetKey={displayMascot?.flightState?.borders.find((border) => border.selected)?.assetKey}
             className={styles.tripStatusPortrait}
-            assetKey={displayMascot?.appearance.portraitAssetKey}
-          >
-            <span className={styles.tripStatusPortraitFallback} aria-hidden="true" />
-          </AssetImage>
+            portraitAssetKey={displayMascot?.appearance.portraitAssetKey}
+            size="small"
+          />
           <div className={styles.tripStatusIdentity}>
             <span>{t("map.tripStatus")}</span>
             <h2 id="trip-status-dialog-title">{displayMascot?.name ?? t("map.tripStatus")}</h2>

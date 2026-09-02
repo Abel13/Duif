@@ -32,9 +32,11 @@
 .activeToolButton span { position:absolute; top:-.3rem; right:-.25rem; display:grid; place-items:center; min-width:1.15rem; height:1.15rem; padding:0 .2rem; border:1px solid var(--color-paper); border-radius:999px; background:var(--color-postal-red); color:var(--color-paper); font-size:.6rem; font-weight:900; }
 .activeToolButton:focus-visible { outline:3px solid var(--color-postal-blue); outline-offset:3px; }
 .visitorToolButton { overflow:visible; text-decoration:none; }
-.visitorPortrait { width:100%; height:100%; overflow:hidden; border-radius:50%; }
-.visitorPortrait img { width:100%; height:100%; object-fit:cover; }
-.visitorPortrait > span { position:static; width:100%; height:100%; padding:0; border:0; border-radius:50%; background:var(--color-paper-dark); }
+.visitorPortrait { width:100%; height:100%; }
+.visitorToolButton > .visitorPortrait:not([role="img"]) { overflow:hidden; border-radius:50%; }
+.visitorToolButton > .visitorPortrait:not([role="img"]) img { width:100%; height:100%; object-fit:cover; }
+.visitorToolButton > .visitorPortrait:not([role="img"]) > span { position:static; width:100%; height:100%; padding:0; border:0; border-radius:50%; background:var(--color-paper-dark); }
+.visitorToolButton > .visitorPortrait[role="img"] { overflow:visible; border-radius:0; width:2.75rem; height:2.75rem; }
 .visitorToolButton > span:last-child { top:auto; right:-.45rem; bottom:-.35rem; min-width:2.25rem; padding:0 .3rem; white-space:nowrap; }
 .activeToolButton[data-new="true"] { border-color:var(--color-rare-gold); animation:active-tool-pulse 900ms ease-in-out infinite alternate; }
 @keyframes active-tool-pulse { from{transform:scale(1)} to{transform:scale(1.08)} }
@@ -167,26 +169,30 @@
   position: relative;
   width: 1.7rem;
   height: 1.7rem;
-  overflow: hidden;
-  border: 2px solid var(--color-muted-green);
-  border-radius: 50%;
+  flex: none;
   background: rgba(122, 143, 104, 0.16);
 }
 
-.finishedDeliveryMark img {
+.finishedDeliveryMark:not([role="img"]) {
+  overflow: hidden;
+  border: 2px solid var(--color-muted-green);
+  border-radius: 50%;
+}
+
+.finishedDeliveryMark[role="img"] {
+  overflow: visible;
+  width: 2.1rem;
+  height: 2.1rem;
+  background: transparent;
+}
+
+.finishedDeliveryMark:not([role="img"]) img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.finishedDeliveryMarkFallback {
-  display: block;
-  width: 100%;
-  height: 100%;
-  background: var(--color-paper-dark);
-}
-
-.finishedDeliveryMark::after {
+.finishedDeliveryMark:not([role="img"])::after {
   content: "";
   position: absolute;
   top: 0.35rem;
@@ -593,7 +599,7 @@
 
 .tripStatusHeader {
   display: grid;
-  grid-template-columns: 4rem minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   gap: var(--space-3);
   align-items: center;
   padding-bottom: var(--space-3);
@@ -603,28 +609,31 @@
 .tripStatusPortrait {
   width: 4rem;
   height: 4rem;
-  overflow: hidden;
-  border: 3px solid var(--color-postal-blue);
-  border-radius: 50%;
+  flex: none;
   background: var(--color-paper-dark);
   box-shadow:
     0 0 0 0.18rem rgba(255, 248, 232, 0.9),
     0.14rem 0.18rem 0 rgba(46, 42, 36, 0.18);
 }
 
-.tripStatusPortrait img,
-.tripStatusPortraitFallback {
+.tripStatusPortrait:not([role="img"]) {
+  overflow: hidden;
+  border: 3px solid var(--color-postal-blue);
+  border-radius: 50%;
+}
+
+.tripStatusPortrait[role="img"] {
+  overflow: visible;
+  width: 4.6rem;
+  height: 4.6rem;
+  background: transparent;
+  box-shadow: none;
+}
+
+.tripStatusPortrait:not([role="img"]) img {
   width: 100%;
   height: 100%;
-}
-
-.tripStatusPortrait img {
   object-fit: cover;
-}
-
-.tripStatusPortraitFallback {
-  display: block;
-  background: radial-gradient(circle, var(--color-paper) 25%, var(--color-postal-blue) 26% 42%, var(--color-paper-dark) 43%);
 }
 
 .tripStatusIdentity {
@@ -835,12 +844,17 @@
 
 @media (max-width: 360px) {
   .tripStatusHeader {
-    grid-template-columns: 3.5rem minmax(0, 1fr);
+    grid-template-columns: auto minmax(0, 1fr);
   }
 
-  .tripStatusPortrait {
+  .tripStatusPortrait:not([role="img"]) {
     width: 3.5rem;
     height: 3.5rem;
+  }
+
+  .tripStatusPortrait[role="img"] {
+    width: 4rem;
+    height: 4rem;
   }
 
   .tripStatusStamp {
