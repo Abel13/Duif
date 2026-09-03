@@ -1,1 +1,96 @@
-.medallion{position:relative;isolation:isolate;display:inline-grid;aspect-ratio:1;place-items:center;flex:none}.small{width:3rem}.medium{width:5.5rem}.large{width:min(100%,22rem)}.portrait{position:absolute;inset:16%;overflow:hidden;border-radius:50%;background:var(--color-paper-dark)}.portrait img{width:100%;height:100%;object-fit:cover;clip-path:circle(50%)}.portrait>span{width:100%;height:100%;border-radius:50%;background:var(--color-paper-dark)}.border{position:absolute;z-index:2;inset:0;width:100%;height:100%;pointer-events:none}.border img{width:100%;height:100%;object-fit:contain}.border>span{display:none}@media(prefers-reduced-motion:no-preference){.medallion{animation:prestige-in .18s ease-out both}}@keyframes prestige-in{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:none}}@media(prefers-reduced-motion:reduce){.medallion{animation:none}}
+.medallion {
+  position: relative;
+  isolation: isolate;
+  display: block;
+  flex: none;
+  aspect-ratio: 1;
+}
+
+.small {
+  width: 3rem;
+  height: 3rem;
+}
+
+.medium {
+  width: 5.5rem;
+  height: 5.5rem;
+}
+
+.large {
+  width: min(100%, 22rem);
+  aspect-ratio: 1;
+}
+
+.medallion > .portrait {
+  position: absolute;
+  inset: 16%;
+  display: block;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--color-paper-dark);
+}
+
+.medallion > .portrait img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  clip-path: circle(50%);
+}
+
+.medallion > .portrait > span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--color-paper-dark);
+}
+
+.medallion > .border {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  display: block;
+  width: auto;
+  height: auto;
+  pointer-events: none;
+}
+
+.medallion > .border img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: contain;
+}
+
+.medallion > .border > span {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .medallion {
+    animation: prestige-in 0.18s ease-out both;
+  }
+}
+
+@keyframes prestige-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .medallion {
+    animation: none;
+  }
+}

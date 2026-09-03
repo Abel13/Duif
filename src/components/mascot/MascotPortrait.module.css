@@ -170,7 +170,11 @@
   border-radius: 999px;
 }
 
-.prestigeMedallion{filter:drop-shadow(.4rem .55rem 0 rgba(46,42,36,.16))}
+.prestigeMedallion {
+  width: min(100%, clamp(14.5rem, 78vw, 22rem));
+  aspect-ratio: 1;
+  filter: drop-shadow(0.4rem 0.55rem 0 rgba(46, 42, 36, 0.16));
+}
 
 @media (max-width: 360px) {
   .postmark {
