@@ -3589,6 +3589,8 @@ export type Database = {
           distance_km: number
           friend_id: string
           friend_name: string
+          friendship_state: string
+          mascot_level: number
           mascot_name: string
           origin_latitude: number
           origin_longitude: number
@@ -3596,10 +3598,12 @@ export type Database = {
           outbound_arrival_at: string
           outbound_start_at: string
           portrait_asset_key: string
+          prestige_asset_key: string | null
           return_arrival_at: string
           return_start_at: string
           species_key: string
           traffic_id: string
+          trait_name_key: string
           visibility: string
         }[]
       }
@@ -3811,6 +3815,13 @@ export type Database = {
       }
       request_friendship_by_postal_code: {
         Args: { submitted_code: string }
+        Returns: {
+          outcome: string
+          request_id: string
+        }[]
+      }
+      request_friendship_from_postal_traffic: {
+        Args: { traffic_delivery_id: string }
         Returns: {
           outcome: string
           request_id: string

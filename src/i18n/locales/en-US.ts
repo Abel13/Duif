@@ -822,6 +822,9 @@ export const enUS = {
     travelState: "Travel state",
     owner: "Owner",
     openFriendProfile: "Open friend profile",
+    requestFriendship: "Request friendship",
+    friendshipRequestSent: "Friendship request sent.",
+    friendshipRequestIncoming: "You already have a request from this player in Friends.",
     privateOwner: "This mascot's owner details are private.",
     outOfRange:
       "This mascot left the queried region. Showing its last known record.",

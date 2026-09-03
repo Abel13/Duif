@@ -5,7 +5,7 @@ import { AirTrafficControl, Binoculars, Clock, CloudSun, Compass, Gauge, MapPin,
 import { AppBottomNav } from "../../components/layout";
 import { TravelMap } from "../../components/map/TravelMap";
 import { MascotPrestigeMedallion } from "../../components/mascot/MascotPrestigeMedallion";
-import { AssetImage, ItemCard, SketchPanel, TravelStatusLabel, TravelWeatherBadge } from "../../components/ui";
+import { AssetImage, ItemCard, SketchPanel, StampButton, TravelStatusLabel, TravelWeatherBadge } from "../../components/ui";
 import {
   assetKeys,
   effectiveSpeedKmh,
@@ -32,6 +32,7 @@ import {
   type MapPlaceLabel,
   type MapSelection,
   type Mascot,
+  type PostalTrafficFriendshipState,
   type PostalTrafficPetSnapshot,
   type PostalTrafficRangeState,
   type RouteRewardDiscovery,
@@ -47,6 +48,7 @@ import { useMascotCatalog } from "../../game/useMascotCatalog";
 import { useAuth } from "../../integrations/supabase/AuthProvider";
 import { usePostalFriends } from "../../integrations/supabase/usePostalFriends";
 import { fetchActivePostalVisitors, getPostalVisitorMinutes, type ActivePostalVisitor } from "../../integrations/supabase/mailbox";
+import { requestPostalFriendshipFromTraffic } from "../../integrations/supabase/postalFriends";
 import { acknowledgeWorldLandmark, reconcileWorldLandmarks } from "../../integrations/supabase/worldLandmarks";
 import { fetchExclusiveMissionDossier, type ExclusiveMissionDossier } from "../../integrations/supabase/exclusivePostalMissions";
 import { type TranslationKey, useTranslation } from "../../i18n";
@@ -793,17 +795,17 @@ function PostalTrafficContent({
             >
               <ItemCard
                 description={t(pet.speciesKey)}
-                meta={`${pet.progress}% · ${Math.round(pet.distanceFromMascotKm)} km`}
+                meta={`${t("mascot.level")} ${pet.mascotLevel} · ${t(pet.traitNameKey)}`}
                 selected={selectedTrafficId === pet.id}
                 title={pet.mascotName}
               >
-                <AssetImage
+                <MascotPrestigeMedallion
                   alt={pet.mascotName}
+                  borderAssetKey={pet.prestigeAssetKey}
                   className={styles.trafficListPortrait}
-                  assetKey={pet.portraitAssetKey}
-                >
-                  <span className={styles.trafficPortraitFallback} aria-hidden="true" />
-                </AssetImage>
+                  portraitAssetKey={pet.portraitAssetKey}
+                  size="small"
+                />
               </ItemCard>
             </button>
           ))}
@@ -834,17 +836,50 @@ function PostalTrafficDetails({
   rangeState: PostalTrafficRangeState;
 }) {
   const { t } = useTranslation();
+  const [friendshipState, setFriendshipState] = useState<PostalTrafficFriendshipState>(pet.friendshipState);
+  const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    setFriendshipState(pet.friendshipState);
+    setMessage("");
+  }, [pet.friendshipState, pet.id]);
+
+  async function requestFriendship() {
+    if (busy || pet.visibility !== "public" || friendshipState !== "none") return;
+    setBusy(true);
+    setMessage("");
+    try {
+      const outcome = await requestPostalFriendshipFromTraffic(pet.id);
+      if (outcome === "sent" || outcome === "alreadyPending") {
+        setFriendshipState("outgoing");
+        setMessage(t(outcome === "sent" ? "friends.requestSent" : "friends.requestAlreadyPending"));
+      } else if (outcome === "receivedPending") {
+        setFriendshipState("incoming");
+        setMessage(t("friends.requestReceivedPending"));
+      } else if (outcome === "alreadyFriends") {
+        setFriendshipState("friend");
+        setMessage(t("friends.requestAlreadyFriends"));
+      } else {
+        setMessage(t("friends.requestUnavailable"));
+      }
+    } catch {
+      setMessage(t("friends.requestUnavailable"));
+    } finally {
+      setBusy(false);
+    }
+  }
 
   return (
     <article className={styles.trafficDetails}>
       <div className={styles.trafficCompactIdentity}>
-        <AssetImage
+        <MascotPrestigeMedallion
           alt={pet.mascotName}
+          borderAssetKey={pet.prestigeAssetKey}
           className={styles.trafficCompactPortrait}
-          assetKey={pet.portraitAssetKey}
-        >
-          <span className={styles.trafficPortraitFallback} aria-hidden="true" />
-        </AssetImage>
+          portraitAssetKey={pet.portraitAssetKey}
+          size="medium"
+        />
         <div>
           <h3>{pet.mascotName}</h3>
           <p>{t(pet.speciesKey)}</p>
@@ -859,6 +894,8 @@ function PostalTrafficDetails({
       ) : null}
 
       <dl className={styles.trafficRouteSummary}>
+        <SummaryRow label={t("mascot.level")} value={String(pet.mascotLevel)} />
+        <SummaryRow label={t("mascot.specialTrait")} value={t(pet.traitNameKey)} />
         <SummaryRow label={t("mascot.origin")} value={pet.originRegionLabel ?? t(pet.originRegionKey)} />
         <SummaryRow label={t("mascot.destination")} value={pet.destinationRegionLabel ?? t(pet.destinationRegionKey)} />
       </dl>
@@ -867,7 +904,20 @@ function PostalTrafficDetails({
         <Link className={styles.routeLink} to={`/friends/${pet.friendId}`}>
           {t("postalTraffic.openFriendProfile")}
         </Link>
-      ) : null}
+      ) : friendshipState === "none" ? (
+        <StampButton className={styles.trafficFriendRequest} disabled={busy} onClick={() => void requestFriendship()} type="button">
+          {t("postalTraffic.requestFriendship")}
+        </StampButton>
+      ) : (
+        <p className={styles.trafficFriendRequestStatus} role="status">
+          {friendshipState === "outgoing"
+            ? t("postalTraffic.friendshipRequestSent")
+            : friendshipState === "incoming"
+              ? t("postalTraffic.friendshipRequestIncoming")
+              : t("friends.requestAlreadyFriends")}
+        </p>
+      )}
+      {message ? <p className={styles.trafficFriendRequestStatus} role="status">{message}</p> : null}
     </article>
   );
 }

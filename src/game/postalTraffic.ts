@@ -9,6 +9,7 @@ export const POSTAL_TRAFFIC_REFRESH_MS = 5 * 60 * 1000;
 export const POSTAL_TRAFFIC_VIEWPORT_MARGIN = 0.25;
 
 export type PostalTrafficVisibility = "friend" | "public";
+export type PostalTrafficFriendshipState = "friend" | "none" | "outgoing" | "incoming";
 export type PostalTrafficRangeState = "visible" | "outOfRange";
 export type PostalTrafficVisualPhase = "entering" | "visible" | "leaving";
 
@@ -38,11 +39,15 @@ export type PostalTrafficRouteSnapshot = {
 };
 
 type PostalTrafficPetBase = {
+  friendshipState: PostalTrafficFriendshipState;
   id: string;
+  mascotLevel: number;
   mascotName: string;
   portraitAssetKey: OfficialAssetKey;
+  prestigeAssetKey?: OfficialAssetKey;
   route: PostalTrafficRouteSnapshot;
   speciesKey: TranslationKey;
+  traitNameKey: TranslationKey;
 };
 
 export type PostalTrafficPet =
@@ -60,16 +65,20 @@ type PostalTrafficPetSnapshotBase = {
   destinationRegionKey: TranslationKey;
   destinationRegionLabel?: string;
   distanceFromMascotKm: number;
+  friendshipState: PostalTrafficFriendshipState;
   id: string;
   label: string;
   leg: TravelLeg;
+  mascotLevel: number;
   mascotName: string;
   originRegionKey: TranslationKey;
   originRegionLabel?: string;
   portraitAssetKey: OfficialAssetKey;
+  prestigeAssetKey?: OfficialAssetKey;
   progress: number;
   speciesKey: TranslationKey;
   route: PostalTrafficRouteSnapshot;
+  traitNameKey: TranslationKey;
   visualPhase: PostalTrafficVisualPhase;
 };
 
@@ -103,9 +112,12 @@ export const mockPostalTrafficPets: PostalTrafficPet[] = [
   {
     friendId: "friend-lisbon",
     friendName: "Lia",
+    friendshipState: "friend",
     id: "traffic-lia-aurora",
+    mascotLevel: 12,
     mascotName: "Aurora",
     portraitAssetKey: assetKeys.mascots.aurora,
+    prestigeAssetKey: assetKeys.prestige.firstHorizon,
     route: {
       origin: { latitude: -30.0346, longitude: -51.2177 },
       destination: { latitude: -27.5949, longitude: -48.5482 },
@@ -117,10 +129,13 @@ export const mockPostalTrafficPets: PostalTrafficPet[] = [
       returnArrivalAt: "2026-07-19T06:30:00.000Z",
     },
     speciesKey: "species.mailDuck",
+    traitNameKey: "traits.steadyRoute.name",
     visibility: "friend",
   },
   {
+    friendshipState: "none",
     id: "traffic-public-bento",
+    mascotLevel: 7,
     mascotName: "Bento",
     portraitAssetKey: assetKeys.mascots.bento,
     route: {
@@ -134,14 +149,18 @@ export const mockPostalTrafficPets: PostalTrafficPet[] = [
       returnArrivalAt: "2026-07-19T16:00:00.000Z",
     },
     speciesKey: "species.messengerFalcon",
+    traitNameKey: "traits.directFlight.name",
     visibility: "public",
   },
   {
     friendId: "friend-toronto",
     friendName: "Mina",
+    friendshipState: "friend",
     id: "traffic-mina-maple",
+    mascotLevel: 18,
     mascotName: "Maple",
     portraitAssetKey: assetKeys.mascots.maple,
+    prestigeAssetKey: assetKeys.prestige.routeAtlas,
     route: {
       origin: { latitude: -19.9167, longitude: -43.9345 },
       destination: { latitude: -19.539, longitude: -40.6306 },
@@ -153,10 +172,13 @@ export const mockPostalTrafficPets: PostalTrafficPet[] = [
       returnArrivalAt: "2026-07-19T09:00:00.000Z",
     },
     speciesKey: "species.mailDuck",
+    traitNameKey: "traits.curiousFinder.name",
     visibility: "friend",
   },
   {
+    friendshipState: "none",
     id: "traffic-public-oliva",
+    mascotLevel: 4,
     mascotName: "Oliva",
     portraitAssetKey: assetKeys.mascots.oliva,
     route: {
@@ -170,6 +192,7 @@ export const mockPostalTrafficPets: PostalTrafficPet[] = [
       returnArrivalAt: "2026-07-22T10:30:00.000Z",
     },
     speciesKey: "species.mailDuck",
+    traitNameKey: "traits.steadyRoute.name",
     visibility: "public",
   },
 ];
@@ -241,16 +264,20 @@ export function createPublicTrafficSnapshot(
     destinationRegionKey: pet.route.destinationRegionKey,
     destinationRegionLabel: pet.route.destinationRegionLabel,
     distanceFromMascotKm: haversineDistanceKm(mascotCoordinates, position.coordinates),
+    friendshipState: pet.friendshipState,
     id: pet.id,
     label: getPostalTrafficLabel(pet),
     leg: position.leg,
+    mascotLevel: pet.mascotLevel,
     mascotName: pet.mascotName,
     originRegionKey: pet.route.originRegionKey,
     originRegionLabel: pet.route.originRegionLabel,
     portraitAssetKey: pet.portraitAssetKey,
+    prestigeAssetKey: pet.prestigeAssetKey,
     progress: Math.round(position.progress * 100),
     speciesKey: pet.speciesKey,
     route: pet.route,
+    traitNameKey: pet.traitNameKey,
     visualPhase: "visible" as const,
   };
 
@@ -296,11 +323,15 @@ export function isPostalTrafficJourneyVisible(
 
 function snapshotToPet(snapshot: PostalTrafficPetSnapshot): PostalTrafficPet {
   const base = {
+    friendshipState: snapshot.friendshipState,
     id: snapshot.id,
+    mascotLevel: snapshot.mascotLevel,
     mascotName: snapshot.mascotName,
     portraitAssetKey: snapshot.portraitAssetKey,
+    prestigeAssetKey: snapshot.prestigeAssetKey,
     route: snapshot.route,
     speciesKey: snapshot.speciesKey,
+    traitNameKey: snapshot.traitNameKey,
   };
   return snapshot.visibility === "friend"
     ? { ...base, friendId: snapshot.friendId, friendName: snapshot.friendName, visibility: "friend" }

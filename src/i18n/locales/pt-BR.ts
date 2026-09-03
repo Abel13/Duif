@@ -899,6 +899,9 @@ export const ptBR = {
     travelState: "Estado da viagem",
     owner: "Dono",
     openFriendProfile: "Abrir perfil do amigo",
+    requestFriendship: "Solicitar amizade",
+    friendshipRequestSent: "Pedido de amizade enviado.",
+    friendshipRequestIncoming: "Você já tem um pedido deste jogador em Amigos.",
     privateOwner: "Os dados do dono deste mascote são privados.",
     outOfRange:
       "Este mascote saiu da região consultada. Exibindo o último registro conhecido.",

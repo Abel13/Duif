@@ -39,6 +39,16 @@ export async function requestPostalFriendship(code: string): Promise<FriendReque
   const outcome = Array.isArray(data) ? asString(asRecord(data[0]).outcome) : "";
   return ["sent", "alreadyPending", "alreadyFriends", "receivedPending", "unavailable"].includes(outcome) ? outcome as FriendRequestOutcome : "unavailable";
 }
+export async function requestPostalFriendshipFromTraffic(trafficId: string): Promise<FriendRequestOutcome> {
+  const { data, error } = await (clientOrThrow() as any).rpc("request_friendship_from_postal_traffic", {
+    traffic_delivery_id: trafficId,
+  });
+  if (error) throw error;
+  const outcome = Array.isArray(data) ? asString(asRecord(data[0]).outcome) : "";
+  return ["sent", "alreadyPending", "alreadyFriends", "receivedPending", "unavailable"].includes(outcome)
+    ? outcome as FriendRequestOutcome
+    : "unavailable";
+}
 export async function respondToPostalFriendRequest(id: string, accept: boolean) {
   const { data, error } = await (clientOrThrow() as any).rpc("respond_to_postal_friend_request", { friendship_id: id, should_accept: accept });
   if (error) throw error;

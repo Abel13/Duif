@@ -7,14 +7,17 @@ const row = {
   current_latitude: -23.375, current_longitude: -51.5,
   destination_latitude: -23.5, destination_longitude: -52,
   destination_region: "PR, Brasil", distance_km: 12,
-  friend_id: null, friend_name: null, mascot_name: "Aurora",
+  friend_id: null, friend_name: null, friendship_state: "none",
+  mascot_level: 7, mascot_name: "Aurora",
   origin_latitude: -23.25, origin_longitude: -51, origin_region: "PR, Brasil",
   outbound_arrival_at: "2026-07-18T23:00:00.000Z",
   outbound_start_at: "2026-07-18T21:00:00.000Z",
   portrait_asset_key: assetKeys.mascots.aurora,
+  prestige_asset_key: assetKeys.prestige.firstHorizon,
   return_arrival_at: "2026-07-19T02:00:00.000Z",
   return_start_at: "2026-07-19T00:00:00.000Z",
-  species_key: "species.mailDuck", traffic_id: "traffic-1", visibility: "public",
+  species_key: "species.mailDuck", traffic_id: "traffic-1",
+  trait_name_key: "traits.steadyRoute.name", visibility: "public",
 };
 
 describe("authenticated postal traffic mapper", () => {
@@ -23,12 +26,27 @@ describe("authenticated postal traffic mapper", () => {
     expect(snapshot.visibility).toBe("public");
     expect("friendId" in snapshot).toBe(false);
     expect("friendName" in snapshot).toBe(false);
+    expect(snapshot.mascotLevel).toBe(7);
+    expect(snapshot.traitNameKey).toBe("traits.steadyRoute.name");
+    expect(snapshot.prestigeAssetKey).toBe(assetKeys.prestige.firstHorizon);
+    expect(snapshot.friendshipState).toBe("none");
     expect(snapshot.coordinates).toEqual({ latitude: -23.375, longitude: -51.5 });
     expect(snapshot.route.origin).toEqual({ latitude: -23.25, longitude: -51 });
   });
 
   it("adds an already-authorized friend CTA identity", () => {
-    const snapshot = mapTrafficRow({ ...row, friend_id: "friend-lia", friend_name: "Lia", visibility: "friend" });
-    expect(snapshot).toMatchObject({ visibility: "friend", friendId: "friend-lia", friendName: "Lia" });
+    const snapshot = mapTrafficRow({
+      ...row,
+      friend_id: "friend-lia",
+      friend_name: "Lia",
+      friendship_state: "friend",
+      visibility: "friend",
+    });
+    expect(snapshot).toMatchObject({
+      visibility: "friend",
+      friendId: "friend-lia",
+      friendName: "Lia",
+      friendshipState: "friend",
+    });
   });
 });

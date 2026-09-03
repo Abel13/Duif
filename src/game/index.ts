@@ -74,6 +74,7 @@ export {
   POSTAL_TRAFFIC_MAX_VISIBLE,
   POSTAL_TRAFFIC_VISIBILITY_RADIUS_KM,
   resolvePostalTrafficSelection,
+  type PostalTrafficFriendshipState,
   type PostalTrafficPet,
   type PostalTrafficPetSnapshot,
   type PostalTrafficRangeState,

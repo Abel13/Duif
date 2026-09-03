@@ -694,6 +694,9 @@ export type TranslationDictionary = {
     travelState: string;
     owner: string;
     openFriendProfile: string;
+    requestFriendship: string;
+    friendshipRequestSent: string;
+    friendshipRequestIncoming: string;
     privateOwner: string;
     outOfRange: string;
     visibility: {
@@ -1617,6 +1620,9 @@ export type TranslationKey =
   | "postalTraffic.travelState"
   | "postalTraffic.owner"
   | "postalTraffic.openFriendProfile"
+  | "postalTraffic.requestFriendship"
+  | "postalTraffic.friendshipRequestSent"
+  | "postalTraffic.friendshipRequestIncoming"
   | "postalTraffic.privateOwner"
   | "postalTraffic.outOfRange"
   | "postalTraffic.visibility.friend"

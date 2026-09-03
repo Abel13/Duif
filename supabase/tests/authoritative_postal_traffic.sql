@@ -39,7 +39,10 @@ begin
 
   if result.traffic_id <> '00000000-0000-4000-8000-000000009601'::uuid
     or result.visibility <> 'friend'
-    or result.friend_name is null then
+    or result.friend_name is null
+    or result.mascot_level is null
+    or coalesce(result.trait_name_key, '') = ''
+    or result.friendship_state <> 'friend' then
     raise exception 'Expected sanitized friend traffic result';
   end if;
   if result.origin_latitude = -23.30451 or result.origin_longitude = -51.16961 then

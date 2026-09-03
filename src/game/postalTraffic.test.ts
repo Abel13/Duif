@@ -20,7 +20,9 @@ const mascotCoordinates = { latitude: 0, longitude: 0 };
 const friendPet: PostalTrafficPet = {
   friendId: "friend-lisbon",
   friendName: "Lia",
+  friendshipState: "friend",
   id: "traffic-test",
+  mascotLevel: 5,
   mascotName: "Aurora",
   portraitAssetKey: assetKeys.mascots.aurora,
   route: {
@@ -32,12 +34,15 @@ const friendPet: PostalTrafficPet = {
     outboundArrivalAt: "2026-07-18T12:00:00.000Z",
   },
   speciesKey: "species.mailDuck",
+  traitNameKey: "traits.steadyRoute.name",
   visibility: "friend",
 };
 
 function petAt(id: string, longitude: number): PostalTrafficPet {
   return {
+    friendshipState: "none",
     id,
+    mascotLevel: 1,
     mascotName: id,
     portraitAssetKey: assetKeys.mascots.bento,
     route: {
@@ -49,6 +54,7 @@ function petAt(id: string, longitude: number): PostalTrafficPet {
       outboundArrivalAt: "2026-07-19T12:00:00.000Z",
     },
     speciesKey: "species.messengerFalcon",
+    traitNameKey: "traits.directFlight.name",
     visibility: "public",
   };
 }
