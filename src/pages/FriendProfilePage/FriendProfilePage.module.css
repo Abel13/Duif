@@ -101,6 +101,10 @@
   overflow-wrap: anywhere;
 }
 
+.progressBlock {
+  margin-top: var(--space-3);
+}
+
 .cardGrid {
   display: grid;
   gap: var(--space-3);

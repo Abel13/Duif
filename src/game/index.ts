@@ -14,6 +14,16 @@ export {
   mockFriends,
 } from "./friends";
 export {
+  FRIENDSHIP_LEVEL_THRESHOLDS,
+  friendshipLevelFromCycles,
+  getFriendshipProgress,
+} from "./friendshipLevels";
+export type {
+  FriendshipLevel,
+  FriendshipLevelId,
+  FriendshipProgress,
+} from "./friendshipLevels";
+export {
   filterInventoryItemsByCategory,
   getInventoryCategoryCounts,
   getInventoryItemsByCategory,

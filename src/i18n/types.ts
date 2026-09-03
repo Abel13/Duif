@@ -1012,11 +1012,28 @@ export type TranslationDictionary = {
     quickSend: string;
     friendshipLevel: string;
     exchangeCount: string;
+    cyclesProgress: string;
+    maxBond: string;
+    levels: {
+      newCorrespondents: string;
+      frequentCorrespondents: string;
+      postalFriends: string;
+      routeCompanions: string;
+      lastingBond: string;
+    };
+    seals: {
+      newCorrespondents: { alt: string };
+      frequentCorrespondents: { alt: string };
+      postalFriends: { alt: string };
+      routeCompanions: { alt: string };
+      lastingBond: { alt: string };
+    };
     friendMascots: string;
     receivedCorrespondence: string;
     location: string;
     backToFriends: string;
     noCorrespondence: string;
+    noMascots: string;
     mascotLabel: string;
     emptyTitle: string;
     emptyDescription: string;
@@ -1861,11 +1878,24 @@ export type TranslationKey =
   | "friends.quickSend"
   | "friends.friendshipLevel"
   | "friends.exchangeCount"
+  | "friends.cyclesProgress"
+  | "friends.maxBond"
+  | "friends.levels.newCorrespondents"
+  | "friends.levels.frequentCorrespondents"
+  | "friends.levels.postalFriends"
+  | "friends.levels.routeCompanions"
+  | "friends.levels.lastingBond"
+  | "friends.seals.newCorrespondents.alt"
+  | "friends.seals.frequentCorrespondents.alt"
+  | "friends.seals.postalFriends.alt"
+  | "friends.seals.routeCompanions.alt"
+  | "friends.seals.lastingBond.alt"
   | "friends.friendMascots"
   | "friends.receivedCorrespondence"
   | "friends.location"
   | "friends.backToFriends"
   | "friends.noCorrespondence"
+  | "friends.noMascots"
   | "friends.mascotLabel"
   | "friends.emptyTitle"
   | "friends.emptyDescription"

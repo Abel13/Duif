@@ -173,6 +173,15 @@ export const assetKeys = {
     letterSky: "prestige.border.letterSky",
     nestAmongStars: "prestige.border.nestAmongStars",
   },
+  friendship: {
+    seals: {
+      newCorrespondents: "friendship.seal.newCorrespondents",
+      frequentCorrespondents: "friendship.seal.frequentCorrespondents",
+      postalFriends: "friendship.seal.postalFriends",
+      routeCompanions: "friendship.seal.routeCompanions",
+      lastingBond: "friendship.seal.lastingBond",
+    },
+  },
   landmarks: {
     christTheRedeemer: "landmark.christTheRedeemer.artwork",
     masp: "landmark.masp.artwork",

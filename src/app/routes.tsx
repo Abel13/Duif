@@ -20,6 +20,7 @@ const NestHubPage=lazyWithRetry(()=>import("../pages/NestHubPage/NestHubPage").t
 const ProfilePage=lazyWithRetry(()=>import("../pages/ProfilePage/ProfilePage").then(module=>({default:module.ProfilePage})));
 const InventoryAlbumPage=lazyWithRetry(()=>import("../pages/InventoryAlbumPage/InventoryAlbumPage").then(module=>({default:module.InventoryAlbumPage})));
 const FriendsPage=lazyWithRetry(()=>import("../pages/FriendsPage/FriendsPage").then(module=>({default:module.FriendsPage})));
+const FriendProfilePage=lazyWithRetry(()=>import("../pages/FriendProfilePage/FriendProfilePage").then(module=>({default:module.FriendProfilePage})));
 const MailboxPage=lazyWithRetry(()=>import("../pages/MailboxPage/MailboxPage").then(module=>({default:module.MailboxPage})));
 const ShopPage=lazyWithRetry(()=>import("../pages/ShopPage/ShopPage").then(module=>({default:module.ShopPage})));
 const SendFlowPage=lazyWithRetry(()=>import("../pages/SendFlowPage/SendFlowPage").then(module=>({default:module.SendFlowPage})));
@@ -48,6 +49,7 @@ export function AppRoutes() {
       <Route path="/mascots/:mascotId" element={<ProtectedGameRoute><MascotDetailPage/></ProtectedGameRoute>} />
       <Route path="/inventory" element={<ProtectedGameRoute><InventoryAlbumPage/></ProtectedGameRoute>} />
       <Route path="/friends" element={<ProtectedGameRoute><FriendsPage/></ProtectedGameRoute>} />
+      <Route path="/friends/:friendId" element={<ProtectedGameRoute><FriendProfilePage/></ProtectedGameRoute>} />
       <Route path="/mailbox" element={<ProtectedGameRoute><MailboxPage/></ProtectedGameRoute>} />
       <Route path="/shop" element={<ProtectedGameRoute><ShopPage/></ProtectedGameRoute>} />
       <Route path="/send" element={<ProtectedGameRoute><SendFlowPage/></ProtectedGameRoute>} />

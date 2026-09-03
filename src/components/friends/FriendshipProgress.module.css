@@ -1,0 +1,123 @@
+.root {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: center;
+  min-width: 0;
+}
+
+.compact {
+  padding: var(--space-2);
+  border: 1px dashed rgba(46, 42, 36, 0.28);
+  border-radius: 0.35rem 0.2rem;
+  background:
+    linear-gradient(rgba(46, 42, 36, 0.03) 1px, transparent 1px),
+    rgba(255, 248, 232, 0.72);
+  background-size: 100% 0.9rem;
+}
+
+.full {
+  padding: var(--space-3);
+  border: 2px dashed rgba(164, 74, 63, 0.5);
+  border-radius: 0.3rem;
+  background:
+    radial-gradient(circle at 100% 0, rgba(164, 74, 63, 0.1), transparent 3rem),
+    var(--color-postal-label);
+  box-shadow: 0.16rem 0.16rem 0 rgba(46, 42, 36, 0.08);
+}
+
+.seal {
+  width: 3.25rem;
+  aspect-ratio: 1;
+  flex-shrink: 0;
+}
+
+.full .seal {
+  width: 4.5rem;
+}
+
+.seal[data-has-image="true"] {
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.sealFallback {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  border: 2px dashed rgba(46, 42, 36, 0.35);
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 35% 30%, rgba(255, 248, 232, 0.85), transparent 55%),
+    var(--color-paper-dark);
+}
+
+.copy {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.eyebrow,
+.cycles {
+  color: var(--color-ink-soft);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.levelMark {
+  color: var(--color-postal-red);
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.name {
+  margin: 0;
+  color: var(--color-ink);
+  font-weight: 900;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.meter {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.track {
+  height: 0.7rem;
+  overflow: hidden;
+  border: 1px solid rgba(46, 42, 36, 0.35);
+  border-radius: 999px;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent 0.9rem,
+      rgba(46, 42, 36, 0.08) 0.9rem,
+      rgba(46, 42, 36, 0.08) 0.96rem
+    ),
+    var(--color-paper-dark);
+}
+
+.fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--color-muted-green);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .fill {
+    transition: width 180ms ease-out;
+  }
+}

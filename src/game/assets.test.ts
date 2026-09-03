@@ -220,6 +220,27 @@ describe("official asset manifest", () => {
     });
   });
 
+  it("resolves every friendship level seal by its stable key", () => {
+    const seals = [
+      [assetKeys.friendship.seals.newCorrespondents, "/assets/friendship/new-correspondents.webp"],
+      [assetKeys.friendship.seals.frequentCorrespondents, "/assets/friendship/frequent-correspondents.webp"],
+      [assetKeys.friendship.seals.postalFriends, "/assets/friendship/postal-friends.webp"],
+      [assetKeys.friendship.seals.routeCompanions, "/assets/friendship/route-companions.webp"],
+      [assetKeys.friendship.seals.lastingBond, "/assets/friendship/lasting-bond.webp"],
+    ] as const;
+    const manifest = parseOfficialAssetManifest(seals.map(([key, packaged_path]) => ({
+      ...row,
+      packaged_path,
+      width: 256,
+      height: 256,
+      byte_size: 14000,
+      alt_text_key: "friends.seals.newCorrespondents.alt",
+      official_assets: { asset_key: key, asset_type: "collectibleThumbnail" },
+    })));
+
+    seals.forEach(([key, path]) => expect(resolveOfficialAssetPath(manifest, key)).toBe(path));
+  });
+
   it("keeps every starter equipment record connected to an official asset key", () => {
     const equipment = starterMascots.flatMap((mascot) => mascot.equipment);
 
