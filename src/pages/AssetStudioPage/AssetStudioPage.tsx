@@ -2,26 +2,231 @@ import { useEffect, useMemo, useState, type FormEvent } from "react";
 
 import { SketchPanel, StampButton } from "../../components/ui";
 import { useTranslation } from "../../i18n";
-import { activateAssetVersion, archiveAssetVersion, createAssetUpload, listGeoNamesRefreshes, listStudioAssets, publishAssetDraft, startGeoNamesRefresh, type AssetStudioAsset, type GeoNamesRefreshSummary } from "../../integrations/supabase/assetStudio";
+import {
+  activateAssetVersion,
+  archiveAssetVersion,
+  createAssetUpload,
+  listStudioAssets,
+  publishAssetDraft,
+  type AssetStudioAsset,
+} from "../../integrations/supabase/assetStudio";
 import styles from "./AssetStudioPage.module.css";
 
-const types = ["mascotPortrait","equipmentIcon","rewardThumbnail","collectibleThumbnail","navigationIcon","mapControl","mapPin","currencyIcon","shopArtwork","texture","postalMark","postcardArtwork","nestArtwork"];
+const types = [
+  "mascotPortrait",
+  "equipmentIcon",
+  "rewardThumbnail",
+  "collectibleThumbnail",
+  "navigationIcon",
+  "mapControl",
+  "mapPin",
+  "currencyIcon",
+  "shopArtwork",
+  "texture",
+  "postalMark",
+  "postcardArtwork",
+  "nestArtwork",
+];
 
 export function AssetStudioPage() {
-  const { t } = useTranslation(); const [assets,setAssets]=useState<AssetStudioAsset[]>([]); const [filter,setFilter]=useState("all"); const [status,setStatus]=useState<"loading"|"ready"|"error">("loading"); const [busy,setBusy]=useState(false); const [message,setMessage]=useState(""); const [geo,setGeo]=useState<GeoNamesRefreshSummary>();
-  const refresh=async()=>{setStatus("loading");try{const [nextAssets,nextGeo]=await Promise.all([listStudioAssets(),listGeoNamesRefreshes()]);setAssets(nextAssets);setGeo(nextGeo);setStatus("ready");}catch{setStatus("error");}};
-  useEffect(()=>{void refresh();},[]);
-  const visible=useMemo(()=>filter==="all"?assets:assets.filter((asset)=>asset.type===filter),[assets,filter]);
-  async function submit(event:FormEvent<HTMLFormElement>){event.preventDefault();const form=new FormData(event.currentTarget);const file=form.get("file");if(!(file instanceof File)||!file.size)return;setBusy(true);setMessage("");try{await createAssetUpload({assetKey:String(form.get("key")),assetType:String(form.get("type")),file,altTextKey:form.get("decorative")==="on"?null:String(form.get("alt")||"")||null,isDecorative:form.get("decorative")==="on",author:String(form.get("author"))});setMessage(t("assetStudio.draftSaved"));event.currentTarget.reset();await refresh();}catch{setMessage(t("assetStudio.error"));}finally{setBusy(false);}}
-  async function publish(versionId:string){setBusy(true);try{await publishAssetDraft(versionId);setMessage(t("assetStudio.published"));await refresh();}catch{setMessage(t("assetStudio.error"));}finally{setBusy(false);}}
-  async function archive(versionId:string){setBusy(true);try{await archiveAssetVersion(versionId);setMessage(t("assetStudio.archived"));await refresh();}catch{setMessage(t("assetStudio.error"));}finally{setBusy(false);}}
-  async function restore(versionId:string, publicObjectPath:string){setBusy(true);try{await activateAssetVersion(versionId,publicObjectPath);setMessage(t("assetStudio.restored"));await refresh();}catch{setMessage(t("assetStudio.error"));}finally{setBusy(false);}}
-  async function refreshGeo(){setBusy(true);try{await startGeoNamesRefresh();setMessage(t("geonamesAdmin.refreshStarted"));await refresh();}catch{setMessage(t("assetStudio.error"));}finally{setBusy(false);}}
-  return <main className={styles.page}><header className={styles.header}><span>{t("assetStudio.eyebrow")}</span><h1>{t("assetStudio.title")}</h1><p>{t("assetStudio.description")}</p></header><div className={styles.layout}><GeoNamesPanel busy={busy} onRefresh={()=>void refreshGeo()} summary={geo} /><SketchPanel eyebrow={t("assetStudio.newAsset")} title={t("assetStudio.uploadTitle")}><form className={styles.form} onSubmit={(event)=>void submit(event)}><label>{t("assetStudio.key")}<input name="key" pattern="[a-z][a-zA-Z0-9]*(\.[a-zA-Z0-9]+)+" required /></label><label>{t("assetStudio.type")}<select defaultValue="mascotPortrait" name="type">{types.map((type)=><option key={type}>{type}</option>)}</select></label><label>{t("assetStudio.file")}<input accept="image/webp,image/svg+xml" name="file" required type="file" /></label><label>{t("assetStudio.altKey")}<input name="alt" /></label><label className={styles.check}><input name="decorative" type="checkbox" />{t("assetStudio.decorative")}</label><label>{t("assetStudio.author")}<input defaultValue="DUIF" name="author" required /></label><StampButton disabled={busy} type="submit">{t("assetStudio.saveDraft")}</StampButton></form>{message&&<p className={styles.message} role="status">{message}</p>}</SketchPanel><section className={styles.catalog}><div className={styles.filters} aria-label={t("assetStudio.filters")}>{["all",...types].map((type)=><button aria-pressed={filter===type} key={type} onClick={()=>setFilter(type)} type="button">{type=== "all"?t("assetStudio.all"):type}</button>)}</div>{status==="loading"?<p>{t("assetStudio.loading")}</p>:status==="error"?<p>{t("assetStudio.error")}</p>:visible.map((asset)=><SketchPanel key={asset.id} eyebrow={asset.type} title={asset.key}><p>{t("assetStudio.usage")}: {Object.values(asset.usage).reduce((sum,value)=>sum+value,0)}</p><ul className={styles.versions}>{asset.versions.map((version)=><li key={version.id}><span>v{version.version} · {version.status} · {version.width}×{version.height}</span>{version.source==="storage"&&version.storageBucket==="duif-assets"&&version.storageObjectPath?<img alt="" src={`${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/${version.storageBucket}/${version.storageObjectPath}`} />:null}{version.status==="draft"?<StampButton disabled={busy} onClick={()=>void publish(version.id)}>{t("assetStudio.publish")}</StampButton>:null}{version.status==="active"?<StampButton disabled={busy} onClick={()=>void archive(version.id)} variant="secondary">{t("assetStudio.archive")}</StampButton>:null}{version.status==="archived"&&version.source==="storage"&&version.storageObjectPath?.startsWith("assets/")?<StampButton disabled={busy} onClick={()=>void restore(version.id,version.storageObjectPath!)} variant="secondary">{t("assetStudio.restore")}</StampButton>:null}</li>)}</ul></SketchPanel>)}</section></div></main>;
-}
+  const { t } = useTranslation();
+  const [assets, setAssets] = useState<AssetStudioAsset[]>([]);
+  const [filter, setFilter] = useState("all");
+  const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
+  const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState("");
 
-function GeoNamesPanel({ summary, busy, onRefresh }: { summary?: GeoNamesRefreshSummary; busy: boolean; onRefresh: () => void }) {
-  const { t } = useTranslation(); const [confirming, setConfirming] = useState(false);
-  const statusLabel = (status: string) => t(`geonamesAdmin.${status}` as "geonamesAdmin.queued" | "geonamesAdmin.running" | "geonamesAdmin.failed" | "geonamesAdmin.succeeded");
-  return <SketchPanel eyebrow={t("geonamesAdmin.eyebrow")} title={t("geonamesAdmin.title")}><div className={styles.geo}><p>{t("geonamesAdmin.description")}</p><p><strong>{summary?.activeCityCount ?? 0}</strong> {t("geonamesAdmin.activeCities")}</p><p>{summary?.latestSuccess ? `${t("geonamesAdmin.latestSuccess")}: ${new Date(summary.latestSuccess.completed_at ?? summary.latestSuccess.created_at).toLocaleString()}` : t("geonamesAdmin.noSuccess")}</p>{confirming ? <div className={styles.confirm}><strong>{t("geonamesAdmin.confirmTitle")}</strong><p>{t("geonamesAdmin.confirmDescription")}</p><div><StampButton disabled={busy} onClick={()=>{setConfirming(false);onRefresh();}}>{t("geonamesAdmin.confirm")}</StampButton><StampButton disabled={busy} onClick={()=>setConfirming(false)} variant="secondary">{t("geonamesAdmin.cancel")}</StampButton></div></div> : <StampButton disabled={busy || summary?.jobs.some((job)=>job.status === "queued" || job.status === "running")} onClick={()=>setConfirming(true)}>{t("geonamesAdmin.refresh")}</StampButton>}<h2>{t("geonamesAdmin.history")}</h2><ul className={styles.geoHistory}>{summary?.jobs.map((job)=><li key={job.id}><strong>{statusLabel(job.status)}</strong><span>{new Date(job.created_at).toLocaleString()}</span><small>{job.processed_city_count} {t("geonamesAdmin.processed")} · {job.imported_city_count} {t("geonamesAdmin.imported")} · {job.updated_city_count} {t("geonamesAdmin.updated")} · {job.archived_city_count} {t("geonamesAdmin.archived")}</small>{job.safe_error_code ? <small>{t("assetStudio.error")}</small> : null}</li>)}</ul></div></SketchPanel>;
+  const refresh = async () => {
+    setStatus("loading");
+    try {
+      setAssets(await listStudioAssets());
+      setStatus("ready");
+    } catch {
+      setStatus("error");
+    }
+  };
+
+  useEffect(() => {
+    void refresh();
+  }, []);
+
+  const visible = useMemo(
+    () => (filter === "all" ? assets : assets.filter((asset) => asset.type === filter)),
+    [assets, filter],
+  );
+
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    const file = form.get("file");
+    if (!(file instanceof File) || !file.size) return;
+    setBusy(true);
+    setMessage("");
+    try {
+      await createAssetUpload({
+        assetKey: String(form.get("key")),
+        assetType: String(form.get("type")),
+        file,
+        altTextKey: form.get("decorative") === "on" ? null : String(form.get("alt") || "") || null,
+        isDecorative: form.get("decorative") === "on",
+        author: String(form.get("author")),
+      });
+      setMessage(t("assetStudio.draftSaved"));
+      event.currentTarget.reset();
+      await refresh();
+    } catch {
+      setMessage(t("assetStudio.error"));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function publish(versionId: string) {
+    setBusy(true);
+    try {
+      await publishAssetDraft(versionId);
+      setMessage(t("assetStudio.published"));
+      await refresh();
+    } catch {
+      setMessage(t("assetStudio.error"));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function archive(versionId: string) {
+    setBusy(true);
+    try {
+      await archiveAssetVersion(versionId);
+      setMessage(t("assetStudio.archived"));
+      await refresh();
+    } catch {
+      setMessage(t("assetStudio.error"));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function restore(versionId: string, publicObjectPath: string) {
+    setBusy(true);
+    try {
+      await activateAssetVersion(versionId, publicObjectPath);
+      setMessage(t("assetStudio.restored"));
+      await refresh();
+    } catch {
+      setMessage(t("assetStudio.error"));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <main className={styles.page}>
+      <header className={styles.header}>
+        <span>{t("assetStudio.eyebrow")}</span>
+        <h1>{t("assetStudio.title")}</h1>
+        <p>{t("assetStudio.description")}</p>
+      </header>
+      <div className={styles.layout}>
+        <SketchPanel eyebrow={t("assetStudio.newAsset")} title={t("assetStudio.uploadTitle")}>
+          <form className={styles.form} onSubmit={(event) => void submit(event)}>
+            <label>
+              {t("assetStudio.key")}
+              <input name="key" pattern="[a-z][a-zA-Z0-9]*(\.[a-zA-Z0-9]+)+" required />
+            </label>
+            <label>
+              {t("assetStudio.type")}
+              <select defaultValue="mascotPortrait" name="type">
+                {types.map((type) => (
+                  <option key={type}>{type}</option>
+                ))}
+              </select>
+            </label>
+            <label>
+              {t("assetStudio.file")}
+              <input accept="image/webp,image/svg+xml" name="file" required type="file" />
+            </label>
+            <label>
+              {t("assetStudio.altKey")}
+              <input name="alt" />
+            </label>
+            <label className={styles.check}>
+              <input name="decorative" type="checkbox" />
+              {t("assetStudio.decorative")}
+            </label>
+            <label>
+              {t("assetStudio.author")}
+              <input defaultValue="DUIF" name="author" required />
+            </label>
+            <StampButton disabled={busy} type="submit">
+              {t("assetStudio.saveDraft")}
+            </StampButton>
+          </form>
+          {message ? (
+            <p className={styles.message} role="status">
+              {message}
+            </p>
+          ) : null}
+        </SketchPanel>
+        <section className={styles.catalog}>
+          <div className={styles.filters} aria-label={t("assetStudio.filters")}>
+            {["all", ...types].map((type) => (
+              <button aria-pressed={filter === type} key={type} onClick={() => setFilter(type)} type="button">
+                {type === "all" ? t("assetStudio.all") : type}
+              </button>
+            ))}
+          </div>
+          {status === "loading" ? <p>{t("assetStudio.loading")}</p> : null}
+          {status === "error" ? <p>{t("assetStudio.error")}</p> : null}
+          {status === "ready"
+            ? visible.map((asset) => (
+                <SketchPanel key={asset.id} eyebrow={asset.type} title={asset.key}>
+                  <p>
+                    {t("assetStudio.usage")}: {Object.values(asset.usage).reduce((sum, value) => sum + value, 0)}
+                  </p>
+                  <ul className={styles.versions}>
+                    {asset.versions.map((version) => (
+                      <li key={version.id}>
+                        <span>
+                          v{version.version} · {version.status} · {version.width}×{version.height}
+                        </span>
+                        {version.source === "storage" &&
+                        version.storageBucket === "duif-assets" &&
+                        version.storageObjectPath ? (
+                          <img
+                            alt=""
+                            src={`${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/${version.storageBucket}/${version.storageObjectPath}`}
+                          />
+                        ) : null}
+                        {version.status === "draft" ? (
+                          <StampButton disabled={busy} onClick={() => void publish(version.id)}>
+                            {t("assetStudio.publish")}
+                          </StampButton>
+                        ) : null}
+                        {version.status === "active" ? (
+                          <StampButton disabled={busy} onClick={() => void archive(version.id)} variant="secondary">
+                            {t("assetStudio.archive")}
+                          </StampButton>
+                        ) : null}
+                        {version.status === "archived" &&
+                        version.source === "storage" &&
+                        version.storageObjectPath?.startsWith("assets/") ? (
+                          <StampButton
+                            disabled={busy}
+                            onClick={() => void restore(version.id, version.storageObjectPath!)}
+                            variant="secondary"
+                          >
+                            {t("assetStudio.restore")}
+                          </StampButton>
+                        ) : null}
+                      </li>
+                    ))}
+                  </ul>
+                </SketchPanel>
+              ))
+            : null}
+        </section>
+      </div>
+    </main>
+  );
 }

@@ -25,6 +25,10 @@ const ShopPage=lazyWithRetry(()=>import("../pages/ShopPage/ShopPage").then(modul
 const SendFlowPage=lazyWithRetry(()=>import("../pages/SendFlowPage/SendFlowPage").then(module=>({default:module.SendFlowPage})));
 const RewardCollectionPage=lazyWithRetry(()=>import("../pages/RewardCollectionPage/RewardCollectionPage").then(module=>({default:module.RewardCollectionPage})));
 const AssetStudioPage=lazyWithRetry(()=>import("../pages/AssetStudioPage/AssetStudioPage").then(module=>({default:module.AssetStudioPage})));
+const AdminLayout=lazyWithRetry(()=>import("../pages/Admin/AdminLayout").then(module=>({default:module.AdminLayout})));
+const AdminHubPage=lazyWithRetry(()=>import("../pages/Admin/AdminHubPage").then(module=>({default:module.AdminHubPage})));
+const GeoNamesAdminPage=lazyWithRetry(()=>import("../pages/Admin/GeoNamesAdminPage").then(module=>({default:module.GeoNamesAdminPage})));
+const AdminEncountersPage=lazyWithRetry(()=>import("../pages/Admin/AdminEncountersPage").then(module=>({default:module.AdminEncountersPage})));
 const PostalJobsPage=lazyWithRetry(()=>import("../pages/PostalJobsPage/PostalJobsPage").then(module=>({default:module.PostalJobsPage})));
 
 export function AppRoutes() {
@@ -49,14 +53,19 @@ export function AppRoutes() {
       <Route path="/send" element={<ProtectedGameRoute><SendFlowPage/></ProtectedGameRoute>} />
       <Route path="/jobs" element={<ProtectedGameRoute><PostalJobsPage/></ProtectedGameRoute>} />
       <Route path="/rewards/:deliveryId" element={<ProtectedGameRoute><RewardCollectionPage/></ProtectedGameRoute>} />
-      <Route path="/admin/assets" element={<ProtectedAdminRoute />} />
+      <Route path="/admin" element={<ProtectedAdminRoute />}>
+        <Route index element={<AdminHubPage />} />
+        <Route path="assets" element={<AssetStudioPage />} />
+        <Route path="geonames" element={<GeoNamesAdminPage />} />
+        <Route path="encounters" element={<AdminEncountersPage />} />
+      </Route>
       <Route path="*" element={<ProtectedFoundationRoute />} />
     </Routes>
   );
 }
 
 function ProtectedNestRoute(){const {journeyState}=useAuth();if(journeyState==="loading")return <FoundationStatusPage state="loading"/>;if(journeyState==="nestSetupRequired")return <Suspense fallback={<FoundationStatusPage state="loading"/>}><NestSetupPage/></Suspense>;return <Navigate replace to={journeyState==="ready"?"/map":"/onboarding"}/>;}
-function ProtectedAdminRoute(){const {isLoading,session}=useAuth();if(isLoading)return <FoundationStatusPage state="loading"/>;if(!session)return <Navigate replace to="/auth?next=%2Fadmin%2Fassets"/>;if(!isAssetAdministrator(session.user.app_metadata))return <Navigate replace to="/map"/>;return <Suspense fallback={<FoundationStatusPage state="loading"/>}><AssetStudioPage/></Suspense>;}
+function ProtectedAdminRoute(){const {isLoading,session}=useAuth();if(isLoading)return <FoundationStatusPage state="loading"/>;if(!session)return <Navigate replace to="/auth?next=%2Fadmin"/>;if(!isAssetAdministrator(session.user.app_metadata))return <Navigate replace to="/map"/>;return <Suspense fallback={<FoundationStatusPage state="loading"/>}><AdminLayout/></Suspense>;}
 function ProtectedGameRoute({children}:{children:ReactNode}){const {journeyState}=useAuth();if(journeyState==="loading")return <FoundationStatusPage state="loading"/>;if(journeyState!=="ready")return <Navigate replace to={journeyState==="nestSetupRequired"?"/onboarding/nest":"/onboarding"}/>;return <Suspense fallback={<FoundationStatusPage state="loading"/>}>{children}</Suspense>;}
 
 function ProtectedTutorialRoute() {

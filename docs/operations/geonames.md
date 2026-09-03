@@ -21,7 +21,7 @@ a privileged database URL and a local `psql` client.
 
 ## Administrative refresh
 
-Administrators can also run the same refresh from **/admin/assets → Cidades GeoNames**. The browser
+Administrators can also run the same refresh from **/admin/geonames**. The browser
 only requests the job: the Edge Function downloads the archive directly from GeoNames, verifies and
 stages it privately, then swaps the active records in one database transaction. A failed download,
 validation, or staging step therefore leaves the active catalog unchanged. The panel retains the

@@ -1,0 +1,141 @@
+.shell {
+  min-height: 100dvh;
+  padding: calc(1.25rem + env(safe-area-inset-top)) 1rem calc(2rem + env(safe-area-inset-bottom));
+  color: var(--color-ink);
+  background: var(--color-paper-dark);
+}
+
+.top {
+  display: grid;
+  gap: 0.85rem;
+  max-width: 72rem;
+  margin: 0 auto 1.25rem;
+}
+
+.top span {
+  color: var(--color-postal-red);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.top h1,
+.brand {
+  margin: 0.25rem 0 0;
+  font-family: var(--font-display, Georgia, serif);
+  font-size: clamp(1.8rem, 6vw, 2.6rem);
+  font-weight: 700;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.nav a {
+  min-height: 2.5rem;
+  padding: 0.45rem 0.8rem;
+  border: 2px solid color-mix(in srgb, var(--color-postal-brown) 55%, transparent);
+  border-radius: 0.35rem 0.55rem 0.3rem 0.5rem;
+  color: var(--color-ink);
+  background: var(--color-paper);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.nav a.active {
+  border-color: var(--color-postal-blue);
+  color: var(--color-paper);
+  background: var(--color-postal-blue);
+}
+
+.nav a:focus-visible {
+  outline: 3px solid var(--color-postal-blue);
+  outline-offset: 2px;
+}
+
+.page {
+  max-width: 72rem;
+  margin: 0 auto;
+}
+
+.intro {
+  max-width: 40rem;
+  margin: 0 0 1rem;
+  line-height: 1.5;
+}
+
+.cards {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.card {
+  display: grid;
+  gap: 0.35rem;
+  padding: 1rem 1.1rem;
+  border: 2px dashed color-mix(in srgb, var(--color-postal-brown) 48%, transparent);
+  border-radius: 0.45rem 0.7rem 0.4rem 0.65rem;
+  color: inherit;
+  background: var(--color-paper);
+  text-align: left;
+  text-decoration: none;
+  box-shadow: var(--shadow-paper);
+}
+
+.card strong {
+  font-family: var(--font-display, Georgia, serif);
+  font-size: 1.25rem;
+}
+
+.card span {
+  color: var(--color-ink-soft);
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.card:focus-visible {
+  outline: 3px solid var(--color-postal-blue);
+  outline-offset: 3px;
+}
+
+.form {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.form label {
+  display: grid;
+  gap: 0.3rem;
+  font-weight: 700;
+}
+
+.form input {
+  min-height: 2.8rem;
+  padding: 0.55rem;
+  border: 2px dashed color-mix(in srgb, var(--color-postal-brown) 55%, transparent);
+  border-radius: 0.45rem;
+  background: var(--color-paper);
+  color: inherit;
+}
+
+.message {
+  margin: 0.75rem 0 0;
+  color: var(--color-postal-blue);
+  font-weight: 700;
+}
+
+.error {
+  color: var(--color-postal-red);
+}
+
+@media (min-width: 720px) {
+  .cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

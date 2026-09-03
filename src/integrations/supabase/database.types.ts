@@ -3063,6 +3063,15 @@ export type Database = {
       }
       admin_list_geonames_refreshes: { Args: never; Returns: Json }
       admin_list_official_assets: { Args: never; Returns: Json }
+      admin_get_encounter_settings: { Args: never; Returns: Json }
+      admin_update_encounter_settings: {
+        Args: {
+          target_radius_km: number
+          target_refresh_minutes: number
+          target_result_limit: number
+        }
+        Returns: Json
+      }
       admin_validate_asset_draft: {
         Args: {
           actor_id: string

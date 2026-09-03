@@ -1,8 +1,10 @@
 # Studio administrativo de assets
 
-O Studio está disponível em `/admin/assets` apenas para contas cujo JWT possua
-`app_metadata.duif_role = "admin"`. Esconder o link não concede acesso: a rota, as políticas de
-Storage, as RPCs e a Edge Function verificam o papel novamente.
+O Studio está disponível em `/admin/assets` dentro do [painel admin](/admin). O hub também
+reúne GeoNames (`/admin/geonames`) e parâmetros de encontros locais (`/admin/encounters`).
+Somente contas cujo JWT possua `app_metadata.duif_role = "admin"` acessam essas rotas.
+Esconder o link não concede acesso: a rota, as políticas de Storage, as RPCs e a Edge Function
+verificam o papel novamente.
 
 ## Bootstrap do mantenedor
 

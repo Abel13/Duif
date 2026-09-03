@@ -331,6 +331,33 @@ export type TranslationDictionary = {
   exclusiveMissions: { title:string; eyebrow:string; badge:string; destination:string; objective:string; dossier:string; briefing:string; returnRecord:string; closeDossier:string; expires:string; expired:string; accept:string; depart:string; error:string; };
   assetStudio: { eyebrow: string; title: string; description: string; newAsset: string; uploadTitle: string; key: string; type: string; file: string; altKey: string; decorative: string; author: string; saveDraft: string; draftSaved: string; publish: string; published: string; archive: string; archived: string; restore: string; restored: string; usage: string; filters: string; all: string; loading: string; error: string };
   geonamesAdmin: { eyebrow: string; title: string; description: string; activeCities: string; latestSuccess: string; noSuccess: string; refresh: string; confirm: string; cancel: string; confirmTitle: string; confirmDescription: string; history: string; status: string; processed: string; imported: string; updated: string; archived: string; running: string; failed: string; succeeded: string; queued: string; refreshStarted: string };
+  adminPanel: {
+    eyebrow: string;
+    title: string;
+    description: string;
+    navLabel: string;
+    nav: { hub: string; assets: string; geonames: string; encounters: string };
+    cards: {
+      assetsTitle: string;
+      assetsDescription: string;
+      geonamesTitle: string;
+      geonamesDescription: string;
+      encountersTitle: string;
+      encountersDescription: string;
+    };
+    encounters: {
+      eyebrow: string;
+      title: string;
+      description: string;
+      radiusKm: string;
+      refreshMinutes: string;
+      resultLimit: string;
+      save: string;
+      saved: string;
+      loading: string;
+      error: string;
+    };
+  };
   units: {
     kilometers: string;
   };
@@ -1953,6 +1980,10 @@ export type TranslationKey =
   | "geonamesAdmin.succeeded"
   | "geonamesAdmin.queued"
   | "geonamesAdmin.refreshStarted"
+  | "adminPanel.eyebrow" | "adminPanel.title" | "adminPanel.description" | "adminPanel.navLabel"
+  | "adminPanel.nav.hub" | "adminPanel.nav.assets" | "adminPanel.nav.geonames" | "adminPanel.nav.encounters"
+  | "adminPanel.cards.assetsTitle" | "adminPanel.cards.assetsDescription" | "adminPanel.cards.geonamesTitle" | "adminPanel.cards.geonamesDescription" | "adminPanel.cards.encountersTitle" | "adminPanel.cards.encountersDescription"
+  | "adminPanel.encounters.eyebrow" | "adminPanel.encounters.title" | "adminPanel.encounters.description" | "adminPanel.encounters.radiusKm" | "adminPanel.encounters.refreshMinutes" | "adminPanel.encounters.resultLimit" | "adminPanel.encounters.save" | "adminPanel.encounters.saved" | "adminPanel.encounters.loading" | "adminPanel.encounters.error"
   | "officialPostcards.base.name"
   | "officialPostcards.base.description"
   | "officialPostcards.christTheRedeemer.name"
