@@ -3,6 +3,15 @@
   isolation: isolate;
   display: block;
   flex: none;
+  box-sizing: border-box;
+  aspect-ratio: 1;
+  overflow: visible;
+}
+
+/* Keeps layout size when portrait/border slots are out of flow. */
+.sizer {
+  display: block;
+  width: 100%;
   aspect-ratio: 1;
 }
 
@@ -17,14 +26,21 @@
 }
 
 .large {
-  width: min(100%, 22rem);
-  aspect-ratio: 1;
+  width: min(22rem, 78vw);
+  height: min(22rem, 78vw);
+  max-width: 100%;
+  max-height: min(22rem, 78vw);
 }
 
 .medallion > .portrait {
   position: absolute;
   inset: 16%;
+  z-index: 1;
   display: block;
+  width: auto;
+  height: auto;
+  min-width: 0;
+  min-height: 0;
   overflow: hidden;
   border-radius: 50%;
   background: var(--color-paper-dark);
@@ -33,6 +49,7 @@
 .medallion > .portrait img {
   position: absolute;
   inset: 0;
+  display: block;
   width: 100%;
   height: 100%;
   max-width: none;
@@ -55,12 +72,15 @@
   display: block;
   width: auto;
   height: auto;
+  min-width: 0;
+  min-height: 0;
   pointer-events: none;
 }
 
 .medallion > .border img {
   position: absolute;
   inset: 0;
+  display: block;
   width: 100%;
   height: 100%;
   max-width: none;

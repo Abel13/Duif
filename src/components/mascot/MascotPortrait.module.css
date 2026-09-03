@@ -64,6 +64,8 @@
   display: grid;
   gap: var(--space-4);
   justify-items: center;
+  width: 100%;
+  min-width: 0;
 }
 
 .assetFrame {
@@ -171,7 +173,10 @@
 }
 
 .prestigeMedallion {
-  width: min(100%, clamp(14.5rem, 78vw, 22rem));
+  width: min(22rem, 78vw);
+  height: min(22rem, 78vw);
+  max-width: 100%;
+  max-height: min(22rem, 78vw);
   aspect-ratio: 1;
   filter: drop-shadow(0.4rem 0.55rem 0 rgba(46, 42, 36, 0.16));
 }
