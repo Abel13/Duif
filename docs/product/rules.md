@@ -253,6 +253,29 @@ Rules:
   account deletion preserves anonymized qualified progress; only an audited admin fraud
   invalidation removes it. A Lume already collected is never revoked.
 
+### Friendship levels
+
+- There are five friendship levels with no decay, purchase, or gameplay rewards:
+  1. New Correspondents
+  2. Frequent Correspondents
+  3. Postal Friends
+  4. Route Companions
+  5. Lasting Bond
+- Level is derived from completed travel **cycles** between the pair. A cycle is one delivery whose
+  outbound leg and return-to-nest leg both completed successfully. A reply from the friend is not
+  required.
+- Thresholds (completed cycles required to reach each level):
+  - New Correspondents: 0 (on accept)
+  - Frequent Correspondents: 3
+  - Postal Friends: 8
+  - Route Companions: 20
+  - Lasting Bond: 50
+- Accepting a friendship starts at level 1 with 0 cycles. Unfriending and later re-adding starts
+  again at level 1.
+- Legacy friendships already present when these rules activate must have their cycle counts and
+  levels recalculated from authoritative completed deliveries; stored levels must not be frozen
+  above what the completed cycles justify.
+
 Friend location visibility:
 
 - Accepted friends may see only city, state, and country.

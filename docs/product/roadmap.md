@@ -10,9 +10,9 @@ Procedimentos de deploy pertencem a [Operações](../operations/release.md), nã
 - `Planejamento e produção do catálogo visual`: decisões operacionais fechadas em 2 de setembro
   de 2026; catálogos em revisão com primeiros lotes autorizados e integrados. A próxima produção
   visual prioriza conteúdo futuro autorizado, não a dívida de placeholders atuais.
-- `Encontros locais, segurança de amizade e moderação`: parâmetros de encontro local (raio, refresh,
-  limite, âncora e cache) fechados em 2 de setembro de 2026; pendências restantes do milestone =
-  moderação operacional e limiares de níveis de amizade.
+- `Encontros locais, segurança de amizade e moderação`: parâmetros de encontro local e limiares de
+  níveis de amizade fechados em 2–3 de setembro de 2026; pendência restante do milestone =
+  moderação operacional.
 - Demais etapas abaixo: planejadas, com pendências explícitas em cada seção.
 
 ## Equipamentos funcionais, mochilas e prévia de loadout
@@ -268,8 +268,8 @@ dívida existente e aprovar a fila editorial antes de qualquer nova produção v
 
 ## Encontros locais, segurança de amizade e moderação
 
-**Estado:** Planned; discovery, privacy, and local-encounter parameters approved. Moderation
-operations and friendship-level thresholds remain unresolved.
+**Estado:** Planned; discovery, privacy, local-encounter parameters, and friendship-level
+thresholds approved. Moderation operations remain unresolved.
 
 **Objetivo:**
 
@@ -302,9 +302,12 @@ intentional friendship requests.
   a snapshot of the public profile, encounter context, and prior decisions without revealing the
   reporter;
 - no free-text public biography initially;
-- five friendship levels based mainly on reciprocal correspondence cycles, without decay, purchase,
-  or gameplay rewards: New Correspondents, Frequent Correspondents, Postal Friends, Route
-  Companions, and Lasting Bond;
+- five friendship levels without decay, purchase, or gameplay rewards: New Correspondents,
+  Frequent Correspondents, Postal Friends, Route Companions, and Lasting Bond;
+- friendship level derived from completed travel cycles between the pair: one cycle is a delivery
+  whose outbound and return-to-nest legs both completed; a friend reply is not required;
+- cycle thresholds 0 / 3 / 8 / 20 / 50 for levels 1–5; accept starts at level 1 with 0 cycles;
+- legacy friendships recalculated from authoritative completed deliveries when the rules activate;
 - unfriending preserves private history locally but a later re-add starts friendship level 1;
   blocking hides history and level from the blocked player;
 - surprise protection: an accepted friend's approaching mascot and sender identity remain hidden
@@ -323,11 +326,16 @@ intentional friendship requests.
 - no máximo 5 encontros por seleção;
 - mascote longe do ninho usa a geometria da seleção atual.
 
+**Decisões entregues (níveis de amizade, 3 de setembro de 2026):**
+
+- ciclo = entrega com ida e volta ao ninho concluídas; resposta do amigo não é exigida;
+- limiares 0 / 3 / 8 / 20 / 50 ciclos para os níveis 1–5;
+- amigos legados: recalcular ciclos e nível a partir das entregas autoritativas já concluídas.
+
 **Decisões pendentes antes da implementação:**
 
 - report categories, evidence retention, moderator roles, service targets, appeals, policy text,
-  notification copy, and legal/operational requirements;
-- exact reciprocal-cycle thresholds for each friendship level and treatment of legacy friends.
+  notification copy, and legal/operational requirements.
 
 **Critérios de sucesso:**
 
