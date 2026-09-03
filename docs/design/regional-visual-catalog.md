@@ -31,8 +31,9 @@ catálogo GeoNames antes da produção.
 - desbloqueios futuros, ainda não implementados: cartão após visita concluída à cidade; selo após
   visita concluída a qualquer destino da UF;
 - uma cidade produz um cartão próprio, mas reutiliza o selo da UF;
-- toda arte exige brief, origem/licença registradas, alt text pt-BR/en-US e validação nas telas
-  reais antes de publicação.
+- toda arte exige brief, alt text pt-BR/en-US e validação nas telas reais antes de publicação;
+  proveniência (geração assistida), titularidade e licença do asset publicado seguem a
+  [política operacional de assets](assets.md#política-operacional-aprovada);
 
 ## Cidades com Ninhos em produção
 

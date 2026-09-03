@@ -7,7 +7,9 @@ Procedimentos de deploy pertencem a [Operações](../operations/release.md), nã
 ## Estado atual
 
 - Concluídas localmente: equipamentos funcionais, identidades de skills e níveis de voo.
-- Próxima etapa: revisar e aprovar a documentação de `Planejamento e produção do catálogo visual`.
+- `Planejamento e produção do catálogo visual`: decisões operacionais fechadas em 2 de setembro
+  de 2026; catálogos em revisão com primeiros lotes autorizados e integrados. A próxima produção
+  visual prioriza conteúdo futuro autorizado, não a dívida de placeholders atuais.
 - Demais etapas abaixo: planejadas, com pendências explícitas em cada seção.
 
 ## Equipamentos funcionais, mochilas e prévia de loadout
@@ -155,7 +157,8 @@ quatro bordas independentes são selecionáveis após o primeiro desbloqueio aut
 
 ## Planejamento e produção do catálogo visual
 
-**Estado:** Catálogo em revisão, com primeiros lotes autorizados e integrados. Cristo Redentor,
+**Estado:** Decisões operacionais fechadas em 2 de setembro de 2026. Catálogo em revisão, com
+primeiros lotes autorizados e integrados. Cristo Redentor,
 MASP, Garganta do Diabo, Machu Picchu, Salar de Uyuni, Glaciar Perito Moreno, Torres del Paine,
 Salto Ángel e Ahu Tongariki possuem o par completo de Lugar Memorável; os 27 selos
 territoriais brasileiros, os cartões das 27 capitais brasileiras e os cartões urbanos de Manhuaçu,
@@ -224,24 +227,26 @@ dívida existente e aprovar a fila editorial antes de qualquer nova produção v
 - durante a fase documental atual: gerar, editar, remover ou publicar imagens; alterar Registry,
   manifest, banco, frontend, mapa, desbloqueios ou fazer deploy.
 
-**Decisões pendentes antes da implementação:**
+**Decisões entregues (2 de setembro de 2026):**
 
-- quem aprova direção visual, conteúdo, acessibilidade e publicação final de cada lote?
-- qual é a capacidade real de produção por semana ou ciclo e quais ferramentas/fontes de arte serão
-  autorizadas?
-- quais assets atuais são placeholders aceitáveis e quais devem ser tratados como defeitos de
-  produção imediatos?
-- qual será a prioridade entre dívida visual atual, cartões postais, medalhas de evento, bordas de
-  prestígio, clima sazonal e conteúdo futuro?
-- quais limites máximos de arquivo e dimensões serão adotados por família além dos orçamentos gerais
-  já documentados?
-- quais superfícies exigem variantes próprias e quais podem reutilizar o mesmo asset com recorte ou
-  responsividade?
-- o acompanhamento da fila viverá no Asset Studio, em documento operacional ou em ferramenta
-  externa; qual será a fonte única do estado de produção?
-- quais verificações visuais poderão ser automatizadas e quais exigirão aprovação humana em
-  dispositivos reais?
-- como registrar autoria, licença e uso de geração assistida para cada versão publicada?
+- aprovação de direção visual, conteúdo, acessibilidade e publicação final de cada lote: responsável
+  único do projeto (sem segundo aprovador obrigatório);
+- capacidade semanal e ferramentas de arte: fora das decisões vinculantes; não bloqueiam a fila;
+- placeholders e assets atuais: todos aceitáveis por enquanto; nenhum é defeito imediato de
+  produção;
+- prioridade da fila visual: conteúdo futuro autorizado, à frente de dívida visual, cartões
+  existentes, medalhas, bordas de prestígio e clima sazonal;
+- limites máximos de arquivo/dimensão por família: nenhum além dos orçamentos gerais já
+  documentados em [assets](../design/assets.md);
+- variantes por superfície: por enquanto sempre reuso do mesmo arquivo com recorte ou
+  responsividade; pares funcionais já aprovados (ex.: sticker + cartão de Lugar Memorável)
+  permanecem obrigatórios;
+- fonte única do estado de produção: Administrative Asset Studio;
+- QA visual: todo asset exige aprovação humana em dispositivo real antes da publicação;
+- proveniência: toda arte ilustrada publicada é geração assistida por IA; o responsável do projeto
+  aprova a versão final;
+- licença dos assets do produto: pertencem ao DUIF, todos os direitos reservados, uso somente no
+  produto. Política canônica em [assets](../design/assets.md).
 
 **Critérios de sucesso:**
 

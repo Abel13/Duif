@@ -27,14 +27,42 @@ Para a produção ilustrada futura:
 - o dossiê de condições do trecho usa texturas decorativas WebP transparentes, quadradas, até
   512×512 e 80 KB: uma base para cada estação e um overlay para garoa, chuva, neve/gelo ou
   tempestade. Elas são decorativas, sem texto, e não aparecem sobre o mapa;
-- assets de atmosfera podem usar IA assistida, desde que o Studio registre a proveniência e o
-  responsável do projeto aprove a versão final antes do deploy;
 - nenhuma dessas ilustrações novas deve ser produzida em SVG;
 - cada asset precisa de brief aprovado antes da criação, com composição, referências permitidas,
   licença/origem, dimensões, orçamento, área segura e alt text;
 - todo lote deve ser pequeno, validado nos tamanhos e superfícies reais e submetido a aprovação
   humana entre catálogo, geração, otimização e publicação;
 - nenhuma arte deve ser publicada ou integrada apenas porque aparece nos catálogos editoriais.
+
+## Política operacional aprovada
+
+Decisões vinculantes de 2 de setembro de 2026 para produção e publicação de assets ilustrados.
+Detalhes de inventário e dívida ficam no [inventário mestre](asset-inventory.md); o status da
+milestone permanece no [roadmap](../product/roadmap.md).
+
+- **Aprovação:** o responsável do projeto aprova sozinho direção visual, conteúdo, acessibilidade e
+  publicação final de cada lote.
+- **Capacidade e ferramentas:** não são decisões vinculantes nem critério de bloqueio da fila.
+- **Placeholders atuais:** todos os assets e placeholders atuais são aceitáveis por enquanto; nenhum
+  é tratado como defeito imediato de produção.
+- **Prioridade da fila:** conteúdo futuro autorizado primeiro; dívida visual, redesenho de cartões
+  existentes, medalhas de evento, bordas de prestígio e clima sazonal vêm depois, salvo autorização
+  explícita em contrário.
+- **Orçamentos:** valem apenas os limites gerais já documentados neste arquivo; não há tetos
+  adicionais por família.
+- **Reuso:** por enquanto, sempre reutilizar o mesmo arquivo com recorte ou responsividade nas
+  superfícies. Não criar variantes só porque a superfície mudou. Pares funcionais já aprovados
+  (sticker de mapa + frente de cartão 3:2 de Lugar Memorável) continuam obrigatórios.
+- **Fonte do status:** o Administrative Asset Studio é a fonte única do estado de produção de cada
+  asset. Catálogos em `docs/design` são editoriais e não substituem o Studio nem o Registry.
+- **QA:** todo asset exige aprovação humana em dispositivo real (mobile e, quando aplicável,
+  desktop) antes da publicação. Checagens automatizadas de chave, caminho e manifesto são apoio,
+  não substituto.
+- **Proveniência:** toda arte ilustrada publicada é geração assistida por IA; o Studio deve
+  registrar essa proveniência; o responsável do projeto aprova a versão final.
+- **Licença dos assets do produto:** pertencem ao DUIF; todos os direitos reservados; uso somente
+  no produto. Licenças de *referências* de pesquisa (ex.: acervos públicos usados só como brief)
+  continuam documentadas no brief e não alteram a titularidade do asset publicado.
 
 This document defines the first asset pipeline conventions for DUIF.
 

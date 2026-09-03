@@ -44,6 +44,8 @@ Contrato de asset: `landmark.<slug>.artwork`, WebP transparente, até 256×256 e
 também exige `postcard.landmark.<slug>.front`, WebP 3:2, antes de ser considerada completa. A
 referência visual permitida é uma descrição, Wikimedia Commons com licença compatível, acervo
 público ou página oficial para pesquisa factual — nunca autorização para copiar uma fotografia.
+Assets publicados seguem a [política operacional de assets](assets.md#política-operacional-aprovada)
+(geração assistida, titularidade DUIF).
 
 ## Direção visual: marco como sticker ilustrado
 

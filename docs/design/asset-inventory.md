@@ -59,9 +59,9 @@ Resumo auditado:
 
 As dimensões e pesos abaixo são dos arquivos versionados no repositório. “Código” inclui a chave
 tipada, catálogo ou componente consumidor. Assets decorativos usam `alt=""`; os demais dependem
-das traduções do Registry. A origem predominante é o slice raster ilustrado do DUIF; quando a
-autoria/licença não está individualizada, a ação recomendada é completar essa ficha antes da
-próxima versão.
+das traduções do Registry. A origem predominante é geração assistida por IA; titularidade e
+licença dos assets publicados seguem a
+[política operacional](assets.md#política-operacional-aprovada).
 
 | Chave oficial | Tipo · versão/estado | Arquivo · formato · dimensão · peso | Código e superfícies | Texto/fallback | Qualidade, dependência e ação | Classe |
 |---|---|---|---|---|---|---|
@@ -243,9 +243,10 @@ pois não havia navegador local disponível nesta auditoria.
 | Lenço do Correio Carmesim e Boné da Rota Campestre | ativo a revisar | são as únicas artes comerciais marcadas como mock; precisam de aprovação visual antes de serem classificadas como definitivas, mas não há defeito estático que exija retirada imediata |
 | Assets arquivados e `.gitkeep` | fora da triagem de produção | preservar conforme política histórica/estrutural; não aparecem como arte ativa |
 
-Conclusão provisória: nenhum placeholder atual foi classificado como defeito de produção imediato.
-O único julgamento humano pendente é se as duas artes comerciais em revisão são definitivas ou
-precisam ser substituídas.
+Conclusão (atualizada em 2 de setembro de 2026): todos os assets e placeholders atuais são
+aceitáveis por enquanto; nenhum é defeito imediato de produção. Artes comerciais ainda marcadas
+como mock (Lenço do Correio Carmesim e Boné da Rota Campestre) permanecem publicáveis e só entram
+em redesenho quando a fila priorizar dívida visual, não conteúdo futuro.
 
 ## Cobertura e dívida por família
 
@@ -283,18 +284,30 @@ necessidades não entram em produção sem decisão explícita.
 
 ## Ordem recomendada para uma produção futura
 
-1. Auditar o Registry de produção e resolver somente as referências quebradas comprovadas.
-2. Validar os cartões urbanos já produzidos em compositor, caixa postal e Álbum nos tamanhos reais;
-   selos territoriais e Lugares Memoráveis seguem lotes independentes.
-3. Produzir os ativos indispensáveis à próxima funcionalidade explicitamente autorizada.
-4. Tratar dívida de baixa resolução e loja somente depois dos fluxos de maior impacto.
+Prioridade vinculante (2 de setembro de 2026): **conteúdo futuro autorizado** antes de dívida
+visual, redesenho de cartões existentes, medalhas, bordas de prestígio ou clima sazonal. Ver
+[política operacional](assets.md#política-operacional-aprovada).
+
+1. Produzir os ativos indispensáveis à próxima funcionalidade explicitamente autorizada.
+2. Auditar o Registry de produção e resolver somente as referências quebradas comprovadas.
+3. Validar em dispositivo real lotes novos no Asset Studio antes da publicação.
+4. Tratar dívida de baixa resolução, loja e placeholders só depois do conteúdo futuro prioritário.
 5. Manter Diário e expansão massiva de descobertas no fim da fila.
 
-Decisões registradas: a aprovação final de cada lote é feita exclusivamente pelo responsável do
-projeto, sem segundo aprovador obrigatório; a capacidade de revisão e aprovação é de até 50 assets
-finalizados por semana. Os cartões urbanos já produzidos de Manhuaçu, Londrina, Nova Friburgo e
-Hong Kong permanecem uma família separada dos Lugares Memoráveis, que têm planejamento e critérios
-de produção próprios.
+## Decisões operacionais fechadas
 
-Decisões ainda necessárias: fonte e licença de cada referência; limites finais por família;
-variantes realmente necessárias; e local único de acompanhamento do estado editorial.
+Fonte canônica da política: [assets.md](assets.md#política-operacional-aprovada). Resumo:
+
+- aprovação exclusiva do responsável do projeto;
+- capacidade/ferramentas não vinculantes;
+- placeholders atuais todos aceitáveis;
+- fila prioriza conteúdo futuro;
+- sem limites extras por família além dos orçamentos gerais;
+- sempre reuso com recorte/responsividade (pares funcionais de Lugar Memorável continuam
+  obrigatórios);
+- Asset Studio = fonte única do status de produção;
+- QA humana em dispositivo real para todo asset;
+- geração assistida por IA + licença DUIF (todos os direitos reservados, uso só no produto).
+
+Os cartões urbanos de Manhuaçu, Londrina, Nova Friburgo e Hong Kong permanecem família separada
+dos Lugares Memoráveis.
