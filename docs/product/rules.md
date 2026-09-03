@@ -275,6 +275,9 @@ Rules:
 - Legacy friendships already present when these rules activate must have their cycle counts and
   levels recalculated from authoritative completed deliveries; stored levels must not be frozen
   above what the completed cycles justify.
+- `exchange_count` stores the authoritative completed-cycle count for the current friendship window.
+  Completing a non-tutorial delivery with outbound and return finished refreshes the pair. Accepting
+  a friendship (including a later re-add) starts a new window at level 1 with 0 cycles.
 
 Friend location visibility:
 

@@ -330,7 +330,9 @@ intentional friendship requests.
 
 - ciclo = entrega com ida e volta ao ninho concluídas; resposta do amigo não é exigida;
 - limiares 0 / 3 / 8 / 20 / 50 ciclos para os níveis 1–5;
-- amigos legados: recalcular ciclos e nível a partir das entregas autoritativas já concluídas.
+- amigos legados: recalcular ciclos e nível a partir das entregas autoritativas já concluídas;
+- implementação autoritativa: `exchange_count` = ciclos da janela atual; refresh na conclusão da
+  entrega; aceitar/re-adicionar reinicia nível 1 com 0 ciclos.
 
 **Decisões pendentes antes da implementação:**
 

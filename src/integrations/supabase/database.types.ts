@@ -1004,6 +1004,7 @@ export type Database = {
           favorite_note_key: string | null
           friendship_level: number
           id: string
+          level_started_at: string
           requester_profile_id: string
           status: string
           updated_at: string
@@ -1015,6 +1016,7 @@ export type Database = {
           favorite_note_key?: string | null
           friendship_level?: number
           id: string
+          level_started_at?: string
           requester_profile_id: string
           status?: string
           updated_at?: string
@@ -1026,6 +1028,7 @@ export type Database = {
           favorite_note_key?: string | null
           friendship_level?: number
           id?: string
+          level_started_at?: string
           requester_profile_id?: string
           status?: string
           updated_at?: string
@@ -3826,6 +3829,26 @@ export type Database = {
           outcome: string
           request_id: string
         }[]
+      }
+      friendship_level_from_cycles: { Args: { cycle_count: number }; Returns: number }
+      count_friendship_cycles: {
+        Args: { left_profile_id: string; right_profile_id: string; since_at: string }
+        Returns: number
+      }
+      refresh_friendship_progress: {
+        Args: { left_profile_id: string; right_profile_id: string }
+        Returns: {
+          addressee_profile_id: string
+          created_at: string
+          exchange_count: number
+          favorite_note_key: string | null
+          friendship_level: number
+          id: string
+          level_started_at: string
+          requester_profile_id: string
+          status: string
+          updated_at: string
+        }
       }
       resolve_delivery_route_segments: {
         Args: { at_time?: string; target_delivery_id: string }
