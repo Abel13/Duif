@@ -77,6 +77,10 @@ export type TranslationDictionary = {
     uluru: { name: string; description: string; alt: string };
     heartReef: { name: string; description: string; alt: string };
     mitrePeak: { name: string; description: string; alt: string };
+    teatroAmazonas: { name: string; description: string; alt: string };
+    elevadorLacerda: { name: string; description: string; alt: string };
+    congressoNacional: { name: string; description: string; alt: string };
+    jardimBotanicoCuritiba: { name: string; description: string; alt: string };
   };
   officialPostcards: {
     base: { name: string; description: string };
@@ -130,6 +134,10 @@ export type TranslationDictionary = {
     uluru: { name: string; description: string; alt: string };
     heartReef: { name: string; description: string; alt: string };
     mitrePeak: { name: string; description: string; alt: string };
+    teatroAmazonas: { name: string; description: string; alt: string };
+    elevadorLacerda: { name: string; description: string; alt: string };
+    congressoNacional: { name: string; description: string; alt: string };
+    jardimBotanicoCuritiba: { name: string; description: string; alt: string };
     cities: {
       aracaju: { name: string; description: string; alt: string };
       beloHorizonte: { name: string; description: string; alt: string };
@@ -587,6 +595,8 @@ export type TranslationDictionary = {
       close: string;
       category: string;
       cultural: string;
+      architectural: string;
+      natural: string;
       empty: string;
     };
     eyebrow: string;
@@ -1122,10 +1132,14 @@ export type TranslationKey =
  | "landmarks.uluru.name" | "landmarks.uluru.description" | "landmarks.uluru.alt"
  | "landmarks.heartReef.name" | "landmarks.heartReef.description" | "landmarks.heartReef.alt"
  | "landmarks.mitrePeak.name" | "landmarks.mitrePeak.description" | "landmarks.mitrePeak.alt"
+ | "landmarks.teatroAmazonas.name" | "landmarks.teatroAmazonas.description" | "landmarks.teatroAmazonas.alt"
+ | "landmarks.elevadorLacerda.name" | "landmarks.elevadorLacerda.description" | "landmarks.elevadorLacerda.alt"
+ | "landmarks.congressoNacional.name" | "landmarks.congressoNacional.description" | "landmarks.congressoNacional.alt"
+ | "landmarks.jardimBotanicoCuritiba.name" | "landmarks.jardimBotanicoCuritiba.description" | "landmarks.jardimBotanicoCuritiba.alt"
  | "landmarks.forbiddenCityMeridianGate.name" | "landmarks.forbiddenCityMeridianGate.description" | "landmarks.forbiddenCityMeridianGate.alt"
  | "landmarks.himejiCastle.name" | "landmarks.himejiCastle.description" | "landmarks.himejiCastle.alt"
  | "landmarks.halongBayThienCung.name" | "landmarks.halongBayThienCung.description" | "landmarks.halongBayThienCung.alt"
-  | "map.landmarks.title" | "map.landmarks.discovered" | "map.landmarks.newTitle" | "map.landmarks.newDescription" | "map.landmarks.learnMore" | "map.landmarks.dismiss" | "map.landmarks.close" | "map.landmarks.category" | "map.landmarks.cultural" | "map.landmarks.empty"
+  | "map.landmarks.title" | "map.landmarks.discovered" | "map.landmarks.newTitle" | "map.landmarks.newDescription" | "map.landmarks.learnMore" | "map.landmarks.dismiss" | "map.landmarks.close" | "map.landmarks.category" | "map.landmarks.cultural" | "map.landmarks.architectural" | "map.landmarks.natural" | "map.landmarks.empty"
   | "send.skillPreview.title" | "send.skillPreview.loading" | "send.skillPreview.unavailable" | "send.skillPreview.active" | "send.skillPreview.inactive" | "send.skillPreview.weatherDependent" | "send.skillPreview.weatherNotice" | "send.skillPreview.reasons.snapshot" | "send.skillPreview.reasons.conditionNotMet"
   | "functionalEquipment.shopTitle" | "functionalEquipment.shopDescription" | "functionalEquipment.balance" | "functionalEquipment.buy" | "functionalEquipment.buying" | "functionalEquipment.purchaseError"
   | "functionalEquipment.loadoutDescription" | "functionalEquipment.lockedDuringTravel" | "functionalEquipment.backpackSlot" | "functionalEquipment.utilitySlot" | "functionalEquipment.none"
@@ -2023,6 +2037,10 @@ export type TranslationKey =
  | "officialPostcards.uluru.name" | "officialPostcards.uluru.description" | "officialPostcards.uluru.alt"
  | "officialPostcards.heartReef.name" | "officialPostcards.heartReef.description" | "officialPostcards.heartReef.alt"
  | "officialPostcards.mitrePeak.name" | "officialPostcards.mitrePeak.description" | "officialPostcards.mitrePeak.alt"
+ | "officialPostcards.teatroAmazonas.name" | "officialPostcards.teatroAmazonas.description" | "officialPostcards.teatroAmazonas.alt"
+ | "officialPostcards.elevadorLacerda.name" | "officialPostcards.elevadorLacerda.description" | "officialPostcards.elevadorLacerda.alt"
+ | "officialPostcards.congressoNacional.name" | "officialPostcards.congressoNacional.description" | "officialPostcards.congressoNacional.alt"
+ | "officialPostcards.jardimBotanicoCuritiba.name" | "officialPostcards.jardimBotanicoCuritiba.description" | "officialPostcards.jardimBotanicoCuritiba.alt"
  | "officialPostcards.forbiddenCityMeridianGate.name" | "officialPostcards.forbiddenCityMeridianGate.description" | "officialPostcards.forbiddenCityMeridianGate.alt"
  | "officialPostcards.himejiCastle.name" | "officialPostcards.himejiCastle.description" | "officialPostcards.himejiCastle.alt"
  | "officialPostcards.halongBayThienCung.name" | "officialPostcards.halongBayThienCung.description" | "officialPostcards.halongBayThienCung.alt"

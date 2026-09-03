@@ -134,6 +134,10 @@ describe("official asset manifest", () => {
       [assetKeys.landmarks.uluru, "/assets/landmarks/uluru.webp"],
       [assetKeys.landmarks.heartReef, "/assets/landmarks/heart-reef.webp"],
       [assetKeys.landmarks.mitrePeak, "/assets/landmarks/mitre-peak.webp"],
+      [assetKeys.landmarks.teatroAmazonas, "/assets/landmarks/teatro-amazonas.webp"],
+      [assetKeys.landmarks.elevadorLacerda, "/assets/landmarks/elevador-lacerda.webp"],
+      [assetKeys.landmarks.congressoNacional, "/assets/landmarks/congresso-nacional.webp"],
+      [assetKeys.landmarks.jardimBotanicoCuritiba, "/assets/landmarks/jardim-botanico-curitiba.webp"],
     ] as const;
     const manifest = parseOfficialAssetManifest(artwork.map(([key, packaged_path]) => ({
       ...row,

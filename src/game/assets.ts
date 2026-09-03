@@ -224,6 +224,10 @@ export const assetKeys = {
     uluru: "landmark.uluru.artwork",
     heartReef: "landmark.heartReef.artwork",
     mitrePeak: "landmark.mitrePeak.artwork",
+    teatroAmazonas: "landmark.teatroAmazonas.artwork",
+    elevadorLacerda: "landmark.elevadorLacerda.artwork",
+    congressoNacional: "landmark.congressoNacional.artwork",
+    jardimBotanicoCuritiba: "landmark.jardimBotanicoCuritiba.artwork",
   },
 } as const;
 

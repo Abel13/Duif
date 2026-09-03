@@ -19,7 +19,7 @@ de cartões.
 | Arquivos existentes, dimensões e dívida visual | [inventário mestre](asset-inventory.md) |
 | Estado e ordem das iniciativas de produto | [roadmap](../product/roadmap.md#planejamento-e-produção-do-catálogo-visual) |
 
-As 50 entradas catalogadas estão ativas, cada uma com seu par de assets WebP, proveniência no
+As 54 entradas catalogadas estão ativas, cada uma com seu par de assets WebP, proveniência no
 Official Asset Registry e validação visual de fidelidade, legibilidade e ausência de texto ou marcas.
 
 Cada Lugar Memorável aprovado exige o par completo: um sticker ilustrado transparente para o mapa
@@ -29,7 +29,7 @@ prioridades e revisões obrigatórias permanece neste documento.
 ## Princípios
 
 A seleção contém pontos específicos, reconhecíveis e verificáveis, distribuídos entre América do
-Sul (9), América do Norte/Central (8), Europa (10), África (9), Ásia (10) e Oceania (4). A
+Sul (13), América do Norte/Central (8), Europa (10), África (9), Ásia (10) e Oceania (4). A
 distribuição evita transformar Europa e América do Norte no padrão dominante e mantém equilíbrio
 entre referências naturais, culturais e arquitetônicas.
 
@@ -96,7 +96,7 @@ zoom de descoberta, ficha informativa e fundo noturno/sazonal. A aprovação pre
 silhueta, fidelidade, respeito cultural, transparência, borda inteira, contraste e coerência com os
 assets atuais antes de publicar a versão no Registry.
 
-## Proposta nominal de 50 Lugares Memoráveis
+## Proposta nominal de 54 Lugares Memoráveis
 
 Todas as entradas usam raio fixo de **25 km** quando publicadas. As não marcadas como ativas
 permanecem `proposta-em-revisão`.
@@ -153,10 +153,14 @@ permanecem `proposta-em-revisão`.
 | 48 | `landmark.uluru` · Uluru · **ativo** | Northern Territory, Austrália · -25.34443, 131.03688 | natural · monólito e lugar sagrado; rocha no deserto | Parks Australia; consulta cultural obrigatória e respeito a restrições de imagem | Uluru elevando-se sobre a planície do deserto | alta/revisão cultural |
 | 49 | `landmark.heart-reef` · Heart Reef · **ativo** | Queensland, Austrália · -19.77515, 149.24754 | natural · formação específica na Grande Barreira; recife em forma de coração | parque marinho/UNESCO; vista aérea estilizada sem operador turístico | Pequeno recife em forma de coração nas águas azuis | média |
 | 50 | `landmark.milford-sound-mitre-peak` · Mitre Peak · **ativo** | Southland, Nova Zelândia · -44.67161, 167.92563 | natural · fiorde específico e pico reconhecível; montanha sobre água escura | DOC/Te Wahipounamu e imagens licenciadas | Mitre Peak refletido nas águas de Milford Sound | média |
+| 51 | `landmark.teatro-amazonas` · Teatro Amazonas · **ativo** | Manaus, Amazonas, Brasil · -3.13028, -60.02333 | cultural · ópera histórica reconhecível; cúpula e fachada rosa na praça | ilustração original assistida por IA, validada contra o brief; cúpula, pedimento e palmeiras | Sticker ilustrado do Teatro Amazonas com cúpula e fachada rosa | produzido |
+| 52 | `landmark.elevador-lacerda` · Elevador Lacerda · **ativo** | Salvador, Bahia, Brasil · -12.97417, -38.51333 | arquitetônico · elevador urbano Art Déco entre Cidade Alta e Baixa; torres na falésia | ilustração original assistida por IA, validada contra o brief; torres gêmeas, falésia e baía | Sticker ilustrado do Elevador Lacerda sobre a falésia e a baía | produzido |
+| 53 | `landmark.congresso-nacional` · Congresso Nacional · **ativo** | Brasília, DF, Brasil · -15.79972, -47.86417 | arquitetônico · complexo modernista de Niemeyer; torres, cúpula e semi-esfera | ilustração original assistida por IA, validada contra o brief; plataforma, torres e espelho d’água | Sticker ilustrado do Congresso Nacional com torres, cúpula e semi-esfera | produzido |
+| 54 | `landmark.jardim-botanico-curitiba` · Jardim Botânico de Curitiba · **ativo** | Curitiba, Paraná, Brasil · -25.44278, -49.23944 | arquitetônico · estufa Art Nouveau de ferro e vidro; silhueta inequívoca no parque | ilustração original assistida por IA, validada contra o brief; três pavilhões de vidro e canteiros | Sticker ilustrado da estufa do Jardim Botânico de Curitiba | produzido |
 
 ## Comportamento dos lugares implementados
 
-- Todos os 50 lugares são desbloqueados durante a passagem de uma nova rota não tutorial a até 25 km.
+- Todos os 54 lugares são desbloqueados durante a passagem de uma nova rota não tutorial a até 25 km.
 - O marco só aparece para o jogador depois do desbloqueio; antes disso não há silhueta, pista ou
   contagem que revele sua posição.
 - Tocar no marco abre uma ficha informativa editorial, sem expor coordenadas privadas de rotas.
@@ -178,11 +182,15 @@ permanecem `proposta-em-revisão`.
 | MASP | `landmark.masp.artwork` · ativo | `postcard.landmark.masp.front` · ativo e concedido no desbloqueio |
 | Garganta do Diabo | `landmark.iguazuDevilsThroat.artwork` · ativo | `postcard.landmark.iguazuDevilsThroat.front` · ativo e concedido no desbloqueio |
 | Machu Picchu | `landmark.machuPicchu.artwork` · ativo | `postcard.landmark.machuPicchu.front` · ativo e concedido no desbloqueio |
+| Teatro Amazonas | `landmark.teatroAmazonas.artwork` · ativo | `postcard.landmark.teatroAmazonas.front` · ativo e concedido no desbloqueio |
+| Elevador Lacerda | `landmark.elevadorLacerda.artwork` · ativo | `postcard.landmark.elevadorLacerda.front` · ativo e concedido no desbloqueio |
+| Congresso Nacional | `landmark.congressoNacional.artwork` · ativo | `postcard.landmark.congressoNacional.front` · ativo e concedido no desbloqueio |
+| Jardim Botânico de Curitiba | `landmark.jardimBotanicoCuritiba.artwork` · ativo | `postcard.landmark.jardimBotanicoCuritiba.front` · ativo e concedido no desbloqueio |
 
 Todo brief contempla os dois assets. O sticker privilegia silhueta e leitura entre
 40–56 px; o cartão usa composição horizontal 3:2 adequada à inspeção e ao envio postal.
 
 ## Revisão concluída
 
-Os 50 marcos passaram por revisão visual do par de assets, verificação técnica de dimensões e
+Os 54 marcos passaram por revisão visual do par de assets, verificação técnica de dimensões e
 tamanho e teste local do catálogo, da descoberta e da concessão idempotente do cartão.
