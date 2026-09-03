@@ -10,6 +10,9 @@ Procedimentos de deploy pertencem a [Operações](../operations/release.md), nã
 - `Planejamento e produção do catálogo visual`: decisões operacionais fechadas em 2 de setembro
   de 2026; catálogos em revisão com primeiros lotes autorizados e integrados. A próxima produção
   visual prioriza conteúdo futuro autorizado, não a dívida de placeholders atuais.
+- `Encontros locais, segurança de amizade e moderação`: parâmetros de encontro local (raio, refresh,
+  limite, âncora e cache) fechados em 2 de setembro de 2026; pendências restantes do milestone =
+  moderação operacional e limiares de níveis de amizade.
 - Demais etapas abaixo: planejadas, com pendências explícitas em cada seção.
 
 ## Equipamentos funcionais, mochilas e prévia de loadout
@@ -265,7 +268,8 @@ dívida existente e aprovar a fila editorial antes de qualquer nova produção v
 
 ## Encontros locais, segurança de amizade e moderação
 
-**Estado:** Planned; discovery and privacy rules approved, moderation operations unresolved.
+**Estado:** Planned; discovery, privacy, and local-encounter parameters approved. Moderation
+operations and friendship-level thresholds remain unresolved.
 
 **Objetivo:**
 
@@ -274,9 +278,17 @@ intentional friendship requests.
 
 **Inclui:**
 
-- other players' mascots visible only in relation to the viewing player's current mascot or nest;
-- local eligibility resolved by the backend around that anchor, never by an arbitrary world-map
-  viewport, camera pan, searched city, or guessed coordinate;
+- other players' mascots visible only in relation to the viewing player's currently selected nest
+  or a specific owned mascot;
+- local eligibility resolved by the backend around that selected anchor, never by an arbitrary
+  world-map viewport, camera pan, searched city, or guessed coordinate;
+- when the selected mascot is traveling far from the nest, encounters use that mascot's
+  authoritative position; when the nest is selected, encounters use the nest;
+- default encounter radius of 1000 km, backend-authoritative and editable from the administrative
+  panel;
+- eligibility refresh every 5 minutes, with per-anchor caching so rapid selection switches reuse a
+  still-valid result set instead of forcing a full re-query;
+- at most 5 sanitized encounter results per selection;
 - removal of the ability to browse or follow other players' mascots flying anywhere in the world;
 - encounter visibility enabled by default, with an explained profile privacy toggle to opt out;
 - a sanitized public profile opened from a locally encountered mascot: nickname, mascot and level,
@@ -303,12 +315,16 @@ intentional friendship requests.
 - global traffic browsing, exact distance, exact coordinates, live trails, chat, public bios,
   automatic friendship, friend rewards, report-count auto-punishment, or automatic suspension.
 
+**Decisões entregues (encontro local, 2 de setembro de 2026):**
+
+- âncora = seleção atual (ninho ou mascote específico);
+- raio padrão 1000 km, configurável no painel admin;
+- refresh a cada 5 minutos, com cache por âncora para trocas rápidas;
+- no máximo 5 encontros por seleção;
+- mascote longe do ninho usa a geometria da seleção atual.
+
 **Decisões pendentes antes da implementação:**
 
-- the encounter radius/frequency, result limit, refresh cadence, and behavior when the player's own
-  mascot is traveling far from its nest;
-- whether the anchor is the selected mascot, every owned mascot, the nest, or a priority order when
-  several are simultaneously eligible;
 - report categories, evidence retention, moderator roles, service targets, appeals, policy text,
   notification copy, and legal/operational requirements;
 - exact reciprocal-cycle thresholds for each friendship level and treatment of legacy friends.
