@@ -26,22 +26,23 @@
 }
 
 .large {
-  width: min(22rem, 78vw);
-  height: min(22rem, 78vw);
+  width: min(100%, 22rem);
+  height: auto;
   max-width: 100%;
-  max-height: min(22rem, 78vw);
+  aspect-ratio: 1;
 }
 
+/* Inner ring opening is ~64% of the border asset (~18% inset). */
 .medallion > .portrait {
   position: absolute;
-  inset: 10%;
+  inset: 17.5%;
   z-index: 1;
   display: block;
   width: auto;
   height: auto;
   min-width: 0;
   min-height: 0;
-  overflow: visible;
+  overflow: hidden;
   border-radius: 50%;
   background: var(--color-paper-dark);
 }
@@ -54,7 +55,6 @@
   height: 120%;
   max-width: none;
   object-fit: cover;
-  clip-path: circle(52% at center);
 }
 
 .medallion > .portrait > span {
