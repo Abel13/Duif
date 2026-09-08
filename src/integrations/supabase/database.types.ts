@@ -2881,6 +2881,197 @@ export type Database = {
         }
         Relationships: []
       }
+      seed_package_catalog: {
+        Row: {
+          id: string
+          catalog_key: string
+          name_key: string
+          description_key: string
+          asset_key: string | null
+          seed_quantity: number
+          base_chance_percent: number
+          tier: number
+          min_distance_km: number
+          status: string
+          version: number
+          created_at: string
+          sort_order: number
+        }
+        Insert: {
+          id?: string
+          catalog_key: string
+          name_key: string
+          description_key: string
+          asset_key?: string | null
+          seed_quantity: number
+          base_chance_percent: number
+          tier: number
+          min_distance_km?: number
+          status?: string
+          version?: number
+          created_at?: string
+          sort_order?: number
+        }
+        Update: {
+          id?: string
+          catalog_key?: string
+          name_key?: string
+          description_key?: string
+          asset_key?: string | null
+          seed_quantity?: number
+          base_chance_percent?: number
+          tier?: number
+          min_distance_km?: number
+          status?: string
+          version?: number
+          created_at?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      delivery_seed_package_opportunities: {
+        Row: {
+          id: string
+          delivery_id: string
+          opportunity_index: number
+          segment_index: number
+          catalog_version: number
+          eligible_packages: Json
+          mascot_luck_snapshot: number
+          seed_value: string
+          result_package_key: string | null
+          result_seed_quantity: number | null
+          result_calculated_at: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          delivery_id: string
+          opportunity_index: number
+          segment_index: number
+          catalog_version: number
+          eligible_packages: Json
+          mascot_luck_snapshot: number
+          seed_value: string
+          result_package_key?: string | null
+          result_seed_quantity?: number | null
+          result_calculated_at?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          delivery_id?: string
+          opportunity_index?: number
+          segment_index?: number
+          catalog_version?: number
+          eligible_packages?: Json
+          mascot_luck_snapshot?: number
+          seed_value?: string
+          result_package_key?: string | null
+          result_seed_quantity?: number | null
+          result_calculated_at?: string | null
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "delivery_seed_package_opportunities_delivery_id_fkey"
+            columns: ["delivery_id"]
+            isOneToOne: false
+            referencedRelation: "deliveries"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      seed_package_route_cooldowns: {
+        Row: {
+          id: string
+          profile_id: string
+          mascot_id: string
+          origin_key: string
+          destination_key: string
+          last_package_found_at: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          profile_id: string
+          mascot_id: string
+          origin_key: string
+          destination_key: string
+          last_package_found_at: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          profile_id?: string
+          mascot_id?: string
+          origin_key?: string
+          destination_key?: string
+          last_package_found_at?: string
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "seed_package_route_cooldowns_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "seed_package_route_cooldowns_mascot_id_fkey"
+            columns: ["mascot_id"]
+            isOneToOne: false
+            referencedRelation: "player_mascots"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      seed_package_ledger: {
+        Row: {
+          id: string
+          profile_id: string
+          delivery_id: string
+          opportunity_id: string
+          package_catalog_key: string
+          seed_quantity: number
+          credited_at: string
+        }
+        Insert: {
+          id?: string
+          profile_id: string
+          delivery_id: string
+          opportunity_id: string
+          package_catalog_key: string
+          seed_quantity: number
+          credited_at?: string
+        }
+        Update: {
+          id?: string
+          profile_id?: string
+          delivery_id?: string
+          opportunity_id?: string
+          package_catalog_key?: string
+          seed_quantity?: number
+          credited_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "seed_package_ledger_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "seed_package_ledger_opportunity_id_fkey"
+            columns: ["opportunity_id"]
+            isOneToOne: false
+            referencedRelation: "delivery_seed_package_opportunities"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -4051,6 +4242,20 @@ export type Database = {
           segment_index: number
         }
         Returns: Json
+      }
+      check_seed_package_cooldown: {
+        Args: {
+          target_mascot_id: string
+          origin_canonical_key: string
+          destination_canonical_key: string
+        }
+        Returns: boolean
+      }
+      credit_seed_packages: {
+        Args: {
+          delivery_id_param: string
+        }
+        Returns: undefined
       }
     }
     Enums: {

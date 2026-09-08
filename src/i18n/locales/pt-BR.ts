@@ -250,6 +250,7 @@ export const ptBR = {
     unavailable: "Indisponível",
     loadError: "Não foi possível carregar este conteúdo.",
     retry: "Tentar novamente",
+    seeds: "sementes",
   },
   notFound: {
     eyebrow: "Carta extraviada",
@@ -1148,6 +1149,9 @@ export const ptBR = {
     affinityLongDistance: "Rota longa",
     affinityUrban: "Rota urbana",
     affinityDiscovery: "Descoberta no caminho",
+    seedPackagesFound: "Pacotes encontrados",
+    effectiveChance: "Chance efetiva",
+    luckBonus: "Bônus de sorte",
     items: {
       wornRouteStamp: {
         name: "Selo de rota gasto",
@@ -1411,5 +1415,27 @@ export const ptBR = {
     friendLumaPortrait: "Retrato temporário de Luma",
     friendMaplePortrait: "Retrato de Maple",
     owlPortrait: "Retrato temporário de Coruja",
+  },
+  seedPackages: {
+    minimum: {
+      name: "Pacote Mínimo",
+      description: "Um pequeno achado postal",
+    },
+    small: {
+      name: "Pacote Pequeno",
+      description: "Sementes encontradas na rota",
+    },
+    medium: {
+      name: "Pacote Médio",
+      description: "Uma descoberta valiosa",
+    },
+    large: {
+      name: "Pacote Grande",
+      description: "Tesouro postal raro",
+    },
+    treasure: {
+      name: "Tesouro Postal",
+      description: "Achado extraordinário!",
+    },
   },
 } satisfies TranslationDictionary;

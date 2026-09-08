@@ -12,6 +12,7 @@ import { requireTranslationKey } from "./catalogMappers";
 import { getSupabaseClient } from "./client";
 import type { Database, Json } from "./database.types";
 import { mapInventoryItemRow, type InventoryItemRow } from "./inventoryMappers";
+import { creditSeedPackages } from "./seedPackageOpportunities";
 
 export type RewardItemRow = Database["public"]["Tables"]["reward_items"]["Row"];
 export type DeliveryRewardRow = Database["public"]["Tables"]["delivery_rewards"]["Row"];
@@ -366,5 +367,14 @@ export async function collectAuthenticatedReward({
   const { data: progressionData } = await supabase.rpc("get_delivery_progression_award", {
     delivery_id: deliveryId,
   });
+  
+  // Creditar pacotes de sementes encontrados na rota
+  try {
+    await creditSeedPackages(deliveryId);
+  } catch (seedPackageError) {
+    console.error("Failed to credit seed packages:", seedPackageError);
+    // Não bloqueia a coleta principal se falhar
+  }
+  
   return { ...collected, progression: mapProgressionPayload(progressionData) };
 }
