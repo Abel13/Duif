@@ -83,6 +83,59 @@
   border: 1px dashed rgba(46, 42, 36, 0.4);
   border-radius: 0.3rem;
   color: var(--color-ink-soft);
+  background: var(--color-paper-light);
+  cursor: pointer;
+}
+.settings:focus-visible {
+  outline: 3px solid rgba(164, 74, 63, 0.45);
+  outline-offset: 2px;
+}
+.settingsDialog {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  width: 100vw;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right))
+    max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+  overflow: auto;
+  border: 0;
+  background: rgba(46, 42, 36, 0.72);
+}
+.settingsDialog::backdrop {
+  background: rgba(46, 42, 36, 0.72);
+}
+.settingsDialogBody {
+  display: grid;
+  gap: var(--space-3);
+  width: min(100%, 28rem);
+  margin: auto;
+}
+.settingsDialogHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+.settingsDialogHeader h2 {
+  margin: 0;
+  color: var(--color-paper);
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 7vw, 2rem);
+}
+.settingsClose {
+  display: grid;
+  width: 2.6rem;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 2px solid var(--color-postal-brown);
+  border-radius: 0.3rem;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  cursor: pointer;
 }
 .settingsMark {
   position: relative;

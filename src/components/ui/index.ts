@@ -18,3 +18,4 @@ export { LetterDialog, LetterPaper } from "./LetterDialog";
 export type { LetterDialogProps, LetterPaperProps } from "./LetterDialog";
 export { PostalCorrespondenceDialog, PostalEnvelope, PostalFinishingView, PostalLetterReader, PostalPostcard, PostalPostmark, PostalStickerSheet } from "./PostalCorrespondence";
 export type { PostalDensity, PostalFinishing } from "./PostalCorrespondence";
+export { PushNotificationSettings } from "./PushNotificationSettings";
