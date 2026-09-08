@@ -14,6 +14,8 @@ Procedimentos de deploy pertencem a [Operações](../operations/release.md), nã
 - `Encontros locais, segurança de amizade e moderação`: encontros locais por âncora (ninho/mascote)
   com raio/limite/admin entregues; níveis de amizade fechados. Pendências restantes = unfriend,
   block/report, cooldown de recusa e moderação operacional.
+- `Push notifications e privacidade de entregas`: fundação VAPID + quatro momentos do loop postal
+  entregues; quiet hours, convites/eventos e dismiss cross-device permanecem pendentes.
 - Demais etapas abaixo: planejadas, com pendências explícitas em cada seção.
 
 ## Equipamentos funcionais, mochilas e prévia de loadout
@@ -500,7 +502,10 @@ sempre determinadas pelo backend.
 
 ## Push notifications e privacidade de entregas
 
-**Estado:** Planned; notification moments are approved, platform/provider operations unresolved.
+**Estado:** Fundação VAPID e os quatro momentos do loop postal entregues localmente
+(chegada, preparo restante, partida de retorno, pronto para coleta) para remetente e
+destinatário. Pendências restantes: quiet hours, convites/eventos, dismiss cross-device,
+runbooks de produção e validação iOS PWA instalada em produção.
 
 **Objetivo:**
 

@@ -6,6 +6,9 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
+      strategies: "injectManifest",
+      srcDir: "src",
+      filename: "sw.ts",
       registerType: "autoUpdate",
       injectRegister: null,
       manifest: {
@@ -40,11 +43,8 @@ export default defineConfig({
           },
         ],
       },
-      workbox: {
+      injectManifest: {
         globPatterns: ["**/*.{js,css,html,ico,svg,webp,png,json}"],
-        // VitePWA adds manifest icons to the precache itself. Excluding them
-        // here prevents Workbox from receiving the same URL both with and
-        // without a revision, which otherwise aborts service-worker install.
         globIgnores: [
           "assets/icons/icon-192.png",
           "assets/icons/icon-512.png",

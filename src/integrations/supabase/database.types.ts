@@ -3242,6 +3242,49 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      register_push_subscription: {
+        Args: {
+          subscription_endpoint: string
+          subscription_p256dh: string
+          subscription_auth: string
+          subscription_user_agent?: string | null
+          preferred_locale?: string
+        }
+        Returns: {
+          id: string
+          profile_id: string
+          endpoint: string
+          p256dh: string
+          auth: string
+          user_agent: string | null
+          created_at: string
+          last_seen_at: string
+        }
+      }
+      revoke_push_subscription: {
+        Args: { subscription_endpoint: string }
+        Returns: boolean
+      }
+      upsert_push_preferences: {
+        Args: {
+          master_enabled: boolean
+          allow_correspondence_arrived?: boolean
+          allow_return_prep_remaining?: boolean
+          allow_return_departed?: boolean
+          allow_ready_for_collection?: boolean
+          preferred_locale?: string
+        }
+        Returns: {
+          profile_id: string
+          enabled: boolean
+          correspondence_arrived: boolean
+          return_prep_remaining: boolean
+          return_departed: boolean
+          ready_for_collection: boolean
+          locale: string
+          updated_at: string
+        }
+      }
       create_delivery_from_selection: {
         Args: {
           content_payload: Json
@@ -3574,6 +3617,19 @@ export type Database = {
         }[]
       }
       get_my_referral_progress: { Args: never; Returns: Json }
+      get_push_preferences: {
+        Args: never
+        Returns: {
+          profile_id: string
+          enabled: boolean
+          correspondence_arrived: boolean
+          return_prep_remaining: boolean
+          return_departed: boolean
+          ready_for_collection: boolean
+          locale: string
+          updated_at: string
+        }
+      }
       get_nearby_postal_traffic: {
         Args: {
           anchor_kind: string

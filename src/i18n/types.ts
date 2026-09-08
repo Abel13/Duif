@@ -445,7 +445,33 @@ export type TranslationDictionary = {
   nestHub: {
     eyebrow: string; title: string; tagline: string; currencySummary: string; seeds: string; crystals: string; settingsSoon: string; defaultAvatar: string; profileName: string; nestName: string; nestOf: string; location: string; levelZero: string; xpZero: string; sections: string; profileTitle: string; profileDescription: string; mascotTitle: string; mascotDescription: string; mailboxTitle: string; mailboxDescription: string; atNest: string; traveling: string; newCorrespondence: string; travelingTitle: string; noTravelTitle: string; noTravelDescription: string;
   };
-  profile: { eyebrow: string; email: string; location: string; joined: string; level: string; xp: string; seeds: string; crystals: string; readOnlyNotice: string; };
+  profile: {
+    eyebrow: string;
+    email: string;
+    location: string;
+    joined: string;
+    level: string;
+    xp: string;
+    seeds: string;
+    crystals: string;
+    readOnlyNotice: string;
+    push: {
+      title: string;
+      description: string;
+      enable: string;
+      disable: string;
+      later: string;
+      enabled: string;
+      unsupported: string;
+      denied: string;
+      missingKey: string;
+      error: string;
+      correspondenceArrived: string;
+      returnPrepRemaining: string;
+      returnDeparted: string;
+      readyForCollection: string;
+    };
+  };
   mailbox: {
     eyebrow: string;
     title: string;
@@ -1203,6 +1229,7 @@ export type TranslationKey =
   | "travelWeather.seasons.spring"
   | "nestHub.eyebrow" | "nestHub.title" | "nestHub.tagline" | "nestHub.currencySummary" | "nestHub.seeds" | "nestHub.crystals" | "nestHub.settingsSoon" | "nestHub.defaultAvatar" | "nestHub.profileName" | "nestHub.nestName" | "nestHub.nestOf" | "nestHub.location" | "nestHub.levelZero" | "nestHub.xpZero" | "nestHub.sections" | "nestHub.profileTitle" | "nestHub.profileDescription" | "nestHub.mascotTitle" | "nestHub.mascotDescription" | "nestHub.mailboxTitle" | "nestHub.mailboxDescription" | "nestHub.atNest" | "nestHub.traveling" | "nestHub.newCorrespondence" | "nestHub.travelingTitle" | "nestHub.noTravelTitle" | "nestHub.noTravelDescription"
   | "profile.eyebrow" | "profile.email" | "profile.location" | "profile.joined" | "profile.level" | "profile.xp" | "profile.seeds" | "profile.crystals" | "profile.readOnlyNotice"
+  | "profile.push.title" | "profile.push.description" | "profile.push.enable" | "profile.push.disable" | "profile.push.later" | "profile.push.enabled" | "profile.push.unsupported" | "profile.push.denied" | "profile.push.missingKey" | "profile.push.error" | "profile.push.correspondenceArrived" | "profile.push.returnPrepRemaining" | "profile.push.returnDeparted" | "profile.push.readyForCollection"
   | "mailbox.eyebrow"
   | "mailbox.title"
   | "mailbox.description"

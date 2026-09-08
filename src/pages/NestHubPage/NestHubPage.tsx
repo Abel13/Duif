@@ -4,7 +4,7 @@ import { CaretRight, CoffeeBean, GearSix, SketchLogo } from "@phosphor-icons/rea
 
 import { AppBottomNav, PageShell } from "../../components/layout";
 import { MascotPrestigeMedallion } from "../../components/mascot/MascotPrestigeMedallion";
-import { AssetImage } from "../../components/ui";
+import { AssetImage, StampButton } from "../../components/ui";
 import {
   assetKeys,
   getDeliveryStatus,
@@ -15,20 +15,43 @@ import { useMascotCatalog } from "../../game/useMascotCatalog";
 import { useTranslation } from "../../i18n";
 import { useAuth } from "../../integrations/supabase/AuthProvider";
 import { fetchReceivedCorrespondence } from "../../integrations/supabase/mailbox";
+import {
+  enablePushNotifications,
+  fetchPushPreferences,
+  isPushOptInAvailable,
+} from "../../integrations/supabase/pushNotifications";
 import { formatPostalLocationLabel } from "../../game/locationLabels";
 import styles from "./NestHubPage.module.css";
+
+const pushPromptStorageKey = "duif.push.optInDismissed";
 
 export function NestHubPage() {
   const { profile } = useAuth();
   const { mascots, isLoading: isMascotsLoading } = useMascotCatalog();
-  const { t } = useTranslation();
+  const { locale, t } = useTranslation();
   const navigate = useNavigate();
   const [letters, setLetters] = useState<ReceivedCorrespondence[]>([]);
+  const [showPushPrompt, setShowPushPrompt] = useState(false);
+  const [pushBusy, setPushBusy] = useState(false);
 
   useEffect(() => {
     void fetchReceivedCorrespondence()
       .then(setLetters)
       .catch(() => setLetters([]));
+  }, []);
+
+  useEffect(() => {
+    if (!isPushOptInAvailable()) return;
+    if (window.sessionStorage.getItem(pushPromptStorageKey) === "1") return;
+    let active = true;
+    void fetchPushPreferences()
+      .then((prefs) => {
+        if (active && !prefs.enabled) setShowPushPrompt(true);
+      })
+      .catch(() => undefined);
+    return () => {
+      active = false;
+    };
   }, []);
   const traveling = useMemo(
     () =>
@@ -51,6 +74,24 @@ export function NestHubPage() {
     : t("common.unavailable");
   const name = profile?.display_name || t("common.unavailable");
 
+  async function acceptPushPrompt() {
+    setPushBusy(true);
+    try {
+      await enablePushNotifications(locale);
+      window.sessionStorage.setItem(pushPromptStorageKey, "1");
+      setShowPushPrompt(false);
+    } catch {
+      navigate("/profile");
+    } finally {
+      setPushBusy(false);
+    }
+  }
+
+  function dismissPushPrompt() {
+    window.sessionStorage.setItem(pushPromptStorageKey, "1");
+    setShowPushPrompt(false);
+  }
+
   return (
     <PageShell hasBottomNav>
       <main className={styles.shell}>
@@ -69,6 +110,19 @@ export function NestHubPage() {
               <GearSix aria-hidden="true" size={20} weight="duotone" />
             </span>
           </div>
+          {showPushPrompt ? (
+            <section className={styles.pushPrompt} aria-label={t("profile.push.title")}>
+              <p>{t("profile.push.description")}</p>
+              <div className={styles.pushPromptActions}>
+                <StampButton disabled={pushBusy} onClick={() => void acceptPushPrompt()} type="button">
+                  {t("profile.push.enable")}
+                </StampButton>
+                <button className={styles.pushPromptDismiss} onClick={dismissPushPrompt} type="button">
+                  {t("profile.push.later")}
+                </button>
+              </div>
+            </section>
+          ) : null}
           <div className={styles.identity}>
             <AssetImage
               alt={t("nestHub.defaultAvatar")}

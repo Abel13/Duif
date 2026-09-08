@@ -142,6 +142,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setIsLoading(false);
       return undefined;
     }
+    const client = supabase;
 
     let isMounted = true;
     let accountRetryTimer: number | undefined;
@@ -206,7 +207,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setIsLoading(true);
       for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
         try {
-          const { data, error } = await supabase.auth.getSession();
+          const { data, error } = await client.auth.getSession();
           if (error) throw error;
           if (!isMounted) return;
           setIsServiceAvailable(true);
@@ -225,7 +226,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     bootstrapRef.current = () => bootstrap(3);
     void bootstrap();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, nextSession) => {
+    const { data: { subscription } } = client.auth.onAuthStateChange((event, nextSession) => {
       if (event === "PASSWORD_RECOVERY") setIsPasswordRecovery(true);
       void applySession(nextSession);
     });

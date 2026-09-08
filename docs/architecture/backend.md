@@ -266,6 +266,16 @@ switching selection rapidly. The response keeps deterministic quarter-degree rou
 regional labels; exact endpoints, addresses, city labels for non-friends, and non-friend owner
 identity never leave the database. Blocked pairs and the caller's own deliveries remain excluded.
 
+## Web Push for the postal loop
+
+Postal alerts use direct VAPID Web Push. Authenticated clients register `push_subscriptions` and
+`push_preferences` after an explicit opt-in. Minute cron `enqueue_postal_push_events` writes
+idempotent `push_outbox` rows for correspondence arrival, mid-window return preparation, return
+departure, and ready-for-collection (sender always; recipient only when a return reply exists).
+Edge Function `push-dispatch` sends sanitized title/body payloads and revokes gone endpoints.
+Lock-screen copy never includes surprise sender identity, letter text, coordinates, or routes.
+Operational setup lives in [`docs/operations/web-push.md`](../operations/web-push.md).
+
 ## Official correspondence and return replies
 
 The official-correspondence schema includes `official_postcards`, `official_stickers`, per-profile unlock/balance
@@ -312,8 +322,7 @@ This milestone does not include:
 - Loja;
 - trading;
 - chat;
-- payments;
-- push notifications.
+- payments.
 
 ## Verification
 
