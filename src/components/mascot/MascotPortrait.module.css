@@ -2,9 +2,9 @@
   position: relative;
   isolation: isolate;
   display: grid;
-  min-height: clamp(14rem, 62vw, 18rem);
+  min-height: clamp(12rem, 50vw, 15rem);
   place-items: center;
-  padding: clamp(1rem, 5vw, var(--space-5));
+  padding: clamp(0.75rem, 3vw, var(--space-4));
   overflow: hidden;
   border: var(--border-dashed-ink);
   border-radius: 0.75rem 0.25rem 0.65rem 0.35rem;
@@ -62,7 +62,7 @@
   position: relative;
   z-index: 1;
   display: grid;
-  gap: var(--space-4);
+  gap: var(--space-3);
   justify-items: center;
   width: 100%;
   min-width: 0;
@@ -173,10 +173,10 @@
 }
 
 .prestigeMedallion {
-  width: min(22rem, 78vw);
-  height: min(22rem, 78vw);
+  width: min(18rem, 72vw);
+  height: min(18rem, 72vw);
   max-width: 100%;
-  max-height: min(22rem, 78vw);
+  max-height: min(18rem, 72vw);
   aspect-ratio: 1;
   filter: drop-shadow(0.4rem 0.55rem 0 rgba(46, 42, 36, 0.16));
 }
