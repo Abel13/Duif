@@ -5,6 +5,7 @@ import { AppBottomNav, PageShell } from "../../components/layout";
 import { AssetImage, StampButton } from "../../components/ui";
 import { assetKeys } from "../../game";
 import { formatPostalLocationLabel } from "../../game/locationLabels";
+import { useProfileProgression } from "../../game/useProfileProgression";
 import { useTranslation } from "../../i18n";
 import { useAuth } from "../../integrations/supabase/AuthProvider";
 import {
@@ -19,6 +20,7 @@ import styles from "./ProfilePage.module.css";
 
 export function ProfilePage() {
   const { profile, session } = useAuth();
+  const progression = useProfileProgression();
   const { locale, t } = useTranslation();
   const navigate = useNavigate();
   const [preferences, setPreferences] = useState<PushPreferences | null>(null);
@@ -98,9 +100,9 @@ export function ProfilePage() {
             <div><dt>{t("profile.email")}</dt><dd>{session?.user.email ?? t("common.unavailable")}</dd></div>
             <div><dt>{t("profile.location")}</dt><dd>{location}</dd></div>
             <div><dt>{t("profile.joined")}</dt><dd>{joined}</dd></div>
-            <div><dt>{t("profile.level")}</dt><dd>{t("nestHub.levelZero")}</dd></div>
-            <div><dt>{t("profile.xp")}</dt><dd>{t("nestHub.xpZero")}</dd></div>
-            <div><dt>{t("profile.seeds")}</dt><dd>0</dd></div>
+            <div><dt>{t("profile.level")}</dt><dd>{progression.isLoading ? "..." : `Nível ${progression.level}`}</dd></div>
+            <div><dt>{t("profile.xp")}</dt><dd>{progression.isLoading ? "..." : `${progression.xp} XP`}</dd></div>
+            <div><dt>{t("profile.seeds")}</dt><dd>{progression.isLoading ? "..." : progression.seeds}</dd></div>
             <div><dt>{t("profile.crystals")}</dt><dd>0</dd></div>
           </dl>
           <p className={styles.notice}>{t("profile.readOnlyNotice")}</p>
