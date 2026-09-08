@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { CaretRight, CoffeeBean, GearSix, SketchLogo } from "@phosphor-icons/react";
+import { CaretRight, CoffeeBean, GearSix, SketchLogo, X } from "@phosphor-icons/react";
 
 import { AppBottomNav, PageShell } from "../../components/layout";
 import { MascotPrestigeMedallion } from "../../components/mascot/MascotPrestigeMedallion";
-import { AssetImage, StampButton } from "../../components/ui";
+import { AssetImage, PushNotificationSettings, StampButton } from "../../components/ui";
 import {
   assetKeys,
   getDeliveryStatus,
@@ -32,6 +32,7 @@ export function NestHubPage() {
   const navigate = useNavigate();
   const [letters, setLetters] = useState<ReceivedCorrespondence[]>([]);
   const [showPushPrompt, setShowPushPrompt] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const [pushBusy, setPushBusy] = useState(false);
 
   useEffect(() => {
@@ -81,7 +82,8 @@ export function NestHubPage() {
       window.sessionStorage.setItem(pushPromptStorageKey, "1");
       setShowPushPrompt(false);
     } catch {
-      navigate("/profile");
+      setShowPushPrompt(false);
+      setSettingsOpen(true);
     } finally {
       setPushBusy(false);
     }
@@ -102,13 +104,15 @@ export function NestHubPage() {
           >
             <Currency currency="seeds" label={t("nestHub.seeds")} />
             <Currency currency="crystals" label={t("nestHub.crystals")} />
-            <span
+            <button
+              aria-label={t("nestHub.settings")}
               className={styles.settings}
-              aria-label={t("nestHub.settingsSoon")}
-              title={t("nestHub.settingsSoon")}
+              onClick={() => setSettingsOpen(true)}
+              title={t("nestHub.settings")}
+              type="button"
             >
               <GearSix aria-hidden="true" size={20} weight="duotone" />
-            </span>
+            </button>
           </div>
           {showPushPrompt ? (
             <section className={styles.pushPrompt} aria-label={t("profile.push.title")}>
@@ -219,7 +223,53 @@ export function NestHubPage() {
         )}
       </main>
       <AppBottomNav />
+      {settingsOpen ? <NestSettingsDialog onClose={() => setSettingsOpen(false)} /> : null}
     </PageShell>
+  );
+}
+
+function NestSettingsDialog({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation();
+  const titleId = useId();
+  const dialog = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    const element = dialog.current;
+    if (!element) return;
+    if (!element.open) element.showModal();
+    return () => {
+      if (element.open) element.close();
+    };
+  }, []);
+
+  return (
+    <dialog
+      aria-labelledby={titleId}
+      className={styles.settingsDialog}
+      onCancel={(event) => {
+        event.preventDefault();
+        onClose();
+      }}
+      onClick={(event) => {
+        if (event.target === event.currentTarget) onClose();
+      }}
+      ref={dialog}
+    >
+      <div className={styles.settingsDialogBody}>
+        <header className={styles.settingsDialogHeader}>
+          <h2 id={titleId}>{t("nestHub.settings")}</h2>
+          <button
+            aria-label={t("nestHub.closeSettings")}
+            className={styles.settingsClose}
+            onClick={onClose}
+            type="button"
+          >
+            <X aria-hidden="true" size={22} weight="bold" />
+          </button>
+        </header>
+        <PushNotificationSettings />
+      </div>
+    </dialog>
   );
 }
 
