@@ -107,6 +107,16 @@ export function TravelMapPage() {
       ? selectedMascot
       : selectMapMascot(mascots, now);
   }, [mascots, now, selectedMascotId]);
+
+  useEffect(() => {
+    const selectedMascot = mascots.find((mascot) => mascot.id === selectedMascotId);
+    if (selectedMascot && hasActiveMascotDelivery(selectedMascot, now)) {
+      updatePostalTrafficAnchor({ kind: "mascot", mascotId: selectedMascot.id });
+      return;
+    }
+    updatePostalTrafficAnchor({ kind: "nest" });
+  }, [mascots, now, selectedMascotId, updatePostalTrafficAnchor]);
+
   const activeDeliveryCandidate = activeMascot?.currentDelivery;
   const activeDelivery = activeDeliveryCandidate
     && getDeliveryStatus(activeDeliveryCandidate, now) !== "returned"
@@ -519,7 +529,6 @@ export function TravelMapPage() {
             onRewardSelect={selectReward}
             onLandmarkSelect={selectLandmark}
             onTrafficSelect={selectTraffic}
-            onViewportChange={updatePostalTrafficAnchor}
             originLabel={originLabel}
             originTitle={t("mascot.origin")}
             petLabel={displayMascot?.name ?? t("common.unavailable")}
@@ -544,7 +553,7 @@ export function TravelMapPage() {
           <div className={styles.mapTravelStatus}><TravelStatusLabel mascotName={displayMascot.name} statusLabel={t(`delivery.status.${status}`)}/></div>
         ) : null}
 
-        {(activePostalVisitors.length > 0 || (journeyPhase === "traveling" && displayMascot && (landmarks.length > 0 || delivery.segmentedTravel || visiblePostalTraffic.length > 0 || rewards.length > 0)) || (missionDossier && journeyPhase !== "completed")) ? (
+        {(activePostalVisitors.length > 0 || visiblePostalTraffic.length > 0 || (journeyPhase === "traveling" && displayMascot && (landmarks.length > 0 || delivery.segmentedTravel || rewards.length > 0)) || (missionDossier && journeyPhase !== "completed")) ? (
           <nav aria-label={t("map.activeMapTools")} className={styles.activeMapTools}>
             {activePostalVisitors.map((visitor) => (
               <Link
@@ -561,7 +570,7 @@ export function TravelMapPage() {
             ))}
             {journeyPhase === "traveling" && displayMascot && delivery.segmentedTravel ? <TravelWeatherBadge baseSpeedKmh={delivery.animalSpeedKmh} isDay={!visualTheme.isNight} mascotName={displayMascot.name} summary={delivery.segmentedTravel} /> : null}
             {missionDossier && journeyPhase !== "completed" ? <button aria-label={t("exclusiveMissions.dossier")} className={styles.activeToolButton} onClick={(event) => openMissionDossier(event.currentTarget)} title={t("exclusiveMissions.dossier")} type="button"><Scroll aria-hidden="true" weight="duotone" /></button> : null}
-            {journeyPhase === "traveling" && visiblePostalTraffic.length > 0 ? <button aria-label={t("postalTraffic.title")} className={styles.activeToolButton} onClick={() => setTrafficDialogOpen(true)} title={t("postalTraffic.title")} type="button"><AirTrafficControl aria-hidden="true" weight="duotone" /><span>{visiblePostalTraffic.length}</span></button> : null}
+            {visiblePostalTraffic.length > 0 ? <button aria-label={t("postalTraffic.title")} className={styles.activeToolButton} onClick={() => setTrafficDialogOpen(true)} title={t("postalTraffic.title")} type="button"><AirTrafficControl aria-hidden="true" weight="duotone" /><span>{visiblePostalTraffic.length}</span></button> : null}
             {journeyPhase === "traveling" && rewards.length > 0 ? <button aria-label={t("map.discoveries")} className={styles.activeToolButton} data-new={newDiscoveryIds.size > 0 || undefined} onClick={() => { closeRewardDetails(); setDiscoveryDialogOpen(true); }} title={t("map.discoveries")} type="button"><Binoculars aria-hidden="true" weight="duotone" /><span>{discoveredCount}/{rewards.length}</span></button> : null}
             {journeyPhase==="traveling"&&landmarks.length>0?<button aria-label={t("map.landmarks.title")} className={styles.activeToolButton} data-new={landmarks.some((item)=>item.announcementPending)||undefined} onClick={()=>{setSelectedLandmark(landmarks[0]);setLandmarkDialogOpen(true);}} title={t("map.landmarks.title")} type="button"><MapPin aria-hidden="true" weight="duotone"/><span>{landmarks.length}</span></button>:null}
           </nav>

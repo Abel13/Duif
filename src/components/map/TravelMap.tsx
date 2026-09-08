@@ -16,7 +16,6 @@ import type {
 } from "../../game/mapTravel";
 import {
   getPostalTrafficSnapshotPosition,
-  type PostalTrafficQueryAnchor,
   type PostalTrafficPetSnapshot,
 } from "../../game/postalTraffic";
 import {
@@ -99,7 +98,7 @@ export type TravelMapProps = {
   onLandmarkSelect?: (landmarkKey: string) => void;
   onPetSelect: () => void;
   onTrafficSelect: (trafficId: string) => void;
-  onViewportChange: (anchor: PostalTrafficQueryAnchor) => void;
+  onViewportChange?: () => void;
 };
 
 export function TravelMap({
@@ -293,7 +292,7 @@ export function TravelMap({
       );
       syncCompletedDeliveryMap(map, deliveryCompleted, rewardMarkerRefs.current);
       focusMap(map, focusTargetRef.current, delivery, petPosition, rewards, postalTraffic, landmarks);
-      if (!map.isMoving()) emitViewport(map, onViewportChangeRef.current);
+      if (!map.isMoving()) emitViewport(onViewportChangeRef.current);
     });
 
     const stopFollowing = () => {
@@ -309,7 +308,7 @@ export function TravelMap({
       syncRewardMarkerVisibility(map, rewardMarkerRefs.current);
       syncLandmarkVisibility(map,landmarkMarkerRefs.current,landmarks);
     });
-    map.on("moveend", () => { emitViewport(map, onViewportChangeRef.current); syncLandmarkVisibility(map,landmarkMarkerRefs.current,landmarks); });
+    map.on("moveend", () => { emitViewport(onViewportChangeRef.current); syncLandmarkVisibility(map,landmarkMarkerRefs.current,landmarks); });
 
     return () => {
       petMarkerRef.current?.remove();
@@ -683,21 +682,8 @@ function updatePostalTrafficMotion(
   syncPostalTrafficRoutes(map, traffic, selection, positions);
 }
 
-function emitViewport(
-  map: maplibregl.Map,
-  onChange: (anchor: PostalTrafficQueryAnchor) => void,
-) {
-  const center = map.getCenter();
-  const bounds = map.getBounds();
-  onChange({
-    center: { latitude: center.lat, longitude: center.lng },
-    viewport: {
-      north: bounds.getNorth(),
-      east: bounds.getEast(),
-      south: bounds.getSouth(),
-      west: bounds.getWest(),
-    },
-  });
+function emitViewport(onChange?: () => void) {
+  onChange?.();
 }
 
 function updateTrafficMarker(

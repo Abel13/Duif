@@ -3,8 +3,8 @@ import { assetKeys, type OfficialAssetKey } from "./assets";
 import { interpolateCoordinates, type MapCoordinate, type TravelLeg } from "./mapTravel";
 import { clampProgress, haversineDistanceKm } from "./travel";
 
-export const POSTAL_TRAFFIC_VISIBILITY_RADIUS_KM = 250;
-export const POSTAL_TRAFFIC_MAX_VISIBLE = 10;
+export const POSTAL_TRAFFIC_VISIBILITY_RADIUS_KM = 1000;
+export const POSTAL_TRAFFIC_MAX_VISIBLE = 5;
 export const POSTAL_TRAFFIC_REFRESH_MS = 5 * 60 * 1000;
 export const POSTAL_TRAFFIC_VIEWPORT_MARGIN = 0.25;
 
@@ -12,6 +12,7 @@ export type PostalTrafficVisibility = "friend" | "public";
 export type PostalTrafficFriendshipState = "friend" | "none" | "outgoing" | "incoming";
 export type PostalTrafficRangeState = "visible" | "outOfRange";
 export type PostalTrafficVisualPhase = "entering" | "visible" | "leaving";
+export type PostalTrafficAnchorKind = "nest" | "mascot";
 
 export type PostalTrafficViewport = {
   north: number;
@@ -20,10 +21,14 @@ export type PostalTrafficViewport = {
   west: number;
 };
 
-export type PostalTrafficQueryAnchor = {
-  center: MapCoordinate;
-  viewport: PostalTrafficViewport;
-};
+/** Authoritative encounter anchor. Camera/viewport must never authorize eligibility. */
+export type PostalTrafficQueryAnchor =
+  | { kind: "nest" }
+  | { kind: "mascot"; mascotId: string };
+
+export function postalTrafficAnchorKey(anchor: PostalTrafficQueryAnchor): string {
+  return anchor.kind === "mascot" ? `mascot:${anchor.mascotId}` : "nest";
+}
 
 export type PostalTrafficRouteSnapshot = {
   origin: MapCoordinate;

@@ -3576,12 +3576,8 @@ export type Database = {
       get_my_referral_progress: { Args: never; Returns: Json }
       get_nearby_postal_traffic: {
         Args: {
-          center_latitude: number
-          center_longitude: number
-          viewport_east: number
-          viewport_north: number
-          viewport_south: number
-          viewport_west: number
+          anchor_kind: string
+          target_mascot_id?: string | null
         }
         Returns: {
           current_latitude: number
@@ -3610,6 +3606,7 @@ export type Database = {
           visibility: string
         }[]
       }
+      get_encounter_client_settings: { Args: never; Returns: Json }
       invoke_weather_travel_edge_function: { Args: never; Returns: number }
       is_asset_admin: { Args: never; Returns: boolean }
       json_translation_keys_are_official: {

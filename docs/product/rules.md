@@ -122,8 +122,6 @@ Route rewards:
 
 Local mascot encounters:
 
-- The shipped regional-viewport traffic model is planned for replacement. It must not become a
-  way to browse mascots flying anywhere in the world.
 - Another player's mascot may be eligible only in relation to an authorized local anchor: the
   viewing player's **currently selected** nest or a specific owned mascot. Panning, zooming, or
   searching another region never changes that authorization boundary. When the selected mascot is
@@ -131,7 +129,7 @@ Local mascot encounters:
   is selected, eligibility uses the nest.
 - The backend resolves eligibility around the selected anchor from private geometry. The client
   receives only the minimum sanitized encounter data and never a global delivery set, exact nest,
-  precise distance, private endpoint, or reusable live trail.
+  private endpoint, or reusable live trail.
 - Default encounter radius is 1000 km. The authoritative radius is backend-configured and editable
   from the administrative panel; the client must not hardcode the only source of truth.
 - Encounter eligibility refresh cadence is 5 minutes. Switching selection rapidly must reuse a

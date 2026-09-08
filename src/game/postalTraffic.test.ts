@@ -10,6 +10,9 @@ import {
   getPostalTrafficPetPosition,
   isPostalTrafficJourneyVisible,
   mockPostalTrafficPets,
+  POSTAL_TRAFFIC_MAX_VISIBLE,
+  POSTAL_TRAFFIC_VISIBILITY_RADIUS_KM,
+  postalTrafficAnchorKey,
   resolvePostalTrafficSelection,
   type PostalTrafficPet,
 } from "./postalTraffic";
@@ -60,6 +63,16 @@ function petAt(id: string, longitude: number): PostalTrafficPet {
 }
 
 describe("postal traffic helpers", () => {
+  it("keys encounter anchors without camera credentials", () => {
+    expect(postalTrafficAnchorKey({ kind: "nest" })).toBe("nest");
+    expect(postalTrafficAnchorKey({ kind: "mascot", mascotId: "mascot-1" })).toBe("mascot:mascot-1");
+  });
+
+  it("uses the authoritative encounter radius and result limit defaults", () => {
+    expect(POSTAL_TRAFFIC_VISIBILITY_RADIUS_KM).toBe(1000);
+    expect(POSTAL_TRAFFIC_MAX_VISIBLE).toBe(5);
+  });
+
   it("snaps an active visitor at the authenticated nest while delivered", () => {
     const snapshot=createPublicTrafficSnapshot({ ...friendPet,route:{...friendPet.route,returnStartAt:"2026-07-18T14:00:00.000Z",returnArrivalAt:"2026-07-18T16:00:00.000Z"}},mascotCoordinates,new Date("2026-07-18T13:00:00.000Z"));
     const nest={latitude:-23.42,longitude:-51.93};

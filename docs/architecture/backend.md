@@ -255,18 +255,16 @@ dano real e a quatro pontos percentuais por trecho; a chave única em
 `delivery_equipment_activations` garante no máximo um consumo por jornada, inclusive sob cron e
 reconnect concorrentes. Tutoriais ignoram esse domínio e preservam seus tempos fixos.
 
-Regional postal traffic uses the authenticated `get_nearby_postal_traffic` RPC. The function
-reads complete active-delivery coordinates behind RLS, expands the supplied viewport by 25%,
-excludes the caller and blocked relationships, and returns at most 10 results ordered from the
-camera center. Its response contains deterministic quarter-degree route geometry and regional
-labels; exact endpoints, addresses, city labels, and non-friend owner identity never leave the
-database. The browser interpolates these public snapshots between five-minute refreshes.
-
-That RPC records the current regional-traffic schema and is planned for replacement by the
-approved future contract accepts no arbitrary camera viewport as an authorization source: other
-players' mascots are eligible only relative to a server-resolved anchor belonging to the viewer
-(nest or current mascot). The migration shape, anchor priority, radius, refresh cadence, and legacy
-RPC retirement remain explicitly unresolved in the roadmap.
+Local encounters use the authenticated `get_nearby_postal_traffic(anchor_kind, target_mascot_id)`
+RPC. Eligibility is resolved only from a server-owned anchor: the viewer's nest home coordinates
+(`anchor_kind = nest`) or the authoritative interpolated position of an owned mascot on an active
+journey (`anchor_kind = mascot`). Camera pan, zoom, and searched regions never authorize the
+result set. Radius and result limit come from `app_runtime_settings` (`encounter.radiusKm`,
+`encounter.resultLimit`; defaults 1000 km and 5). Authenticated clients may read refresh cadence
+and limit via `get_encounter_client_settings()` and must reuse a still-fresh per-anchor cache when
+switching selection rapidly. The response keeps deterministic quarter-degree route geometry and
+regional labels; exact endpoints, addresses, city labels for non-friends, and non-friend owner
+identity never leave the database. Blocked pairs and the caller's own deliveries remain excluded.
 
 ## Official correspondence and return replies
 

@@ -91,9 +91,11 @@ export {
   type PostalTrafficRouteSnapshot,
   type PostalTrafficVisibility,
   type PostalTrafficQueryAnchor,
+  type PostalTrafficAnchorKind,
   type PostalTrafficViewport,
   type PostalTrafficVisualPhase,
   POSTAL_TRAFFIC_REFRESH_MS,
+  postalTrafficAnchorKey,
 } from "./postalTraffic";
 export {
   nestMascotStorageKey,

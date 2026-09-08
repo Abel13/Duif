@@ -42,7 +42,7 @@ declare
   traffic record;
 begin
   select * into traffic
-  from public.get_nearby_postal_traffic(-23.36, -51.55, -23.0, -51.0, -23.8, -52.1)
+  from public.get_nearby_postal_traffic('nest')
   where traffic_id = '00000000-0000-4000-8000-000000009611';
   if traffic.visibility <> 'public' or traffic.friendship_state <> 'outgoing' then
     raise exception 'Expected outgoing friendship state on public traffic card';

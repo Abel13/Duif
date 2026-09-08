@@ -19,9 +19,26 @@ type TrafficRow = Omit<GeneratedTrafficRow, "friend_id" | "friend_name" | "prest
 const fallbackRegionKey = "postalTraffic.regions.paranaBrazil" as TranslationKey;
 const fallbackTraitKey = "traits.steadyRoute.name" as TranslationKey;
 
+export type EncounterClientSettings = {
+  refreshMinutes: number;
+  resultLimit: number;
+};
+
 function mapFriendshipState(value: string | null | undefined): PostalTrafficFriendshipState {
   if (value === "friend" || value === "outgoing" || value === "incoming") return value;
   return "none";
+}
+
+export async function fetchEncounterClientSettings(): Promise<EncounterClientSettings> {
+  const supabase = getSupabaseClient();
+  if (!supabase) return { refreshMinutes: 5, resultLimit: 5 };
+  const { data, error } = await supabase.rpc("get_encounter_client_settings");
+  if (error) throw error;
+  const payload = data as { refreshMinutes?: number; resultLimit?: number } | null;
+  return {
+    refreshMinutes: Math.max(1, Math.trunc(payload?.refreshMinutes ?? 5)),
+    resultLimit: Math.max(1, Math.trunc(payload?.resultLimit ?? 5)),
+  };
 }
 
 export async function fetchAuthenticatedPostalTraffic(
@@ -32,12 +49,8 @@ export async function fetchAuthenticatedPostalTraffic(
   if (!supabase) return [];
 
   const { data, error } = await supabase.rpc("get_nearby_postal_traffic", {
-    center_latitude: anchor.center.latitude,
-    center_longitude: anchor.center.longitude,
-    viewport_north: anchor.viewport.north,
-    viewport_east: anchor.viewport.east,
-    viewport_south: anchor.viewport.south,
-    viewport_west: anchor.viewport.west,
+    anchor_kind: anchor.kind,
+    target_mascot_id: anchor.kind === "mascot" ? anchor.mascotId : null,
   });
   if (error) throw error;
   return data.map((row) => mapTrafficRow(row, now));

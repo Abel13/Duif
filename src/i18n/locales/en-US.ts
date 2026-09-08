@@ -825,9 +825,9 @@ export const enUS = {
     },
   },
   postalTraffic: {
-    title: "Postal traffic",
+    title: "Local encounters",
     nearbyPets: "Nearby mascots",
-    empty: "No mascots are passing through the queried region right now.",
+    empty: "No mascots are within range of the selected anchor right now.",
     progress: "Progress",
     travelState: "Travel state",
     owner: "Owner",
@@ -837,7 +837,7 @@ export const enUS = {
     friendshipRequestIncoming: "You already have a request from this player in Friends.",
     privateOwner: "This mascot's owner details are private.",
     outOfRange:
-      "This mascot left the queried region. Showing its last known record.",
+      "This mascot left the anchor range. Showing its last known record.",
     visibility: {
       friend: "Friend",
       public: "Public mascot",

@@ -6,19 +6,20 @@ Procedimentos de deploy pertencem a [Operações](../operations/release.md), nã
 
 ## Estado atual
 
-- Concluídas localmente: equipamentos funcionais, identidades de skills e níveis de voo.
+- Concluídas e em produção (`main`): equipamentos funcionais, identidades de skills e níveis de
+  voo. O que está publicado na `main` já está em produção.
 - `Planejamento e produção do catálogo visual`: decisões operacionais fechadas em 2 de setembro
   de 2026; catálogos em revisão com primeiros lotes autorizados e integrados. A próxima produção
   visual prioriza conteúdo futuro autorizado, não a dívida de placeholders atuais.
-- `Encontros locais, segurança de amizade e moderação`: parâmetros de encontro local e limiares de
-  níveis de amizade fechados em 2–3 de setembro de 2026; pendência restante do milestone =
-  moderação operacional.
+- `Encontros locais, segurança de amizade e moderação`: encontros locais por âncora (ninho/mascote)
+  com raio/limite/admin entregues; níveis de amizade fechados. Pendências restantes = unfriend,
+  block/report, cooldown de recusa e moderação operacional.
 - Demais etapas abaixo: planejadas, com pendências explícitas em cada seção.
 
 ## Equipamentos funcionais, mochilas e prévia de loadout
 
-**Estado:** Concluída localmente. Catálogo, economia, loadout, durabilidade e integração climática
-foram implementados; publicação permanece um procedimento operacional separado.
+**Estado:** Concluída e em produção. Catálogo, economia, loadout, durabilidade e integração
+climática estão publicados na `main` e ativos em produção.
 
 **Objetivo:**
 
@@ -67,8 +68,8 @@ gameplay advantage.
 
 ## Identidades de skills e domínio contextual
 
-**Estado:** Concluída localmente. Identidades, progressão, resolução contextual, migração e
-explicações de viagem são autoritativas e versionadas.
+**Estado:** Concluída e em produção. Identidades, progressão, resolução contextual, migração e
+explicações de viagem estão publicadas na `main`, autoritativas e versionadas.
 
 **Objetivo:**
 
@@ -114,8 +115,8 @@ skills, and one player-chosen individual skill per mascot.
 
 ## Níveis de voo, rotas familiares e bordas de prestígio
 
-**Estado:** Concluída localmente. Progressão, alcance, capacidade, familiaridade canônica e bordas
-de prestígio foram implementados; publicação permanece operacional.
+**Estado:** Concluída e em produção. Progressão, alcance, capacidade, familiaridade canônica e
+bordas de prestígio estão publicados na `main` e ativos em produção.
 
 **Objetivo:**
 
@@ -268,8 +269,10 @@ dívida existente e aprovar a fila editorial antes de qualquer nova produção v
 
 ## Encontros locais, segurança de amizade e moderação
 
-**Estado:** Planned; discovery, privacy, local-encounter parameters, and friendship-level
-thresholds approved. Moderation operations remain unresolved.
+**Estado:** Encontros locais por âncora entregues (ninho ou mascote selecionado; settings admin
+`radiusKm` / `refreshMinutes` / `resultLimit`). Níveis de amizade entregues. Pendências restantes:
+unfriend, block/report no cliente, cooldown de 7 dias após recusa, surprise protection no mapa,
+opt-out de visibilidade e moderação operacional.
 
 **Objetivo:**
 

@@ -1,16 +1,25 @@
 import { useCallback, useEffect, useRef, useState, type Dispatch, type SetStateAction } from "react";
 
 import { useAuth } from "../integrations/supabase/AuthProvider";
-import { fetchAuthenticatedPostalTraffic } from "../integrations/supabase/authenticatedPostalTraffic";
+import {
+  fetchAuthenticatedPostalTraffic,
+  fetchEncounterClientSettings,
+} from "../integrations/supabase/authenticatedPostalTraffic";
 import { isSupabaseCatalogEnabled } from "../integrations/supabase/config";
 import {
   isPostalTrafficJourneyVisible,
   POSTAL_TRAFFIC_REFRESH_MS,
+  postalTrafficAnchorKey,
   type PostalTrafficPetSnapshot,
   type PostalTrafficQueryAnchor,
 } from "./postalTraffic";
 
 const fadeDurationMs = 400;
+
+type AnchorCacheEntry = {
+  fetchedAt: number;
+  pets: PostalTrafficPetSnapshot[];
+};
 
 export function usePostalTraffic() {
   const { profile, session } = useAuth();
@@ -18,41 +27,75 @@ export function usePostalTraffic() {
   const [traffic, setTraffic] = useState<PostalTrafficPetSnapshot[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const anchorRef = useRef<PostalTrafficQueryAnchor>();
+  const refreshMsRef = useRef(POSTAL_TRAFFIC_REFRESH_MS);
   const lastRefreshRef = useRef(0);
   const refreshingRef = useRef(false);
+  const cacheRef = useRef<Map<string, AnchorCacheEntry>>(new Map());
   const removalTimersRef = useRef<Map<string, number>>(new Map());
   const mountedRef = useRef(true);
 
-  const refresh = useCallback(async () => {
+  const applyPets = useCallback((pets: PostalTrafficPetSnapshot[]) => {
+    const visibleTraffic = pets.filter((pet) => isPostalTrafficJourneyVisible(pet));
+    setTraffic((current) => reconcileTraffic(current, visibleTraffic, removalTimersRef.current, setTraffic));
+  }, []);
+
+  const refresh = useCallback(async (force = false) => {
     const anchor = anchorRef.current;
     if (!anchor || refreshingRef.current) return;
+
+    const key = postalTrafficAnchorKey(anchor);
+    const cached = cacheRef.current.get(key);
+    const fresh =
+      !force &&
+      cached &&
+      Date.now() - cached.fetchedAt < refreshMsRef.current;
+
+    if (fresh && cached) {
+      lastRefreshRef.current = cached.fetchedAt;
+      applyPets(cached.pets);
+      return;
+    }
+
     refreshingRef.current = true;
     setIsLoading(true);
     try {
+      if (authenticated) {
+        const settings = await fetchEncounterClientSettings();
+        refreshMsRef.current = Math.max(60_000, settings.refreshMinutes * 60_000);
+      }
       const next = authenticated ? await fetchAuthenticatedPostalTraffic(anchor) : [];
       if (!mountedRef.current) return;
-      lastRefreshRef.current = Date.now();
-      const visibleTraffic = next.filter((pet) => isPostalTrafficJourneyVisible(pet));
-      setTraffic((current) => reconcileTraffic(current, visibleTraffic, removalTimersRef.current, setTraffic));
+      const fetchedAt = Date.now();
+      lastRefreshRef.current = fetchedAt;
+      cacheRef.current.set(key, { fetchedAt, pets: next });
+      applyPets(next);
     } catch {
-      // Preserve the last known regional snapshot until the next polling cycle.
+      // Preserve the last known encounter snapshot until the next polling cycle.
     } finally {
       refreshingRef.current = false;
       if (mountedRef.current) setIsLoading(false);
     }
-  }, [authenticated]);
+  }, [applyPets, authenticated]);
 
   const updateAnchor = useCallback((anchor: PostalTrafficQueryAnchor) => {
+    const previous = anchorRef.current;
+    const nextKey = postalTrafficAnchorKey(anchor);
+    const previousKey = previous ? postalTrafficAnchorKey(previous) : null;
     anchorRef.current = anchor;
-    if (lastRefreshRef.current === 0) void refresh();
+    if (previousKey !== nextKey || lastRefreshRef.current === 0) {
+      void refresh();
+    }
   }, [refresh]);
 
   useEffect(() => {
-    const interval = window.setInterval(() => void refresh(), POSTAL_TRAFFIC_REFRESH_MS);
-    const onVisibility = () => {
-      if (document.visibilityState === "visible" && Date.now() - lastRefreshRef.current >= POSTAL_TRAFFIC_REFRESH_MS) {
-        void refresh();
+    const tick = () => {
+      if (Date.now() - lastRefreshRef.current >= refreshMsRef.current) {
+        void refresh(true);
       }
+    };
+    const interval = window.setInterval(tick, 30_000);
+    const onVisibility = () => {
+      if (document.visibilityState === "visible") tick();
     };
     document.addEventListener("visibilitychange", onVisibility);
     return () => {
@@ -63,7 +106,8 @@ export function usePostalTraffic() {
 
   useEffect(() => {
     lastRefreshRef.current = 0;
-    if (anchorRef.current) void refresh();
+    cacheRef.current.clear();
+    if (anchorRef.current) void refresh(true);
   }, [authenticated, refresh]);
 
   useEffect(() => {

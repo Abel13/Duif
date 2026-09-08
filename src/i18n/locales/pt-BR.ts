@@ -902,9 +902,9 @@ export const ptBR = {
     },
   },
   postalTraffic: {
-    title: "Tráfego postal",
+    title: "Encontros locais",
     nearbyPets: "Mascotes próximos",
-    empty: "Nenhum mascote passando pela região consultada agora.",
+    empty: "Nenhum mascote dentro do alcance da âncora selecionada agora.",
     progress: "Progresso",
     travelState: "Estado da viagem",
     owner: "Dono",
@@ -914,7 +914,7 @@ export const ptBR = {
     friendshipRequestIncoming: "Você já tem um pedido deste jogador em Amigos.",
     privateOwner: "Os dados do dono deste mascote são privados.",
     outOfRange:
-      "Este mascote saiu da região consultada. Exibindo o último registro conhecido.",
+      "Este mascote saiu do alcance da âncora. Exibindo o último registro conhecido.",
     visibility: {
       friend: "Amigo",
       public: "Mascote público",
