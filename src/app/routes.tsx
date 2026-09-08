@@ -68,7 +68,7 @@ export function AppRoutes() {
 
 function ProtectedNestRoute(){const {journeyState}=useAuth();if(journeyState==="loading")return <FoundationStatusPage state="loading"/>;if(journeyState==="nestSetupRequired")return <Suspense fallback={<FoundationStatusPage state="loading"/>}><NestSetupPage/></Suspense>;return <Navigate replace to={journeyState==="ready"?"/map":"/onboarding"}/>;}
 function ProtectedAdminRoute(){const {isLoading,session}=useAuth();if(isLoading)return <FoundationStatusPage state="loading"/>;if(!session)return <Navigate replace to="/auth?next=%2Fadmin"/>;if(!isAssetAdministrator(session.user.app_metadata))return <Navigate replace to="/map"/>;return <Suspense fallback={<FoundationStatusPage state="loading"/>}><AdminLayout/></Suspense>;}
-function ProtectedGameRoute({children}:{children:ReactNode}){const {journeyState}=useAuth();if(journeyState==="loading")return <FoundationStatusPage state="loading"/>;if(journeyState!=="ready")return <Navigate replace to={journeyState==="nestSetupRequired"?"/onboarding/nest":"/onboarding"}/>;return <Suspense fallback={<FoundationStatusPage state="loading"/>}>{children}</Suspense>;}
+function ProtectedGameRoute({children}:{children:ReactNode}){const {journeyState}=useAuth();if(journeyState==="loading")return <FoundationStatusPage state="loading"/>;if(journeyState==="serviceUnavailable")return <FoundationStatusPage state="unavailable"/>;if(journeyState!=="ready")return <Navigate replace to={journeyState==="nestSetupRequired"?"/onboarding/nest":"/onboarding"}/>;return <Suspense fallback={<FoundationStatusPage state="loading"/>}>{children}</Suspense>;}
 
 function ProtectedTutorialRoute() {
   const {journeyState,onboarding}=useAuth();

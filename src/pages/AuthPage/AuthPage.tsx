@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useState, type ReactNode } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import { AuthField } from "../../components/auth";
@@ -14,7 +14,7 @@ type AuthMode = "signIn" | "signUp" | "recover";
 export function AuthPage() {
   const { locale, setLocale, t } = useTranslation();
   const { isConfigured, isLoading, isServiceAvailable, journeyState, pendingVerificationEmail,
-    dismissVerification, requestPasswordReset, resendConfirmation, signIn, signUp } = useAuth();
+    dismissVerification, requestPasswordReset, resendConfirmation, retryServiceBootstrap, signIn, signUp } = useAuth();
   const [searchParams] = useSearchParams();
   const requestedMode = searchParams.get("mode");
   const [mode, setMode] = useState<AuthMode>(requestedMode === "signup" ? "signUp" : "signIn");
@@ -89,7 +89,13 @@ export function AuthPage() {
           </label>
 
           <SketchPanel eyebrow={t("auth.eyebrow")} title={t("auth.title")} variant="note">
-            {unavailable && <AuthNotice title={t("auth.unavailableTitle")} body={t("auth.unavailableDescription")} />}
+            {unavailable && (
+              <AuthNotice title={t("auth.unavailableTitle")} body={t("auth.unavailableDescription")}>
+                <StampButton onClick={() => void retryServiceBootstrap()} type="button">
+                  {t("foundation.retry")}
+                </StampButton>
+              </AuthNotice>
+            )}
             {isLoading && !unavailable && <AuthNotice body={t("auth.loadingSession")} />}
 
             {!isLoading && !unavailable && journeyState === "verificationPending" && pendingVerificationEmail ? (
@@ -152,6 +158,6 @@ function PasswordRequirements({ password }: { password: string }) {
   </ul>;
 }
 
-function AuthNotice({ body, title }: { body: string; title?: string }) {
-  return <div className={styles.statusBlock} role="status">{title && <strong>{title}</strong>}<span>{body}</span></div>;
+function AuthNotice({ body, children, title }: { body: string; children?: ReactNode; title?: string }) {
+  return <div className={styles.statusBlock} role="status">{title && <strong>{title}</strong>}<span>{body}</span>{children}</div>;
 }

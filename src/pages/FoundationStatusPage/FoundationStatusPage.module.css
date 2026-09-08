@@ -20,17 +20,21 @@
   line-height: 1.6;
 }
 
-.content a {
+.content a,
+.content .retry {
   padding: 0.7rem 0.9rem;
   border: 2px dashed var(--color-postal-red);
   color: var(--color-postal-red);
   background: var(--color-paper);
+  font: inherit;
   font-weight: 900;
   text-decoration: none;
   text-transform: uppercase;
+  cursor: pointer;
 }
 
-.content a:focus-visible {
+.content a:focus-visible,
+.content .retry:focus-visible {
   outline: 3px solid rgba(164, 74, 63, 0.45);
   outline-offset: 3px;
 }

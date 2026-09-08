@@ -50,6 +50,7 @@ type AuthContextValue = {
   exchangeAuthCode: (code: string, purpose?: "confirmation" | "recovery") => Promise<AuthPublicResult>;
   requestPasswordReset: (email: string) => Promise<AuthPublicResult>;
   resendConfirmation: (email: string) => Promise<AuthPublicResult>;
+  retryServiceBootstrap: () => Promise<void>;
   signIn: (email: string, password: string) => Promise<AuthPublicResult>;
   signOut: () => Promise<void>;
   signUp: (email: string, password: string, intendedRoute?: string | null) => Promise<AuthPublicResult>;
@@ -77,6 +78,33 @@ async function fetchProfile(authUserId: string) {
   return data;
 }
 
+function wait(ms: number) {
+  return new Promise<void>((resolve) => {
+    window.setTimeout(resolve, ms);
+  });
+}
+
+async function loadAccountState(authUserId: string) {
+  const [nextProfile, nextOnboarding] = await Promise.all([
+    fetchProfile(authUserId),
+    beginOrResumeOnboarding(),
+  ]);
+  return { nextProfile, nextOnboarding };
+}
+
+async function loadAccountStateWithRetry(authUserId: string, attempts = 3) {
+  let lastError: unknown;
+  for (let attempt = 0; attempt < attempts; attempt += 1) {
+    try {
+      return await loadAccountState(authUserId);
+    } catch (error) {
+      lastError = error;
+      if (attempt < attempts - 1) await wait(400 * 2 ** attempt);
+    }
+  }
+  throw lastError;
+}
+
 function authRedirect(path: string) {
   return typeof window === "undefined" ? undefined : `${window.location.origin}${path}`;
 }
@@ -99,6 +127,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [onboarding, setOnboarding] = useState<AccountOnboarding | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const sessionLoadIdRef = useRef(0);
+  const accountLoadFailuresRef = useRef(0);
+  const bootstrapRef = useRef<() => Promise<void>>(async () => undefined);
+  const isServiceAvailableRef = useRef(isConfigured);
   const [isPasswordRecovery, setIsPasswordRecovery] = useState(false);
   const [pendingVerificationEmail, setPendingVerificationEmail] = useState<string | null>(() =>
     typeof window === "undefined" ? null : window.sessionStorage.getItem(pendingEmailStorageKey),
@@ -113,13 +144,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     let isMounted = true;
+    let accountRetryTimer: number | undefined;
+
     async function applySession(nextSession: Session | null) {
       if (!isMounted) return;
       const loadId = ++sessionLoadIdRef.current;
+      window.clearTimeout(accountRetryTimer);
       setIsLoading(true);
+      let scheduleAccountRetry = false;
       try {
         setSession(nextSession);
         if (!nextSession) {
+          accountLoadFailuresRef.current = 0;
           setProfile(null);
           setOnboarding(null);
           return;
@@ -137,43 +173,87 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             // Keep the signed invitation briefly; a temporary function outage must not lose attribution.
           }
         }
-        const [nextProfile, nextOnboarding] = await Promise.all([
-          fetchProfile(nextSession.user.id),
-          beginOrResumeOnboarding(),
-        ]);
+        const account = await loadAccountStateWithRetry(nextSession.user.id);
         if (!isMounted || loadId !== sessionLoadIdRef.current) return;
-        setProfile(nextProfile);
-        setOnboarding(nextOnboarding);
+        accountLoadFailuresRef.current = 0;
+        setIsServiceAvailable(true);
+        setProfile(account.nextProfile);
+        setOnboarding(account.nextOnboarding);
+      } catch {
+        if (!isMounted || loadId !== sessionLoadIdRef.current) return;
+        if (!nextSession) {
+          setIsServiceAvailable(false);
+          return;
+        }
+        // A valid session after long PWA sleep must not become permanent "maintenance".
+        accountLoadFailuresRef.current += 1;
+        if (accountLoadFailuresRef.current >= 5) {
+          setIsServiceAvailable(false);
+          return;
+        }
+        scheduleAccountRetry = true;
+        accountRetryTimer = window.setTimeout(() => {
+          void applySession(nextSession);
+        }, 1_500);
       } finally {
-        if (isMounted && loadId === sessionLoadIdRef.current) setIsLoading(false);
+        if (isMounted && loadId === sessionLoadIdRef.current && !scheduleAccountRetry) {
+          setIsLoading(false);
+        }
       }
     }
 
-    supabase.auth.getSession()
-      .then(async ({ data, error }) => {
-        if (error) throw error;
-        setIsServiceAvailable(true);
-        await applySession(data.session);
-      })
-      .catch(() => {
-        if (isMounted) {
-          setIsServiceAvailable(false);
-          setIsLoading(false);
+    async function bootstrap(maxAttempts = 3) {
+      setIsLoading(true);
+      for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+        try {
+          const { data, error } = await supabase.auth.getSession();
+          if (error) throw error;
+          if (!isMounted) return;
+          setIsServiceAvailable(true);
+          await applySession(data.session);
+          return;
+        } catch {
+          if (attempt < maxAttempts - 1) await wait(500 * 2 ** attempt);
         }
-      });
+      }
+      if (isMounted) {
+        setIsServiceAvailable(false);
+        setIsLoading(false);
+      }
+    }
+
+    bootstrapRef.current = () => bootstrap(3);
+    void bootstrap();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, nextSession) => {
       if (event === "PASSWORD_RECOVERY") setIsPasswordRecovery(true);
-      void applySession(nextSession).catch(() => {
-        if (isMounted) setIsServiceAvailable(false);
-      });
+      void applySession(nextSession);
     });
+
+    const recoverWhenAwake = () => {
+      if (document.visibilityState !== "visible") return;
+      if (!isServiceAvailableRef.current || accountLoadFailuresRef.current > 0) {
+        void bootstrap(2);
+      }
+    };
+    document.addEventListener("visibilitychange", recoverWhenAwake);
+    window.addEventListener("online", recoverWhenAwake);
 
     return () => {
       isMounted = false;
+      window.clearTimeout(accountRetryTimer);
       subscription.unsubscribe();
+      document.removeEventListener("visibilitychange", recoverWhenAwake);
+      window.removeEventListener("online", recoverWhenAwake);
     };
   }, [isConfigured]);
+
+  isServiceAvailableRef.current = isServiceAvailable;
+  const retryServiceBootstrap = useCallback(async () => {
+    accountLoadFailuresRef.current = 0;
+    setIsLoading(true);
+    await bootstrapRef.current();
+  }, []);
 
   const signIn = useCallback(async (email: string, password: string): Promise<AuthPublicResult> => {
     const supabase = getSupabaseClient();
@@ -360,6 +440,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     profile,
     requestPasswordReset,
     resendConfirmation,
+    retryServiceBootstrap,
     session,
     signIn,
     signOut,
@@ -367,7 +448,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     saveInitialMascotDraft,
     startOrResumeTutorialDelivery,
   }), [acknowledgeTutorialInstruction, acknowledgeInauguralPostcardHint, advanceOnboarding, completePasswordReset, collectTutorialDelivery, completeNestSetup, dismissVerification, exchangeAuthCode, isConfigured, isLoading, isPasswordRecovery, isServiceAvailable,
-    journeyState, onboarding, pendingVerificationEmail, profile, requestPasswordReset, resendConfirmation,
+    journeyState, onboarding, pendingVerificationEmail, profile, requestPasswordReset, resendConfirmation, retryServiceBootstrap,
     provisionInitialMascot, saveInitialMascotDraft, session, signIn, signOut, signUp, startOrResumeTutorialDelivery]);
 
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
