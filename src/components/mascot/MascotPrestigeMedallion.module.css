@@ -34,7 +34,7 @@
 
 .medallion > .portrait {
   position: absolute;
-  inset: 12%;
+  inset: 10%;
   z-index: 1;
   display: block;
   width: auto;
@@ -48,13 +48,13 @@
 
 .medallion > .portrait img {
   position: absolute;
-  inset: -8%;
+  inset: -10%;
   display: block;
-  width: 116%;
-  height: 116%;
+  width: 120%;
+  height: 120%;
   max-width: none;
   object-fit: cover;
-  clip-path: circle(50% at center);
+  clip-path: circle(52% at center);
 }
 
 .medallion > .portrait > span {
