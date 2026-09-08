@@ -196,6 +196,7 @@ export type TranslationDictionary = {
     unavailable: string;
     loadError: string;
     retry: string;
+    seeds: string;
   };
   notFound: {
     eyebrow: string;
@@ -934,6 +935,9 @@ export type TranslationDictionary = {
     affinityLongDistance: string;
     affinityUrban: string;
     affinityDiscovery: string;
+    seedPackagesFound: string;
+    effectiveChance: string;
+    luckBonus: string;
     items: {
       wornRouteStamp: {
         name: string;
@@ -1154,6 +1158,13 @@ export type TranslationDictionary = {
     friendMaplePortrait: string;
     owlPortrait: string;
   };
+  seedPackages: {
+    minimum: { name: string; description: string };
+    small: { name: string; description: string };
+    medium: { name: string; description: string };
+    large: { name: string; description: string };
+    treasure: { name: string; description: string };
+  };
 };
 
 export type TranslationKey =
@@ -1345,6 +1356,7 @@ export type TranslationKey =
   | "common.unavailable"
   | "common.loadError"
   | "common.retry"
+  | "common.seeds"
   | "notFound.eyebrow"
   | "notFound.title"
   | "notFound.description"
@@ -1816,6 +1828,9 @@ export type TranslationKey =
   | "rewards.affinityLongDistance"
   | "rewards.affinityUrban"
   | "rewards.affinityDiscovery"
+  | "rewards.seedPackagesFound"
+  | "rewards.effectiveChance"
+  | "rewards.luckBonus"
   | "rewards.items.wornRouteStamp.name"
   | "rewards.items.wornRouteStamp.description"
   | "rewards.items.blueAirmailLabel.name"
