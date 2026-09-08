@@ -118,6 +118,14 @@ export type TutorialTravelBoost = {
   returnSeconds: 120;
 };
 
+export type SeedPackageIndicator = {
+  opportunityId: string;
+  segmentIndex: number;
+  hasPackage: boolean;
+  tier?: number;
+  quantity?: number;
+};
+
 export type Delivery = {
   id: string;
   senderId: string;
@@ -141,6 +149,7 @@ export type Delivery = {
   tutorialTravelBoost?: TutorialTravelBoost;
   correspondenceType?: CorrespondenceType;
   segmentedTravel?: import("./travelWeather").TravelWeatherSummary;
+  seedPackageIndicators?: SeedPackageIndicator[];
 };
 
 export type ReceivedLetter = {

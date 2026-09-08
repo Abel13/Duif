@@ -198,6 +198,7 @@ export type {
   RewardRarity,
   ReceivedCorrespondencePreview,
   SendFlowSelection,
+  SeedPackageIndicator,
   ShopCatalogItem,
   ShopCategory,
   ShopCurrency,

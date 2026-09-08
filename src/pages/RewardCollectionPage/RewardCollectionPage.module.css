@@ -115,8 +115,66 @@
   min-width: 0;
 }
 
+.seedPackages {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.seedPackagesGrid {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.seedPackageCard {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-3);
+  align-items: center;
+  padding: var(--space-3);
+  border: var(--border-ink);
+  border-radius: 0.25rem;
+  background: rgba(255, 248, 232, 0.68);
+}
+
+.seedPackageIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 1.5rem;
+}
+
+.seedPackageInfo {
+  display: grid;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.seedPackageName {
+  margin: 0;
+  color: var(--color-ink);
+  font-size: 0.82rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.seedPackageQuantity {
+  margin: 0;
+  color: var(--color-postal-brown);
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
 @media (min-width: 560px) {
   .routeCargoGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  
+  .seedPackagesGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

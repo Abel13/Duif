@@ -32,6 +32,7 @@ export function RewardCollectionPage() {
     reward,
     progression,
     routeDiscoveries,
+    seedPackages,
   } = useRewardCollectionData(deliveryId);
   const { mascots } = useMascotCatalog();
 
@@ -106,6 +107,7 @@ export function RewardCollectionPage() {
               progression={progression}
               mascot={mascot}
               routeDiscoveries={routeDiscoveries}
+              seedPackages={seedPackages}
             />
           ) : (
             <TravelingPanel delivery={delivery} />
@@ -128,6 +130,7 @@ function RewardPanel({
   progression,
   mascot,
   routeDiscoveries,
+  seedPackages,
 }: {
   canCollect: boolean;
   error?: TranslationKey;
@@ -140,6 +143,7 @@ function RewardPanel({
   progression?: DeliveryProgressionAward;
   mascot?: ReturnType<typeof useMascotCatalog>["mascots"][number];
   routeDiscoveries: ReturnType<typeof useRewardCollectionData>["routeDiscoveries"];
+  seedPackages: ReturnType<typeof useRewardCollectionData>["seedPackages"];
 }) {
   const { t } = useTranslation();
 
@@ -173,6 +177,24 @@ function RewardPanel({
                   selected={isCollected}
                   title={t(discovery.titleKey)}
                 />
+              ))}
+            </div>
+          </section>
+        ) : null}
+        {seedPackages.length > 0 ? (
+          <section className={styles.seedPackages} aria-labelledby="seed-packages-title">
+            <h3 className={styles.cargoTitle} id="seed-packages-title">
+              {t("rewards.seedPackagesFound")}
+            </h3>
+            <div className={styles.seedPackagesGrid}>
+              {seedPackages.map((pkg) => (
+                <div key={pkg.id} className={styles.seedPackageCard}>
+                  <div className={styles.seedPackageIcon}>📦</div>
+                  <div className={styles.seedPackageInfo}>
+                    <h4 className={styles.seedPackageName}>{t(pkg.package_catalog_key.replace("seed-package-", "seedPackages.") + ".name" as TranslationKey)}</h4>
+                    <p className={styles.seedPackageQuantity}>+{pkg.seed_quantity} {t("common.seeds")}</p>
+                  </div>
+                </div>
               ))}
             </div>
           </section>

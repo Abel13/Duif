@@ -7,6 +7,10 @@ import {
   type AuthenticatedRewardCollection,
   type CollectedRewardResult,
 } from "../integrations/supabase/authenticatedRewards";
+import {
+  fetchDeliverySeedPackages,
+  type SeedPackageLedgerRow,
+} from "../integrations/supabase/seedPackageOpportunities";
 import type { TranslationKey } from "../i18n";
 import type { RouteRewardDiscovery } from "./mapTravel";
 import type { Delivery, DeliveryProgressionAward, DeliveryReward } from "./types";
@@ -23,6 +27,7 @@ type RewardCollectionState = {
   reward?: DeliveryReward;
   progression?: DeliveryProgressionAward;
   routeDiscoveries: RouteRewardDiscovery[];
+  seedPackages: SeedPackageLedgerRow[];
 };
 
 const emptyState: RewardCollectionState = {
@@ -33,9 +38,10 @@ const emptyState: RewardCollectionState = {
   isLoading: true,
   isMutating: false,
   routeDiscoveries: [],
+  seedPackages: [],
 };
 
-function mapState(data: AuthenticatedRewardCollection, profileId: string): RewardCollectionState {
+function mapState(data: AuthenticatedRewardCollection, profileId: string, seedPackages: SeedPackageLedgerRow[]): RewardCollectionState {
   return {
     canCollect: data.delivery.senderId === profileId,
     delivery: data.delivery,
@@ -47,6 +53,7 @@ function mapState(data: AuthenticatedRewardCollection, profileId: string): Rewar
     reward: data.reward,
     progression: data.progression,
     routeDiscoveries: data.routeDiscoveries,
+    seedPackages,
   };
 }
 
@@ -61,8 +68,13 @@ export function useRewardCollectionData(deliveryId?: string) {
       return;
     }
     let active = true;
-    fetchAuthenticatedRewardCollection(deliveryId, profile.id)
-      .then((data) => active && setState(data ? mapState(data, profile.id) : { ...emptyState, isLoading: false }))
+    Promise.all([
+      fetchAuthenticatedRewardCollection(deliveryId, profile.id),
+      fetchDeliverySeedPackages(deliveryId)
+    ])
+      .then(([data, seedPackages]) => 
+        active && setState(data ? mapState(data, profile.id, seedPackages) : { ...emptyState, isLoading: false })
+      )
       .catch(() => active && setState({ ...emptyState, isLoading: false, error: "rewards.collectError" }));
     return () => { active = false; };
   }, [deliveryId, isAuthLoading, profile, session]);

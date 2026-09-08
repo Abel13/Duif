@@ -249,6 +249,7 @@ export const enUS = {
     unavailable: "Unavailable",
     loadError: "We couldn't load this content.",
     retry: "Try again",
+    seeds: "seeds",
   },
   notFound: {
     eyebrow: "Misrouted letter",
@@ -1070,6 +1071,9 @@ export const enUS = {
     affinityLongDistance: "Long-distance route",
     affinityUrban: "Urban route",
     affinityDiscovery: "Route discovery",
+    seedPackagesFound: "Packages found",
+    effectiveChance: "Effective chance",
+    luckBonus: "Luck bonus",
     items: {
       wornRouteStamp: {
         name: "Worn route stamp",
@@ -1328,5 +1332,27 @@ export const enUS = {
     friendLumaPortrait: "Temporary portrait of Luma",
     friendMaplePortrait: "Portrait of Maple",
     owlPortrait: "Temporary Owl portrait",
+  },
+  seedPackages: {
+    minimum: {
+      name: "Minimum Package",
+      description: "A small postal find",
+    },
+    small: {
+      name: "Small Package",
+      description: "Seeds found along the route",
+    },
+    medium: {
+      name: "Medium Package",
+      description: "A valuable discovery",
+    },
+    large: {
+      name: "Large Package",
+      description: "Rare postal treasure",
+    },
+    treasure: {
+      name: "Postal Treasure",
+      description: "Extraordinary find!",
+    },
   },
 } satisfies TranslationDictionary;
