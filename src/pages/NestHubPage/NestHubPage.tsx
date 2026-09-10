@@ -12,6 +12,7 @@ import {
   type ReceivedCorrespondence,
 } from "../../game";
 import { useMascotCatalog } from "../../game/useMascotCatalog";
+import { useProfileProgression } from "../../game/useProfileProgression";
 import { useTranslation } from "../../i18n";
 import { useAuth } from "../../integrations/supabase/AuthProvider";
 import { fetchReceivedCorrespondence } from "../../integrations/supabase/mailbox";
@@ -28,6 +29,7 @@ const pushPromptStorageKey = "duif.push.optInDismissed";
 export function NestHubPage() {
   const { profile } = useAuth();
   const { mascots, isLoading: isMascotsLoading } = useMascotCatalog();
+  const progression = useProfileProgression();
   const { locale, t } = useTranslation();
   const navigate = useNavigate();
   const [letters, setLetters] = useState<ReceivedCorrespondence[]>([]);
@@ -102,8 +104,8 @@ export function NestHubPage() {
             className={styles.currencyRow}
             aria-label={t("nestHub.currencySummary")}
           >
-            <Currency currency="seeds" label={t("nestHub.seeds")} />
-            <Currency currency="crystals" label={t("nestHub.crystals")} />
+            <Currency currency="seeds" label={t("nestHub.seeds")} value={progression.isLoading ? "..." : progression.seeds} />
+            <Currency currency="crystals" label={t("nestHub.crystals")} value="0" />
             <button
               aria-label={t("nestHub.settings")}
               className={styles.settings}
@@ -160,8 +162,8 @@ export function NestHubPage() {
               </div>
             </dl>
             <div className={styles.level}>
-              <strong>{t("nestHub.levelZero")}</strong>
-              <span>{t("nestHub.xpZero")}</span>
+              <strong>{progression.isLoading ? "..." : `${t("mascot.level")} ${progression.level}`}</strong>
+              <span>{progression.isLoading ? "..." : `${progression.xp.toLocaleString()} XP`}</span>
             </div>
           </div>
         </header>
@@ -273,12 +275,12 @@ function NestSettingsDialog({ onClose }: { onClose: () => void }) {
   );
 }
 
-function Currency({ currency, label }: { currency: "seeds" | "crystals"; label: string }) {
+function Currency({ currency, label, value }: { currency: "seeds" | "crystals"; label: string; value: string | number }) {
   const Icon = currency === "seeds" ? CoffeeBean : SketchLogo;
   return (
     <span className={styles.currency} data-currency={currency}>
       <Icon aria-hidden="true" size={23} weight="duotone" />
-      <strong>0</strong>
+      <strong>{typeof value === "number" ? value.toLocaleString() : value}</strong>
       <small>{label}</small>
     </span>
   );
