@@ -29,3 +29,8 @@ supabase functions deploy exclusive-mission-generator --no-verify-jwt
 Em seguida, execute `select public.invoke_exclusive_postal_mission_edge_function();` e inspecione
 `net._http_response`. Uma resposta saudável informa `generated`; `fallbacks` maior que zero mantém
 as missões jogáveis, mas indica indisponibilidade ou validação rejeitada da geração por IA.
+
+Se a resposta for `mission_preparation_failed`, rode
+`select public.prepare_exclusive_postal_missions(now(), 100);` no SQL Editor para ver o erro do
+Postgres. Ofertas `offered`/`accepted` vencidas devem poder virar `expired` mantendo `copy` e
+destino; constraints antigas que exigiam esses campos nulos em `expired` bloqueavam o prepare.

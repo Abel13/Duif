@@ -64,6 +64,42 @@ begin
   if (select count(*) from public.exclusive_postal_missions where mascot_id='00000000-0000-4000-8000-000000000902')<>2 then
     raise exception 'an expired mission did not become eligible on the next local day';
   end if;
+
+  -- Offered missions keep copy/destination when prepare expires them.
+  update public.exclusive_postal_missions set
+    status='offered',
+    expires_at=timestamptz '2026-09-01 03:10:00+00',
+    destination_geoname_id=1796236,
+    destination_name='Shanghai',
+    destination_country_code='CN',
+    destination_latitude=31.22222,
+    destination_longitude=121.45806,
+    distance_km=12.5,
+    copy=jsonb_build_object(
+      'pt-BR', jsonb_build_object('title','T','briefing','B','outboundObjective','O','returnRecord','R'),
+      'en-US', jsonb_build_object('title','T','briefing','B','outboundObjective','O','returnRecord','R')
+    ),
+    generated_at=timestamptz '2026-08-31 03:10:00+00',
+    updated_at=timestamptz '2026-08-31 03:10:00+00'
+  where id=(
+    select id from public.exclusive_postal_missions
+    where mascot_id='00000000-0000-4000-8000-000000000902' and status='pending'
+    order by created_at desc limit 1
+  );
+  perform public.prepare_exclusive_postal_missions(timestamptz '2026-09-01 03:10:00+00',100);
+  if not exists(
+    select 1 from public.exclusive_postal_missions
+    where mascot_id='00000000-0000-4000-8000-000000000902'
+      and status='expired'
+      and copy is not null
+      and destination_name='Shanghai'
+  ) then
+    raise exception 'prepare cannot expire offered missions that retain copy';
+  end if;
+  perform public.prepare_exclusive_postal_missions(timestamptz '2026-09-02 03:10:00+00',100);
+  if (select count(*) from public.exclusive_postal_missions where mascot_id='00000000-0000-4000-8000-000000000902' and status='pending')<>1 then
+    raise exception 'next local day did not open a pending offer after offered expiry';
+  end if;
 end $$;
 
 do $$
