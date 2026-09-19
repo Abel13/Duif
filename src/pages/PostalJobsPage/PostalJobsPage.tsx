@@ -103,14 +103,16 @@ export function PostalJobsPage() {
       <div className={styles.exclusiveHeading}><span>{t("exclusiveMissions.eyebrow")}</span><h2 id="exclusive-missions-title">{t("exclusiveMissions.title")}</h2></div>
       {exclusiveMissions.map((mission) => {
         const copy = mission.copy?.[locale] ?? mission.copy?.["pt-BR"];
-        const expiry = new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(new Date(mission.expiresAt));
+        const expiryDate = new Date(mission.expiresAt);
+        const isExpired = mission.status === "expired" || expiryDate.getTime() <= Date.now();
+        const expiry = new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(expiryDate);
         return <article className={styles.exclusiveMission} key={mission.id}>
           <div className={styles.exclusiveStamp}>{t("exclusiveMissions.badge")}</div>
           <p className={styles.mascotName}>{mission.mascotName}</p>
           <h3>{copy?.title ?? mission.destinationName}</h3>
           {copy ? <><p>{copy.briefing}</p><p><strong>{t("exclusiveMissions.objective")}:</strong> {copy.outboundObjective}</p></> : null}
           <dl><div><dt>{t("exclusiveMissions.destination")}</dt><dd>{mission.destinationName} · {mission.destinationCountryCode}</dd></div><div><dt>{t("postalJobs.distance")}</dt><dd>{mission.distanceKm} km</dd></div><div><dt>{t("exclusiveMissions.expires")}</dt><dd>{expiry}</dd></div></dl>
-          {mission.status === "expired" ? <p className={styles.expired}>{t("exclusiveMissions.expired")}</p>
+          {isExpired ? <p className={styles.expired}>{t("exclusiveMissions.expired")}</p>
             : mission.status === "accepted" ? <StampButton disabled={busy === mission.id || Boolean(mascots.find((mascot) => mascot.id === mission.mascotId)?.currentDelivery)} onClick={() => void dispatchExclusive(mission)}>{t("exclusiveMissions.depart")}</StampButton>
               : <StampButton disabled={busy === mission.id || Boolean(mascots.find((mascot) => mascot.id === mission.mascotId)?.currentDelivery)} onClick={() => void acceptExclusive(mission)}>{t("exclusiveMissions.accept")}</StampButton>}
         </article>;

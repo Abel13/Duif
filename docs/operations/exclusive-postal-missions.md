@@ -34,3 +34,8 @@ Se a resposta for `mission_preparation_failed`, rode
 `select public.prepare_exclusive_postal_missions(now(), 100);` no SQL Editor para ver o erro do
 Postgres. Ofertas `offered`/`accepted` vencidas devem poder virar `expired` mantendo `copy` e
 destino; constraints antigas que exigiam esses campos nulos em `expired` bloqueavam o prepare.
+
+Ofertas passam a `expired` no `prepare` diário e também ao listar o quadro
+(`list_exclusive_postal_missions`) quando `expires_at <= now()`. Aceitar uma oferta já vencida
+retorna `Exclusive mission is unavailable` (22023); o cliente deve mostrar o estado expirado em
+vez do botão de aceitar.

@@ -102,6 +102,46 @@ begin
   end if;
 end $$;
 
+-- Listing must persist expiry for offered rows past expires_at.
+update public.exclusive_postal_missions set
+  status='offered',
+  expires_at=timestamptz '2026-09-07 03:10:00+00',
+  destination_geoname_id=1796236,
+  destination_name='Shanghai',
+  destination_country_code='CN',
+  destination_latitude=31.22222,
+  destination_longitude=121.45806,
+  distance_km=12.5,
+  copy=jsonb_build_object(
+    'pt-BR', jsonb_build_object('title','T','briefing','B','outboundObjective','O','returnRecord','R'),
+    'en-US', jsonb_build_object('title','T','briefing','B','outboundObjective','O','returnRecord','R')
+  ),
+  generated_at=now(),
+  updated_at=now()
+where id=(
+  select id from public.exclusive_postal_missions
+  where mascot_id='00000000-0000-4000-8000-000000000902' and status='pending'
+  order by created_at desc limit 1
+);
+select set_config('request.jwt.claim.sub','10000000-0000-4000-8000-000000000901',true);
+set local role authenticated;
+do $$
+begin
+  if (select status from public.list_exclusive_postal_missions() where mascot_id='00000000-0000-4000-8000-000000000902' limit 1)
+     is distinct from 'expired' then
+    raise exception 'list did not expire an offered mission past expires_at';
+  end if;
+end $$;
+reset role;
+
+do $$
+begin
+  perform public.prepare_exclusive_postal_missions(timestamptz '2026-09-08 03:10:00+00',100);
+  if (select count(*) from public.exclusive_postal_missions where mascot_id='00000000-0000-4000-8000-000000000902' and status='pending')<>1 then
+    raise exception 'prepare did not open a pending offer after list expiry';
+  end if;
+end $$;
+
 do $$
 declare mission record; candidate jsonb; city public.geonames_cities;
 begin
@@ -113,6 +153,7 @@ begin
   update public.exclusive_postal_missions set
     status='offered', destination_geoname_id=city.geoname_id, destination_name=city.name, destination_country_code=city.country_code,
     destination_latitude=city.latitude, destination_longitude=city.longitude, distance_km=(candidate->>'distanceKm')::numeric,
+    expires_at=now()+interval '7 days',
     copy=jsonb_build_object('pt-BR',jsonb_build_object('title','A lente antes do turno','briefing','Aline precisa da lente polida porque o mecanismo de sinais perdeu sua peça de reposição.','outboundObjective','Entregue a lente polida ao responsável do posto para recompor o mecanismo de sinais.','returnRecord','A lente foi encaixada e a contramarca deve voltar ao ninho.'),'en-US',jsonb_build_object('title','The lens before the watch','briefing','Aline needs the polished lens because the signal mechanism lost its replacement part.','outboundObjective','Deliver the polished lens to the post steward so the signal mechanism can be restored.','returnRecord','The lens was fitted and the countermark must return to the nest.'))
   where id=mission.id;
   perform set_config('duif.test.exclusive_mission_id',mission.id::text,true);
