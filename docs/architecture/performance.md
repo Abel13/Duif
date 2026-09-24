@@ -66,7 +66,7 @@ Decisions:
 
 - Keep the generated raster assets as a validation slice, not final art.
 - Keep every individual runtime asset under `300K`.
-- Keep `Caveat` and `Special Elite` unloaded until they are justified by a specific UI role.
+- `Playwrite BE WAL` is now loaded as the handwritten font. Keep `Special Elite` unloaded until it is justified by a specific UI role.
 - Continue treating MapLibre chunk size as a separate map-code-splitting concern.
 
 ## Future Checks

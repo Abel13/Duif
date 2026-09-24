@@ -500,9 +500,12 @@ The first self-hosted runtime font pair introduced:
 The app loads latin WOFF2 subsets from `public/assets/fonts/` and keeps system fallbacks in
 the CSS tokens.
 
-Keep handwritten and stamp fonts planned but deferred:
+The handwritten font is now loaded:
 
-- `Caveat` for short handwritten notes;
+- `Playwrite BE WAL` for handwritten notes and correspondence.
+
+Keep stamp font planned but deferred:
+
 - `Special Elite` for stamps, delivery codes, and postal labels.
 
 Rules:

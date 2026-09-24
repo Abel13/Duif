@@ -28,7 +28,7 @@ Start with two external fonts at most:
 :root {
   --font-ui: "Atkinson Hyperlegible", system-ui, sans-serif;
   --font-display: "Fraunces", Georgia, serif;
-  --font-hand: "Caveat", cursive;
+  --font-hand: "Playwrite BE WAL", cursive;
   --font-stamp: "Special Elite", ui-monospace, monospace;
 }
 ```
@@ -38,8 +38,8 @@ For the first implementation that loads external fonts, only load:
 - `Atkinson Hyperlegible`
 - `Fraunces`
 
-Keep `Caveat` and `Special Elite` as planned roles, but do not load them until the UI proves
-that handwritten notes and stamp text materially improve the experience.
+`Playwrite BE WAL` is now loaded as the handwritten font for postal correspondence.
+Keep `Special Elite` as a planned role, but do not load it until stamp text materially improves the experience.
 
 ## Recommended Fonts
 
@@ -108,7 +108,7 @@ Good alternatives:
 
 Default decision for DUIF: use `Fraunces`.
 
-### Handwritten Notes: Caveat
+### Handwritten Notes: Playwrite BE WAL
 
 Use only for short decorative text:
 
@@ -121,22 +121,23 @@ Use only for short decorative text:
 
 Recommended weight:
 
-- `600` or `700`.
+- `300` or `400`.
 
 Fallback:
 
 ```css
---font-hand: "Caveat", cursive;
+--font-hand: "Playwrite BE WAL", cursive;
 ```
 
 Good alternatives:
 
 - `Patrick Hand` for cleaner notebook writing;
 - `Kalam` for a more natural handwritten feel;
-- `Patrick Hand SC` for drawn uppercase notes.
+- `Patrick Hand SC` for drawn uppercase notes;
+- `Caveat` for a more casual handwritten style.
 
-Default decision for DUIF: keep `Caveat` planned, but defer loading it beyond the first art
-direction slice until handwritten notes prove they need a dedicated font.
+Default decision for DUIF: `Playwrite BE WAL` is now loaded and provides the postal guides-inspired
+handwritten feel for correspondence and notes.
 
 ### Stamp And Postal Marks: Special Elite
 
@@ -180,8 +181,9 @@ The first typography implementation loaded two runtime families:
 - `Atkinson Hyperlegible` latin subset at weights `400` and `700`;
 - `Fraunces` latin subset as one variable WOFF2 covering display weights `700` to `900`.
 
-Runtime files live under `public/assets/fonts/`. `Caveat` and `Special Elite` remain planned
-roles only and are not loaded yet.
+The handwritten font has been updated to `Playwrite BE WAL` at weights `300` to `400` for both
+latin and latin-ext subsets. Runtime files live under `public/assets/fonts/`. `Special Elite`
+remains a planned role only and is not loaded yet.
 
 ## CSS Token Plan
 
@@ -191,7 +193,7 @@ When real fonts are introduced, define tokens in `src/styles/theme.css`:
 :root {
   --font-ui: "Atkinson Hyperlegible", system-ui, sans-serif;
   --font-display: "Fraunces", Georgia, serif;
-  --font-hand: "Caveat", cursive;
+  --font-hand: "Playwrite BE WAL", cursive;
   --font-stamp: "Special Elite", ui-monospace, monospace;
 }
 ```
@@ -212,9 +214,11 @@ Current path:
    rewards, and postal traffic milestones.
 2. The first typography implementation added `Atkinson Hyperlegible` and `Fraunces` as the self-hosted
    typography pair.
-3. Continue validating mobile readability, layout shifts, bundle/build size, and visual
+3. The handwritten font has been updated from `Caveat` to `Playwrite BE WAL` to provide a postal
+   guides-inspired handwriting style that better fits the correspondence theme.
+4. Continue validating mobile readability, layout shifts, bundle/build size, and visual
    identity before adding more font roles.
-4. Add `Caveat` and `Special Elite` only if short notes and postal marks need more identity.
+5. Add `Special Elite` only if postal marks and stamps need more identity.
 
 ## Review Checklist
 
