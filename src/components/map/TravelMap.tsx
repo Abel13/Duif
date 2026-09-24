@@ -42,7 +42,8 @@ import {
   MIN_REWARD_VISIBILITY_ZOOM,
   shouldShowMapRewards,
 } from "./travelMapCamera";
-import { postalMapStyle } from "./postalMapStyle";
+import { applyPostalMapTheme, createPostalMapStyle } from "./postalMapStyle";
+import { DEFAULT_POSTAL_MAP_SEASON, postalMapPalettes } from "./postalMapPalette";
 import { MapWeatherEffects } from "./MapWeatherEffects";
 import type { TravelWeatherCategory } from "../../game/travelWeather";
 
@@ -51,16 +52,9 @@ const outboundProgressSourceId = "duif-outbound-progress";
 const returnProgressSourceId = "duif-return-progress";
 const placeLabelsSourceId = "duif-place-labels";
 const postalTrafficRoutesSourceId = "duif-postal-traffic-routes";
-
-function applyTravelMapTheme(map: maplibregl.Map, theme?: { isNight:boolean; season:"summer"|"autumn"|"winter"|"spring" }) {
-  const seasonalPaper={summer:"#ead8a8",autumn:"#dfc5ad",winter:"#c9d8dd",spring:"#d7dfc5"};
-  map.setPaintProperty("postal-paper","background-color",theme?.isNight?"#171d24":theme?seasonalPaper[theme.season]:"#eadfca");
-  map.setPaintProperty("osm-raster","raster-opacity",theme?.isNight ? .5 : .62);
-  map.setPaintProperty("osm-raster","raster-saturation",theme?.isNight ? -.88 : -.72);
-  map.setPaintProperty("osm-raster","raster-contrast",theme?.isNight ? .18 : -.18);
-  map.setPaintProperty("osm-raster","raster-brightness-min",theme?.isNight ? .03 : .12);
-  map.setPaintProperty("osm-raster","raster-brightness-max",theme?.isNight ? .38 : .9);
-}
+const routeColor = postalMapPalettes[DEFAULT_POSTAL_MAP_SEASON].route;
+const placeLabelColor = postalMapPalettes[DEFAULT_POSTAL_MAP_SEASON].placeLabel;
+const labelHaloColor = postalMapPalettes[DEFAULT_POSTAL_MAP_SEASON].labelHalo;
 
 export type TravelMapProps = {
   delivery: Delivery;
@@ -215,7 +209,10 @@ export function TravelMap({
         cooperativeGestures: false,
         dragRotate: false,
         pitchWithRotate: false,
-        style: postalMapStyle,
+        style: createPostalMapStyle({
+          isNight: visualTheme?.isNight,
+          season: visualTheme?.season ?? DEFAULT_POSTAL_MAP_SEASON,
+        }),
         touchPitch: false,
         zoom: 2,
       });
@@ -250,13 +247,13 @@ export function TravelMap({
 
     map.on("load", () => {
       isLoadedRef.current = true;
-      applyTravelMapTheme(map, visualTheme);
       addMapLayers(
         map,
         delivery,
         placeLabels,
         getPetMapPosition(delivery, new Date()),
       );
+      applyPostalMapTheme(map, visualTheme);
       syncRewardMarkers(
         map,
         rewardMarkerRefs.current,
@@ -325,7 +322,7 @@ export function TravelMap({
 
   useEffect(() => {
     const map=mapRef.current;
-    if(map&&isLoadedRef.current) applyTravelMapTheme(map,visualTheme);
+    if(map&&isLoadedRef.current) applyPostalMapTheme(map,visualTheme);
   },[visualTheme?.isNight,visualTheme?.season]);
 
   useEffect(() => {
@@ -1013,7 +1010,7 @@ function addMapLayers(
     map.addLayer({
       id: "duif-route-line",
       paint: {
-        "line-color": "#a44a3f",
+        "line-color": routeColor,
         "line-dasharray": [1.4, 1],
         "line-opacity": 0.9,
         "line-width": 4,
@@ -1074,7 +1071,7 @@ function addMapLayers(
           MIN_REWARD_VISIBILITY_ZOOM,
           ["get", "label"],
         ],
-        "text-font": ["Open Sans Regular"],
+        "text-font": ["Noto Sans Regular"],
         "text-offset": [
           "case",
           ["==", ["get", "kind"], "origin"],
@@ -1095,9 +1092,9 @@ function addMapLayers(
         ],
       },
       paint: {
-        "text-color": "#2e2a24",
+        "text-color": placeLabelColor,
         "text-halo-blur": 0.5,
-        "text-halo-color": "#fff8e8",
+        "text-halo-color": labelHaloColor,
         "text-halo-width": 2,
       },
       source: placeLabelsSourceId,
@@ -1111,7 +1108,7 @@ function addMapLayers(
       type: "line",
       source: postalTrafficRoutesSourceId,
       paint: {
-        "line-color": ["case", ["==", ["get", "segment"], "progress"], "#a44a3f", ["boolean", ["get", "selected"], false], "#6f91a8", "#7a8f68"],
+        "line-color": ["case", ["==", ["get", "segment"], "progress"], routeColor, ["boolean", ["get", "selected"], false], "#6f91a8", "#7a8f68"],
         "line-dasharray": ["case", ["==", ["get", "segment"], "progress"], ["literal", [1, 0]], ["literal", [1.4, 1.8]]],
         "line-opacity": ["*", ["number", ["get", "opacity"], 1], ["case", ["==", ["get", "segment"], "progress"], 0.78, ["boolean", ["get", "selected"], false], 0.4, 0.22]],
         "line-width": ["case", ["==", ["get", "segment"], "progress"], 3, ["boolean", ["get", "selected"], false], 2, 1.25],
