@@ -146,10 +146,10 @@ The current PWA icon family is derived from `assets-source/icons/duif-icon-trans
 - `icon-maskable-512.png` uses the paper background and a safe inset for adaptive masks;
 - `apple-touch-icon.png` uses an opaque paper background for iOS.
 
-`public/assets/fonts/caveat-400-600-latin.woff2` and
-`public/assets/fonts/caveat-400-600-latin-ext.woff2` are the local Caveat subsets used only by
-postcard writing: Regular for messages and SemiBold for postcard highlights. They remain outside
-the official asset registry, alongside the application fonts required during boot.
+`public/assets/fonts/playwrite-300-400-latin.woff2` and
+`public/assets/fonts/playwrite-300-400-latin-ext.woff2` are the local Playwrite BE WAL subsets used
+for postcard writing and correspondence: Light to Regular weights for messages and handwritten notes.
+They remain outside the official asset registry, alongside the application fonts required during boot.
 
 ## Recommended Sizes
 
