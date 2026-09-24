@@ -375,12 +375,16 @@ Recommended validation stack:
 
 MapLibre GL JS
 
-The map implementation uses MapLibre with public raster tiles for validation, then adds DUIF
-route, reward, pet, and place-label layers on top.
+The map implementation uses MapLibre with an OpenMapTiles-compatible vector basemap and a
+DUIF seasonal postal palette (earth, field, park, water, buildings, roads, labels, route).
+The interim default tile/glyph host is OpenFreeMap, overridable via `VITE_MAP_VECTOR_TILES_URL`
+and `VITE_MAP_GLYPHS_URL`. DUIF route, reward, pet, and place-label layers remain on top.
+
+This is still not the final production tile/style decision. The first production map decision
+still needs a proper tile/style provider and usage review.
 
 This avoids adding a provider key before the product validates whether MapLibre feels right
-for DUIF. It is not a production tile/style decision. The first production map decision
-still needs a proper tile/style provider and usage review.
+for DUIF.
 
 The main `/map` screen uses one-finger pan on mobile because it is a full-screen primary
 gameplay surface. Cooperative two-finger gestures should only be reconsidered for embedded
