@@ -122,6 +122,28 @@ Avoid large areas of saturated color.
 
 The interface should feel calm and readable.
 
+## Map palette by season
+
+The travel map basemap uses a dedicated seasonal palette (not the UI token set above). Shared
+constants live in `src/components/map/postalMapPalette.ts`. Place labels (`#2E2A24`) and the
+route accent (`#A44A3F`) stay constant; other fills and road colors shift by season:
+
+| Token | Spring | Summer | Autumn | Winter |
+| --- | --- | --- | --- | --- |
+| Earth | `#F3EBD8` | `#F2E7CF` | `#EFE0CE` | `#E8E6DF` |
+| Field | `#E9DEC1` | `#EDE1BF` | `#E9D6BB` | `#D8D6CC` |
+| Park / forest | `#B9C4A0` | `#CBD2B0` | `#D8BEA0` | `#7A8F78` |
+| Water | `#A5BEC9` | `#B7C9CD` | `#ADBBC0` | `#7A9AAD` |
+| Shoreline | `#5A7E94` | `#4F738A` | `#4E6A7C` | `#4A6A7C` |
+| Building | `#E8DCC8` | `#E6D4B4` | `#E2D0B8` | `#DCD8D0` |
+| Street | `#D4C4A8` | `#D2BE96` | `#D0B898` | `#C8C0B4` |
+| Avenue | `#CAB18E` | `#DEC7A3` | `#D7B995` | `#B0A898` |
+| Road edge | `#8B7355` | `#8B6B3C` | `#7A5538` | `#6A6458` |
+| Label halo | `#FFF8E8` | `#FFF8E8` | `#FFF8E8` | `#F4F4EC` |
+| Water label | `#2A3A44` | `#243640` | `#1A2830` | `#1A2830` |
+
+Night mode keeps earth at `#171D24` and darkens the remaining fills for readability.
+
 ## Backgrounds
 
 Avoid pure white backgrounds.

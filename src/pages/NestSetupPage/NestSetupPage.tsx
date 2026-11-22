@@ -4,6 +4,8 @@ import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 import { StampButton } from "../../components/ui";
+import { postalMapStyle } from "../../components/map/postalMapStyle";
+import { postalMapPalettes, DEFAULT_POSTAL_MAP_SEASON } from "../../components/map/postalMapPalette";
 import { useMobileKeyboardViewportRecovery } from "../../components/ui/useMobileKeyboardViewportRecovery";
 import { quantizeNestCoordinate, type NestSearchResult, type NestSelection } from "../../game/nest";
 import { useTranslation } from "../../i18n";
@@ -11,15 +13,15 @@ import { useAuth } from "../../integrations/supabase/AuthProvider";
 import { searchNestCities } from "../../integrations/supabase/nest";
 import styles from "./NestSetupPage.module.css";
 
-const style: maplibregl.StyleSpecification={version:8,sources:{osm:{type:"raster",tiles:["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],tileSize:256,attribution:"© OpenStreetMap contributors"}},layers:[{id:"paper",type:"background",paint:{"background-color":"#eadfca"}},{id:"osm",type:"raster",source:"osm",paint:{"raster-opacity":.62,"raster-saturation":-.7}}]};
+const nestMarkerColor = postalMapPalettes[DEFAULT_POSTAL_MAP_SEASON].route;
 
 export function NestSetupPage(){
   const {t}=useTranslation(); const navigate=useNavigate(); const {completeNestSetup}=useAuth();
   const page=useRef<HTMLElement>(null); const mapNode=useRef<HTMLDivElement>(null); const map=useRef<maplibregl.Map>(); const marker=useRef<maplibregl.Marker>();
   const restoreKeyboardViewport=useMobileKeyboardViewportRecovery(page);
   const [query,setQuery]=useState("");const [results,setResults]=useState<NestSearchResult[]>([]);const [selectedCity,setSelectedCity]=useState<NestSearchResult>();const [selection,setSelection]=useState<NestSelection>();const [busy,setBusy]=useState(false);const [error,setError]=useState(false);const [hasSearched,setHasSearched]=useState(false);
-  useEffect(()=>{if(!mapNode.current)return;const instance=new maplibregl.Map({container:mapNode.current,style,center:[0,15],zoom:1.5,attributionControl:false});instance.addControl(new maplibregl.NavigationControl({showCompass:false}),"top-right");instance.on("click",(event)=>choose({latitude:event.lngLat.lat,longitude:event.lngLat.lng}));map.current=instance;return()=>instance.remove();},[]);
-  function choose(value:NestSelection){setSelection(value);if(!map.current)return;if(!marker.current) marker.current=new maplibregl.Marker({color:"#a44a3f"}).setLngLat([value.longitude,value.latitude]).addTo(map.current);else marker.current.setLngLat([value.longitude,value.latitude]);}
+  useEffect(()=>{if(!mapNode.current)return;const instance=new maplibregl.Map({container:mapNode.current,style:postalMapStyle,center:[0,15],zoom:1.5,attributionControl:false});instance.addControl(new maplibregl.NavigationControl({showCompass:false}),"top-right");instance.on("click",(event)=>choose({latitude:event.lngLat.lat,longitude:event.lngLat.lng}));map.current=instance;return()=>instance.remove();},[]);
+  function choose(value:NestSelection){setSelection(value);if(!map.current)return;if(!marker.current) marker.current=new maplibregl.Marker({color:nestMarkerColor}).setLngLat([value.longitude,value.latitude]).addTo(map.current);else marker.current.setLngLat([value.longitude,value.latitude]);}
   async function search(){setBusy(true);setError(false);setHasSearched(true);try{setResults(await searchNestCities(query.trim()));}catch{setError(true);}finally{setBusy(false);}}
   async function confirm(){if(!selection||!selectedCity)return;setBusy(true);setError(false);try{await restoreKeyboardViewport();await completeNestSetup(selection,selectedCity.id);await restoreKeyboardViewport();navigate("/onboarding/tutorial",{replace:true});}catch{setError(true);}finally{setBusy(false);}}
   const approximate=selection?quantizeNestCoordinate(selection):undefined;
