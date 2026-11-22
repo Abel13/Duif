@@ -1,6 +1,6 @@
 import { useMemo, useState, useEffect, useRef, type MouseEvent, type ReactNode } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { AirTrafficControl, Binoculars, Clock, CloudSun, Compass, Gauge, MapPin, Package, Scroll, Signpost, X } from "@phosphor-icons/react";
+import { AirTrafficControl, Binoculars, Clock, CloudSun, Compass, Gauge, Gift, MapPin, Package, Scroll, Signpost, X } from "@phosphor-icons/react";
 
 import { AppBottomNav } from "../../components/layout";
 import { TravelMap } from "../../components/map/TravelMap";
@@ -54,6 +54,7 @@ import { fetchExclusiveMissionDossier, type ExclusiveMissionDossier } from "../.
 import { type TranslationKey, useTranslation } from "../../i18n";
 import styles from "./TravelMapPage.module.css";
 import { isMapCameraTargetDisabled } from "../../components/map/travelMapCamera";
+import { claimGlobalGift, listPendingGlobalGifts, type GlobalGift } from "../../integrations/supabase/globalGifts";
 
 const defaultMascotId = "mascot-nuvem";
 const liveTickMs = 30 * 1000;
@@ -88,6 +89,7 @@ export function TravelMapPage() {
   const [selectedLandmark,setSelectedLandmark]=useState<WorldLandmark>();
   const [landmarkDialogOpen,setLandmarkDialogOpen]=useState(false);
   const [newVisitorIds, setNewVisitorIds] = useState<Set<string>>(() => new Set());
+  const [globalGifts,setGlobalGifts]=useState<GlobalGift[]>([]);
   const tripStatusTriggerRef = useRef<HTMLElement | null>(null);
   const missionDossierTriggerRef = useRef<HTMLElement | null>(null);
   const highlightTimersRef = useRef<Map<string, number>>(new Map());
@@ -108,6 +110,9 @@ export function TravelMapPage() {
       : selectMapMascot(mascots, now);
   }, [mascots, now, selectedMascotId]);
 
+  useEffect(() => {
+    void listPendingGlobalGifts().then(setGlobalGifts).catch(()=>undefined);
+  }, [profile?.id]);
   useEffect(() => {
     const selectedMascot = mascots.find((mascot) => mascot.id === selectedMascotId);
     if (selectedMascot && hasActiveMascotDelivery(selectedMascot, now)) {
@@ -553,8 +558,9 @@ export function TravelMapPage() {
           <div className={styles.mapTravelStatus}><TravelStatusLabel mascotName={displayMascot.name} statusLabel={t(`delivery.status.${status}`)}/></div>
         ) : null}
 
-        {(activePostalVisitors.length > 0 || visiblePostalTraffic.length > 0 || (journeyPhase === "traveling" && displayMascot && (landmarks.length > 0 || delivery.segmentedTravel || rewards.length > 0)) || (missionDossier && journeyPhase !== "completed")) ? (
+        {(globalGifts.length>0 || activePostalVisitors.length > 0 || visiblePostalTraffic.length > 0 || (journeyPhase === "traveling" && displayMascot && (landmarks.length > 0 || delivery.segmentedTravel || rewards.length > 0)) || (missionDossier && journeyPhase !== "completed")) ? (
           <nav aria-label={t("map.activeMapTools")} className={styles.activeMapTools}>
+            {globalGifts.length>0?<button aria-label="Presentes" className={styles.activeToolButton} onClick={()=>{const gift=globalGifts[0];if(gift)void claimGlobalGift(gift.id).then(()=>setGlobalGifts((items)=>items.filter((item)=>item.id!==gift.id))).catch(()=>undefined)}} title="Resgatar presente" type="button"><Gift aria-hidden="true" weight="duotone"/><span>{globalGifts.length}</span></button>:null}
             {activePostalVisitors.map((visitor) => (
               <Link
                 aria-label={`${t("mailbox.visitingMascot")}: ${visitor.mascotName}, ${getPostalVisitorMinutes(visitor.departsAt, now.getTime())} ${t("mailbox.minutesRemaining")}`}

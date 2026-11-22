@@ -103,6 +103,11 @@ export const enUS = {
   jardimBotanicoCuritiba: { name: "Curitiba Botanical Garden", description: "In Curitiba, the iron-and-glass greenhouse of the Botanical Garden marks the park with its Art Nouveau silhouette among formal flowerbeds.", alt: "Illustrated sticker of the iron-and-glass greenhouse at Curitiba Botanical Garden." },
   },
   officialPostcards: {
+    christmasTree:{name:"Christmas Tree",description:"A glowing tree in the quiet snow.",alt:"Illustrated postcard of a glowing Christmas tree in snow."},
+    christmasFeast:{name:"Christmas Feast",description:"A festive table warmed by candles and a fireplace.",alt:"Illustrated postcard of a Christmas feast in a snowy cottage."},
+    christmasGifts:{name:"Christmas Gifts",description:"Handmade parcels wait beneath the tree.",alt:"Illustrated postcard of Christmas gifts beside a tree."},
+    christmasCarols:{name:"Christmas Carols",description:"A glowing chapel keeps songs for the night.",alt:"Illustrated postcard of a snowy chapel with music folios and lanterns."},
+    christmasSleigh:{name:"Christmas Sleigh",description:"A laden sleigh travels through the winter morning.",alt:"Illustrated postcard of a gift-laden sleigh in a snowy forest."},
     base: { name: "DUIF Postcard", description: "The permanent base postcard for every correspondence." },
     christTheRedeemer: { name: "Christ the Redeemer Postcard", description: "A permanent postcard earned by passing Christ the Redeemer.", alt: "Illustrated postcard of Christ the Redeemer overlooking Rio de Janeiro." },
     masp: { name: "MASP Postcard", description: "A permanent postcard earned by passing MASP.", alt: "Illustrated postcard of MASP on Avenida Paulista." },
@@ -1119,6 +1124,7 @@ export const enUS = {
     },
   },
   shop: {
+    christmasPack:{name:"2027 Festive Collection",description:"Eleven postcards to send: illustrated Christmas and South American New Year scenes.",buy:"Buy collection",buying:"Buying collection"},
     eyebrow: "Postal counter",
     title: "Shop",
     subtitle:

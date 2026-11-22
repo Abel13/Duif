@@ -84,6 +84,7 @@ export type TranslationDictionary = {
   };
   officialPostcards: {
     base: { name: string; description: string };
+    christmasTree: { name:string; description:string; alt:string }; christmasFeast: { name:string; description:string; alt:string }; christmasGifts: { name:string; description:string; alt:string }; christmasCarols: { name:string; description:string; alt:string }; christmasSleigh: { name:string; description:string; alt:string };
     christTheRedeemer: { name: string; description: string; alt: string };
     masp: { name: string; description: string; alt: string };
     iguazuDevilsThroat: { name: string; description: string; alt: string };
@@ -982,6 +983,7 @@ export type TranslationDictionary = {
     };
   };
   shop: {
+    christmasPack: { name:string; description:string; buy:string; buying:string };
     eyebrow: string;
     title: string;
     subtitle: string;
@@ -2217,4 +2219,23 @@ export type TranslationKey =
   | "mailbox.minutesRemaining"
   | "mailbox.openVisitorLetter"
   | "mailbox.correspondenceUnavailable"
-  | "send.removeSticker";
+  | "send.removeSticker"
+  | "shop.christmasPack.name"
+  | "shop.christmasPack.description"
+  | "shop.christmasPack.buy"
+  | "shop.christmasPack.buying"
+  | "officialPostcards.christmasTree.name"
+  | "officialPostcards.christmasTree.description"
+  | "officialPostcards.christmasTree.alt"
+  | "officialPostcards.christmasFeast.name"
+  | "officialPostcards.christmasFeast.description"
+  | "officialPostcards.christmasFeast.alt"
+  | "officialPostcards.christmasGifts.name"
+  | "officialPostcards.christmasGifts.description"
+  | "officialPostcards.christmasGifts.alt"
+  | "officialPostcards.christmasCarols.name"
+  | "officialPostcards.christmasCarols.description"
+  | "officialPostcards.christmasCarols.alt"
+  | "officialPostcards.christmasSleigh.name"
+  | "officialPostcards.christmasSleigh.description"
+  | "officialPostcards.christmasSleigh.alt";

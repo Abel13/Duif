@@ -13,7 +13,7 @@ import {
   type ShopCategory,
   useEquipmentData,
 } from "../../game";
-import { purchaseEquipment } from "../../integrations/supabase/equipment";
+import { purchaseChristmasPostcardPack, purchaseEquipment } from "../../integrations/supabase/equipment";
 import { useTranslation } from "../../i18n";
 import styles from "./ShopPage.module.css";
 
@@ -29,6 +29,8 @@ export function ShopPage() {
     () => filterShopItemsByCategory(shopCatalog, selectedCategory),
     [selectedCategory],
   );
+  const today = new Date();
+  const isChristmasSeason = today.getMonth() === 11 || (today.getMonth() === 0 && today.getDate() <= 6);
 
   function openItem(item: ShopCatalogItem, trigger: HTMLButtonElement) {
     lastTriggerRef.current = trigger;
@@ -44,6 +46,12 @@ export function ShopPage() {
     setBuyingKey(catalogKey);
     setPurchaseError(false);
     try { await purchaseEquipment(catalogKey); await refreshEquipment(); }
+    catch { setPurchaseError(true); }
+    finally { setBuyingKey(undefined); }
+  }
+  async function handleChristmasPurchase() {
+    setBuyingKey("christmas-postcards"); setPurchaseError(false);
+    try { await purchaseChristmasPostcardPack(); await refreshEquipment(); }
     catch { setPurchaseError(true); }
     finally { setBuyingKey(undefined); }
   }
@@ -65,6 +73,11 @@ export function ShopPage() {
               <button className={styles.cardAction} disabled={buyingKey===item.catalogKey || equipmentData.seedBalance<item.seedPrice} onClick={()=>void handleEquipmentPurchase(item.catalogKey)} type="button">{buyingKey===item.catalogKey?t("functionalEquipment.buying"):t("functionalEquipment.buy")}</button>
             </article>)}
           </div>
+          <article className={styles.card}>
+            <AssetImage alt={t("shop.christmasPack.name")} className={`${styles.cardImage} ${styles.postcardImage}`} height={683} assetKey={assetKeys.postcards.christmas.tree} width={1024}><span className={styles.assetFallback} aria-hidden="true" /></AssetImage>
+            <div className={styles.cardBody}><p className={styles.category}>{t("shop.categories.postcards")}</p><h3>{t("shop.christmasPack.name")}</h3><p>{t("shop.christmasPack.description")}</p><p className={styles.price}><CurrencyIcon currency="seeds"/><strong>10</strong></p></div>
+            <button className={styles.cardAction} disabled={!isChristmasSeason || buyingKey==="christmas-postcards" || equipmentData.seedBalance<10} onClick={()=>void handleChristmasPurchase()} type="button">{buyingKey==="christmas-postcards"?t("shop.christmasPack.buying"):t("shop.christmasPack.buy")}</button>
+          </article>
           {purchaseError?<p className={styles.purchaseError}>{t("functionalEquipment.purchaseError")}</p>:null}
           <div className={styles.filterHeader}>
             <h2 id="shop-catalog-title">{t("shop.categoriesLabel")}</h2>

@@ -53,6 +53,12 @@ export async function purchaseEquipment(catalogKey: string, requestId = crypto.r
   if (error) throw error;
 }
 
+export async function purchaseChristmasPostcardPack(requestId = crypto.randomUUID()) {
+  const client = getSupabaseClient(); if (!client) return;
+  const { error } = await client.rpc("purchase_christmas_postcard_pack", { request_id: requestId });
+  if (error) throw error;
+}
+
 export async function saveMascotLoadout(loadout: MascotLoadout, backpackInstanceId?: string, utilityInstanceId?: string, requestId = crypto.randomUUID()) {
   const client = getSupabaseClient(); if (!client) return;
   const { error } = await client.rpc("set_mascot_loadout", {

@@ -103,6 +103,11 @@ export const ptBR = {
   jardimBotanicoCuritiba: { name: "Jardim Botânico de Curitiba", description: "Em Curitiba, a estufa de ferro e vidro do Jardim Botânico marca o parque com sua silhueta Art Nouveau entre canteiros formais.", alt: "Sticker ilustrado da estufa de ferro e vidro do Jardim Botânico de Curitiba." },
   },
   officialPostcards: {
+    christmasTree:{name:"Árvore de Natal",description:"Uma árvore iluminada no silêncio da neve.",alt:"Cartão postal ilustrado de uma árvore de Natal iluminada na neve."},
+    christmasFeast:{name:"Ceia de Natal",description:"Uma mesa festiva aquecida por velas e lareira.",alt:"Cartão postal ilustrado de uma ceia de Natal em uma cabana nevada."},
+    christmasGifts:{name:"Presentes de Natal",description:"Pacotes artesanais aguardam sob a árvore.",alt:"Cartão postal ilustrado de presentes natalinos junto a uma árvore."},
+    christmasCarols:{name:"Cantos de Natal",description:"Uma capela iluminada guarda canções para a noite.",alt:"Cartão postal ilustrado de uma capela nevada com partituras e lanternas."},
+    christmasSleigh:{name:"Trenó de Natal",description:"Um trenó carregado segue pela manhã de inverno.",alt:"Cartão postal ilustrado de um trenó com presentes em uma floresta nevada."},
     base: { name: "Cartão DUIF", description: "O cartão-base permanente para toda correspondência." },
     christTheRedeemer: { name: "Cartão do Cristo Redentor", description: "Um cartão postal permanente conquistado ao passar pelo Cristo Redentor.", alt: "Cartão postal ilustrado do Cristo Redentor com o Rio de Janeiro ao fundo." },
     masp: { name: "Cartão do MASP", description: "Um cartão postal permanente conquistado ao passar pelo MASP.", alt: "Cartão postal ilustrado do MASP na Avenida Paulista." },
@@ -1201,6 +1206,7 @@ export const ptBR = {
     },
   },
   shop: {
+    christmasPack:{name:"Coleção Festas 2027",description:"Onze cartões-postais para enviar: Natal ilustrado e viradas de ano sul-americanas.",buy:"Comprar coleção",buying:"Comprando coleção"},
     eyebrow: "Balcão postal",
     title: "Loja",
     subtitle:

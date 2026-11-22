@@ -3406,6 +3406,10 @@ export type Database = {
       }
       claim_referral_owl: { Args: { requested_name: string }; Returns: Json }
       collect_delivery_reward: { Args: { delivery_id: string }; Returns: Json }
+      list_pending_global_gifts: { Args: never; Returns: { id:string; seed_quantity:number }[] }
+      claim_global_gift: { Args: { gift_id:string }; Returns: Json }
+      admin_create_global_gift: { Args: { target_seed_quantity:number }; Returns: Json }
+      admin_set_global_gift_status: { Args: { target_gift_id:string; target_status:string }; Returns: undefined }
       collect_tutorial_delivery: { Args: never; Returns: Json }
       complete_nest_setup: {
         Args: {
@@ -4041,6 +4045,10 @@ export type Database = {
       provision_initial_mascot: { Args: never; Returns: Json }
       purchase_equipment: {
         Args: { request_id: string; target_catalog_key: string }
+        Returns: Json
+      }
+      purchase_christmas_postcard_pack: {
+        Args: { request_id: string }
         Returns: Json
       }
       regenerate_my_postal_friend_code: {

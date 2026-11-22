@@ -34,6 +34,8 @@ export const assetKeys = {
   postcards: {
     baseFront: "postcard.base.front",
     inauguralFront: "postcard.inaugural.front",
+    christmas: { tree: "postcard.seasonal.christmasTree.front", feast: "postcard.seasonal.christmasFeast.front", gifts: "postcard.seasonal.christmasGifts.front", carols: "postcard.seasonal.christmasCarols.front", sleigh: "postcard.seasonal.christmasSleigh.front", cottage: "postcard.seasonal.christmasCottage.front", table: "postcard.seasonal.christmasTable.front", mailbox: "postcard.seasonal.christmasMailbox.front" },
+    newYear: { beach: "postcard.seasonal.newYearBeach.front", andes: "postcard.seasonal.newYearAndes.front", buenosAires: "postcard.seasonal.newYearBuenosAires.front" },
     cities: {
       aracaju: "postcard.city.3471872.front",
       beloHorizonte: "postcard.city.3470127.front",
