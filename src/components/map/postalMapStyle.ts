@@ -8,7 +8,7 @@ import {
   type PostalMapPalette,
 } from "./postalMapPalette";
 
-const DEFAULT_VECTOR_TILES_URL = "https://tiles.openfreemap.org/planet/{z}/{x}/{y}.pbf";
+const DEFAULT_RASTER_TILES_URL = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
 const DEFAULT_GLYPHS_URL = "https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf";
 const VECTOR_ATTRIBUTION = "© OpenStreetMap contributors · © OpenFreeMap";
 const LABEL_FONT = ["Noto Sans Regular"] as [string];
@@ -54,8 +54,8 @@ export type CreatePostalMapStyleOptions = {
   tilesUrl?: string;
 };
 
-export function getPostalMapTilesUrl(override?: string): string {
-  return override ?? import.meta.env.VITE_MAP_VECTOR_TILES_URL ?? DEFAULT_VECTOR_TILES_URL;
+export function getPostalMapTilesUrl(override?: string): string | undefined {
+  return override ?? import.meta.env.VITE_MAP_VECTOR_TILES_URL;
 }
 
 export function getPostalMapGlyphsUrl(override?: string): string {
@@ -69,6 +69,10 @@ export function createPostalMapStyle(
   const palette = resolvePostalMapPalette(season, options.isNight ?? false);
   const tilesUrl = getPostalMapTilesUrl(options.tilesUrl);
   const glyphsUrl = getPostalMapGlyphsUrl(options.glyphsUrl);
+
+  if (!tilesUrl) {
+    return createPostalRasterStyle(palette, glyphsUrl);
+  }
 
   return {
     version: 8,
@@ -247,6 +251,44 @@ export function createPostalMapStyle(
           "text-halo-color": palette.labelHalo,
           "text-halo-width": 1.4,
           "text-halo-blur": 0.4,
+        },
+      },
+    ],
+  };
+}
+
+function createPostalRasterStyle(
+  palette: PostalMapPalette,
+  glyphs: string,
+): maplibregl.StyleSpecification {
+  return {
+    version: 8,
+    name: "DUIF Postal Raster",
+    glyphs,
+    sources: {
+      osm: {
+        type: "raster",
+        tiles: [DEFAULT_RASTER_TILES_URL],
+        tileSize: 256,
+        attribution: "© OpenStreetMap contributors",
+      },
+    },
+    layers: [
+      {
+        id: postalMapLayerIds.paper,
+        type: "background",
+        paint: { "background-color": palette.earth },
+      },
+      {
+        id: "osm-raster",
+        type: "raster",
+        source: "osm",
+        paint: {
+          "raster-opacity": 0.62,
+          "raster-saturation": -0.72,
+          "raster-contrast": -0.18,
+          "raster-brightness-min": 0.12,
+          "raster-brightness-max": 0.9,
         },
       },
     ],

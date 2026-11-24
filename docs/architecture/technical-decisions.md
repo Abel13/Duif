@@ -377,8 +377,10 @@ MapLibre GL JS
 
 The map implementation uses MapLibre with an OpenMapTiles-compatible vector basemap and a
 DUIF seasonal postal palette (earth, field, park, water, buildings, roads, labels, route).
-The interim default tile/glyph host is OpenFreeMap, overridable via `VITE_MAP_VECTOR_TILES_URL`
-and `VITE_MAP_GLYPHS_URL`. DUIF route, reward, pet, and place-label layers remain on top.
+The default basemap is OpenStreetMap raster tiles, so the map stays available without depending on
+an interim vector-tile host. A vetted vector host can be enabled through
+`VITE_MAP_VECTOR_TILES_URL`; its glyph host is configured through `VITE_MAP_GLYPHS_URL`. DUIF
+route, reward, pet, and place-label layers remain on top.
 
 This is still not the final production tile/style decision. The first production map decision
 still needs a proper tile/style provider and usage review.

@@ -46,18 +46,14 @@ describe("postalMapPalette", () => {
 });
 
 describe("postalMapStyle", () => {
-  it("builds an OpenMapTiles vector style without raster OSM layers", () => {
+  it("uses a reliable raster basemap when no vector tile host is configured", () => {
     const style = createPostalMapStyle({ season: "autumn" });
     const layerIds = style.layers?.map((layer) => layer.id) ?? [];
 
-    expect(style.sources).toHaveProperty("openmaptiles");
-    expect(style.sources).not.toHaveProperty("osm");
+    expect(style.sources).toHaveProperty("osm");
+    expect(style.sources).not.toHaveProperty("openmaptiles");
     expect(layerIds).toContain(postalMapLayerIds.paper);
-    expect(layerIds).toContain(postalMapLayerIds.park);
-    expect(layerIds).toContain(postalMapLayerIds.water);
-    expect(layerIds).toContain(postalMapLayerIds.roadAvenue);
-    expect(layerIds).toContain(postalMapLayerIds.placeLabel);
-    expect(layerIds).not.toContain("osm-raster");
+    expect(layerIds).toContain("osm-raster");
 
     const paper = style.layers?.find((layer) => layer.id === postalMapLayerIds.paper);
     expect(backgroundColor(paper)).toBe(postalMapPalettes.autumn.earth);
@@ -69,15 +65,24 @@ describe("postalMapStyle", () => {
     expect(backgroundColor(paper)).toBe(postalMapPalettes.summer.earth);
   });
 
-  it("resolves tile and glyph URLs from overrides", () => {
+  it("resolves optional vector tile and glyph URL overrides", () => {
     expect(getPostalMapTilesUrl("https://example.test/{z}/{x}/{y}.pbf")).toBe(
       "https://example.test/{z}/{x}/{y}.pbf",
     );
     expect(getPostalMapGlyphsUrl("https://example.test/fonts/{fontstack}/{range}.pbf")).toBe(
       "https://example.test/fonts/{fontstack}/{range}.pbf",
     );
-    expect(getPostalMapTilesUrl()).toContain("openfreemap.org");
+    expect(getPostalMapTilesUrl()).toBeUndefined();
     expect(getPostalMapGlyphsUrl()).toContain("openfreemap.org");
+  });
+
+  it("uses a vector basemap only when one is explicitly configured", () => {
+    const style = createPostalMapStyle({
+      tilesUrl: "https://example.test/{z}/{x}/{y}.pbf",
+    });
+
+    expect(style.sources).toHaveProperty("openmaptiles");
+    expect(style.sources).not.toHaveProperty("osm");
   });
 });
 
