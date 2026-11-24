@@ -3,7 +3,7 @@ import { CoffeeBean, SketchLogo } from "@phosphor-icons/react";
 
 import { AppBottomNav, PageShell } from "../../components/layout";
 import { EquipmentArtwork } from "../../components/mascot/MascotLoadoutEditor";
-import { AssetImage, SketchPanel, StampButton } from "../../components/ui";
+import { AssetImage, StampButton } from "../../components/ui";
 import {
   assetKeys,
   filterShopItemsByCategory,
@@ -69,10 +69,7 @@ export function ShopPage() {
   return (
     <PageShell hasBottomNav>
       <div className={styles.shell}>
-        <SketchPanel eyebrow={t("shop.eyebrow")} title={t("shop.title")}>
-          <p className={styles.subtitle}>{t("shop.subtitle")}</p>
-          <p className={styles.notice}>{t("shop.prototypeNotice")}</p>
-        </SketchPanel>
+        <ShopAnnouncementCarousel />
 
         <section className={styles.catalog} aria-labelledby="shop-catalog-title">
           <div className={styles.functionalHeader}><div><h2>{t("functionalEquipment.shopTitle")}</h2><p>{t("functionalEquipment.shopDescription")}</p></div><strong>{t("functionalEquipment.balance")}: {equipmentData.seedBalance}</strong></div>
@@ -83,7 +80,7 @@ export function ShopPage() {
               <button className={styles.cardAction} disabled={buyingKey===item.catalogKey || equipmentData.seedBalance<item.seedPrice} onClick={()=>void handleEquipmentPurchase(item.catalogKey)} type="button">{buyingKey===item.catalogKey?t("functionalEquipment.buying"):t("functionalEquipment.buy")}</button>
             </article>)}
           </div>
-          <section aria-labelledby="seasonal-postcards-title" className={styles.seasonalPostcards}>
+          {isChristmasSeason ? <section aria-labelledby="seasonal-postcards-title" className={styles.seasonalPostcards}>
             <header><div><p className={styles.category}>{t("shop.categories.postcards")}</p><h2 id="seasonal-postcards-title">{t("shop.christmasPack.name")}</h2><p>{t("shop.christmasPack.description")}</p></div></header>
             <article className={styles.card}>
               <AssetImage alt={t("shop.christmasPack.name")} className={`${styles.cardImage} ${styles.postcardImage}`} height={683} assetKey={assetKeys.postcards.christmas.tree} width={1024}><span className={styles.assetFallback} aria-hidden="true" /></AssetImage>
@@ -96,7 +93,7 @@ export function ShopPage() {
               <div className={styles.cardBody}><h3>{t(item.nameKey)}</h3><p>{t(item.descriptionKey)}</p><p className={styles.price}><CurrencyIcon currency="seeds"/><strong>{individualSeasonalPostcardPrice}</strong></p></div>
               <button className={styles.cardAction} disabled={!isChristmasSeason || buyingKey===item.catalogKey || equipmentData.seedBalance<individualSeasonalPostcardPrice} onClick={()=>void handleSeasonalPostcardPurchase(item.catalogKey)} type="button">{buyingKey===item.catalogKey?t("shop.christmasPack.individualBuying"):t("shop.christmasPack.individualBuy")}</button>
             </article>)}</div>
-          </section>
+          </section> : null}
           {purchaseError?<p className={styles.purchaseError}>{t("functionalEquipment.purchaseError")}</p>:null}
           <div className={styles.filterHeader}>
             <h2 id="shop-catalog-title">{t("shop.categoriesLabel")}</h2>
@@ -135,6 +132,26 @@ export function ShopPage() {
       )}
       <AppBottomNav />
     </PageShell>
+  );
+}
+
+function ShopAnnouncementCarousel() {
+  const { t } = useTranslation();
+
+  return (
+    <section aria-label={t("shop.announcements.label")} aria-roledescription="carousel" className={styles.announcementCarousel}>
+      <article aria-roledescription="slide" className={styles.announcementSlide}>
+        <AssetImage alt={t("shop.announcements.yearEnd.alt")} assetKey={assetKeys.shop.yearEndPostcardPackAnnouncement} className={styles.announcementArtwork} height={640} width={960}>
+          <span aria-hidden="true" className={styles.assetFallback} />
+        </AssetImage>
+        <div className={styles.announcementCopy}>
+          <span>{t("shop.announcements.label")}</span>
+          <h2>{t("shop.announcements.yearEnd.title")}</h2>
+          <p>{t("shop.announcements.yearEnd.description")}</p>
+          <strong>{t("shop.announcements.yearEnd.availability")}</strong>
+        </div>
+      </article>
+    </section>
   );
 }
 

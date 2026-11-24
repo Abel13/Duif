@@ -126,6 +126,7 @@ export const assetKeys = {
     lanternFestivalPostcard: "shop.thumbnail.lanternFestivalPostcard",
     brassNestPlaque: "shop.thumbnail.brassNestPlaque",
     airmailProfileRibbon: "shop.thumbnail.airmailProfileRibbon",
+    yearEndPostcardPackAnnouncement: "shop.announcement.yearEndPostcardPack",
   },
   jobs: { postalBoard: "jobs.artwork.postalBoard" },
   nest: {

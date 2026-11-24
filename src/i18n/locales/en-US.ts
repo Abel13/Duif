@@ -1138,6 +1138,7 @@ export const enUS = {
   },
   shop: {
     christmasPack:{name:"2027 Festive Collection",description:"Eleven postcards to send: illustrated Christmas and South American New Year scenes.",buy:"Buy collection",buying:"Buying collection",individualTitle:"Individual postcards",individualDescription:"Restock a seasonal postcard for your next correspondence.",individualBuy:"Buy postcard",individualBuying:"Buying postcard"},
+    announcements:{label:"Shop announcements",yearEnd:{title:"2027 Festive Collection",description:"The complete collection of 11 postcards will arrive at the counter for 100 seeds.",availability:"Available from December 1.",alt:"Festive postal package with illustrated postcards, a red ribbon, and a snowy window."}},
     eyebrow: "Postal counter",
     title: "Shop",
     subtitle:

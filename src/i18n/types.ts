@@ -992,6 +992,7 @@ export type TranslationDictionary = {
   };
   shop: {
     christmasPack: { name:string; description:string; buy:string; buying:string; individualTitle:string; individualDescription:string; individualBuy:string; individualBuying:string };
+    announcements: { label:string; yearEnd:{ title:string; description:string; availability:string; alt:string } };
     eyebrow: string;
     title: string;
     subtitle: string;
@@ -2243,6 +2244,11 @@ export type TranslationKey =
   | "shop.christmasPack.individualDescription"
   | "shop.christmasPack.individualBuy"
   | "shop.christmasPack.individualBuying"
+  | "shop.announcements.label"
+  | "shop.announcements.yearEnd.title"
+  | "shop.announcements.yearEnd.description"
+  | "shop.announcements.yearEnd.availability"
+  | "shop.announcements.yearEnd.alt"
   | "officialPostcards.christmasTree.name"
   | "officialPostcards.christmasTree.description"
   | "officialPostcards.christmasTree.alt"

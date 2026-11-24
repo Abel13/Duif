@@ -1220,6 +1220,7 @@ export const ptBR = {
   },
   shop: {
     christmasPack:{name:"Coleção Festas 2027",description:"Onze cartões-postais para enviar: Natal ilustrado e viradas de ano sul-americanas.",buy:"Comprar coleção",buying:"Comprando coleção",individualTitle:"Cartões avulsos",individualDescription:"Reponha um cartão sazonal para a próxima correspondência.",individualBuy:"Comprar cartão",individualBuying:"Comprando cartão"},
+    announcements:{label:"Anúncios da loja",yearEnd:{title:"Pacote Festas 2027",description:"A coleção completa de 11 cartões-postais chegará ao balcão por 100 sementes.",availability:"Disponível a partir de 1º de dezembro.",alt:"Pacote postal festivo com cartões ilustrados, laço vermelho e uma janela nevada."}},
     eyebrow: "Balcão postal",
     title: "Loja",
     subtitle:
