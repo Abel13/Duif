@@ -9,13 +9,17 @@ import {
   filterShopItemsByCategory,
   shopCatalog,
   shopCategories,
+  seasonalPostcardShopItems,
   type ShopCatalogItem,
   type ShopCategory,
   useEquipmentData,
 } from "../../game";
-import { purchaseChristmasPostcardPack, purchaseEquipment } from "../../integrations/supabase/equipment";
+import { purchaseChristmasPostcardPack, purchaseEquipment, purchaseSeasonalPostcard } from "../../integrations/supabase/equipment";
 import { useTranslation } from "../../i18n";
 import styles from "./ShopPage.module.css";
+
+const completeSeasonalPackPrice = 100;
+const individualSeasonalPostcardPrice = 10;
 
 export function ShopPage() {
   const { t } = useTranslation();
@@ -55,6 +59,12 @@ export function ShopPage() {
     catch { setPurchaseError(true); }
     finally { setBuyingKey(undefined); }
   }
+  async function handleSeasonalPostcardPurchase(catalogKey: string) {
+    setBuyingKey(catalogKey); setPurchaseError(false);
+    try { await purchaseSeasonalPostcard(catalogKey); await refreshEquipment(); }
+    catch { setPurchaseError(true); }
+    finally { setBuyingKey(undefined); }
+  }
 
   return (
     <PageShell hasBottomNav>
@@ -73,11 +83,20 @@ export function ShopPage() {
               <button className={styles.cardAction} disabled={buyingKey===item.catalogKey || equipmentData.seedBalance<item.seedPrice} onClick={()=>void handleEquipmentPurchase(item.catalogKey)} type="button">{buyingKey===item.catalogKey?t("functionalEquipment.buying"):t("functionalEquipment.buy")}</button>
             </article>)}
           </div>
-          <article className={styles.card}>
-            <AssetImage alt={t("shop.christmasPack.name")} className={`${styles.cardImage} ${styles.postcardImage}`} height={683} assetKey={assetKeys.postcards.christmas.tree} width={1024}><span className={styles.assetFallback} aria-hidden="true" /></AssetImage>
-            <div className={styles.cardBody}><p className={styles.category}>{t("shop.categories.postcards")}</p><h3>{t("shop.christmasPack.name")}</h3><p>{t("shop.christmasPack.description")}</p><p className={styles.price}><CurrencyIcon currency="seeds"/><strong>10</strong></p></div>
-            <button className={styles.cardAction} disabled={!isChristmasSeason || buyingKey==="christmas-postcards" || equipmentData.seedBalance<10} onClick={()=>void handleChristmasPurchase()} type="button">{buyingKey==="christmas-postcards"?t("shop.christmasPack.buying"):t("shop.christmasPack.buy")}</button>
-          </article>
+          <section aria-labelledby="seasonal-postcards-title" className={styles.seasonalPostcards}>
+            <header><div><p className={styles.category}>{t("shop.categories.postcards")}</p><h2 id="seasonal-postcards-title">{t("shop.christmasPack.name")}</h2><p>{t("shop.christmasPack.description")}</p></div></header>
+            <article className={styles.card}>
+              <AssetImage alt={t("shop.christmasPack.name")} className={`${styles.cardImage} ${styles.postcardImage}`} height={683} assetKey={assetKeys.postcards.christmas.tree} width={1024}><span className={styles.assetFallback} aria-hidden="true" /></AssetImage>
+              <div className={styles.cardBody}><h3>{t("shop.christmasPack.name")}</h3><p className={styles.price}><CurrencyIcon currency="seeds"/><strong>{completeSeasonalPackPrice}</strong></p></div>
+              <button className={styles.cardAction} disabled={!isChristmasSeason || buyingKey==="christmas-postcards" || equipmentData.seedBalance<completeSeasonalPackPrice} onClick={()=>void handleChristmasPurchase()} type="button">{buyingKey==="christmas-postcards"?t("shop.christmasPack.buying"):t("shop.christmasPack.buy")}</button>
+            </article>
+            <div className={styles.seasonalIndividualHeader}><div><h3>{t("shop.christmasPack.individualTitle")}</h3><p>{t("shop.christmasPack.individualDescription")}</p></div></div>
+            <div className={styles.grid}>{seasonalPostcardShopItems.map((item) => <article className={styles.card} key={item.catalogKey}>
+              <AssetImage alt={t(item.nameKey)} className={`${styles.cardImage} ${styles.postcardImage}`} height={683} assetKey={item.thumbnailAssetKey} width={1024}><span className={styles.assetFallback} aria-hidden="true" /></AssetImage>
+              <div className={styles.cardBody}><h3>{t(item.nameKey)}</h3><p>{t(item.descriptionKey)}</p><p className={styles.price}><CurrencyIcon currency="seeds"/><strong>{individualSeasonalPostcardPrice}</strong></p></div>
+              <button className={styles.cardAction} disabled={!isChristmasSeason || buyingKey===item.catalogKey || equipmentData.seedBalance<individualSeasonalPostcardPrice} onClick={()=>void handleSeasonalPostcardPurchase(item.catalogKey)} type="button">{buyingKey===item.catalogKey?t("shop.christmasPack.individualBuying"):t("shop.christmasPack.individualBuy")}</button>
+            </article>)}</div>
+          </section>
           {purchaseError?<p className={styles.purchaseError}>{t("functionalEquipment.purchaseError")}</p>:null}
           <div className={styles.filterHeader}>
             <h2 id="shop-catalog-title">{t("shop.categoriesLabel")}</h2>

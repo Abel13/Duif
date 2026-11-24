@@ -53,9 +53,15 @@ export async function purchaseEquipment(catalogKey: string, requestId = crypto.r
   if (error) throw error;
 }
 
-export async function purchaseChristmasPostcardPack(requestId = crypto.randomUUID()) {
+export async function purchaseChristmasPostcardPack(requestId = crypto.randomUUID()): Promise<void> {
   const client = getSupabaseClient(); if (!client) return;
   const { error } = await client.rpc("purchase_christmas_postcard_pack", { request_id: requestId });
+  if (error) throw error;
+}
+
+export async function purchaseSeasonalPostcard(catalogKey: string, requestId = crypto.randomUUID()): Promise<void> {
+  const client = getSupabaseClient(); if (!client) return;
+  const { error } = await client.rpc("purchase_seasonal_postcard", { target_catalog_key: catalogKey, request_id: requestId });
   if (error) throw error;
 }
 

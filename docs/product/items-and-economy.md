@@ -64,7 +64,9 @@ são apenas apresentação persistida da correspondência: não transferem propr
 ### Loja futura
 
 A loja poderá vender itens cosméticos oficiais, incluindo selos e carimbos personalizados, e
-eventualmente coleções de adesivos e pacotes de cartões de arte paga. A economia gratuita poderá
+eventualmente coleções de adesivos e pacotes de cartões de arte paga. A coleção sazonal de onze
+cartões de Festas custa 100 Sementes uma vez por temporada; cada cartão dela pode ser recomprado
+individualmente por 10 Sementes. A economia gratuita poderá
 oferecer com Sementes equipamento funcional básico e Lanches Revigorantes depois do balanceamento.
 Cristais não venderão vantagem de rota, XP, drops aleatórios pagos ou acesso social.
 

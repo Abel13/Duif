@@ -32,6 +32,43 @@
   min-width: 0;
 }
 
+.seasonalPostcards {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border: 2px dashed rgba(164, 74, 63, 0.42);
+  border-radius: 0.72rem 0.3rem 0.64rem 0.38rem;
+  background: rgba(255, 248, 232, 0.54);
+}
+
+.seasonalPostcards > header h2,
+.seasonalPostcards > header p,
+.seasonalIndividualHeader h3,
+.seasonalIndividualHeader p {
+  margin: 0;
+}
+
+.seasonalPostcards > header {
+  padding-bottom: var(--space-2);
+  border-bottom: 1px dashed rgba(139, 94, 60, 0.38);
+}
+
+.seasonalPostcards > header h2 {
+  font-family: var(--font-display);
+}
+
+.seasonalPostcards > header p:last-child,
+.seasonalIndividualHeader p {
+  margin-top: var(--space-1);
+  color: var(--color-ink-soft);
+  line-height: 1.5;
+}
+
+.seasonalIndividualHeader {
+  padding-top: var(--space-2);
+  border-top: 1px dashed rgba(139, 94, 60, 0.38);
+}
+
 .filterHeader {
   display: grid;
   gap: var(--space-2);

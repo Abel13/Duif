@@ -90,6 +90,9 @@ export function TravelMapPage() {
   const [landmarkDialogOpen,setLandmarkDialogOpen]=useState(false);
   const [newVisitorIds, setNewVisitorIds] = useState<Set<string>>(() => new Set());
   const [globalGifts,setGlobalGifts]=useState<GlobalGift[]>([]);
+  const [claimedGlobalGift, setClaimedGlobalGift] = useState<number>();
+  const [isClaimingGlobalGift, setIsClaimingGlobalGift] = useState(false);
+  const [globalGiftError, setGlobalGiftError] = useState(false);
   const tripStatusTriggerRef = useRef<HTMLElement | null>(null);
   const missionDossierTriggerRef = useRef<HTMLElement | null>(null);
   const highlightTimersRef = useRef<Map<string, number>>(new Map());
@@ -113,6 +116,23 @@ export function TravelMapPage() {
   useEffect(() => {
     void listPendingGlobalGifts().then(setGlobalGifts).catch(()=>undefined);
   }, [profile?.id]);
+
+  async function handleGlobalGiftClaim() {
+    const gift = globalGifts[0];
+    if (!gift || isClaimingGlobalGift) return;
+
+    setIsClaimingGlobalGift(true);
+    setGlobalGiftError(false);
+    try {
+      const claim = await claimGlobalGift(gift.id);
+      setGlobalGifts((items) => items.filter((item) => item.id !== gift.id));
+      setClaimedGlobalGift(claim.seedQuantity);
+    } catch {
+      setGlobalGiftError(true);
+    } finally {
+      setIsClaimingGlobalGift(false);
+    }
+  }
   useEffect(() => {
     const selectedMascot = mascots.find((mascot) => mascot.id === selectedMascotId);
     if (selectedMascot && hasActiveMascotDelivery(selectedMascot, now)) {
@@ -560,7 +580,7 @@ export function TravelMapPage() {
 
         {(globalGifts.length>0 || activePostalVisitors.length > 0 || visiblePostalTraffic.length > 0 || (journeyPhase === "traveling" && displayMascot && (landmarks.length > 0 || delivery.segmentedTravel || rewards.length > 0)) || (missionDossier && journeyPhase !== "completed")) ? (
           <nav aria-label={t("map.activeMapTools")} className={styles.activeMapTools}>
-            {globalGifts.length>0?<button aria-label="Presentes" className={styles.activeToolButton} onClick={()=>{const gift=globalGifts[0];if(gift)void claimGlobalGift(gift.id).then(()=>setGlobalGifts((items)=>items.filter((item)=>item.id!==gift.id))).catch(()=>undefined)}} title="Resgatar presente" type="button"><Gift aria-hidden="true" weight="duotone"/><span>{globalGifts.length}</span></button>:null}
+            {globalGifts.length > 0 ? <button aria-label={t("map.globalGiftLabel")} className={styles.activeToolButton} disabled={isClaimingGlobalGift} onClick={() => void handleGlobalGiftClaim()} title={t("map.claimGlobalGift")} type="button"><Gift aria-hidden="true" weight="duotone"/><span>{globalGifts.length}</span></button> : null}
             {activePostalVisitors.map((visitor) => (
               <Link
                 aria-label={`${t("mailbox.visitingMascot")}: ${visitor.mascotName}, ${getPostalVisitorMinutes(visitor.departsAt, now.getTime())} ${t("mailbox.minutesRemaining")}`}
@@ -581,6 +601,7 @@ export function TravelMapPage() {
             {journeyPhase==="traveling"&&landmarks.length>0?<button aria-label={t("map.landmarks.title")} className={styles.activeToolButton} data-new={landmarks.some((item)=>item.announcementPending)||undefined} onClick={()=>{setSelectedLandmark(landmarks[0]);setLandmarkDialogOpen(true);}} title={t("map.landmarks.title")} type="button"><MapPin aria-hidden="true" weight="duotone"/><span>{landmarks.length}</span></button>:null}
           </nav>
         ) : null}
+        {globalGiftError ? <p className={styles.globalGiftError} role="alert">{t("map.globalGiftClaimError")}</p> : null}
 
         {discoveryToast ? (
           <div className={styles.discoveryToast} role="status">
@@ -672,6 +693,7 @@ export function TravelMapPage() {
         {discoveryDialogOpen?<RouteDiscoveryDialog discoveredCount={discoveredCount} onClose={()=>setDiscoveryDialogOpen(false)} onSelect={selectReward} onShowList={closeRewardDetails} rewardStates={rewardStates} rewards={rewards} selectedReward={selectedReward} sourceLabel={t(delivery.routeDiscoveryVersion?"map.persistedRewards":"map.mockedRewards")}/>:null}
         {landmarkDialogOpen&&selectedLandmark?<LandmarkDialog landmark={selectedLandmark} landmarks={landmarks} onClose={()=>{setLandmarkDialogOpen(false);setSelection(null);}} onSelect={selectLandmark}/>:null}
         {missionDossierOpen && missionDossier ? <MissionDossierDialog dossier={missionDossier} onClose={closeMissionDossier} returned={journeyPhase === "returned"} /> : null}
+        {claimedGlobalGift ? <GlobalGiftClaimDialog onClose={() => setClaimedGlobalGift(undefined)} seedQuantity={claimedGlobalGift} /> : null}
 
         {tripStatusOpen && journeyPhase !== "completed" ? (
           <TripStatusDialog
@@ -833,6 +855,38 @@ function PostalTrafficContent({
 }
 
 function LandmarkBanner({landmark,onDismiss,onOpen}:{landmark:WorldLandmark;onDismiss:(landmark:WorldLandmark)=>void;onOpen:(landmark:WorldLandmark)=>void}){const{t}=useTranslation();return <aside className={styles.landmarkBanner} role="status"><AssetImage alt="" assetKey={landmark.assetKey} className={styles.landmarkBannerImage}><span aria-hidden="true"/></AssetImage><div><strong>{t("map.landmarks.discovered")}</strong><span>{t(landmark.nameKey)}</span></div><button onClick={()=>onOpen(landmark)} type="button">{t("map.landmarks.learnMore")}</button><button aria-label={t("map.landmarks.dismiss")} onClick={()=>onDismiss(landmark)} type="button"><X aria-hidden="true"/></button></aside>}
+
+function GlobalGiftClaimDialog({ onClose, seedQuantity }: { onClose: () => void; seedQuantity: number }) {
+  const { locale, t } = useTranslation();
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    dialogRef.current?.showModal();
+  }, []);
+
+  function handleBackdropClick(event: MouseEvent<HTMLDialogElement>) {
+    if (event.target === event.currentTarget) dialogRef.current?.close();
+  }
+
+  return (
+    <dialog
+      aria-labelledby="global-gift-claim-title"
+      className={styles.trafficDialog}
+      onClick={handleBackdropClick}
+      onClose={onClose}
+      ref={dialogRef}
+    >
+      <section className={`${styles.trafficDialogPaper} ${styles.globalGiftPaper}`}>
+        <Gift aria-hidden="true" className={styles.globalGiftIcon} weight="duotone" />
+        <span>{t("map.globalGiftReceivedEyebrow")}</span>
+        <h2 id="global-gift-claim-title">{t("map.globalGiftReceivedTitle")}</h2>
+        <strong className={styles.globalGiftAmount}>{new Intl.NumberFormat(locale).format(seedQuantity)}</strong>
+        <p>{t("map.globalGiftReceivedDescription").replace("{seeds}", new Intl.NumberFormat(locale).format(seedQuantity))}</p>
+        <StampButton autoFocus onClick={() => dialogRef.current?.close()}>{t("map.closeGlobalGift")}</StampButton>
+      </section>
+    </dialog>
+  );
+}
 
 function LandmarkDialog({landmark,landmarks,onClose,onSelect}:{landmark:WorldLandmark;landmarks:WorldLandmark[];onClose:()=>void;onSelect:(key:string)=>void}){const{t}=useTranslation();const ref=useRef<HTMLDialogElement>(null);useEffect(()=>ref.current?.showModal(),[]);return <dialog aria-labelledby="landmark-dialog-title" className={styles.trafficDialog} onClick={(event)=>{if(event.target===event.currentTarget)ref.current?.close();}} onClose={onClose} ref={ref}><section className={`${styles.trafficDialogPaper} ${styles.landmarkPaper}`}><header><div><span>{t("map.landmarks.discovered")}</span><h2 id="landmark-dialog-title">{t(landmark.nameKey)}</h2></div><button aria-label={t("map.landmarks.close")} onClick={()=>ref.current?.close()} type="button"><X aria-hidden="true"/></button></header><AssetImage alt={t(landmark.nameKey)} assetKey={landmark.assetKey} className={styles.landmarkArtwork}><span aria-hidden="true"/></AssetImage><p>{t(landmark.descriptionKey)}</p><dl><div><dt>{t("map.landmarks.category")}</dt><dd>{t(`map.landmarks.${landmark.category}` as TranslationKey)}</dd></div><div><dt>{t("mascot.destination")}</dt><dd>{[landmark.city,landmark.region,landmark.countryCode].filter(Boolean).join(", ")}</dd></div></dl>{landmarks.length>1?<nav aria-label={t("map.landmarks.title")} className={styles.landmarkThumbnailList}>{landmarks.map((item)=><button aria-current={item.catalogKey===landmark.catalogKey?"true":undefined} aria-label={t(item.nameKey)} className={styles.landmarkThumbnailButton} key={item.catalogKey} onClick={()=>onSelect(item.catalogKey)} title={t(item.nameKey)} type="button"><AssetImage alt="" assetKey={item.assetKey} className={styles.landmarkThumbnail}><span aria-hidden="true"/></AssetImage></button>)}</nav>:null}</section></dialog>}
 

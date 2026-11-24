@@ -4051,6 +4051,10 @@ export type Database = {
         Args: { request_id: string }
         Returns: Json
       }
+      purchase_seasonal_postcard: {
+        Args: { request_id: string; target_catalog_key: string }
+        Returns: Json
+      }
       regenerate_my_postal_friend_code: {
         Args: never
         Returns: {

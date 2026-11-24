@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { isOfficialAssetKey } from "./assets";
-import { filterShopItemsByCategory, shopCatalog, shopCategories } from "./shop";
+import { filterShopItemsByCategory, seasonalPostcardShopItems, shopCatalog, shopCategories } from "./shop";
 
 describe("shop catalog", () => {
   it("contains unique, priced items with valid runtime assets", () => {
@@ -25,5 +25,11 @@ describe("shop catalog", () => {
     expect(
       filterShopItemsByCategory(shopCatalog, "unknown" as (typeof shopCategories)[number]),
     ).toEqual([]);
+  });
+
+  it("lists the complete seasonal collection as individually purchasable postcards", () => {
+    expect(seasonalPostcardShopItems).toHaveLength(11);
+    expect(new Set(seasonalPostcardShopItems.map((item) => item.catalogKey)).size).toBe(11);
+    expect(seasonalPostcardShopItems.every((item) => isOfficialAssetKey(item.thumbnailAssetKey))).toBe(true);
   });
 });

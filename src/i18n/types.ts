@@ -85,6 +85,7 @@ export type TranslationDictionary = {
   officialPostcards: {
     base: { name: string; description: string };
     christmasTree: { name:string; description:string; alt:string }; christmasFeast: { name:string; description:string; alt:string }; christmasGifts: { name:string; description:string; alt:string }; christmasCarols: { name:string; description:string; alt:string }; christmasSleigh: { name:string; description:string; alt:string };
+    christmasCottage: { name:string; description:string; alt:string }; christmasTable: { name:string; description:string; alt:string }; christmasMailbox: { name:string; description:string; alt:string }; newYearBeach: { name:string; description:string; alt:string }; newYearAndes: { name:string; description:string; alt:string }; newYearBuenosAires: { name:string; description:string; alt:string };
     christTheRedeemer: { name: string; description: string; alt: string };
     masp: { name: string; description: string; alt: string };
     iguazuDevilsThroat: { name: string; description: string; alt: string };
@@ -667,6 +668,13 @@ export type TranslationDictionary = {
     unavailable: string;
     cameraControls: string;
     activeMapTools: string;
+    globalGiftLabel: string;
+    claimGlobalGift: string;
+    globalGiftReceivedEyebrow: string;
+    globalGiftReceivedTitle: string;
+    globalGiftReceivedDescription: string;
+    closeGlobalGift: string;
+    globalGiftClaimError: string;
     overview: string;
     focusMascot: string;
     followMascot: string;
@@ -983,7 +991,7 @@ export type TranslationDictionary = {
     };
   };
   shop: {
-    christmasPack: { name:string; description:string; buy:string; buying:string };
+    christmasPack: { name:string; description:string; buy:string; buying:string; individualTitle:string; individualDescription:string; individualBuy:string; individualBuying:string };
     eyebrow: string;
     title: string;
     subtitle: string;
@@ -1647,6 +1655,13 @@ export type TranslationKey =
   | "map.unavailable"
   | "map.cameraControls"
   | "map.activeMapTools"
+  | "map.globalGiftLabel"
+  | "map.claimGlobalGift"
+  | "map.globalGiftReceivedEyebrow"
+  | "map.globalGiftReceivedTitle"
+  | "map.globalGiftReceivedDescription"
+  | "map.closeGlobalGift"
+  | "map.globalGiftClaimError"
   | "map.overview"
   | "map.focusMascot"
   | "map.followMascot"
@@ -2224,6 +2239,10 @@ export type TranslationKey =
   | "shop.christmasPack.description"
   | "shop.christmasPack.buy"
   | "shop.christmasPack.buying"
+  | "shop.christmasPack.individualTitle"
+  | "shop.christmasPack.individualDescription"
+  | "shop.christmasPack.individualBuy"
+  | "shop.christmasPack.individualBuying"
   | "officialPostcards.christmasTree.name"
   | "officialPostcards.christmasTree.description"
   | "officialPostcards.christmasTree.alt"
@@ -2238,4 +2257,22 @@ export type TranslationKey =
   | "officialPostcards.christmasCarols.alt"
   | "officialPostcards.christmasSleigh.name"
   | "officialPostcards.christmasSleigh.description"
-  | "officialPostcards.christmasSleigh.alt";
+  | "officialPostcards.christmasSleigh.alt"
+  | "officialPostcards.christmasCottage.name"
+  | "officialPostcards.christmasCottage.description"
+  | "officialPostcards.christmasCottage.alt"
+  | "officialPostcards.christmasTable.name"
+  | "officialPostcards.christmasTable.description"
+  | "officialPostcards.christmasTable.alt"
+  | "officialPostcards.christmasMailbox.name"
+  | "officialPostcards.christmasMailbox.description"
+  | "officialPostcards.christmasMailbox.alt"
+  | "officialPostcards.newYearBeach.name"
+  | "officialPostcards.newYearBeach.description"
+  | "officialPostcards.newYearBeach.alt"
+  | "officialPostcards.newYearAndes.name"
+  | "officialPostcards.newYearAndes.description"
+  | "officialPostcards.newYearAndes.alt"
+  | "officialPostcards.newYearBuenosAires.name"
+  | "officialPostcards.newYearBuenosAires.description"
+  | "officialPostcards.newYearBuenosAires.alt";

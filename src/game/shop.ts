@@ -1,5 +1,27 @@
 import { assetKeys } from "./assets";
 import type { ShopCatalogItem, ShopCategory } from "./types";
+import type { TranslationKey } from "../i18n";
+
+export type SeasonalPostcardShopItem = {
+  catalogKey: string;
+  descriptionKey: TranslationKey;
+  nameKey: TranslationKey;
+  thumbnailAssetKey: ShopCatalogItem["thumbnailAssetKey"];
+};
+
+export const seasonalPostcardShopItems: SeasonalPostcardShopItem[] = [
+  { catalogKey: "postcard-seasonal-christmas-tree", nameKey: "officialPostcards.christmasTree.name", descriptionKey: "officialPostcards.christmasTree.description", thumbnailAssetKey: assetKeys.postcards.christmas.tree },
+  { catalogKey: "postcard-seasonal-christmas-feast", nameKey: "officialPostcards.christmasFeast.name", descriptionKey: "officialPostcards.christmasFeast.description", thumbnailAssetKey: assetKeys.postcards.christmas.feast },
+  { catalogKey: "postcard-seasonal-christmas-gifts", nameKey: "officialPostcards.christmasGifts.name", descriptionKey: "officialPostcards.christmasGifts.description", thumbnailAssetKey: assetKeys.postcards.christmas.gifts },
+  { catalogKey: "postcard-seasonal-christmas-carols", nameKey: "officialPostcards.christmasCarols.name", descriptionKey: "officialPostcards.christmasCarols.description", thumbnailAssetKey: assetKeys.postcards.christmas.carols },
+  { catalogKey: "postcard-seasonal-christmas-sleigh", nameKey: "officialPostcards.christmasSleigh.name", descriptionKey: "officialPostcards.christmasSleigh.description", thumbnailAssetKey: assetKeys.postcards.christmas.sleigh },
+  { catalogKey: "postcard-seasonal-christmas-cottage", nameKey: "officialPostcards.christmasCottage.name", descriptionKey: "officialPostcards.christmasCottage.description", thumbnailAssetKey: assetKeys.postcards.christmas.cottage },
+  { catalogKey: "postcard-seasonal-christmas-table", nameKey: "officialPostcards.christmasTable.name", descriptionKey: "officialPostcards.christmasTable.description", thumbnailAssetKey: assetKeys.postcards.christmas.table },
+  { catalogKey: "postcard-seasonal-christmas-mailbox", nameKey: "officialPostcards.christmasMailbox.name", descriptionKey: "officialPostcards.christmasMailbox.description", thumbnailAssetKey: assetKeys.postcards.christmas.mailbox },
+  { catalogKey: "postcard-seasonal-newyear-beach", nameKey: "officialPostcards.newYearBeach.name", descriptionKey: "officialPostcards.newYearBeach.description", thumbnailAssetKey: assetKeys.postcards.newYear.beach },
+  { catalogKey: "postcard-seasonal-newyear-andes", nameKey: "officialPostcards.newYearAndes.name", descriptionKey: "officialPostcards.newYearAndes.description", thumbnailAssetKey: assetKeys.postcards.newYear.andes },
+  { catalogKey: "postcard-seasonal-newyear-buenos-aires", nameKey: "officialPostcards.newYearBuenosAires.name", descriptionKey: "officialPostcards.newYearBuenosAires.description", thumbnailAssetKey: assetKeys.postcards.newYear.buenosAires },
+];
 
 export const shopCategories: ShopCategory[] = [
   "all",

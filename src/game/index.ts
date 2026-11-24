@@ -112,6 +112,7 @@ export {
 } from "./mascotDeliveryAction";
 export {
   filterShopItemsByCategory,
+  seasonalPostcardShopItems,
   shopCatalog,
   shopCategories,
 } from "./shop";
