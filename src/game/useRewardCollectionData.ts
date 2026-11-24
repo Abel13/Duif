@@ -88,6 +88,7 @@ export function useRewardCollectionData(deliveryId?: string) {
         mascotId: state.delivery.mascotId,
       });
       if (!result) throw new Error("Reward was not collected.");
+      const seedPackages = await fetchDeliverySeedPackages(state.delivery.id).catch(() => []);
       setState((current) => ({
         ...current,
         delivery: result.delivery,
@@ -96,6 +97,7 @@ export function useRewardCollectionData(deliveryId?: string) {
         isMutating: false,
         reward: result.reward,
         progression: result.progression,
+        seedPackages,
       }));
     } catch {
       setState((current) => ({ ...current, error: "rewards.collectError", isMutating: false }));
