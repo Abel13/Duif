@@ -60,7 +60,8 @@ begin
     where not has_pt_br or not has_en_us
   ) then raise exception 'Incomplete official translation key exists'; end if;
 
-  if (select count(*) from public.mascot_templates where status = 'active') <> 3
+  if (select count(*) from public.mascot_templates where status = 'active'
+    and catalog_key in ('mascot-nuvem','mascot-trovao','mascot-pipoca')) <> 3
     or not exists (
       select 1 from public.mascot_templates
       where id = '00000000-0000-4000-8000-000000000201'

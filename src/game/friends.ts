@@ -7,7 +7,7 @@ export const friendMascots: FriendMascotPreview[] = [
   {
     id: "friend-mascot-aurora",
     name: "Aurora",
-    speciesKey: "species.mailDuck",
+    speciesKey: "aurora.species",
     level: 3,
     appearance: {
       primaryColor: "#fff8e8",

@@ -926,6 +926,17 @@ export const enUS = {
       tocantinsBrazil: "Tocantins, Brazil",
     },
   },
+  aurora: {
+    name: "Aurora",
+    species: "Eastern bluebird",
+    owned: "Already owned",
+    horizon: { name: "Horizon Eyes", description: "Extends the discovery radius by 5% in daylight with good visibility." },
+    skyReading: { name: "Sky Reading", description: "Gain 0.5% flight speed per level in clear daytime skies." },
+    attentivePath: { name: "Attentive Path", description: "In daylight with good visibility, gain 0.5% discovery radius per level after three trips on this route." },
+    forager: { name: "Forager’s Eye", description: "In daylight with good visibility, increase seed package chance by 1% per level, relative to the usual chance." },
+    nestMemory: { name: "Nest Memory", description: "In daylight with good visibility, gain 0.8% return speed per level after three trips on this route." },
+    pioneer: { name: "Pioneer’s Eye", description: "On a first daytime visit with good visibility, gain a 20.2–22% chance to discover a collectible beyond the corridor." },
+  },
   species: {
     carrierPigeon: "Carrier pigeon",
     messengerFalcon: "Messenger falcon",

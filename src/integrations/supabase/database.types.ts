@@ -4047,6 +4047,14 @@ export type Database = {
         Args: { request_id: string; target_catalog_key: string }
         Returns: Json
       }
+      get_aurora_offer: {
+        Args: Record<PropertyKey, never>
+        Returns: { price: number; owned: boolean }[]
+      }
+      purchase_aurora: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       purchase_christmas_postcard_pack: {
         Args: { request_id: string }
         Returns: Json

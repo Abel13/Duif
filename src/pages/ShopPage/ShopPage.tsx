@@ -16,12 +16,15 @@ import {
 } from "../../game";
 import { purchaseChristmasPostcardPack, purchaseEquipment, purchaseSeasonalPostcard } from "../../integrations/supabase/equipment";
 import { useTranslation } from "../../i18n";
+import { useAuth } from "../../integrations/supabase/AuthProvider";
+import { AuroraShopCard } from "./AuroraShopCard";
 import styles from "./ShopPage.module.css";
 
 const completeSeasonalPackPrice = 100;
 const individualSeasonalPostcardPrice = 10;
 
 export function ShopPage() {
+  const { profile } = useAuth();
   const { t } = useTranslation();
   const [selectedCategory, setSelectedCategory] = useState<ShopCategory>("all");
   const [selectedItem, setSelectedItem] = useState<ShopCatalogItem | null>(null);
@@ -74,6 +77,7 @@ export function ShopPage() {
         <section className={styles.catalog} aria-labelledby="shop-catalog-title">
           <div className={styles.functionalHeader}><div><h2>{t("functionalEquipment.shopTitle")}</h2><p>{t("functionalEquipment.shopDescription")}</p></div><strong>{t("functionalEquipment.balance")}: {equipmentData.seedBalance}</strong></div>
           <div className={styles.grid}>
+            {profile && <AuroraShopCard key={profile.id} balance={equipmentData.seedBalance} refreshBalance={refreshEquipment} />}
             {equipmentData.catalog.map((item) => <article className={styles.card} key={item.id}>
               <EquipmentArtwork item={item} />
               <div className={styles.cardBody}><p className={styles.category}>{t(`functionalEquipment.kinds.${item.kind}`)}</p><h3>{t(item.nameKey)}</h3><p>{t(item.descriptionKey)}</p><p className={styles.price}><CurrencyIcon currency="seeds"/><strong>{item.seedPrice}</strong></p></div>

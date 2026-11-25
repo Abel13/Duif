@@ -787,6 +787,15 @@ export type TranslationDictionary = {
       tocantinsBrazil: string;
     };
   };
+  aurora: {
+    name: string; species: string; owned: string;
+    horizon: { name: string; description: string };
+    skyReading: { name: string; description: string };
+    attentivePath: { name: string; description: string };
+    forager: { name: string; description: string };
+    nestMemory: { name: string; description: string };
+    pioneer: { name: string; description: string };
+  };
   species: {
     carrierPigeon: string;
     messengerFalcon: string;
@@ -1179,6 +1188,8 @@ export type TranslationDictionary = {
 };
 
 export type TranslationKey =
+  | "aurora.name" | "aurora.species" | "aurora.owned"
+  | `aurora.${"horizon" | "skyReading" | "attentivePath" | "forager" | "nestMemory" | "pioneer"}.${"name" | "description"}`
   | "landmarks.christTheRedeemer.name" | "landmarks.christTheRedeemer.description" | "landmarks.christTheRedeemer.alt" | "landmarks.masp.name" | "landmarks.masp.description" | "landmarks.masp.alt"
   | "landmarks.iguazuDevilsThroat.name" | "landmarks.iguazuDevilsThroat.description" | "landmarks.iguazuDevilsThroat.alt" | "landmarks.machuPicchu.name" | "landmarks.machuPicchu.description" | "landmarks.machuPicchu.alt"
   | "landmarks.salarDeUyuni.name" | "landmarks.salarDeUyuni.description" | "landmarks.salarDeUyuni.alt" | "landmarks.peritoMorenoGlacier.name" | "landmarks.peritoMorenoGlacier.description" | "landmarks.peritoMorenoGlacier.alt"

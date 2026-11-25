@@ -83,7 +83,8 @@ export function mapSkills(value:Json,fallback?:Skill[]):Skill[]{
 export function mapAppearance(value:Json,fallback?:MascotAppearance):MascotAppearance{
   const item=record(value,"appearance");
   return {primaryColor:requireString(item.primaryColor,"primary color"),accentColor:requireString(item.accentColor,"accent color"),
-    portraitPlaceholderKey:requireTranslationKey(item.portraitPlaceholderKey,"portrait key"),
+    portraitPlaceholderKey:requireTranslationKey(item.portraitPlaceholderKey ??
+      (item.portraitAssetKey === "mascot.portrait.lume" ? "appearance.owlPortrait" : undefined),"portrait key"),
     portraitAssetKey:isOfficialAssetKey(item.portraitAssetKey)?item.portraitAssetKey:fallback?.portraitAssetKey};
 }
 export function selectStarterMascotTemplateRows(rows:MascotTemplateRow[]){

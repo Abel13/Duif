@@ -1003,6 +1003,17 @@ export const ptBR = {
       tocantinsBrazil: "Tocantins, Brasil",
     },
   },
+  aurora: {
+    name: "Aurora",
+    species: "Pássaro-azul-do-leste",
+    owned: "Já adquirida",
+    horizon: { name: "Olhos do Horizonte", description: "Durante o dia, com boa visibilidade, amplia em 5% o raio de descoberta." },
+    skyReading: { name: "Leitura do Céu", description: "Com céu limpo durante o dia, ganha 0,5% de velocidade por nível." },
+    attentivePath: { name: "Caminho Atento", description: "Com boa visibilidade durante o dia, amplia o raio de descoberta em 0,5% por nível após três viagens pelo caminho." },
+    forager: { name: "Olhar de Forrageira", description: "Com boa visibilidade durante o dia, aumenta a chance de pacote de Sementes em 1% relativo por nível." },
+    nestMemory: { name: "Memória do Ninho", description: "Com boa visibilidade durante o dia, retorna 0,8% mais rápido por nível após três viagens pelo caminho." },
+    pioneer: { name: "Olhar de Pioneira", description: "Na primeira visita diurna com boa visibilidade, pode descobrir um colecionável além do corredor. Chance de 20,2% a 22%." },
+  },
   species: {
     carrierPigeon: "Pombo-correio",
     messengerFalcon: "Falcão-mensageiro",

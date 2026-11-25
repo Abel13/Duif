@@ -133,8 +133,8 @@ export const mockPostalTrafficPets: PostalTrafficPet[] = [
       returnStartAt: "2026-07-19T02:30:00.000Z",
       returnArrivalAt: "2026-07-19T06:30:00.000Z",
     },
-    speciesKey: "species.mailDuck",
-    traitNameKey: "traits.steadyRoute.name",
+    speciesKey: "aurora.species",
+    traitNameKey: "aurora.horizon.name",
     visibility: "friend",
   },
   {

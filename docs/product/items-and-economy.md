@@ -38,7 +38,8 @@
 
 ### Moedas
 
-Sementes são a moeda comum obtida ao jogar e poderão recompensar trabalhos postais. Elas podem
+Sementes são a moeda comum obtida ao jogar, inclusive como recompensa por trabalhos postais.
+Elas são a moeda prevista para os [mascotes da loja](./mascots.md#compra-de-mascotes) e podem
 comprar consumíveis e equipamento funcional básico aprovados, sempre mantendo o loop completo
 viável sem compra. Cristais são a moeda premium futura, restrita à expressão visual e social.
 Nenhuma moeda pode ser enviada entre jogadores ou comprar XP; Cristais nunca compram atributos,
@@ -49,6 +50,13 @@ alcance, carga, descobertas ou velocidade.
 Rotas podem conceder adesivos, lembranças, materiais, Lanches Revigorantes e itens sazonais. A
 concessão precisa ser determinística e autoritativa; o achado permanece pendente até o retorno e a
 coleta é idempotente. Itens de rota nunca dependem de pagamento.
+
+Em uma viagem elegível, o mascote pode encontrar pacotes de Sementes. A sorte aumenta a chance
+de encontrar um pacote em cada oportunidade. O tipo de pacote é sorteado entre os elegíveis
+para a distância e determina quantas Sementes ele contém. O trecho (ida ou volta) e o ponto do
+achado também são sorteados. Duas viagens pelo mesmo caminho podem render quantidades e locais
+distintos, inclusive terminar sem pacotes. O resultado de cada viagem é preservado ao recarregar
+a página, e as Sementes são creditadas uma única vez na coleta.
 
 ### Eventos
 
